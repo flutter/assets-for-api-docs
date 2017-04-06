@@ -1,0 +1,1 @@
+# assets-for-api-docs
