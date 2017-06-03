@@ -50,6 +50,6 @@ void main() {
     print('export FILE=flutter_01.png # or whatever the file name is');
     final RenderBox box = key.currentContext.findRenderObject();
     final Rect area = ((box.localToGlobal(Offset.zero) * ui.window.devicePixelRatio) & (box.size * ui.window.devicePixelRatio)).inflate(40.0);
-    print('convert \$FILE -crop ${area.width}x${area.height}+${area.left}+${area.top} -resize \'200x200>\' card.png');
+    print('convert \$FILE -crop ${area.width}x${area.height}+${area.left}+${area.top} -resize \'400x400>\' card.png');
   });
 }
