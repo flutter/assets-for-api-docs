@@ -37,4 +37,4 @@ than by hand. For example, have a little Flutter program that
 generates the PNGs so that we can easily re-run the program and
 regenerate the images if we want to e.g. change the resolution or
 adjust the text slightly. For an example,
-see [tile_mode.dart](dart-ui/tile_mode.dart).
+see [tile_mode.dart](src/dart-ui/tile_mode.dart).
