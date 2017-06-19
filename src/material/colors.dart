@@ -15,24 +15,9 @@ abstract class Page {
 
   GlobalKey get key => new GlobalObjectKey(this);
 
-  Widget buildSwatch(BuildContext context, Widget child) {
-    return new GestureDetector(
-        onTap: () async {
-          await SchedulerBinding.instance.endOfFrame;
-          final Rect area = interestingArea;
-          print('BASH: convert flutter_`printf %02d \$N`.png -crop '
-              '${area.width}x${area.height}+${area.left}+${area.top} -resize '
-              '\'400x600>\' ${filename}.png; ((N++))');
-          Navigator.of(context).pop();
-        },
-        child: child);
-  }
-
   Rect get interestingArea {
     final RenderBox box = key.currentContext.findRenderObject();
-    final Rect area =
-        ((box.localToGlobal(Offset.zero) * ui.window.devicePixelRatio) &
-            (box.size * ui.window.devicePixelRatio));
+    final Rect area = ((box.localToGlobal(Offset.zero) * ui.window.devicePixelRatio) & (box.size * ui.window.devicePixelRatio));
     return area;
   }
 }
@@ -50,10 +35,7 @@ class SwatchPage extends Page {
   Widget build(BuildContext context) {
     List<Widget> items = <Widget>[];
     for (int key in keys) {
-      Color textColor =
-          ThemeData.estimateBrightnessForColor(swatch[key]) == Brightness.light
-              ? Colors.black
-              : Colors.white;
+      Color textColor = ThemeData.estimateBrightnessForColor(swatch[key]) == Brightness.light ? Colors.black : Colors.white;
       TextStyle style = new TextStyle(color: textColor);
       String label;
       if (swatch[key].value == swatch.value) {
@@ -69,27 +51,19 @@ class SwatchPage extends Page {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             new Text(label, style: style),
-            new Text('0x${swatch[key].value.toRadixString(16).toUpperCase()}',
-                style: style),
+            new Text('0x${swatch[key].value.toRadixString(16).toUpperCase()}', style: style),
           ],
         ),
       ));
     }
-    return buildSwatch(
-        context,
-        new Material(
-          color: Colors.white,
-          child: new Center(
-            child: new Container(
-              key: key,
-              width: 300.0,
-              child: new Column(
-                mainAxisSize: MainAxisSize.min,
-                children: items,
-              ),
-            ),
-          ),
-        ));
+    return new Container(
+      key: key,
+      width: 300.0,
+      child: new Column(
+        mainAxisSize: MainAxisSize.min,
+        children: items,
+      ),
+    );
   }
 }
 
@@ -115,81 +89,27 @@ class ColorListPage extends Page {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             new Text(key, style: style),
-            new Text('0x${textColor.value.toRadixString(16).toUpperCase()}',
-                style: style),
+            new Text('0x${textColor.value.toRadixString(16).toUpperCase()}', style: style),
           ],
         ),
       ));
     }
-    return buildSwatch(
-        context,
-        new Material(
-          color: Colors.white,
-          child: new Center(
-            child: new Container(
-              key: key,
-              width: 300.0,
-              color: background,
-              child: new Column(
-                mainAxisSize: MainAxisSize.min,
-                children: items,
-              ),
-            ),
-          ),
-        ));
-  }
-}
-
-class HomePage extends StatelessWidget {
-  final List<Page> pages;
-
-  HomePage(this.pages);
-
-  @override
-  Widget build(BuildContext context) {
-    return new GestureDetector(
-      onTap: () async {
-        for (var page in pages.reversed) {
-          Navigator.of(context).pushNamed('/' + page.filename);
-        }
-      },
-      child: new Material(
-        color: Colors.white,
-        child: new Center(
-            child: new Text("Tap to advance to the color swatches.")),
+    return new Container(
+      key: key,
+      width: 300.0,
+      color: background,
+      child: new Column(
+        mainAxisSize: MainAxisSize.min,
+        children: items,
       ),
     );
   }
 }
 
 Future<Null> main() async {
-  const List<int> palette = const <int>[
-    50,
-    100,
-    200,
-    300,
-    400,
-    500,
-    600,
-    700,
-    800,
-    900
-  ];
-  const List<int> accentPalette = const <int>[100, 200, 400, 700];
-  const List<int> greyPalette = const <int>[
-    50,
-    100,
-    200,
-    300,
-    350,
-    400,
-    500,
-    600,
-    700,
-    800,
-    850,
-    900
-  ];
+  const List<int> palette = const <int>[ 50, 100, 200, 300, 400, 500, 600, 700, 800, 900 ];
+  const List<int> accentPalette = const <int>[ 100, 200, 400, 700 ];
+  const List<int> greyPalette = const <int>[ 50, 100, 200, 300, 350, 400, 500, 600, 700, 800, 850, 900 ];
   final List<Page> pages = <Page>[
     const SwatchPage('Colors.red', Colors.red, palette),
     const SwatchPage('Colors.pink', Colors.pink, palette),
@@ -212,23 +132,19 @@ Future<Null> main() async {
     const SwatchPage('Colors.redAccent', Colors.redAccent, accentPalette),
     const SwatchPage('Colors.pinkAccent', Colors.pinkAccent, accentPalette),
     const SwatchPage('Colors.purpleAccent', Colors.purpleAccent, accentPalette),
-    const SwatchPage(
-        'Colors.deepPurpleAccent', Colors.deepPurpleAccent, accentPalette),
+    const SwatchPage('Colors.deepPurpleAccent', Colors.deepPurpleAccent, accentPalette),
     const SwatchPage('Colors.indigoAccent', Colors.indigoAccent, accentPalette),
     const SwatchPage('Colors.blueAccent', Colors.blueAccent, accentPalette),
-    const SwatchPage(
-        'Colors.lightBlueAccent', Colors.lightBlueAccent, accentPalette),
+    const SwatchPage('Colors.lightBlueAccent', Colors.lightBlueAccent, accentPalette),
     const SwatchPage('Colors.cyanAccent', Colors.cyanAccent, accentPalette),
     const SwatchPage('Colors.tealAccent', Colors.tealAccent, accentPalette),
     const SwatchPage('Colors.greenAccent', Colors.greenAccent, accentPalette),
-    const SwatchPage(
-        'Colors.lightGreenAccent', Colors.lightGreenAccent, accentPalette),
+    const SwatchPage('Colors.lightGreenAccent', Colors.lightGreenAccent, accentPalette),
     const SwatchPage('Colors.limeAccent', Colors.limeAccent, accentPalette),
     const SwatchPage('Colors.yellowAccent', Colors.yellowAccent, accentPalette),
     const SwatchPage('Colors.amberAccent', Colors.amberAccent, accentPalette),
     const SwatchPage('Colors.orangeAccent', Colors.orangeAccent, accentPalette),
-    const SwatchPage(
-        'Colors.deepOrangeAccent', Colors.deepOrangeAccent, accentPalette),
+    const SwatchPage('Colors.deepOrangeAccent', Colors.deepOrangeAccent, accentPalette),
     const SwatchPage('Colors.grey', Colors.grey, greyPalette),
     const ColorListPage('Colors.blacks', Colors.white, const <String, Color>{
       'black': Colors.black,
@@ -247,30 +163,31 @@ Future<Null> main() async {
       'white70': Colors.white70,
     }),
   ];
-  print('This app will display a sequence of images. For each one, tap "s"');
-  print('in the console to take a screenshot, then tap the screen to');
-  print('advance. When all is done, a script will be dumped that shows the');
-  print('commands to run to convert all the screenshots to images.');
-  print('BASH: N=1 # set this to the number of the first screenshot file');
-  Map<String, WidgetBuilder> routes = <String, WidgetBuilder>{};
+  print(
+    'This app will display a sequence of images. For each one, tap "s" in the console to take '
+    'a screenshot, then tap the screen to advance. When all is done, a script will be dumped that '
+    'shows the commands to run to convert all the screenshots to images.'
+  );
+  StringBuffer buffer = new StringBuffer();
   for (Page page in pages) {
-    routes['/' + page.filename] = page.build;
-    print('COLOR: ${page.filename}');
+    Completer<Null> completer = new Completer<Null>();
+    runApp(
+      new GestureDetector(
+        onTap: () { completer?.complete(); completer = null; },
+        child: new MaterialApp(
+          home: new Material(
+            color: Colors.white,
+            child: new Center(
+              child: new Builder(builder: page.build),
+            ),
+          ),
+        ),
+      ),
+    );
+    await SchedulerBinding.instance.endOfFrame;
+    final Rect area = page.interestingArea;
+    buffer.writeln('BASH: convert flutter_`printf %02d \$N`.png -crop ${area.width}x${area.height}+${area.left}+${area.top} -resize \'400x600>\' ${page.filename}.png; ((N++))');
+    await completer.future;
   }
-  runApp(new MaterialApp(onGenerateRoute: (RouteSettings settings) {
-    if (settings.isInitialRoute &&
-        settings.name == Navigator.defaultRouteName) {
-      return new MaterialPageRoute<Null>(
-        builder: (BuildContext context) {
-          return new HomePage(pages);
-        },
-        settings: settings,
-      );
-    } else {
-      return new MaterialPageRoute<Null>(
-        builder: routes[settings.name],
-        settings: settings,
-      );
-    }
-  }));
+  debugPrint('BASH: N=1 # set this to the number of the first screenshot file\n$buffer');
 }
