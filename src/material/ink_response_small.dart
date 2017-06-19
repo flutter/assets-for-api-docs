@@ -21,7 +21,7 @@ void main() {
   runApp(new Diagram());
   new Timer(
     const Duration(milliseconds: 1000),
-        () {
+    () {
       final RenderBox target = splashKey.currentContext.findRenderObject();
       final Offset targetOffset = target.localToGlobal(target.size.bottomRight(Offset.zero)) * ui.window.devicePixelRatio;
       ui.window.onPointerDataPacket(new ui.PointerDataPacket(data: <ui.PointerData>[
@@ -35,7 +35,7 @@ void main() {
   );
   new Timer(
     const Duration(milliseconds: 1700),
-        () {
+    () {
       ui.window.onBeginFrame = ui.window.onDrawFrame = null;
       print(currentMessage);
     },
