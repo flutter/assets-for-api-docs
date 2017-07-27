@@ -18,7 +18,6 @@ void main() {
   new Timer(const Duration(seconds: 1), () {
     print('The following commands extract out the six images from a screenshot file.');
     print('You can obtain a screenshot by pressing "s" in the "flutter run" console.');
-    print('BASH: export FILE=flutter_01.png # or whatever the file name is');
     final double w = width * ui.window.devicePixelRatio;
     final double h = (height - spacing * 2.0) * ui.window.devicePixelRatio;
     final double xStride = (width + spacing * 2.0) * ui.window.devicePixelRatio;
@@ -27,19 +26,20 @@ void main() {
     final double top = (topPadding + spacing) * ui.window.devicePixelRatio;
     double x = left;
     double y = top;
-    print('BASH: convert \$FILE -crop ${w}x$h+$x+$y -resize \'200x200>\' tile_mode_clamp_linear.png');
+    print('COMMAND: convert flutter_01.png -crop ${w}x$h+$x+$y -resize \'200x200>\' tile_mode_clamp_linear.png');
     x += xStride;
-    print('BASH: convert \$FILE -crop ${w}x$h+$x+$y -resize \'200x200>\' tile_mode_clamp_radial.png');
+    print('COMMAND: convert flutter_01.png -crop ${w}x$h+$x+$y -resize \'200x200>\' tile_mode_clamp_radial.png');
     x = left;
     y += yStride;
-    print('BASH: convert \$FILE -crop ${w}x$h+$x+$y -resize \'200x200>\' tile_mode_repeated_linear.png');
+    print('COMMAND: convert flutter_01.png -crop ${w}x$h+$x+$y -resize \'200x200>\' tile_mode_repeated_linear.png');
     x += xStride;
-    print('BASH: convert \$FILE -crop ${w}x$h+$x+$y -resize \'200x200>\' tile_mode_repeated_radial.png');
+    print('COMMAND: convert flutter_01.png -crop ${w}x$h+$x+$y -resize \'200x200>\' tile_mode_repeated_radial.png');
     x = left;
     y += yStride;
-    print('BASH: convert \$FILE -crop ${w}x$h+$x+$y -resize \'200x200>\' tile_mode_mirror_linear.png');
+    print('COMMAND: convert flutter_01.png -crop ${w}x$h+$x+$y -resize \'200x200>\' tile_mode_mirror_linear.png');
     x += xStride;
-    print('BASH: convert \$FILE -crop ${w}x$h+$x+$y -resize \'200x200>\' tile_mode_mirror_radial.png');
+    print('COMMAND: convert flutter_01.png -crop ${w}x$h+$x+$y -resize \'200x200>\' tile_mode_mirror_radial.png');
+    print('DONE DRAWING');
   });
 }
 

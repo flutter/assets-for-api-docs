@@ -38,6 +38,7 @@ void main() {
     () {
       ui.window.onBeginFrame = ui.window.onDrawFrame = null;
       print(currentMessage);
+      print('DONE DRAWING');
     },
   );
 }

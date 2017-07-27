@@ -47,9 +47,12 @@ void main() {
   new Timer(const Duration(seconds: 1), () {
     print('The following commands extract out the six images from a screenshot file.');
     print('You can obtain a screenshot by pressing "s" in the "flutter run" console.');
-    print('BASH: export FILE=flutter_01.png # or whatever the file name is');
     final RenderBox box = key.currentContext.findRenderObject();
-    final Rect area = ((box.localToGlobal(Offset.zero) * ui.window.devicePixelRatio) & (box.size * ui.window.devicePixelRatio)).inflate(40.0);
-    print('BASH: convert \$FILE -crop ${area.width}x${area.height}+${area.left}+${area.top} -resize \'400x400>\' card.png');
+    final Rect area = ((box.localToGlobal(Offset.zero) * ui.window.devicePixelRatio) &
+        (box.size * ui.window.devicePixelRatio)).inflate(40.0);
+    print('COMMAND: convert flutter_01.png '
+        '-crop ${area.width}x${area.height}+${area.left}+${area.top} '
+        '-resize \'400x400>\' card.png');
+    print('DONE DRAWING');
   });
 }

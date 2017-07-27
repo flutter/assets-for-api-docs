@@ -125,11 +125,10 @@ class Labeller extends CustomPainter {
     int x = ((topLeft.dx + leftmost) * ui.window.devicePixelRatio).round();
     int y = ((topLeft.dy + topmost) * ui.window.devicePixelRatio).round();
     onPaintMessage(
-        'The following command extracts the image from a screenshot file.\n'
-        'You can obtain a screenshot by pressing "s" in the "flutter run" console.\n'
-        'Make sure the whole diagram is visible (you may need to rotate the device).\n'
-        'BASH: export FILE=flutter_01.png # or whatever the file name is\n'
-        'BASH: convert \$FILE -crop ${w}x$h+$x+$y -resize \'450x450>\' $filename'
+      'The following command extracts the image from a screenshot file.\n'
+      'You can obtain a screenshot by pressing "s" in the "flutter run" console.\n'
+      'Make sure the whole diagram is visible (you may need to rotate the device).\n'
+      'COMMAND: convert flutter_01.png -crop ${w}x$h+$x+$y -resize \'450x450>\' $filename'
     );
   }
 

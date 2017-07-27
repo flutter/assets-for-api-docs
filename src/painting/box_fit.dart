@@ -90,11 +90,14 @@ void main() {
   new Timer(const Duration(seconds: 1), () {
     print('The following commands extract out the ${BoxFit.values.length} images from a screenshot file.');
     print('You can obtain a screenshot by pressing "s" in the "flutter run" console.');
-    print('BASH: export FILE=flutter_01.png # or whatever the file name is');
     for (BoxFit fit in BoxFit.values) {
       final RenderBox box = new GlobalObjectKey(fit).currentContext.findRenderObject();
-      final Rect area = (box.localToGlobal(Offset.zero) * ui.window.devicePixelRatio) & (box.size * ui.window.devicePixelRatio);
-      print('BASH: convert \$FILE -crop ${area.width}x${area.height}+${area.left}+${area.top} -resize \'300x300>\' box_fit_${fit.toString().split(".")[1]}.png');
+      final Rect area = (box.localToGlobal(Offset.zero) * ui.window.devicePixelRatio) &
+          (box.size * ui.window.devicePixelRatio);
+      print("COMMAND: convert flutter_01.png "
+          "-crop ${area.width}x${area.height}+${area.left}+${area.top} "
+          "-resize '300x300>' box_fit_${fit.toString().split(".")[1]}.png");
     }
+    print('DONE DRAWING');
   });
 }

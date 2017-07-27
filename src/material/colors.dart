@@ -9,33 +9,71 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
 abstract class Page {
-  const Page();
-  String get filename;
+  /// The name of the page.  Used for constructing output filenames in commands.
+  String get name;
+
+  ///  The build function to use for this [Page].
   Widget build(BuildContext context);
+
+  /// The index of the page currently displayed.
+  static int pageIndex = 0;
+
+  /// The list of pages that we can display.
+  static List<Page> pages = [];
+
+  /// Used to decide to print the cropping command or not.  We only
+  /// print it the first time the page has been painted.
+  bool printedCommand = false;
 
   GlobalKey get key => new GlobalObjectKey(this);
 
+  Widget buildSwatch(BuildContext context, Widget child) {
+    SchedulerBinding.instance.endOfFrame.then((_) {
+      if (!printedCommand) {
+        printedCommand = true;
+        final Rect area = interestingArea;
+        print('COMMAND: convert flutter_${(pageIndex + 1).toString().padLeft(
+            2, '0')}.png -crop '
+            '${area.width}x${area.height}+${area.left}+${area.top} -resize '
+            '\'400x600>\' ${name}.png');
+      }
+    });
+    return new GestureDetector(
+        onTap: () async {
+          Page.pageIndex++;
+          Navigator.of(context).pop();
+          if (Page.pageIndex < Page.pages.length) {
+            Navigator.of(context).pushNamed(Page.pages[Page.pageIndex].name);
+          } else {
+            Navigator.of(context).pushNamed(Navigator.defaultRouteName);
+          }
+        },
+        child: child);
+  }
+
   Rect get interestingArea {
     final RenderBox box = key.currentContext.findRenderObject();
-    final Rect area = ((box.localToGlobal(Offset.zero) * ui.window.devicePixelRatio) & (box.size * ui.window.devicePixelRatio));
+    final Rect area = ((box.localToGlobal(Offset.zero) * ui.window.devicePixelRatio) &
+        (box.size * ui.window.devicePixelRatio));
     return area;
   }
 }
 
 class SwatchPage extends Page {
-  const SwatchPage(this.name, this.swatch, this.keys);
+  SwatchPage(this.name, this.swatch, this.keys);
+
   final String name;
   final ColorSwatch<int> swatch;
   final List<int> keys;
 
   @override
-  String get filename => name;
-
-  @override
   Widget build(BuildContext context) {
     List<Widget> items = <Widget>[];
     for (int key in keys) {
-      Color textColor = ThemeData.estimateBrightnessForColor(swatch[key]) == Brightness.light ? Colors.black : Colors.white;
+      Color textColor =
+          ThemeData.estimateBrightnessForColor(swatch[key]) == Brightness.light
+              ? Colors.black
+              : Colors.white;
       TextStyle style = new TextStyle(color: textColor);
       String label;
       if (swatch[key].value == swatch.value) {
@@ -51,30 +89,37 @@ class SwatchPage extends Page {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             new Text(label, style: style),
-            new Text('0x${swatch[key].value.toRadixString(16).toUpperCase()}', style: style),
+            new Text('0x${swatch[key].value.toRadixString(16).toUpperCase()}',
+                style: style),
           ],
         ),
       ));
     }
-    return new Container(
-      key: key,
-      width: 300.0,
-      child: new Column(
-        mainAxisSize: MainAxisSize.min,
-        children: items,
+    return buildSwatch(
+      context,
+      new Material(
+        color: Colors.white,
+        child: new Center(
+          child: new Container(
+            key: key,
+            width: 300.0,
+            child: new Column(
+              mainAxisSize: MainAxisSize.min,
+              children: items,
+            ),
+          ),
+        ),
       ),
     );
   }
 }
 
 class ColorListPage extends Page {
-  const ColorListPage(this.filename, this.background, this.colors);
+  ColorListPage(this.name, this.background, this.colors);
 
   @override
-  final String filename;
-
+  final String name;
   final Color background;
-
   final Map<String, Color> colors;
 
   @override
@@ -89,64 +134,75 @@ class ColorListPage extends Page {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             new Text(key, style: style),
-            new Text('0x${textColor.value.toRadixString(16).toUpperCase()}', style: style),
+            new Text('0x${textColor.value.toRadixString(16).toUpperCase()}',
+                style: style),
           ],
         ),
       ));
     }
-    return new Container(
-      key: key,
-      width: 300.0,
-      color: background,
-      child: new Column(
-        mainAxisSize: MainAxisSize.min,
-        children: items,
+    return buildSwatch(
+      context,
+      new Material(
+        color: Colors.white,
+        child: new Center(
+          child: new Container(
+            key: key,
+            width: 300.0,
+            color: background,
+            child: new Column(
+              mainAxisSize: MainAxisSize.min,
+              children: items,
+            ),
+          ),
+        ),
       ),
     );
   }
 }
 
 Future<Null> main() async {
-  const List<int> palette = const <int>[ 50, 100, 200, 300, 400, 500, 600, 700, 800, 900 ];
-  const List<int> accentPalette = const <int>[ 100, 200, 400, 700 ];
-  const List<int> greyPalette = const <int>[ 50, 100, 200, 300, 350, 400, 500, 600, 700, 800, 850, 900 ];
+  const List<int> palette = const [50, 100, 200, 300, 400, 500, 600, 700, 800, 900];
+  const List<int> accentPalette = const [100, 200, 400, 700];
+  const List<int> greyPalette = const [
+    50, 100, 200, 300, 350, 400, 500, 600, 700, 800, 850, 900
+  ];
   final List<Page> pages = <Page>[
-    const SwatchPage('Colors.red', Colors.red, palette),
-    const SwatchPage('Colors.pink', Colors.pink, palette),
-    const SwatchPage('Colors.purple', Colors.purple, palette),
-    const SwatchPage('Colors.deepPurple', Colors.deepPurple, palette),
-    const SwatchPage('Colors.indigo', Colors.indigo, palette),
-    const SwatchPage('Colors.blue', Colors.blue, palette),
-    const SwatchPage('Colors.lightBlue', Colors.lightBlue, palette),
-    const SwatchPage('Colors.cyan', Colors.cyan, palette),
-    const SwatchPage('Colors.teal', Colors.teal, palette),
-    const SwatchPage('Colors.green', Colors.green, palette),
-    const SwatchPage('Colors.lightGreen', Colors.lightGreen, palette),
-    const SwatchPage('Colors.lime', Colors.lime, palette),
-    const SwatchPage('Colors.yellow', Colors.yellow, palette),
-    const SwatchPage('Colors.amber', Colors.amber, palette),
-    const SwatchPage('Colors.orange', Colors.orange, palette),
-    const SwatchPage('Colors.deepOrange', Colors.deepOrange, palette),
-    const SwatchPage('Colors.brown', Colors.brown, palette),
-    const SwatchPage('Colors.blueGrey', Colors.blueGrey, palette),
-    const SwatchPage('Colors.redAccent', Colors.redAccent, accentPalette),
-    const SwatchPage('Colors.pinkAccent', Colors.pinkAccent, accentPalette),
-    const SwatchPage('Colors.purpleAccent', Colors.purpleAccent, accentPalette),
-    const SwatchPage('Colors.deepPurpleAccent', Colors.deepPurpleAccent, accentPalette),
-    const SwatchPage('Colors.indigoAccent', Colors.indigoAccent, accentPalette),
-    const SwatchPage('Colors.blueAccent', Colors.blueAccent, accentPalette),
-    const SwatchPage('Colors.lightBlueAccent', Colors.lightBlueAccent, accentPalette),
-    const SwatchPage('Colors.cyanAccent', Colors.cyanAccent, accentPalette),
-    const SwatchPage('Colors.tealAccent', Colors.tealAccent, accentPalette),
-    const SwatchPage('Colors.greenAccent', Colors.greenAccent, accentPalette),
-    const SwatchPage('Colors.lightGreenAccent', Colors.lightGreenAccent, accentPalette),
-    const SwatchPage('Colors.limeAccent', Colors.limeAccent, accentPalette),
-    const SwatchPage('Colors.yellowAccent', Colors.yellowAccent, accentPalette),
-    const SwatchPage('Colors.amberAccent', Colors.amberAccent, accentPalette),
-    const SwatchPage('Colors.orangeAccent', Colors.orangeAccent, accentPalette),
-    const SwatchPage('Colors.deepOrangeAccent', Colors.deepOrangeAccent, accentPalette),
-    const SwatchPage('Colors.grey', Colors.grey, greyPalette),
-    const ColorListPage('Colors.blacks', Colors.white, const <String, Color>{
+    new SwatchPage('Colors.red', Colors.red, palette),
+    new SwatchPage('Colors.pink', Colors.pink, palette),
+    new SwatchPage('Colors.purple', Colors.purple, palette),
+    new SwatchPage('Colors.deepPurple', Colors.deepPurple, palette),
+    new SwatchPage('Colors.indigo', Colors.indigo, palette),
+    new SwatchPage('Colors.blue', Colors.blue, palette),
+    new SwatchPage('Colors.lightBlue', Colors.lightBlue, palette),
+    new SwatchPage('Colors.cyan', Colors.cyan, palette),
+    new SwatchPage('Colors.teal', Colors.teal, palette),
+    new SwatchPage('Colors.green', Colors.green, palette),
+    new SwatchPage('Colors.lightGreen', Colors.lightGreen, palette),
+    new SwatchPage('Colors.lime', Colors.lime, palette),
+    new SwatchPage('Colors.yellow', Colors.yellow, palette),
+    new SwatchPage('Colors.amber', Colors.amber, palette),
+    new SwatchPage('Colors.orange', Colors.orange, palette),
+    new SwatchPage('Colors.deepOrange', Colors.deepOrange, palette),
+    new SwatchPage('Colors.brown', Colors.brown, palette),
+    new SwatchPage('Colors.blueGrey', Colors.blueGrey, palette),
+    new SwatchPage('Colors.redAccent', Colors.redAccent, accentPalette),
+    new SwatchPage('Colors.pinkAccent', Colors.pinkAccent, accentPalette),
+    new SwatchPage('Colors.purpleAccent', Colors.purpleAccent, accentPalette),
+    new SwatchPage('Colors.deepPurpleAccent', Colors.deepPurpleAccent, accentPalette),
+    new SwatchPage('Colors.indigoAccent', Colors.indigoAccent, accentPalette),
+    new SwatchPage('Colors.blueAccent', Colors.blueAccent, accentPalette),
+    new SwatchPage('Colors.lightBlueAccent', Colors.lightBlueAccent, accentPalette),
+    new SwatchPage('Colors.cyanAccent', Colors.cyanAccent, accentPalette),
+    new SwatchPage('Colors.tealAccent', Colors.tealAccent, accentPalette),
+    new SwatchPage('Colors.greenAccent', Colors.greenAccent, accentPalette),
+    new SwatchPage('Colors.lightGreenAccent', Colors.lightGreenAccent, accentPalette),
+    new SwatchPage('Colors.limeAccent', Colors.limeAccent, accentPalette),
+    new SwatchPage('Colors.yellowAccent', Colors.yellowAccent, accentPalette),
+    new SwatchPage('Colors.amberAccent', Colors.amberAccent, accentPalette),
+    new SwatchPage('Colors.orangeAccent', Colors.orangeAccent, accentPalette),
+    new SwatchPage('Colors.deepOrangeAccent', Colors.deepOrangeAccent, accentPalette),
+    new SwatchPage('Colors.grey', Colors.grey, greyPalette),
+    new ColorListPage('Colors.blacks', Colors.white, <String, Color>{
       'black': Colors.black,
       'black12': Colors.black12,
       'black26': Colors.black26,
@@ -155,7 +211,7 @@ Future<Null> main() async {
       'black54': Colors.black54,
       'black87': Colors.black87,
     }),
-    const ColorListPage('Colors.whites', Colors.black, const <String, Color>{
+    new ColorListPage('Colors.whites', Colors.black, <String, Color>{
       'white': Colors.white,
       'white10': Colors.white10,
       'white12': Colors.white12,
@@ -163,31 +219,43 @@ Future<Null> main() async {
       'white70': Colors.white70,
     }),
   ];
-  print(
-    'This app will display a sequence of images. For each one, tap "s" in the console to take '
-    'a screenshot, then tap the screen to advance. When all is done, a script will be dumped that '
-    'shows the commands to run to convert all the screenshots to images.'
-  );
-  StringBuffer buffer = new StringBuffer();
+
+  print('This app will display a sequence of images. For each one, tap "s"');
+  print('in the console to take a screenshot, then tap the screen to');
+  print('advance. When all is done, the lines beginning with "COMMAND:" form a');
+  print('script that has the commands to run to convert all the screenshots');
+  print('to cropped images.');
+  Map<String, WidgetBuilder> routes = {};
   for (Page page in pages) {
-    Completer<Null> completer = new Completer<Null>();
-    runApp(
-      new GestureDetector(
-        onTap: () { completer?.complete(); completer = null; },
-        child: new MaterialApp(
-          home: new Material(
-            color: Colors.white,
-            child: new Center(
-              child: new Builder(builder: page.build),
-            ),
-          ),
-        ),
-      ),
-    );
-    await SchedulerBinding.instance.endOfFrame;
-    final Rect area = page.interestingArea;
-    buffer.writeln('BASH: convert flutter_`printf %02d \$N`.png -crop ${area.width}x${area.height}+${area.left}+${area.top} -resize \'400x600>\' ${page.filename}.png; ((N++))');
-    await completer.future;
+    routes[page.name] = page.build;
   }
-  debugPrint('BASH: N=1 # set this to the number of the first screenshot file\n$buffer');
+  Page.pageIndex = 0;
+  Page.pages = pages;
+  runApp(new MaterialApp(
+    onGenerateRoute: (RouteSettings settings) {
+      if (settings.name == Navigator.defaultRouteName) {
+        return new MaterialPageRoute(
+          builder: (BuildContext context) => new GestureDetector(
+                onTap: () {
+                  Page.pageIndex = 0;
+                  Navigator.of(context).pushNamed(pages[0].name);
+                },
+                child: new Scaffold(
+                  body: new Center(
+                    child: new Text("Tap to proceed", textScaleFactor: 2.0),
+                  ),
+                ),
+              ),
+        );
+      }
+      return new MaterialPageRoute<Null>(
+        builder: routes[settings.name],
+        settings: settings,
+      );
+    },
+  ));
+  new Timer(const Duration(seconds: 1), () {
+    // Tells the generate script to capture a screen shot.
+    print('DONE DRAWING');
+  });
 }

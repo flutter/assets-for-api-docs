@@ -2,12 +2,14 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'dart:async';
 import 'package:flutter/material.dart';
 
 import 'lib/utils.dart';
 
 void main() {
   runApp(new Diagram());
+  new Timer(const Duration(seconds: 1), () { print('DONE DRAWING'); });
 }
 
 class Diagram extends StatefulWidget {
@@ -77,9 +79,9 @@ class _DiagramState extends State<Diagram> {
                       key: flexibleSpace,
                       decoration: new BoxDecoration(
                         gradient: new LinearGradient(
-                            begin: new FractionalOffset(0.50, 0.0),
-                            end: new FractionalOffset(0.48, 1.0),
-                            colors: [Colors.blue.shade500, Colors.blue.shade800]
+                          begin: new FractionalOffset(0.50, 0.0),
+                          end: new FractionalOffset(0.48, 1.0),
+                          colors: [Colors.blue.shade500, Colors.blue.shade800]
                         ),
                       ),
                     ),

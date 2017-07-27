@@ -171,11 +171,11 @@ void main() {
     print('The following commands extract out the ${curves.length} images from a screenshot file.');
     print('You can obtain a screenshot by pressing "s" in the "flutter run" console.');
     print('Or, use the flutter screenshot command while the app is running.');
-    print('BASH: export FILE=flutter_01.png # or whatever the file name is');
     for (CurveDescription curve in curves) {
       final RenderBox box = curve.key.currentContext.findRenderObject();
       final Rect area = (box.localToGlobal(Offset.zero) * ui.window.devicePixelRatio) & (box.size * ui.window.devicePixelRatio);
-      print('BASH: convert \$FILE -crop ${area.width}x${area.height}+${area.left}+${area.top} -resize \'300x300>\' curve_${curve.filename}.png');
+      print('COMMAND: convert flutter_01.png -crop ${area.width}x${area.height}+${area.left}+${area.top} -resize \'300x300>\' curve_${curve.filename}.png');
     }
+    print('DONE DRAWING');
   });
 }
