@@ -10,12 +10,12 @@ import 'package:flutter/material.dart';
 void main() {
   final GlobalKey key = new GlobalKey();
   runApp(
-    new MaterialApp(home: new Container(
-      alignment: FractionalOffset.center,
-      padding: new EdgeInsets.all(40.0),
-      color: Colors.white,
-      child:
-        new Card(
+    new MaterialApp(
+      home: new Container(
+        alignment: FractionalOffset.center,
+        padding: new EdgeInsets.all(40.0),
+        color: Colors.white,
+        child: new Card(
           key: key,
           child: new Column(
             mainAxisSize: MainAxisSize.min,
@@ -25,16 +25,17 @@ void main() {
                 title: const Text('The Enchanted Nightingale'),
                 subtitle: const Text('Music by Julie Gable. Lyrics by Sidney Stein.'),
               ),
-              new ButtonTheme.bar( // make buttons use the appropriate styles for cards
+              new ButtonTheme.bar(
+                // make buttons use the appropriate styles for cards
                 child: new ButtonBar(
                   children: <Widget>[
                     new FlatButton(
                       child: const Text('BUY TICKETS'),
-                      onPressed: () { /* ... */ },
+                      onPressed: () {},
                     ),
                     new FlatButton(
                       child: const Text('LISTEN'),
-                      onPressed: () { /* ... */ },
+                      onPressed: () {},
                     ),
                   ],
                 ),
@@ -42,7 +43,8 @@ void main() {
             ],
           ),
         ),
-     )),
+      ),
+    ),
   );
   new Timer(const Duration(seconds: 1), () {
     print('The following commands extract out the six images from a screenshot file.');

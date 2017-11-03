@@ -6,7 +6,7 @@ import 'dart:convert';
 import 'package:mockito/mockito.dart';
 
 class MockProcessRunner extends Mock implements Function {
-  Future<ProcessResult> call(String executable, List<String> arguments,
+  ProcessResult call(String executable, List<String> arguments,
       {String workingDirectory,
       Map<String, String> environment,
       bool includeParentEnvironment,
@@ -48,12 +48,20 @@ main() {
 
     setUp(() {
       tmpDir = Directory.systemTemp.createTempSync();
-      when(runner.call(typed(captureAny), typed(captureAny),
-          workingDirectory: typed(captureAny, named: "workingDirectory")))
-          .thenReturn(new Future<MockProcessResult>.value(new MockProcessResult()));
-      when(starter.call(typed(captureAny), typed(captureAny),
-          workingDirectory: typed(captureAny, named: "workingDirectory")))
-          .thenReturn(new Future<MockProcess>.value(new MockProcess()));
+      when(
+        runner.call(
+          typed(captureAny),
+          typed(captureAny),
+          workingDirectory: typed(captureAny, named: "workingDirectory"),
+        ),
+      ).thenReturn(new Future<MockProcessResult>.value(new MockProcessResult()));
+      when(
+        starter.call(
+          typed(captureAny),
+          typed(captureAny),
+          workingDirectory: typed(captureAny, named: "workingDirectory"),
+        ),
+      ).thenReturn(new Future<MockProcess>.value(new MockProcess()));
       generator = new DiagramGenerator('dartFile.dart', "/route",
           processRunner: runner, processStarter: starter, tmpDir: tmpDir, cleanup: false);
     });

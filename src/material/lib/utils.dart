@@ -44,11 +44,18 @@ class Label {
 typedef void PaintMessageCallback(String message);
 
 class Labeller extends CustomPainter {
-  Labeller({ this.labels, this.heroKey, this.canvasKey, @required this.filename, this.onPaintMessage: print }) {
+  Labeller(
+      {this.labels,
+      this.heroKey,
+      this.canvasKey,
+      @required this.filename,
+      this.onPaintMessage: print}) {
     assert(onPaintMessage != null);
     _painters = <Label, TextPainter>{};
     for (Label label in labels) {
-      final TextPainter painter = new TextPainter(text: new TextSpan(text: label.text, style: _labelTextStyle));
+      final TextPainter painter = new TextPainter(
+          textDirection: TextDirection.ltr,
+          text: new TextSpan(text: label.text, style: _labelTextStyle));
       painter.layout();
       _painters[label] = painter;
     }
@@ -89,10 +96,14 @@ class Labeller extends CustomPainter {
       Offset labelPosition;
       Offset textPosition = Offset.zero;
       final TextPainter painter = _painters[label];
-      if (distanceToTop <= distanceToLeft && distanceToTop <= distanceToRight && distanceToTop <= distanceToBottom) {
+      if (distanceToTop <= distanceToLeft &&
+          distanceToTop <= distanceToRight &&
+          distanceToTop <= distanceToBottom) {
         labelPosition = new Offset(anchor.dx + (relativeAnchor.dx - 0.5) * margin, heroTopLeft.dy - margin);
         textPosition = new Offset(labelPosition.dx - painter.width / 2.0, labelPosition.dy - painter.height);
-      } else if (distanceToBottom < distanceToLeft && distanceToBottom < distanceToRight && distanceToTop > distanceToBottom) {
+      } else if (distanceToBottom < distanceToLeft &&
+          distanceToBottom < distanceToRight &&
+          distanceToTop > distanceToBottom) {
         labelPosition = new Offset(anchor.dx, heroTopLeft.dy + hero.size.height + margin);
         textPosition = new Offset(labelPosition.dx - painter.width / 2.0, labelPosition.dy);
       } else if (distanceToLeft < distanceToRight) {
@@ -133,7 +144,9 @@ class Labeller extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(Labeller oldDelegate) => labels != oldDelegate.labels || canvasKey != oldDelegate.canvasKey;
+  bool shouldRepaint(Labeller oldDelegate) {
+    return labels != oldDelegate.labels || canvasKey != oldDelegate.canvasKey;
+  }
 
   @override
   bool hitTest(Offset position) => false;

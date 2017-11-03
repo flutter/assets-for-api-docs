@@ -7,7 +7,8 @@ import 'package:path/path.dart' as path;
 
 /// The type of the process runner callback.  This allows us to
 /// inject a fake process runner into the DiagramGenerator for tests.
-typedef Future<ProcessResult> ProcessRunner(String executable, List<String> arguments,
+typedef ProcessResult ProcessRunner(
+    String executable, List<String> arguments,
     {String workingDirectory,
     Map<String, String> environment,
     bool includeParentEnvironment,
@@ -15,7 +16,7 @@ typedef Future<ProcessResult> ProcessRunner(String executable, List<String> argu
     Encoding stdoutEncoding,
     Encoding stderrEncoding});
 
-/// The type of the process starter callback.  This allows us to
+/// The type of the process starter callback. This allows us to
 /// inject a fake process starter into the DiagramGenerator for tests.
 typedef Future<Process> ProcessStarter(String executable, List<String> arguments,
     {String workingDirectory,
@@ -26,28 +27,28 @@ typedef Future<Process> ProcessStarter(String executable, List<String> arguments
 
 /// Generates diagrams from dart programs for use in the online documentation.
 ///
-/// Runs a dart program in the background, waits for it to indicate that it is done by
-/// printing "DONE DRAWING", and then captures the display and chops it up according to
-/// the shell commands output by the application.
+/// Runs a dart program in the background, waits for it to indicate that it is
+/// done by printing "DONE DRAWING", and then captures the display and chops it
+/// up according to the shell commands output by the application.
 class DiagramGenerator {
   DiagramGenerator(String dartFile, this._initialRoute,
-      {this.processRunner = Process.run,
+      {this.processRunner = Process.runSync,
       this.processStarter = Process.start,
       this.tmpDir,
       this.cleanup = true})
       : _dartPath = path.join(projectDir, dartFile),
         _diagramType = path.split(path.dirname(dartFile)).last,
         _name = path.basenameWithoutExtension(dartFile) {
-    tmpDir ??= Directory.systemTemp.createTempSync();
-    print("Dart Path: ${_dartPath}");
-    print("Initial Route: ${_initialRoute}");
-    print("Diagram Type: ${_diagramType}");
-    print("Name: ${_name}");
-    print("Temp Dir: ${tmpDir}");
+    tmpDir ??= Directory.systemTemp.createTempSync('api_generate_');
+    print('Dart Path: $_dartPath');
+    print('Initial Route: $_initialRoute');
+    print('Diagram Type: $_diagramType');
+    print('Name: $_name');
+    print('Temp Dir: $tmpDir');
   }
 
-  static const String kFlutterCommand = 'flutter';
-  static const String kOptiPngCommand = 'optipng';
+  static const String flutterCommand = 'flutter';
+  static const String optiPngCommand = 'optipng';
 
   /// Whether or not to cleanup the tmpDir after generating diagrams.
   final bool cleanup;
@@ -64,14 +65,15 @@ class DiagramGenerator {
   /// The type of diagram this is, e.g. 'material' or 'animation'
   final String _diagramType;
 
-  /// The initial route to invoke in the dart program, if any.  May be null.
+  /// The initial route to invoke in the dart program, if any. May be null.
   final String _initialRoute;
 
-  /// The name of this diagram, used for filenames, e.g. 'card' or 'curve'.  Cropped out
-  /// images will all begin with this name.
+  /// The name of this diagram, used for filenames, e.g. 'card' or 'curve'.
+  /// Cropped out images will all begin with this name.
   final String _name;
 
-  /// The temporary directory used to write screenshots and cropped out images into.
+  /// The temporary directory used to write screenshots and cropped out images
+  /// into.
   Directory tmpDir;
 
   static String get projectDir =>
@@ -85,14 +87,19 @@ class DiagramGenerator {
     }
   }
 
-  Future<ProcessResult> _captureScreenshot(String outputName) async {
-    print('Capturing screenshot into ${outputName}.');
-    return processRunner(kFlutterCommand, ['screenshot', '--out=${outputName}'],
+  bool _captureScreenshot(String outputName) {
+    print('Capturing screenshot into $outputName.');
+    ProcessResult processResult = processRunner(flutterCommand, ['screenshot', '--out=$outputName'],
         workingDirectory: projectDir);
+    if (processResult.exitCode != 0) {
+      print("Failed to run command '$flutterCommand screenshot --out=$outputName' in ${tmpDir.path}:\n${processResult.stderr}");
+      return false;
+    }
+    return true;
   }
 
   Future<Null> _collectScreenshot() async {
-    print("Collecting Image from ${_dartPath}.");
+    print('Collecting Image from $_dartPath.');
 
     // This is run in the background and later killed because running with
     // --no-resident doesn't keep producing stdout long enough before it exits
@@ -100,30 +107,29 @@ class DiagramGenerator {
     // animations to complete.
     List<String> args = _initialRoute == null
         ? ['run', _dartPath]
-        : ['run', '--route=${_initialRoute}', _dartPath];
-    print("Running app ${_dartPath}.");
-    Process process =
-        await processStarter(kFlutterCommand, args, workingDirectory: projectDir);
+        : ['run', '--route=$_initialRoute', _dartPath];
+    print('Running app $_dartPath.');
+    Process process = await processStarter(flutterCommand, args, workingDirectory: projectDir);
     List<String> lines = [];
-    process.stderr.transform(UTF8.decoder).listen((data) {
-      stderr.write(data);
-    });
     process.stdout.transform(UTF8.decoder).listen((data) {
-      stdout.write(data);
       lines.add(data);
     });
     DateTime startWait = new DateTime.now();
-    while (!lines.join('').contains("DONE DRAWING") &&
+    while (!lines.join('').contains('DONE DRAWING') &&
         (new DateTime.now().difference(startWait) < new Duration(seconds: 60))) {
-      print("\rRunning (${new DateTime.now().difference(startWait).inSeconds} seconds).");
+      stdout.write('\rRunning (${new DateTime.now().difference(startWait).inSeconds} seconds).');
       await new Future.delayed(new Duration(seconds: 1));
     }
+    stdout.write('\n');
 
-    // Wait one more second once we see DONE DRAWING so that things have a chance to calm
-    // down.
+    // Wait one more second once we see DONE DRAWING so that things have a
+    // chance to calm down.
     await new Future.delayed(new Duration(seconds: 1));
-    print("Capturing screenshot.");
-    await _captureScreenshot(path.join(tmpDir.path, 'flutter_01.png'));
+    if (!_captureScreenshot(path.join(tmpDir.path, 'flutter_01.png'))) {
+      process.kill();
+      return;
+    }
+    await new Future.delayed(new Duration(seconds: 1));
     process.kill();
 
     // Have to join/re-split lines because the stream data comes in chunks that
@@ -133,7 +139,6 @@ class DiagramGenerator {
 
   Future<Null> _processScreenshot(List<String> appOutput) async {
     List<String> commands = [];
-
     for (String data in appOutput) {
       RegExp cmdRe = new RegExp(r'^I/flutter.*COMMAND: (.*)');
       Match match = cmdRe.matchAsPrefix(data.trim());
@@ -141,7 +146,6 @@ class DiagramGenerator {
         commands.add(match.group(1));
       }
     }
-
     if (commands.isNotEmpty) {
       for (String command in commands) {
         // Split command into args and get rid of any quotes around arguments,
@@ -150,16 +154,14 @@ class DiagramGenerator {
           final quoteRe = new RegExp(r'''['\"](.*)['\"]''');
           return quoteRe.firstMatch(arg)?.group(1) ?? arg;
         }).toList();
-        Process process = await Process.start(commandArgs[0], commandArgs.sublist(1),
+        ProcessResult processResult = processRunner(commandArgs[0], commandArgs.sublist(1),
             workingDirectory: tmpDir.path);
-        stdout.addStream(process.stdout);
-        stderr.addStream(process.stderr);
-        if (await process.exitCode != 0) {
-          print("Failed to run command ${commandArgs}.");
+        if (processResult.exitCode != 0) {
+          print("Failed to run command '$command' in ${tmpDir.path}:\n${processResult.stderr}");
         }
       }
     } else {
-      print("Unable to find any commands in the output of the generator.");
+      print('Unable to find any commands in the output of the generator.');
     }
   }
 
@@ -167,8 +169,7 @@ class DiagramGenerator {
     Directory destDir = new Directory(path.joinAll(path.split(projectDir)
       ..removeLast()
       ..add(_diagramType)));
-    List<String> images =
-        (await tmpDir.list().toList()).map((FileSystemEntity e) => e.path);
+    List<String> images = (await tmpDir.list().toList()).map((FileSystemEntity e) => e.path).toList();
     for (String imagePath in images) {
       FileSystemEntityType type = await FileSystemEntity.type(imagePath);
       if (type == FileSystemEntityType.FILE &&
@@ -176,16 +177,15 @@ class DiagramGenerator {
           path.basename(imagePath).toLowerCase().startsWith(_name)) {
         File destination = new File(path.join(destDir.path, path.basename(imagePath)));
         if (await destination.exists()) await destination.delete();
-        print("Optimizing PNG file ${imagePath} into ${destination.path}");
-        Process process = await Process.start(kOptiPngCommand,
+        print('Optimizing PNG file.');
+        final ProcessResult processResult = processRunner(optiPngCommand,
             ['-zc1-9', '-zm1-9', '-zs0-3', '-f0-5', imagePath, '-out', destination.path],
             workingDirectory: tmpDir.path);
-        stdout.addStream(process.stdout);
-        stderr.addStream(process.stderr);
-        if (await process.exitCode != 0)
-          print("Failed to convert ${imagePath}.");
-        else
-          print("Converted ${imagePath}");
+        if (processResult.exitCode != 0) {
+          print('Failed to optimize $imagePath:\n${processResult.stderr}');
+        } else {
+          print('Done optimizing $imagePath into ${destination.path}');
+        }
       }
     }
   }
@@ -276,7 +276,7 @@ Future<Null> main(List<String> arguments) async {
     String route = parts.length > 1 ? parts[1] : null;
     DiagramGenerator generator = new DiagramGenerator(app, route, cleanup: !flags['keep_tmp']);
     await generator.generateDiagram();
-    print("Finished ${diagram}");
+    print('Finished $diagram');
   }
 
   exit(0);

@@ -9,8 +9,8 @@ import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
 
 class CurveDescription extends CustomPainter {
-  CurveDescription(this.filename, this.caption, this.curve) :
-    _caption = _createLabelPainter(caption);
+  CurveDescription(this.filename, this.caption, this.curve)
+      : _caption = _createLabelPainter(caption);
 
   final String filename;
 
@@ -20,21 +20,23 @@ class CurveDescription extends CustomPainter {
 
   GlobalKey get key => new GlobalObjectKey(this);
 
-  Widget get widget => new KeyedSubtree(
-    key: key,
-    child: new ConstrainedBox(
-      constraints: new BoxConstraints(maxWidth: 130.0),
-      child: new AspectRatio(
-        aspectRatio: 1.7,
-        child: new Padding(
-          padding: new EdgeInsets.all(ui.window.devicePixelRatio),
-          child: new CustomPaint(
-            painter: this,
+  Widget get widget {
+    return new KeyedSubtree(
+      key: key,
+      child: new ConstrainedBox(
+        constraints: new BoxConstraints(maxWidth: 130.0),
+        child: new AspectRatio(
+          aspectRatio: 1.7,
+          child: new Padding(
+            padding: new EdgeInsets.all(ui.window.devicePixelRatio),
+            child: new CustomPaint(
+              painter: this,
+            ),
           ),
         ),
       ),
-    ),
-  );
+    );
+  }
 
   static TextPainter _t = _createLabelPainter('t', style: FontStyle.italic);
   static TextPainter _x = _createLabelPainter('x', style: FontStyle.italic);
@@ -42,8 +44,9 @@ class CurveDescription extends CustomPainter {
   static TextPainter _one = _createLabelPainter('1.0');
   final TextPainter _caption;
 
-  static TextPainter _createLabelPainter(String label, { FontStyle style: FontStyle.normal }) {
+  static TextPainter _createLabelPainter(String label, {FontStyle style: FontStyle.normal}) {
     TextPainter result = new TextPainter(
+      textDirection: TextDirection.ltr,
       text: new TextSpan(
         text: label,
         style: new TextStyle(
@@ -51,7 +54,7 @@ class CurveDescription extends CustomPainter {
           fontStyle: style,
           fontSize: 6.0,
         ),
-      )
+      ),
     );
     result.layout();
     return result;
@@ -109,10 +112,16 @@ class CurveDescription extends CustomPainter {
     _one.paint(canvas, new Offset(area.left - leftMargin, area.top - _one.height / 2.0));
     _x.paint(canvas, new Offset(unit, (area.bottom) / 2.0));
     _zero.paint(canvas, new Offset(area.left - leftMargin, area.bottom - _zero.height / 2.0));
-    _t.paint(canvas, new Offset(size.width - rightMargin + unit, area.bottom - _t.height / 2.0));
-    _caption.paint(canvas, new Offset(leftMargin + (area.width - _caption.width) / 2.0, size.height - (verticalHeadroom + _caption.height) / 2.0));
-    Path graph = new Path()
-      ..moveTo(area.left, area.bottom);
+    _t.paint(
+        canvas, new Offset(size.width - rightMargin + unit, area.bottom - _t.height / 2.0));
+    _caption.paint(
+      canvas,
+      new Offset(
+        leftMargin + (area.width - _caption.width) / 2.0,
+        size.height - (verticalHeadroom + _caption.height) / 2.0,
+      ),
+    );
+    Path graph = new Path()..moveTo(area.left, area.bottom);
     for (double t = 0.0; t <= 1.0; t += 1.0 / (area.width * ui.window.devicePixelRatio)) {
       Offset point = new FractionalOffset(t, 1.0 - curve.transform(t)).withinRect(area);
       graph.lineTo(point.dx, point.dy);
@@ -122,8 +131,7 @@ class CurveDescription extends CustomPainter {
 
   @override
   bool shouldRepaint(CurveDescription oldDelegate) {
-    return caption != oldDelegate.caption
-        || curve != oldDelegate.curve;
+    return caption != oldDelegate.caption || curve != oldDelegate.curve;
   }
 }
 

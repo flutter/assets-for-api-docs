@@ -35,7 +35,7 @@ abstract class Page {
         print('COMMAND: convert flutter_${(pageIndex + 1).toString().padLeft(
             2, '0')}.png -crop '
             '${area.width}x${area.height}+${area.left}+${area.top} -resize '
-            '\'400x600>\' ${name}.png');
+            '\'400x600>\' $name.png');
       }
     });
     return new GestureDetector(
@@ -70,10 +70,9 @@ class SwatchPage extends Page {
   Widget build(BuildContext context) {
     List<Widget> items = <Widget>[];
     for (int key in keys) {
-      Color textColor =
-          ThemeData.estimateBrightnessForColor(swatch[key]) == Brightness.light
-              ? Colors.black
-              : Colors.white;
+      Color textColor = ThemeData.estimateBrightnessForColor(swatch[key]) == Brightness.light
+          ? Colors.black
+          : Colors.white;
       TextStyle style = new TextStyle(color: textColor);
       String label;
       if (swatch[key].value == swatch.value) {
@@ -89,8 +88,7 @@ class SwatchPage extends Page {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             new Text(label, style: style),
-            new Text('0x${swatch[key].value.toRadixString(16).toUpperCase()}',
-                style: style),
+            new Text('0x${swatch[key].value.toRadixString(16).toUpperCase()}', style: style),
           ],
         ),
       ));
@@ -134,8 +132,7 @@ class ColorListPage extends Page {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             new Text(key, style: style),
-            new Text('0x${textColor.value.toRadixString(16).toUpperCase()}',
-                style: style),
+            new Text('0x${textColor.value.toRadixString(16).toUpperCase()}', style: style),
           ],
         ),
       ));
@@ -236,16 +233,16 @@ Future<Null> main() async {
       if (settings.name == Navigator.defaultRouteName) {
         return new MaterialPageRoute(
           builder: (BuildContext context) => new GestureDetector(
-                onTap: () {
-                  Page.pageIndex = 0;
-                  Navigator.of(context).pushNamed(pages[0].name);
-                },
-                child: new Scaffold(
-                  body: new Center(
-                    child: new Text("Tap to proceed", textScaleFactor: 2.0),
-                  ),
-                ),
+            onTap: () {
+              Page.pageIndex = 0;
+              Navigator.of(context).pushNamed(pages[0].name);
+            },
+            child: new Scaffold(
+              body: new Center(
+                child: new Text("Tap to proceed", textScaleFactor: 2.0),
               ),
+            ),
+          ),
         );
       }
       return new MaterialPageRoute<Null>(

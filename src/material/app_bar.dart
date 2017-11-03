@@ -9,11 +9,13 @@ import 'lib/utils.dart';
 
 void main() {
   runApp(new Diagram());
-  new Timer(const Duration(seconds: 1), () { print('DONE DRAWING'); });
+  new Timer(const Duration(seconds: 1), () {
+    print('DONE DRAWING');
+  });
 }
 
 class Diagram extends StatefulWidget {
-  Diagram({ Key key }) : super(key: key);
+  Diagram({Key key}) : super(key: key);
 
   @override
   _DiagramState createState() => new _DiagramState();
@@ -81,8 +83,7 @@ class _DiagramState extends State<Diagram> {
                         gradient: new LinearGradient(
                           begin: new FractionalOffset(0.50, 0.0),
                           end: new FractionalOffset(0.48, 1.0),
-                          colors: [Colors.blue.shade500, Colors.blue.shade800]
-                        ),
+                          colors: [Colors.blue.shade500, Colors.blue.shade800]),
                       ),
                     ),
                     bottom: new PreferredSize(

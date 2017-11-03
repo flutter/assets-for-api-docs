@@ -23,7 +23,8 @@ void main() {
     const Duration(milliseconds: 1000),
     () {
       final RenderBox target = splashKey.currentContext.findRenderObject();
-      final Offset targetOffset = target.localToGlobal(target.size.bottomRight(Offset.zero)) * ui.window.devicePixelRatio;
+      final Offset targetOffset = target.localToGlobal(target.size.bottomRight(Offset.zero)) *
+          ui.window.devicePixelRatio;
       ui.window.onPointerDataPacket(new ui.PointerDataPacket(data: <ui.PointerData>[
         new ui.PointerData(
           change: ui.PointerChange.down,
@@ -65,7 +66,9 @@ class _DiagramState extends State<Diagram> {
       heroKey: heroKey,
       canvasKey: canvasKey,
       filename: 'ink_well.png',
-      onPaintMessage: (String message) { currentMessage = message; },
+      onPaintMessage: (String message) {
+        currentMessage = message;
+      },
     );
   }
 
@@ -86,7 +89,7 @@ class _DiagramState extends State<Diagram> {
                 height: 100.0,
                 child: new InkWell(
                   key: heroKey,
-                  onTap: () { },
+                  onTap: () {},
                   child: new Hole(
                     color: Colors.blue,
                     key: childKey,

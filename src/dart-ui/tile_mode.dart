@@ -26,19 +26,25 @@ void main() {
     final double top = (topPadding + spacing) * ui.window.devicePixelRatio;
     double x = left;
     double y = top;
-    print('COMMAND: convert flutter_01.png -crop ${w}x$h+$x+$y -resize \'200x200>\' tile_mode_clamp_linear.png');
+    print("COMMAND: convert flutter_01.png -crop ${w}x$h+$x+$y -resize '200x200>' "
+        "tile_mode_clamp_linear.png");
     x += xStride;
-    print('COMMAND: convert flutter_01.png -crop ${w}x$h+$x+$y -resize \'200x200>\' tile_mode_clamp_radial.png');
+    print("COMMAND: convert flutter_01.png -crop ${w}x$h+$x+$y -resize '200x200>' "
+        "tile_mode_clamp_radial.png");
     x = left;
     y += yStride;
-    print('COMMAND: convert flutter_01.png -crop ${w}x$h+$x+$y -resize \'200x200>\' tile_mode_repeated_linear.png');
+    print("COMMAND: convert flutter_01.png -crop ${w}x$h+$x+$y -resize '200x200>' "
+        "tile_mode_repeated_linear.png");
     x += xStride;
-    print('COMMAND: convert flutter_01.png -crop ${w}x$h+$x+$y -resize \'200x200>\' tile_mode_repeated_radial.png');
+    print("COMMAND: convert flutter_01.png -crop ${w}x$h+$x+$y -resize '200x200>' "
+        "tile_mode_repeated_radial.png");
     x = left;
     y += yStride;
-    print('COMMAND: convert flutter_01.png -crop ${w}x$h+$x+$y -resize \'200x200>\' tile_mode_mirror_linear.png');
+    print("COMMAND: convert flutter_01.png -crop ${w}x$h+$x+$y -resize '200x200>' "
+        "tile_mode_mirror_linear.png");
     x += xStride;
-    print('COMMAND: convert flutter_01.png -crop ${w}x$h+$x+$y -resize \'200x200>\' tile_mode_mirror_radial.png');
+    print("COMMAND: convert flutter_01.png -crop ${w}x$h+$x+$y -resize '200x200>' "
+        "tile_mode_mirror_radial.png");
     print('DONE DRAWING');
   });
 }
@@ -55,40 +61,46 @@ class Demo extends StatelessWidget {
       style: new TextStyle(
         color: const Color(0xFF000000),
       ),
-      child: new Container(
-        margin: new EdgeInsets.all(spacing),
-        width: width,
-        decoration: new BoxDecoration(
-          border: new Border.all(width: borderSize),
-          color: const Color(0xFFFFFFFF),
-        ),
-        child: new Column(
-          children: <Widget>[
-            new Expanded(
-              child: new Container(
-                decoration: new BoxDecoration(
-                  gradient: radial ? new RadialGradient(
-                    center: FractionalOffset.center,
-                    radius: 0.2,
-                    colors: [const Color(0xFF0000FF), const Color(0xFF00FF00)],
-                    stops: [0.0, 1.0],
-                    tileMode: tileMode,
-                  ) : new LinearGradient(
-                    begin: const FractionalOffset(0.4, 0.5),
-                    end: const FractionalOffset(0.6, 0.5),
-                    colors: [const Color(0xFF0000FF), const Color(0xFF00FF00)],
-                    stops: [0.0, 1.0],
-                    tileMode: tileMode,
+      child: new Directionality(
+        textDirection: TextDirection.ltr,
+        child: new Container(
+          margin: new EdgeInsets.all(spacing),
+          width: width,
+          decoration: new BoxDecoration(
+            border: new Border.all(width: borderSize),
+            color: const Color(0xFFFFFFFF),
+          ),
+          child: new Column(
+            children: <Widget>[
+              new Expanded(
+                child: new Container(
+                  decoration: new BoxDecoration(
+                    gradient: radial
+                      ? new RadialGradient(
+                        center: FractionalOffset.center,
+                        radius: 0.2,
+                        colors: [const Color(0xFF0000FF), const Color(0xFF00FF00)],
+                        stops: [0.0, 1.0],
+                        tileMode: tileMode,
+                        )
+                      : new LinearGradient(
+                        begin: const FractionalOffset(0.4, 0.5),
+                        end: const FractionalOffset(0.6, 0.5),
+                        colors: [const Color(0xFF0000FF), const Color(0xFF00FF00)],
+                        stops: [0.0, 1.0],
+                        tileMode: tileMode,
+                        ),
+                    border: new Border(bottom: new BorderSide(width: 1.0)),
                   ),
-                  border: new Border(bottom: new BorderSide(width: 1.0)),
                 ),
               ),
-            ),
-            new Container(height: 3.0),
-            new Text('${radial ? "Radial" : "Linear"} Gradient', textAlign: TextAlign.center),
-            new Text('$tileMode', textAlign: TextAlign.center),
-            new Container(height: 3.0),
-          ],
+              new Container(height: 3.0),
+              new Text('${radial ? "Radial" : "Linear"} Gradient',
+                  textAlign: TextAlign.center),
+              new Text('$tileMode', textAlign: TextAlign.center),
+              new Container(height: 3.0),
+            ],
+          ),
         ),
       ),
     );
@@ -98,31 +110,34 @@ class Demo extends StatelessWidget {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return new Container(
-      color: const Color(0xFF00FFFF),
-      child: new ListView(
-        padding: new EdgeInsets.only(top: topPadding),
-        itemExtent: height,
-        children: <Widget>[
-          new Row(
-            children: <Widget>[
-              new Demo(false, TileMode.clamp),
-              new Demo(true, TileMode.clamp),
-            ],
-          ),
-         new Row(
-            children: <Widget>[
-              new Demo(false, TileMode.repeated),
-              new Demo(true, TileMode.repeated),
-            ],
-          ),
-          new Row(
-            children: <Widget>[
-              new Demo(false, TileMode.mirror),
-              new Demo(true, TileMode.mirror),
-            ],
-          ),
-        ],
+    return new Directionality(
+      textDirection: TextDirection.ltr,
+      child: new Container(
+        color: const Color(0xFF00FFFF),
+        child: new ListView(
+          padding: new EdgeInsets.only(top: topPadding),
+          itemExtent: height,
+          children: <Widget>[
+            new Row(
+              children: <Widget>[
+                new Demo(false, TileMode.clamp),
+                new Demo(true, TileMode.clamp),
+              ],
+            ),
+            new Row(
+              children: <Widget>[
+                new Demo(false, TileMode.repeated),
+                new Demo(true, TileMode.repeated),
+              ],
+            ),
+            new Row(
+              children: <Widget>[
+                new Demo(false, TileMode.mirror),
+                new Demo(true, TileMode.mirror),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

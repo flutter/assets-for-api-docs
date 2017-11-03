@@ -19,5 +19,12 @@ For usage, run `dart ./generate.dart --help`.
 
 ### Prerequisites
 
-  - ImageMagick (`brew install imagemagick`).
-  - optipng (`brew install optipng`).
+  - ImageMagick (`brew install imagemagick` on MacOS, `apt-get install imagemagick` on Ubuntu).
+  - optipng (`brew install optipng` on MacOS, `apt-get install optipng` on Ubuntu).
+
+### Adding new code
+
+To add a new asset generator, add your generator's `.dart` file under the appropriate
+section, and add it to the list of overall generators in the generate.dart script,
+under either the vertical or horizontal list, depending upon which aspect your
+generator needs.

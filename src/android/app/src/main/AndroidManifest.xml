@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.yourcompany.src"
+    package="io.flutter.src"
     android:versionCode="1"
     android:versionName="0.0.1">
 

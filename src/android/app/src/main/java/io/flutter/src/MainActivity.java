@@ -1,4 +1,4 @@
-package com.yourcompany.src;
+package io.flutter.src;
 
 import android.os.Bundle;
 
