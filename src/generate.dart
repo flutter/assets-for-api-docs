@@ -5,22 +5,58 @@ import 'dart:convert';
 import 'package:args/args.dart';
 import 'package:path/path.dart' as path;
 
+/// The type of the process runner callback.  This allows us to
+/// inject a fake process runner into the DiagramGenerator for tests.
+typedef Future<ProcessResult> ProcessRunner(String executable, List<String> arguments,
+    {String workingDirectory,
+    Map<String, String> environment,
+    bool includeParentEnvironment,
+    bool runInShell,
+    Encoding stdoutEncoding,
+    Encoding stderrEncoding});
+
+/// The type of the process starter callback.  This allows us to
+/// inject a fake process starter into the DiagramGenerator for tests.
+typedef Future<Process> ProcessStarter(String executable, List<String> arguments,
+    {String workingDirectory,
+    Map<String, String> environment,
+    bool includeParentEnvironment,
+    bool runInShell,
+    ProcessStartMode mode});
+
 /// Generates diagrams from dart programs for use in the online documentation.
 ///
 /// Runs a dart program in the background, waits for it to indicate that it is done by
 /// printing "DONE DRAWING", and then captures the display and chops it up according to
 /// the shell commands output by the application.
 class DiagramGenerator {
-  DiagramGenerator(String dartFile, this._initialRoute)
+  DiagramGenerator(String dartFile, this._initialRoute,
+      {this.processRunner = Process.run,
+      this.processStarter = Process.start,
+      this.tmpDir,
+      this.cleanup = true})
       : _dartPath = path.join(projectDir, dartFile),
         _diagramType = path.split(path.dirname(dartFile)).last,
         _name = path.basenameWithoutExtension(dartFile) {
-    _tmpDir = Directory.systemTemp.createTempSync();
+    tmpDir ??= Directory.systemTemp.createTempSync();
     print("Dart Path: ${_dartPath}");
     print("Initial Route: ${_initialRoute}");
     print("Diagram Type: ${_diagramType}");
     print("Name: ${_name}");
+    print("Temp Dir: ${tmpDir}");
   }
+
+  static const String kFlutterCommand = 'flutter';
+  static const String kOptiPngCommand = 'optipng';
+
+  /// Whether or not to cleanup the tmpDir after generating diagrams.
+  final bool cleanup;
+
+  /// The function used to run processes to completion.
+  final ProcessRunner processRunner;
+
+  /// The function used to start processes and create a Process object.
+  final ProcessStarter processStarter;
 
   /// The path to the dart program to be run for generating the diagram.
   final String _dartPath;
@@ -36,7 +72,7 @@ class DiagramGenerator {
   final String _name;
 
   /// The temporary directory used to write screenshots and cropped out images into.
-  Directory _tmpDir;
+  Directory tmpDir;
 
   static String get projectDir =>
       path.joinAll(path.split(path.fromUri(Platform.script))..removeLast());
@@ -44,23 +80,19 @@ class DiagramGenerator {
   Future<Null> generateDiagram() async {
     await _collectScreenshot();
     await _optimizeImages();
-    await _tmpDir.delete(recursive: true);
+    if (cleanup) {
+      await tmpDir.delete(recursive: true);
+    }
   }
 
   Future<ProcessResult> _captureScreenshot(String outputName) async {
     print('Capturing screenshot into ${outputName}.');
-    return Process.run('flutter', ['screenshot', '--out=${outputName}'],
+    return processRunner(kFlutterCommand, ['screenshot', '--out=${outputName}'],
         workingDirectory: projectDir);
   }
 
   Future<Null> _collectScreenshot() async {
     print("Collecting Image from ${_dartPath}.");
-
-    // TODO(gspencer): Remove this clean step once the bug below is fixed:
-    // https://github.com/flutter/flutter/issues/11400
-    // Until the bug is fixed, we'll have to rebuild every time, which make things slow.
-    print("Cleaning build.");
-    await Process.run('flutter', ['build', 'clean'], workingDirectory: projectDir);
 
     // This is run in the background and later killed because running with
     // --no-resident doesn't keep producing stdout long enough before it exits
@@ -70,7 +102,8 @@ class DiagramGenerator {
         ? ['run', _dartPath]
         : ['run', '--route=${_initialRoute}', _dartPath];
     print("Running app ${_dartPath}.");
-    Process process = await Process.start('flutter', args, workingDirectory: projectDir);
+    Process process =
+        await processStarter(kFlutterCommand, args, workingDirectory: projectDir);
     List<String> lines = [];
     process.stderr.transform(UTF8.decoder).listen((data) {
       stderr.write(data);
@@ -90,7 +123,7 @@ class DiagramGenerator {
     // down.
     await new Future.delayed(new Duration(seconds: 1));
     print("Capturing screenshot.");
-    await _captureScreenshot(path.join(_tmpDir.path, 'flutter_01.png'));
+    await _captureScreenshot(path.join(tmpDir.path, 'flutter_01.png'));
     process.kill();
 
     // Have to join/re-split lines because the stream data comes in chunks that
@@ -118,7 +151,7 @@ class DiagramGenerator {
           return quoteRe.firstMatch(arg)?.group(1) ?? arg;
         }).toList();
         Process process = await Process.start(commandArgs[0], commandArgs.sublist(1),
-            workingDirectory: _tmpDir.path);
+            workingDirectory: tmpDir.path);
         stdout.addStream(process.stdout);
         stderr.addStream(process.stderr);
         if (await process.exitCode != 0) {
@@ -135,7 +168,7 @@ class DiagramGenerator {
       ..removeLast()
       ..add(_diagramType)));
     List<String> images =
-        (await _tmpDir.list().toList()).map((FileSystemEntity e) => e.path);
+        (await tmpDir.list().toList()).map((FileSystemEntity e) => e.path);
     for (String imagePath in images) {
       FileSystemEntityType type = await FileSystemEntity.type(imagePath);
       if (type == FileSystemEntityType.FILE &&
@@ -144,9 +177,9 @@ class DiagramGenerator {
         File destination = new File(path.join(destDir.path, path.basename(imagePath)));
         if (await destination.exists()) await destination.delete();
         print("Optimizing PNG file ${imagePath} into ${destination.path}");
-        Process process = await Process.start('optipng',
+        Process process = await Process.start(kOptiPngCommand,
             ['-zc1-9', '-zm1-9', '-zs0-3', '-f0-5', imagePath, '-out', destination.path],
-            workingDirectory: _tmpDir.path);
+            workingDirectory: tmpDir.path);
         stdout.addStream(process.stdout);
         stderr.addStream(process.stderr);
         if (await process.exitCode != 0)
@@ -215,10 +248,11 @@ Future<Null> main(List<String> arguments) async {
       help: 'Select all of the "horizontal" aspect generators to be run.');
   parser.addFlag('vertical',
       help: 'Select all of the "vertical" aspect generators to be run.');
-  parser.addFlag('help',  help: 'Print help.');
+  parser.addFlag('help', help: 'Print help.');
+  parser.addFlag('keep_tmp', help: "Don't cleanup after a run (don't remove tmpdir).");
   ArgResults flags = parser.parse(arguments);
 
-  if (flags['help']){
+  if (flags['help']) {
     print(parser.usage);
     exit(0);
   }
@@ -240,7 +274,7 @@ Future<Null> main(List<String> arguments) async {
     List<String> parts = diagram.split('@');
     String app = parts[0];
     String route = parts.length > 1 ? parts[1] : null;
-    DiagramGenerator generator = new DiagramGenerator(app, route);
+    DiagramGenerator generator = new DiagramGenerator(app, route, cleanup: !flags['keep_tmp']);
     await generator.generateDiagram();
     print("Finished ${diagram}");
   }
