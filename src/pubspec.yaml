@@ -1,0 +1,11 @@
+name: asset_generators
+dependencies:
+  args: any
+  path: "^1.4.2"
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  mockito: any

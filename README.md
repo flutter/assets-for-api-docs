@@ -32,9 +32,7 @@ the `tests` directory should not be optimised.
 
 ## Generation
 
-Please consider generating images from some sort of source code rather
-than by hand. For example, have a little Flutter program that
-generates the PNGs so that we can easily re-run the program and
-regenerate the images if we want to e.g. change the resolution or
-adjust the text slightly. For an example,
-see [tile_mode.dart](dart-ui/tile_mode.dart).
+See the [documentation for the generate.dart script in the src
+directory](src/README.md), which will will generate a number of
+existing assets.  Feel free to add more programs there to generate
+new assets.
