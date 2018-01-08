@@ -9,3 +9,9 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   mockito: any
+
+flutter:
+  assets:
+    - dart-ui/blend_mode_destination.jpeg
+    - dart-ui/blend_mode_source.png
+  uses-material-design: true

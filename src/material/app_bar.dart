@@ -3,19 +3,22 @@
 // found in the LICENSE file.
 
 import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'lib/utils.dart';
 
 void main() {
-  runApp(new Diagram());
+  SystemChrome.setPreferredOrientations(<DeviceOrientation>[DeviceOrientation.landscapeLeft]);
+  runApp(const Diagram());
   new Timer(const Duration(seconds: 1), () {
     print('DONE DRAWING');
   });
 }
 
 class Diagram extends StatefulWidget {
-  Diagram({Key key}) : super(key: key);
+  const Diagram({ Key key }) : super(key: key);
 
   @override
   _DiagramState createState() => new _DiagramState();
@@ -60,7 +63,7 @@ class _DiagramState extends State<Diagram> {
         color: const Color(0xFFFFFFFF),
         child: new MediaQuery(
           data: new MediaQueryData(
-            padding: new EdgeInsets.all(0.0),
+            padding: const EdgeInsets.all(0.0),
           ),
           child: new Stack(
             children: <Widget>[
@@ -73,17 +76,17 @@ class _DiagramState extends State<Diagram> {
                     leading: new Hole(key: leading),
                     title: new Text('Abc', key: title),
                     actions: <Widget>[
-                      new Hole(),
-                      new Hole(),
+                      const Hole(),
+                      const Hole(),
                       new Hole(key: actions),
                     ],
                     flexibleSpace: new DecoratedBox(
                       key: flexibleSpace,
                       decoration: new BoxDecoration(
                         gradient: new LinearGradient(
-                          begin: new FractionalOffset(0.50, 0.0),
-                          end: new FractionalOffset(0.48, 1.0),
-                          colors: [Colors.blue.shade500, Colors.blue.shade800]),
+                          begin: const FractionalOffset(0.50, 0.0),
+                          end: const FractionalOffset(0.48, 1.0),
+                          colors: <Color>[Colors.blue.shade500, Colors.blue.shade800]),
                       ),
                     ),
                     bottom: new PreferredSize(
@@ -91,8 +94,8 @@ class _DiagramState extends State<Diagram> {
                       preferredSize: const Size(0.0, kToolbarHeight),
                       child: new Container(
                         height: 50.0,
-                        padding: new EdgeInsets.all(4.0),
-                        child: new Placeholder(
+                        padding: const EdgeInsets.all(4.0),
+                        child: const Placeholder(
                           strokeWidth: 2.0,
                           color: const Color(0xFFFFFFFF),
                         ),

@@ -8,7 +8,7 @@ The idea here is to just have a way to regenerate images for the API docs when
 the rendering or other aspects of the output change. It should be something that
 doesn't require a lot of work to regenerate. For some assets, a script may be
 necessary. It should be well documented here what the prerequisites and
-limitations of the script are (what platform should it be run on?, etc.).
+limitations of the script are (what platform it should be run on, etc).
 
 # The Generators
 
@@ -19,8 +19,8 @@ For usage, run `dart ./generate.dart --help`.
 
 ### Prerequisites
 
-  - ImageMagick (`brew install imagemagick` on MacOS, `apt-get install imagemagick` on Ubuntu).
-  - optipng (`brew install optipng` on MacOS, `apt-get install optipng` on Ubuntu).
+ - ImageMagick (`brew install imagemagick` on MacOS, `apt-get install imagemagick` on Ubuntu).
+ - optipng (`brew install optipng` on MacOS, `apt-get install optipng` on Ubuntu).
 
 ### Adding new code
 

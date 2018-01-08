@@ -18,7 +18,7 @@ final GlobalKey splashKey = new GlobalKey();
 String currentMessage;
 
 void main() {
-  runApp(new Diagram());
+  runApp(const Diagram());
   new Timer(
     const Duration(milliseconds: 1000),
     () {
@@ -45,7 +45,7 @@ void main() {
 }
 
 class Diagram extends StatefulWidget {
-  Diagram({ Key key }) : super(key: key);
+  const Diagram({ Key key }) : super(key: key);
 
   @override
   _DiagramState createState() => new _DiagramState();

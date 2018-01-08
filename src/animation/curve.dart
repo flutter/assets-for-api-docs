@@ -38,14 +38,14 @@ class CurveDescription extends CustomPainter {
     );
   }
 
-  static TextPainter _t = _createLabelPainter('t', style: FontStyle.italic);
-  static TextPainter _x = _createLabelPainter('x', style: FontStyle.italic);
-  static TextPainter _zero = _createLabelPainter('0.0');
-  static TextPainter _one = _createLabelPainter('1.0');
+  static final TextPainter _t = _createLabelPainter('t', style: FontStyle.italic);
+  static final TextPainter _x = _createLabelPainter('x', style: FontStyle.italic);
+  static final TextPainter _zero = _createLabelPainter('0.0');
+  static final TextPainter _one = _createLabelPainter('1.0');
   final TextPainter _caption;
 
-  static TextPainter _createLabelPainter(String label, {FontStyle style: FontStyle.normal}) {
-    TextPainter result = new TextPainter(
+  static TextPainter _createLabelPainter(String label, { FontStyle style: FontStyle.normal }) {
+    final TextPainter result = new TextPainter(
       textDirection: TextDirection.ltr,
       text: new TextSpan(
         text: label,
@@ -60,17 +60,17 @@ class CurveDescription extends CustomPainter {
     return result;
   }
 
-  static Paint _axisPaint = new Paint()
+  static final Paint _axisPaint = new Paint()
     ..color = Colors.black
     ..style = PaintingStyle.stroke
     ..strokeWidth = 1.0;
 
-  static Paint _dashPaint = new Paint()
+  static final Paint _dashPaint = new Paint()
     ..color = Colors.black45
     ..style = PaintingStyle.stroke
     ..strokeWidth = 0.0;
 
-  static Paint _graphPaint = new Paint()
+  static final Paint _graphPaint = new Paint()
     ..color = Colors.blue.shade900
     ..style = PaintingStyle.stroke
     ..strokeCap = StrokeCap.round
@@ -78,17 +78,17 @@ class CurveDescription extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    double unit = _zero.width / 4.0;
-    double leftMargin = unit * 5.0;
-    double rightMargin = unit + _t.width;
-    double verticalHeadroom = size.height * 0.2;
-    Rect area = new Rect.fromLTRB(
+    final double unit = _zero.width / 4.0;
+    final double leftMargin = unit * 5.0;
+    final double rightMargin = unit + _t.width;
+    final double verticalHeadroom = size.height * 0.2;
+    final Rect area = new Rect.fromLTRB(
       leftMargin,
       verticalHeadroom,
       size.width - rightMargin,
       size.height - verticalHeadroom,
     );
-    Path axes = new Path()
+    final Path axes = new Path()
       ..moveTo(area.left, area.top - verticalHeadroom) // vertical axis
       ..lineTo(area.left, area.bottom + verticalHeadroom)
       ..moveTo(area.left - unit, area.top) // 1.0 tick
@@ -99,11 +99,11 @@ class CurveDescription extends CustomPainter {
       ..lineTo(area.right, area.bottom)
       ..lineTo(area.right - unit, area.bottom + unit);
     canvas.drawPath(axes, _axisPaint);
-    Path dashLine = new Path();
-    double delta = 1.0 / (area.width / 4.0);
+    final Path dashLine = new Path();
+    final double delta = 1.0 / (area.width / 4.0);
     for (double t = 0.0; t < 1.0; t += delta) {
-      Offset point1 = new FractionalOffset(t, 0.0).withinRect(area);
-      Offset point2 = new FractionalOffset(t + delta / 2.0, 0.0).withinRect(area);
+      final Offset point1 = new FractionalOffset(t, 0.0).withinRect(area);
+      final Offset point2 = new FractionalOffset(t + delta / 2.0, 0.0).withinRect(area);
       dashLine
         ..moveTo(point1.dx, point1.dy)
         ..lineTo(point2.dx, point2.dy);
@@ -121,9 +121,9 @@ class CurveDescription extends CustomPainter {
         size.height - (verticalHeadroom + _caption.height) / 2.0,
       ),
     );
-    Path graph = new Path()..moveTo(area.left, area.bottom);
+    final Path graph = new Path()..moveTo(area.left, area.bottom);
     for (double t = 0.0; t <= 1.0; t += 1.0 / (area.width * ui.window.devicePixelRatio)) {
-      Offset point = new FractionalOffset(t, 1.0 - curve.transform(t)).withinRect(area);
+      final Offset point = new FractionalOffset(t, 1.0 - curve.transform(t)).withinRect(area);
       graph.lineTo(point.dx, point.dy);
     }
     canvas.drawPath(graph, _graphPaint);
@@ -136,7 +136,7 @@ class CurveDescription extends CustomPainter {
 }
 
 void main() {
-  List<CurveDescription> curves = <CurveDescription>[
+  final List<CurveDescription> curves = <CurveDescription>[
     new CurveDescription('bounce_in', 'Curves.bounceIn', Curves.bounceIn),
     new CurveDescription('bounce_in_out', 'Curves.bounceInOut', Curves.bounceInOut),
     new CurveDescription('bounce_out', 'Curves.bounceOut', Curves.bounceOut),

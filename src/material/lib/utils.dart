@@ -24,7 +24,7 @@ class Hole extends StatelessWidget {
     return new AspectRatio(
       aspectRatio: 1.0,
       child: new Padding(
-        padding: new EdgeInsets.all(4.0),
+        padding: const EdgeInsets.all(4.0),
         child: new Placeholder(
           strokeWidth: 2.0,
           color: color,
@@ -44,13 +44,13 @@ class Label {
 typedef void PaintMessageCallback(String message);
 
 class Labeller extends CustomPainter {
-  Labeller(
-      {this.labels,
-      this.heroKey,
-      this.canvasKey,
-      @required this.filename,
-      this.onPaintMessage: print}) {
-    assert(onPaintMessage != null);
+  Labeller({
+    this.labels,
+    this.heroKey,
+    this.canvasKey,
+    @required this.filename,
+    this.onPaintMessage: print,
+  }) : assert(onPaintMessage != null) {
     _painters = <Label, TextPainter>{};
     for (Label label in labels) {
       final TextPainter painter = new TextPainter(
@@ -131,10 +131,10 @@ class Labeller extends CustomPainter {
     topmost -= margin;
     bottommost += margin;
     final Offset topLeft = diagram.localToGlobal(Offset.zero);
-    int w = ((rightmost - leftmost) * ui.window.devicePixelRatio).round();
-    int h = ((bottommost - topmost) * ui.window.devicePixelRatio).round();
-    int x = ((topLeft.dx + leftmost) * ui.window.devicePixelRatio).round();
-    int y = ((topLeft.dy + topmost) * ui.window.devicePixelRatio).round();
+    final int w = ((rightmost - leftmost) * ui.window.devicePixelRatio).round();
+    final int h = ((bottommost - topmost) * ui.window.devicePixelRatio).round();
+    final int x = ((topLeft.dx + leftmost) * ui.window.devicePixelRatio).round();
+    final int y = ((topLeft.dy + topmost) * ui.window.devicePixelRatio).round();
     onPaintMessage(
       'The following command extracts the image from a screenshot file.\n'
       'You can obtain a screenshot by pressing "s" in the "flutter run" console.\n'

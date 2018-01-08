@@ -1,9 +1,15 @@
-import "../generate.dart";
-import "dart:io";
-import 'package:test/test.dart';
+// Copyright 2017 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
+
 import 'package:mockito/mockito.dart';
+import 'package:test/test.dart';
+
+import '../generate.dart';
 
 class MockProcessRunner extends Mock implements Function {
   ProcessResult call(String executable, List<String> arguments,
@@ -26,44 +32,50 @@ class MockProcessStarter extends Mock implements Function {
 
 class MockProcessResult extends Mock implements ProcessResult {
   @override
-  dynamic stderr = "";
+  dynamic stderr = '';
 
   @override
-  dynamic stdout = "";
+  dynamic stdout = '';
 }
 
 class MockProcess extends Mock implements Process {
   @override
-  Stream<List<int>> stderr = new Stream<List<int>>.fromIterable([[1],[2]]);
+  Stream<List<int>> stderr = new Stream<List<int>>.fromIterable(<List<int>>[<int>[1], <int>[2]]);
   @override
-  Stream<List<int>> stdout = new Stream<List<int>>.fromIterable([[1],[2]]);
+  Stream<List<int>> stdout = new Stream<List<int>>.fromIterable(<List<int>>[<int>[1], <int>[2]]);
 }
 
-main() {
-  group("GeneratorTests", () {
+void main() {
+  group('GeneratorTests', () {
     DiagramGenerator generator;
-    Directory tmpDir;
-    MockProcessRunner runner = new MockProcessRunner();
-    MockProcessStarter starter = new MockProcessStarter();
+    Directory temporaryDirectory;
+    final MockProcessRunner runner = new MockProcessRunner();
+    final MockProcessStarter starter = new MockProcessStarter();
 
     setUp(() {
-      tmpDir = Directory.systemTemp.createTempSync();
+      temporaryDirectory = Directory.systemTemp.createTempSync();
       when(
         runner.call(
           typed(captureAny),
           typed(captureAny),
-          workingDirectory: typed(captureAny, named: "workingDirectory"),
+          workingDirectory: typed(captureAny, named: 'workingDirectory'),
         ),
       ).thenReturn(new Future<MockProcessResult>.value(new MockProcessResult()));
       when(
         starter.call(
           typed(captureAny),
           typed(captureAny),
-          workingDirectory: typed(captureAny, named: "workingDirectory"),
+          workingDirectory: typed(captureAny, named: 'workingDirectory'),
         ),
       ).thenReturn(new Future<MockProcess>.value(new MockProcess()));
-      generator = new DiagramGenerator('dartFile.dart', "/route",
-          processRunner: runner, processStarter: starter, tmpDir: tmpDir, cleanup: false);
+      generator = new DiagramGenerator(
+        'dartFile.dart',
+        part: '/route',
+        processRunner: runner,
+        processStarter: starter,
+        temporaryDirectory: temporaryDirectory,
+        cleanup: false,
+      );
     });
     test('make sure generate generates', () {
       generator.generateDiagram();
