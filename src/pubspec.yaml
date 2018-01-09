@@ -11,7 +11,8 @@ dev_dependencies:
   mockito: any
 
 flutter:
+  uses-material-design: true
   assets:
     - dart-ui/blend_mode_destination.jpeg
     - dart-ui/blend_mode_source.png
-  uses-material-design: true
+    - dart-ui/blend_mode_grid.png

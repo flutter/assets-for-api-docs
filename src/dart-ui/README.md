@@ -10,8 +10,8 @@ and is hereby provided under the following license:
 
 
 `blend_mode_source.png` was obtained from
-<https://www.goodfreephotos.com/vector-images/pink-bird-vector-clipart.png.php>
-which claims the photo is called _Pink Bird Vector Clipart_, the
-graphic is by _The Martin_, and that it is licensed under the [CC0 /
-Public Domain](https://creativecommons.org/licenses/publicdomain/)
+<https://www.1001freedownloads.com/free-clipart/blue-macaw-2> which
+claims the photo is called _Blue Macaw_, the graphic is by
+_Luchapress_, and that it is licensed under the [CC0 1.0 Universal
+(CC0 1.0)](https://creativecommons.org/publicdomain/zero/1.0/)
 License.

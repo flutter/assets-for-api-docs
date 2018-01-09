@@ -15,8 +15,9 @@ final GlobalKey key = new GlobalKey();
 
 const String destinationImageName = 'dart-ui/blend_mode_destination.jpeg';
 const String sourceImageName = 'dart-ui/blend_mode_source.png';
+const String gridImageName = 'dart-ui/blend_mode_grid.png';
 
-Image destinationImage, sourceImage;
+Image destinationImage, sourceImage, gridImage;
 int pageIndex = 0;
 
 Future<Image> getImage(ImageProvider provider) {
@@ -40,12 +41,14 @@ Future<Null> main() async {
   new WidgetsFlutterBinding();
   destinationImage = await getImage(const ExactAssetImage(destinationImageName));
   sourceImage = await getImage(const ExactAssetImage(sourceImageName));
-  if (window.defaultRouteName != '') {
+  gridImage = await getImage(const ExactAssetImage(gridImageName));
+  if (window.defaultRouteName != '/') {
     showDemo(BlendMode.values.where((BlendMode mode) => mode.toString() == window.defaultRouteName).single);
   } else {
     while (true) {
       print('Tap on the screen to advance to the next blend mode.');
-      Future.forEach<BlendMode>(BlendMode.values, showDemo);
+      for (BlendMode mode in BlendMode.values)
+        await showDemo(mode);
       print('DONE');
     }
   }
@@ -86,6 +89,10 @@ class Demo extends StatelessWidget {
           child: new DecoratedBox(
             decoration: new ShapeDecoration(
               shape: new Border.all(width: 1.0, color: Colors.white) + new Border.all(width: 1.0, color: Colors.black),
+              image: new DecorationImage(
+                image: const ExactAssetImage(gridImageName),
+                repeat: ImageRepeat.repeat,
+              ),
             ),
             child: new AspectRatio(
               aspectRatio: 1.0,
@@ -170,7 +177,7 @@ class Diagram extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     assert(size.shortestSide == size.longestSide);
     final Rect bounds = (Offset.zero & size).deflate(size.shortestSide * 0.025);
-    canvas.saveLayer(bounds, new Paint()..blendMode = BlendMode.src);
+    canvas.saveLayer(bounds, new Paint()..blendMode = BlendMode.srcOver);
     assert(size.shortestSide == size.longestSide);
     paintTestImage(canvas, bounds, destinationImage);
     canvas.saveLayer(bounds, new Paint()..blendMode = mode);
