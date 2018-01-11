@@ -13,7 +13,7 @@ void main() {
     new MaterialApp(
       home: new Container(
         alignment: FractionalOffset.center,
-        padding: new EdgeInsets.all(40.0),
+        padding: const EdgeInsets.all(40.0),
         color: Colors.white,
         child: new Card(
           key: key,

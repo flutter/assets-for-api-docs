@@ -34,7 +34,7 @@ the `tests` directory should not be optimised.
 
 See the [documentation for the generate.dart script in the src
 directory](src/README.md), which will will generate a number of
-existing assets.  Feel free to add more programs there to generate
+existing assets. Feel free to add more programs there to generate
 new assets.
 
 ## Origin of third-party content

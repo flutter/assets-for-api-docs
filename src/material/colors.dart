@@ -9,20 +9,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
 abstract class Page {
-  /// The name of the page.  Used for constructing output filenames in commands.
+  /// The name of the page. Used for constructing output filenames in commands.
   String get name;
 
-  ///  The build function to use for this [Page].
+  /// The build function to use for this [Page].
   Widget build(BuildContext context);
 
   /// The index of the page currently displayed.
   static int pageIndex = 0;
 
   /// The list of pages that we can display.
-  static List<Page> pages = [];
+  static List<Page> pages = <Page>[];
 
-  /// Used to decide to print the cropping command or not.  We only
-  /// print it the first time the page has been painted.
+  /// Used to decide to print the cropping command or not. We only print it the
+  /// first time the page has been painted.
   bool printedCommand = false;
 
   GlobalKey get key => new GlobalObjectKey(this);
@@ -32,29 +32,32 @@ abstract class Page {
       if (!printedCommand) {
         printedCommand = true;
         final Rect area = interestingArea;
-        print('COMMAND: convert flutter_${(pageIndex + 1).toString().padLeft(
-            2, '0')}.png -crop '
-            '${area.width}x${area.height}+${area.left}+${area.top} -resize '
-            '\'400x600>\' $name.png');
+        print(
+          'COMMAND: convert flutter_${(pageIndex + 1).toString().padLeft(2, "0")}.png '
+                            '-crop ${area.width}x${area.height}+${area.left}+${area.top} '
+                            '-resize \'400x600>\' '
+                            '$name.png'
+        );
       }
     });
     return new GestureDetector(
-        onTap: () async {
-          Page.pageIndex++;
-          Navigator.of(context).pop();
-          if (Page.pageIndex < Page.pages.length) {
-            Navigator.of(context).pushNamed(Page.pages[Page.pageIndex].name);
-          } else {
-            Navigator.of(context).pushNamed(Navigator.defaultRouteName);
-          }
-        },
-        child: child);
+      onTap: () async {
+        Page.pageIndex += 1;
+        Navigator.of(context).pop();
+        if (Page.pageIndex < Page.pages.length) {
+          Navigator.of(context).pushNamed(Page.pages[Page.pageIndex].name);
+        } else {
+          Navigator.of(context).pushNamed(Navigator.defaultRouteName);
+        }
+      },
+      child: child
+    );
   }
 
   Rect get interestingArea {
     final RenderBox box = key.currentContext.findRenderObject();
     final Rect area = ((box.localToGlobal(Offset.zero) * ui.window.devicePixelRatio) &
-        (box.size * ui.window.devicePixelRatio));
+                      (box.size * ui.window.devicePixelRatio));
     return area;
   }
 }
@@ -62,17 +65,18 @@ abstract class Page {
 class SwatchPage extends Page {
   SwatchPage(this.name, this.swatch, this.keys);
 
+  @override
   final String name;
   final ColorSwatch<int> swatch;
   final List<int> keys;
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> items = <Widget>[];
+    final List<Widget> items = <Widget>[];
     for (int key in keys) {
-      Color textColor = ThemeData.estimateBrightnessForColor(swatch[key]) == Brightness.light
-          ? Colors.black
-          : Colors.white;
+      final Color textColor = ThemeData.estimateBrightnessForColor(swatch[key]) == Brightness.light
+        ? Colors.black
+        : Colors.white;
       TextStyle style = new TextStyle(color: textColor);
       String label;
       if (swatch[key].value == swatch.value) {
@@ -83,7 +87,7 @@ class SwatchPage extends Page {
       }
       items.add(new Container(
         color: swatch[key],
-        padding: new EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(8.0),
         child: new Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
@@ -122,12 +126,12 @@ class ColorListPage extends Page {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> items = <Widget>[];
+    final List<Widget> items = <Widget>[];
     for (String key in colors.keys) {
-      Color textColor = colors[key];
-      TextStyle style = new TextStyle(color: textColor);
+      final Color textColor = colors[key];
+      final TextStyle style = new TextStyle(color: textColor);
       items.add(new Container(
-        padding: new EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(8.0),
         child: new Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
@@ -158,10 +162,14 @@ class ColorListPage extends Page {
 }
 
 Future<Null> main() async {
-  const List<int> palette = const [50, 100, 200, 300, 400, 500, 600, 700, 800, 900];
-  const List<int> accentPalette = const [100, 200, 400, 700];
-  const List<int> greyPalette = const [
-    50, 100, 200, 300, 350, 400, 500, 600, 700, 800, 850, 900
+  const List<int> palette = const <int>[
+    50, 100, 200, 300, 400, 500, 600, 700, 800, 900,
+  ];
+  const List<int> accentPalette = const <int>[
+    100, 200, 400, 700,
+  ];
+  const List<int> greyPalette = const <int>[
+    50, 100, 200, 300, 350, 400, 500, 600, 700, 800, 850, 900,
   ];
   final List<Page> pages = <Page>[
     new SwatchPage('Colors.red', Colors.red, palette),
@@ -217,12 +225,19 @@ Future<Null> main() async {
     }),
   ];
 
+  if (ui.window.defaultRouteName == 'list') {
+    for (Page page in pages)
+      print('ROUTE: ${page.name}');
+    print('END');
+    return;
+  }
+
   print('This app will display a sequence of images. For each one, tap "s"');
   print('in the console to take a screenshot, then tap the screen to');
   print('advance. When all is done, the lines beginning with "COMMAND:" form a');
   print('script that has the commands to run to convert all the screenshots');
   print('to cropped images.');
-  Map<String, WidgetBuilder> routes = {};
+  final Map<String, WidgetBuilder> routes = <String, WidgetBuilder>{};
   for (Page page in pages) {
     routes[page.name] = page.build;
   }
@@ -231,7 +246,7 @@ Future<Null> main() async {
   runApp(new MaterialApp(
     onGenerateRoute: (RouteSettings settings) {
       if (settings.name == Navigator.defaultRouteName) {
-        return new MaterialPageRoute(
+        return new MaterialPageRoute<Null>(
           builder: (BuildContext context) => new GestureDetector(
             onTap: () {
               Page.pageIndex = 0;
@@ -239,7 +254,7 @@ Future<Null> main() async {
             },
             child: new Scaffold(
               body: new Center(
-                child: new Text("Tap to proceed", textScaleFactor: 2.0),
+                child: const Text('Tap to proceed', textScaleFactor: 2.0),
               ),
             ),
           ),

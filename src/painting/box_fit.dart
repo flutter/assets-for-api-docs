@@ -8,7 +8,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 
 void main() {
-  List<Widget> children = <Widget>[];
+  final List<Widget> children = <Widget>[];
   for (BoxFit fit in BoxFit.values) {
     final Widget inner = new Container(
       decoration: new BoxDecoration(
@@ -53,12 +53,12 @@ void main() {
                 ),
               ),
             ),
-            new SizedBox(width: 10.0),
+            const SizedBox(width: 10.0),
             new Expanded(
               flex: 80,
               child: inner,
             ),
-            new SizedBox(width: 10.0),
+            const SizedBox(width: 10.0),
             new Expanded(
               flex: 200,
               child: inner,
@@ -94,9 +94,11 @@ void main() {
       final RenderBox box = new GlobalObjectKey(fit).currentContext.findRenderObject();
       final Rect area = (box.localToGlobal(Offset.zero) * ui.window.devicePixelRatio) &
           (box.size * ui.window.devicePixelRatio);
-      print("COMMAND: convert flutter_01.png "
-          "-crop ${area.width}x${area.height}+${area.left}+${area.top} "
-          "-resize '300x300>' box_fit_${fit.toString().split(".")[1]}.png");
+      print(
+        'COMMAND: convert flutter_01.png '
+        '-crop ${area.width}x${area.height}+${area.left}+${area.top} '
+        "-resize '300x300>' box_fit_${fit.toString().split('.')[1]}.png"
+      );
     }
     print('DONE DRAWING');
   });
