@@ -22,6 +22,13 @@ For usage, run `dart ./generate.dart --help`.
  - ImageMagick (`brew install imagemagick` on MacOS, `apt-get install imagemagick` on Ubuntu).
  - optipng (`brew install optipng` on MacOS, `apt-get install optipng` on Ubuntu).
 
+You should also set up a symlink `analysis_options.yaml` that points
+to your Flutter repository, as follows:
+
+```bash
+ln -s ../../flutter/analysis_options.yaml analysis_options.yaml
+```
+
 ### Adding new code
 
 To add a new asset generator, add your generator's `.dart` file under the appropriate
