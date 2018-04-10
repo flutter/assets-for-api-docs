@@ -3,74 +3,126 @@
 // found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:math' as math;
 import 'dart:ui' as ui show window;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+
+Completer<Null> touch;
+int pageIndex = 0;
 
 const double topPadding = 30.0;
-const double width = 175.0;
+const double width = 350.0;
 const double height = 200.0;
 const double spacing = 8.0;
 const double borderSize = 1.0;
 
-void main() {
-  runApp(new MyApp());
-  new Timer(const Duration(seconds: 1), () {
-    print('The following commands extract out the six images from a screenshot file.');
-    print('You can obtain a screenshot by pressing "s" in the "flutter run" console.');
-    final double w = width * ui.window.devicePixelRatio;
-    final double h = (height - spacing * 2.0) * ui.window.devicePixelRatio;
-    final double xStride = (width + spacing * 2.0) * ui.window.devicePixelRatio;
-    final double yStride = height * ui.window.devicePixelRatio;
-    final double left = spacing * ui.window.devicePixelRatio;
-    final double top = (topPadding + spacing) * ui.window.devicePixelRatio;
-    double x = left;
-    double y = top;
-    print(
-      "COMMAND: convert flutter_01.png -crop ${w}x$h+$x+$y -resize '200x200>' "
-      'tile_mode_clamp_linear.png'
-    );
-    x += xStride;
-    print(
-      "COMMAND: convert flutter_01.png -crop ${w}x$h+$x+$y -resize '200x200>' "
-      'tile_mode_clamp_radial.png'
-    );
-    x = left;
-    y += yStride;
-    print(
-      "COMMAND: convert flutter_01.png -crop ${w}x$h+$x+$y -resize '200x200>' "
-      'tile_mode_repeated_linear.png'
-    );
-    x += xStride;
-    print(
-      "COMMAND: convert flutter_01.png -crop ${w}x$h+$x+$y -resize '200x200>' "
-      'tile_mode_repeated_radial.png'
-    );
-    x = left;
-    y += yStride;
-    print(
-      "COMMAND: convert flutter_01.png -crop ${w}x$h+$x+$y -resize '200x200>' "
-      'tile_mode_mirror_linear.png'
-    );
-    x += xStride;
-    print(
-      "COMMAND: convert flutter_01.png -crop ${w}x$h+$x+$y -resize '200x200>' "
-      'tile_mode_mirror_radial.png'
-    );
-    print('DONE DRAWING');
-  });
+enum GradientMode { linear, radial, sweep }
+
+Future<Null> main() async {
+  if (ui.window.defaultRouteName == 'list') {
+    for (GradientMode mode in GradientMode.values) {
+      print('ROUTE: $mode');
+    }
+    print('END');
+    return;
+  }
+  new WidgetsFlutterBinding();
+  if (ui.window.defaultRouteName != '/') {
+    showDemo(GradientMode.values
+        .where((GradientMode mode) =>
+            mode.toString() == ui.window.defaultRouteName)
+        .single);
+  } else {
+    while (true) {
+      print('Tap on the screen to advance to the next gradient mode.');
+      for (GradientMode mode in GradientMode.values) await showDemo(mode);
+      print('DONE');
+    }
+  }
 }
 
-class Demo extends StatelessWidget {
-  const Demo(this.radial, this.tileMode);
+Future<Null> showDemo(GradientMode mode) async {
+  touch = new Completer<Null>();
+  runApp(new MaterialApp(home: new Demo(mode)));
+  await SchedulerBinding.instance.endOfFrame;
 
-  final bool radial;
+  final double w = (width - spacing) * ui.window.devicePixelRatio;
+  final double h = (height - spacing * 2.0) * ui.window.devicePixelRatio;
+  final double yStride = height * ui.window.devicePixelRatio;
+  final double left = spacing * ui.window.devicePixelRatio;
+  final double top = (topPadding + spacing) * ui.window.devicePixelRatio;
+  double x = left;
+  double y = top;
+  print(
+      'COMMAND: convert flutter_${(pageIndex + 1).toString().padLeft(2, "0")}.png '
+      "-crop ${w}x$h+$x+$y -resize '400x200>' tile_mode_clamp_${describeEnum(mode)}.png");
+  y += yStride;
+  print(
+      'COMMAND: convert flutter_${(pageIndex + 1).toString().padLeft(2, "0")}.png '
+      "-crop ${w}x$h+$x+$y -resize '400x200>' tile_mode_repeated_${describeEnum(mode)}.png");
+  y += yStride;
+  print(
+      'COMMAND: convert flutter_${(pageIndex + 1).toString().padLeft(2, "0")}.png '
+      "-crop ${w}x$h+$x+$y -resize '400x200>' tile_mode_mirror_${describeEnum(mode)}.png");
+  print('DONE DRAWING');
+  pageIndex += 1;
+  await touch.future;
+}
+
+class DemoItem extends StatelessWidget {
+  const DemoItem(this.gradientMode, this.tileMode);
+
+  final GradientMode gradientMode;
   final TileMode tileMode;
+
+  Gradient _buildGradient() {
+    Gradient gradient;
+    switch (gradientMode) {
+      case GradientMode.linear:
+        gradient = new LinearGradient(
+          begin: const FractionalOffset(0.4, 0.5),
+          end: const FractionalOffset(0.6, 0.5),
+          colors: <Color>[const Color(0xFF0000FF), const Color(0xFF00FF00)],
+          stops: <double>[0.0, 1.0],
+          tileMode: tileMode,
+        );
+        break;
+      case GradientMode.radial:
+        gradient = new RadialGradient(
+          center: FractionalOffset.center,
+          radius: 0.2,
+          colors: <Color>[const Color(0xFF0000FF), const Color(0xFF00FF00)],
+          stops: <double>[0.0, 1.0],
+          tileMode: tileMode,
+        );
+        break;
+      case GradientMode.sweep:
+        gradient = new SweepGradient(
+          center: FractionalOffset.center,
+          startAngle: 0.0,
+          endAngle: math.pi / 2,
+          colors: <Color>[const Color(0xFF0000FF), const Color(0xFF00FF00)],
+          stops: <double>[0.0, 1.0],
+          tileMode: tileMode,
+        );
+        break;
+    }
+    return gradient;
+  }
+
+  String _getGradientName(GradientMode mode) {
+    String s = describeEnum(gradientMode);
+    return s[0].toUpperCase() + s.substring(1);
+  }
 
   @override
   Widget build(BuildContext context) {
     return DefaultTextStyle.merge(
       style: const TextStyle(
+        fontSize: 10.0,
         color: const Color(0xFF000000),
       ),
       child: new Directionality(
@@ -87,28 +139,16 @@ class Demo extends StatelessWidget {
               new Expanded(
                 child: new Container(
                   decoration: new BoxDecoration(
-                    gradient: radial
-                      ? new RadialGradient(
-                        center: FractionalOffset.center,
-                        radius: 0.2,
-                        colors: <Color>[const Color(0xFF0000FF), const Color(0xFF00FF00)],
-                        stops: <double>[0.0, 1.0],
-                        tileMode: tileMode,
-                        )
-                      : new LinearGradient(
-                        begin: const FractionalOffset(0.4, 0.5),
-                        end: const FractionalOffset(0.6, 0.5),
-                        colors: <Color>[const Color(0xFF0000FF), const Color(0xFF00FF00)],
-                        stops: <double>[0.0, 1.0],
-                        tileMode: tileMode,
-                        ),
+                    gradient: _buildGradient(),
                     border: const Border(bottom: const BorderSide(width: 1.0)),
                   ),
                 ),
               ),
               new Container(height: 3.0),
-              new Text('${radial ? "Radial" : "Linear"} Gradient',
-                  textAlign: TextAlign.center),
+              new Text(
+                '${_getGradientName(gradientMode)} Gradient',
+                textAlign: TextAlign.center,
+              ),
               new Text('$tileMode', textAlign: TextAlign.center),
               new Container(height: 3.0),
             ],
@@ -119,36 +159,32 @@ class Demo extends StatelessWidget {
   }
 }
 
-class MyApp extends StatelessWidget {
+class Demo extends StatelessWidget {
+  const Demo(this.mode);
+
+  final GradientMode mode;
+
   @override
   Widget build(BuildContext context) {
-    return new Directionality(
-      textDirection: TextDirection.ltr,
-      child: new Container(
-        color: const Color(0xFF00FFFF),
-        child: new ListView(
-          padding: const EdgeInsets.only(top: topPadding),
-          itemExtent: height,
-          children: <Widget>[
-            new Row(
+    return new GestureDetector(
+      onTap: () {
+        touch.complete();
+      },
+      child: new Material(
+        child: new Directionality(
+          textDirection: TextDirection.ltr,
+          child: new Container(
+            color: const Color(0xFF00FFFF),
+            child: new ListView(
+              padding: const EdgeInsets.only(top: topPadding),
+              itemExtent: height,
               children: <Widget>[
-                const Demo(false, TileMode.clamp),
-                const Demo(true, TileMode.clamp),
+                new DemoItem(mode, TileMode.clamp),
+                new DemoItem(mode, TileMode.repeated),
+                new DemoItem(mode, TileMode.mirror),
               ],
             ),
-            new Row(
-              children: <Widget>[
-                const Demo(false, TileMode.repeated),
-                const Demo(true, TileMode.repeated),
-              ],
-            ),
-            new Row(
-              children: <Widget>[
-                const Demo(false, TileMode.mirror),
-                const Demo(true, TileMode.mirror),
-              ],
-            ),
-          ],
+          ),
         ),
       ),
     );
