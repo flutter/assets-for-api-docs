@@ -38,7 +38,9 @@ Future<Null> main() async {
   } else {
     while (true) {
       print('Tap on the screen to advance to the next gradient mode.');
-      for (GradientMode mode in GradientMode.values) await showDemo(mode);
+      for (GradientMode mode in GradientMode.values) {
+        await showDemo(mode);
+      }
       print('DONE');
     }
   }
@@ -54,7 +56,7 @@ Future<Null> showDemo(GradientMode mode) async {
   final double yStride = height * ui.window.devicePixelRatio;
   final double left = spacing * ui.window.devicePixelRatio;
   final double top = (topPadding + spacing) * ui.window.devicePixelRatio;
-  double x = left;
+  final double x = left;
   double y = top;
   print(
       'COMMAND: convert flutter_${(pageIndex + 1).toString().padLeft(2, "0")}.png '
@@ -85,8 +87,8 @@ class DemoItem extends StatelessWidget {
         gradient = new LinearGradient(
           begin: const FractionalOffset(0.4, 0.5),
           end: const FractionalOffset(0.6, 0.5),
-          colors: <Color>[const Color(0xFF0000FF), const Color(0xFF00FF00)],
-          stops: <double>[0.0, 1.0],
+          colors: const <Color>[const Color(0xFF0000FF), const Color(0xFF00FF00)],
+          stops: const <double>[0.0, 1.0],
           tileMode: tileMode,
         );
         break;
@@ -94,8 +96,8 @@ class DemoItem extends StatelessWidget {
         gradient = new RadialGradient(
           center: FractionalOffset.center,
           radius: 0.2,
-          colors: <Color>[const Color(0xFF0000FF), const Color(0xFF00FF00)],
-          stops: <double>[0.0, 1.0],
+          colors: const <Color>[const Color(0xFF0000FF), const Color(0xFF00FF00)],
+          stops: const <double>[0.0, 1.0],
           tileMode: tileMode,
         );
         break;
@@ -104,8 +106,8 @@ class DemoItem extends StatelessWidget {
           center: FractionalOffset.center,
           startAngle: 0.0,
           endAngle: math.pi / 2,
-          colors: <Color>[const Color(0xFF0000FF), const Color(0xFF00FF00)],
-          stops: <double>[0.0, 1.0],
+          colors: const <Color>[const Color(0xFF0000FF), const Color(0xFF00FF00)],
+          stops: const <double>[0.0, 1.0],
           tileMode: tileMode,
         );
         break;
@@ -114,7 +116,7 @@ class DemoItem extends StatelessWidget {
   }
 
   String _getGradientName(GradientMode mode) {
-    String s = describeEnum(gradientMode);
+    final String s = describeEnum(gradientMode);
     return s[0].toUpperCase() + s.substring(1);
   }
 
