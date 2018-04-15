@@ -14,7 +14,7 @@ Completer<Null> touch;
 int pageIndex = 0;
 
 const double topPadding = 30.0;
-const double width = 350.0;
+const double width = 175.0;
 const double height = 200.0;
 const double spacing = 8.0;
 const double borderSize = 1.0;
@@ -51,24 +51,22 @@ Future<Null> showDemo(GradientMode mode) async {
   runApp(new MaterialApp(home: new Demo(mode)));
   await SchedulerBinding.instance.endOfFrame;
 
-  final double w = (width - spacing) * ui.window.devicePixelRatio;
+  final double w = width * ui.window.devicePixelRatio;
   final double h = (height - spacing * 2.0) * ui.window.devicePixelRatio;
+  final double x = ui.window.physicalSize.width / 2 - w / 2;
+  double y = (topPadding + spacing) * ui.window.devicePixelRatio;
   final double yStride = height * ui.window.devicePixelRatio;
-  final double left = spacing * ui.window.devicePixelRatio;
-  final double top = (topPadding + spacing) * ui.window.devicePixelRatio;
-  final double x = left;
-  double y = top;
   print(
       'COMMAND: convert flutter_${(pageIndex + 1).toString().padLeft(2, "0")}.png '
-      "-crop ${w}x$h+$x+$y -resize '400x200>' tile_mode_clamp_${describeEnum(mode)}.png");
+      "-crop ${w}x$h+$x+$y -resize '200x200>' tile_mode_clamp_${describeEnum(mode)}.png");
   y += yStride;
   print(
       'COMMAND: convert flutter_${(pageIndex + 1).toString().padLeft(2, "0")}.png '
-      "-crop ${w}x$h+$x+$y -resize '400x200>' tile_mode_repeated_${describeEnum(mode)}.png");
+      "-crop ${w}x$h+$x+$y -resize '200x200>' tile_mode_repeated_${describeEnum(mode)}.png");
   y += yStride;
   print(
       'COMMAND: convert flutter_${(pageIndex + 1).toString().padLeft(2, "0")}.png '
-      "-crop ${w}x$h+$x+$y -resize '400x200>' tile_mode_mirror_${describeEnum(mode)}.png");
+      "-crop ${w}x$h+$x+$y -resize '200x200>' tile_mode_mirror_${describeEnum(mode)}.png");
   print('DONE DRAWING');
   pageIndex += 1;
   await touch.future;
@@ -138,31 +136,35 @@ class DemoItem extends StatelessWidget {
       ),
       child: new Directionality(
         textDirection: TextDirection.ltr,
-        child: new Container(
-          margin: const EdgeInsets.all(spacing),
-          width: width,
-          decoration: new BoxDecoration(
-            border: new Border.all(width: borderSize),
-            color: const Color(0xFFFFFFFF),
-          ),
-          child: new Column(
-            children: <Widget>[
-              new Expanded(
-                child: new Container(
-                  decoration: new BoxDecoration(
-                    gradient: _buildGradient(),
-                    border: const Border(bottom: const BorderSide(width: 1.0)),
+        child: new Center(
+          child: new Container(
+            margin: const EdgeInsets.all(spacing),
+            width: width,
+            decoration: new BoxDecoration(
+              border: new Border.all(width: borderSize),
+              color: const Color(0xFFFFFFFF),
+            ),
+            child: new Column(
+              children: <Widget>[
+                new Expanded(
+                  child: new Container(
+                    decoration: new BoxDecoration(
+                      gradient: _buildGradient(),
+                      border: const Border(
+                        bottom: const BorderSide(width: 1.0),
+                      ),
+                    ),
                   ),
                 ),
-              ),
-              new Container(height: 3.0),
-              new Text(
-                '${_getGradientName(gradientMode)} Gradient',
-                textAlign: TextAlign.center,
-              ),
-              new Text('$tileMode', textAlign: TextAlign.center),
-              new Container(height: 3.0),
-            ],
+                new Container(height: 3.0),
+                new Text(
+                  '${_getGradientName(gradientMode)} Gradient',
+                  textAlign: TextAlign.center,
+                ),
+                new Text('$tileMode', textAlign: TextAlign.center),
+                new Container(height: 3.0),
+              ],
+            ),
           ),
         ),
       ),
