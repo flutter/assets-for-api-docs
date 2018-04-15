@@ -87,7 +87,10 @@ class DemoItem extends StatelessWidget {
         gradient = new LinearGradient(
           begin: const FractionalOffset(0.4, 0.5),
           end: const FractionalOffset(0.6, 0.5),
-          colors: const <Color>[const Color(0xFF0000FF), const Color(0xFF00FF00)],
+          colors: const <Color>[
+            const Color(0xFF0000FF),
+            const Color(0xFF00FF00)
+          ],
           stops: const <double>[0.0, 1.0],
           tileMode: tileMode,
         );
@@ -96,7 +99,10 @@ class DemoItem extends StatelessWidget {
         gradient = new RadialGradient(
           center: FractionalOffset.center,
           radius: 0.2,
-          colors: const <Color>[const Color(0xFF0000FF), const Color(0xFF00FF00)],
+          colors: const <Color>[
+            const Color(0xFF0000FF),
+            const Color(0xFF00FF00)
+          ],
           stops: const <double>[0.0, 1.0],
           tileMode: tileMode,
         );
@@ -106,7 +112,10 @@ class DemoItem extends StatelessWidget {
           center: FractionalOffset.center,
           startAngle: 0.0,
           endAngle: math.pi / 2,
-          colors: const <Color>[const Color(0xFF0000FF), const Color(0xFF00FF00)],
+          colors: const <Color>[
+            const Color(0xFF0000FF),
+            const Color(0xFF00FF00)
+          ],
           stops: const <double>[0.0, 1.0],
           tileMode: tileMode,
         );
