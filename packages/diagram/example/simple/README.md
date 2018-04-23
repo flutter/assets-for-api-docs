@@ -1,8 +1,6 @@
-# simple
+# A simple example
 
-A simple example of how to use the diagram library.
+This is a simple example of how to use the diagram library.
 
-## Getting Started
-
-For help getting started with Flutter, view our online
-[documentation](https://flutter.io/).
+It renders a widget tree to get an image, and also renders
+an animating widget into multiple frames of an animation.  
