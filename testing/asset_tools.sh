@@ -3,7 +3,7 @@ set -e
 
 if [[ "$1" == "analyze" ]]; then
   echo "Analyzing Dart files."
-  (cd src && flutter analyze)
+  (cd diagrams && flutter analyze)
   (cd packages/diagram && flutter analyze)
   (cd packages/diagram/example/simple && flutter analyze)
 

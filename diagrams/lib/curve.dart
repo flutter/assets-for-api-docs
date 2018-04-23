@@ -12,6 +12,8 @@ import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
 
+const double _kFontSize = 14.0;
+
 class CurveDescription extends CustomPainter {
   CurveDescription(this.filename, this.caption, this.curve) : _caption = _createLabelPainter(caption);
 
@@ -21,13 +23,10 @@ class CurveDescription extends CustomPainter {
 
   final Curve curve;
 
-  GlobalKey get key => new GlobalObjectKey(this);
-
   Widget get widget {
     return new KeyedSubtree(
-      key: key,
       child: new ConstrainedBox(
-        constraints: new BoxConstraints(maxWidth: 130.0),
+        constraints: const BoxConstraints(maxWidth: 130.0),
         child: new AspectRatio(
           aspectRatio: 1.7,
           child: new Padding(
@@ -55,7 +54,7 @@ class CurveDescription extends CustomPainter {
         style: new TextStyle(
           color: Colors.black,
           fontStyle: style,
-          fontSize: 6.0,
+          fontSize: _kFontSize,
         ),
       ),
     );
@@ -66,7 +65,7 @@ class CurveDescription extends CustomPainter {
   static final Paint _axisPaint = new Paint()
     ..color = Colors.black
     ..style = PaintingStyle.stroke
-    ..strokeWidth = 1.0;
+    ..strokeWidth = 2.5;
 
   static final Paint _dashPaint = new Paint()
     ..color = Colors.black45
@@ -77,13 +76,13 @@ class CurveDescription extends CustomPainter {
     ..color = Colors.blue.shade900
     ..style = PaintingStyle.stroke
     ..strokeCap = StrokeCap.round
-    ..strokeWidth = 2.0;
+    ..strokeWidth = 5.0;
 
   @override
   void paint(Canvas canvas, Size size) {
     assert(size != Size.zero);
     final double unit = _zero.width / 4.0;
-    final double leftMargin = unit * 5.0;
+    final double leftMargin = unit * 6.0;
     final double rightMargin = unit + _t.width;
     final double verticalHeadroom = size.height * 0.2;
     final Rect area = new Rect.fromLTRB(
@@ -104,7 +103,7 @@ class CurveDescription extends CustomPainter {
       ..lineTo(area.right - unit, area.bottom + unit);
     canvas.drawPath(axes, _axisPaint);
     final Path dashLine = new Path();
-    final double delta = 1.0 / (area.width / 4.0);
+    final double delta = 8.0 / area.width;
     assert(delta > 0.0);
     for (double t = 0.0; t < 1.0; t += delta) {
       final Offset point1 = new FractionalOffset(t, 0.0).withinRect(area);
@@ -150,10 +149,12 @@ class CurvePainterWidget extends StatelessWidget {
   final String caption;
   final CurveDescription description;
 
+  @override
   Widget build(BuildContext context) {
     return new ConstrainedBox(
-      constraints: new BoxConstraints.tight(new Size(300.0, 177.0)),
+      constraints: new BoxConstraints.tight(const Size(300.0, 177.0)),
       child: new Container(
+        padding: const EdgeInsets.all(7.0),
         color: Colors.white,
         child: new CustomPaint(painter: description),
       ),
@@ -164,6 +165,10 @@ class CurvePainterWidget extends StatelessWidget {
 class CurveDiagramStep extends DiagramStep {
   CurveDiagramStep(DiagramController controller) : super(controller);
 
+  @override
+  final String category = 'animation';
+
+  @override
   Future<List<File>> generateDiagrams() async {
     final List<CurvePainterWidget> curves = <CurvePainterWidget>[
       new CurvePainterWidget('bounce_in', 'Curves.bounceIn', Curves.bounceIn),
@@ -186,11 +191,11 @@ class CurveDiagramStep extends DiagramStep {
       new CurvePainterWidget('flipped_curve', 'const FlippedCurve(Curves.bounceIn)', const FlippedCurve(Curves.bounceIn)),
     ];
 
-    List<File> outputFiles = <File>[];
+    final List<File> outputFiles = <File>[];
     for (CurvePainterWidget curve in curves) {
       print('Drawing curve for ${curve.caption} (${curve.filename})');
       controller.builder = (BuildContext context) => curve;
-      outputFiles.add(await controller.drawDiagramToFile(new File('${curve.filename}.png')));
+      outputFiles.add(await controller.drawDiagramToFile(new File('curve_${curve.filename}.png')));
     }
     return outputFiles;
   }
