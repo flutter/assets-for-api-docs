@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-library diagram;
-
 import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
@@ -21,7 +19,7 @@ import 'package:vector_math/vector_math_64.dart';
 
 // The diagram host widget. Diagrams are wrapped by this widget to provide
 // the needed structure for capturing them.
-class _Diagram extends StatefulWidget {
+class _Diagram extends StatelessWidget {
   const _Diagram({
     Key key,
     @required this.boundaryKey,
@@ -33,10 +31,6 @@ class _Diagram extends StatefulWidget {
   final GlobalKey boundaryKey;
   final Widget child;
 
-  _DiagramState createState() => new _DiagramState();
-}
-
-class _DiagramState extends State<_Diagram> {
   Widget build(BuildContext context) {
     return new MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -45,8 +39,8 @@ class _DiagramState extends State<_Diagram> {
           builder: (BuildContext context) {
             return new Center(
               child: new RepaintBoundary(
-                key: widget.boundaryKey,
-                child: widget.child,
+                key: boundaryKey,
+                child: child,
               ),
             );
           },
@@ -67,7 +61,6 @@ class _DiagramViewConfiguration extends ViewConfiguration {
     double pixelRatio: 1.0,
     Size size: _kDefaultDiagramViewportSize,
   })  : _paintMatrix = _getMatrix(size, ui.window.devicePixelRatio),
-        _hitTestMatrix = _getMatrix(size, 1.0),
         super(size: size);
 
   static Matrix4 _getMatrix(Size size, double devicePixelRatio) {
@@ -95,23 +88,12 @@ class _DiagramViewConfiguration extends ViewConfiguration {
   }
 
   final Matrix4 _paintMatrix;
-  final Matrix4 _hitTestMatrix;
 
   @override
   Matrix4 toMatrix() => _paintMatrix.clone();
 
-  /// Provides the transformation matrix that converts coordinates in the test
-  /// coordinate space to coordinates in logical pixels on the real display.
-  ///
-  /// This is essentially the same as [toMatrix] but ignoring the device pixel
-  /// ratio.
-  ///
-  /// This is useful because pointers are described in logical pixels, as
-  /// opposed to graphics which are expressed in physical pixels.
-  Matrix4 toHitTestMatrix() => _hitTestMatrix.clone();
-
   @override
-  String toString() => 'TestViewConfiguration';
+  String toString() => '_DiagramViewConfiguration';
 }
 
 // Provides a binding different from the regular Flutter binding so that
@@ -124,19 +106,24 @@ class _DiagramFlutterBinding extends BindingBase
         PaintingBinding,
         RendererBinding,
         WidgetsBinding {
+
+  /// The current [_DiagramFlutterBinding], if one has been created.
+  static _DiagramFlutterBinding get instance {
+    if (_instance == null) {
+      _instance = new _DiagramFlutterBinding();
+    }
+    return _instance;
+  }
+  static _DiagramFlutterBinding _instance;
+
   @override
-  void initInstances() {
-    super.initInstances();
-    // Short circuit the begin frame to use our timestamp instead of the "real" one.
-    // Re-use the previous onBeginFrame so that all of the hot reload, etc. works.
-    dynamic oldBeginFrame = ui.window.onBeginFrame;
-    ui.window.onBeginFrame = (Duration timestamp) {
-      oldBeginFrame(_timestamp);
-    };
+  void handleBeginFrame(Duration rawTimeStamp) {
+    // Override the timestamp so time doesn't pass unless we want it to.
+    super.handleBeginFrame(_timestamp);
   }
 
   Duration _timestamp = Duration.zero;
-  GlobalKey _boundaryKey = new GlobalKey();
+  final GlobalKey _boundaryKey = new GlobalKey();
 
   /// Determines the ratio between physical units and logical units.
   ///
@@ -144,9 +131,7 @@ class _DiagramFlutterBinding extends BindingBase
   /// size of the output image. It is independent of the
   /// [window.devicePixelRatio] for the device, so specifying 1.0 (the default)
   /// will give you a 1:1 mapping between logical pixels and the output pixels
-  /// in the image. The output image is not anti-aliased, so you may wish to
-  /// use a larger device pixel ratio to obtain an image large enough to
-  /// down sample.
+  /// in the image.
   ///
   /// Defaults to 1.0.
   double get pixelRatio => _pixelRatio;
@@ -165,15 +150,6 @@ class _DiagramFlutterBinding extends BindingBase
     handleMetricsChanged();
   }
 
-  /// Returns the singleton for the binding, after making sure it is
-  /// initialized.
-  static WidgetsBinding instance() {
-    if (WidgetsBinding.instance == null) {
-      new _DiagramFlutterBinding();
-    }
-    return WidgetsBinding.instance;
-  }
-
   @override
   ViewConfiguration createViewConfiguration() {
     return new _DiagramViewConfiguration(
@@ -183,9 +159,9 @@ class _DiagramFlutterBinding extends BindingBase
   }
 
   /// Captures an image of the [RepaintBoundary] with the given key.
-  Future<ui.Image> takeSnapshot() async {
-    RenderRepaintBoundary object = _boundaryKey.currentContext.findRenderObject();
-    return await object.toImage(pixelRatio: pixelRatio);
+  Future<ui.Image> takeSnapshot() {
+    final RenderRepaintBoundary object = _boundaryKey.currentContext.findRenderObject();
+    return object.toImage(pixelRatio: pixelRatio);
   }
 
   /// Updates the current diagram with the given builder as the child of the
@@ -194,7 +170,7 @@ class _DiagramFlutterBinding extends BindingBase
     WidgetBuilder builder, {
     Duration duration: Duration.zero,
   }) {
-    Widget rootWidget = new _Diagram(
+    final Widget rootWidget = new _Diagram(
       boundaryKey: _boundaryKey,
       child: new Builder(builder: builder),
     );
@@ -224,17 +200,15 @@ typedef File AnimationFrameFilenameGenerator(Duration timestamp, int index);
 /// This is used to configure and create individual image diagrams, as well as
 /// animations of diagrams with control over the time used by animation tickers.
 class DiagramController {
-  /// Creates a diagram controller.
-  ///
-  /// The [builder] parameter must not be null, and is required.
+  /// Creates a diagram controller for generating images of diagrams.
   DiagramController({
-    @required WidgetBuilder builder,
+    WidgetBuilder builder,
     this.outputDirectory,
     AnimationFrameFilenameGenerator frameFilenameGenerator,
     double pixelRatio: 1.0,
     Size screenDimensions: _kDefaultDiagramViewportSize,
-  }) : assert(builder != null) {
-    this.frameFilenameGenerator = frameFilenameGenerator;
+  }) {
+    this.frameFilenameGenerator = frameFilenameGenerator ?? _basicFrameFilenameGenerator;
     outputDirectory ??= Directory.current;
     _binding.pixelRatio = pixelRatio;
     _binding.screenDimensions = screenDimensions;
@@ -250,7 +224,6 @@ class DiagramController {
   WidgetBuilder get builder => _builder;
   WidgetBuilder _builder;
   set builder(WidgetBuilder builder) {
-    assert(builder != null);
     if (_builder != builder) {
       _builder = builder;
       _binding.updateDiagram(builder);
@@ -274,14 +247,15 @@ class DiagramController {
   /// The generator for filenames when calling drawAnimatedDiagramToFile.
   ///
   /// If the returned filenames are relative paths, they will be relative to
-  /// [outputDirectory].
+  /// [outputDirectory]. Must not be null.
   AnimationFrameFilenameGenerator get frameFilenameGenerator => _frameFilenameGenerator;
   AnimationFrameFilenameGenerator _frameFilenameGenerator = _basicFrameFilenameGenerator;
   set frameFilenameGenerator(AnimationFrameFilenameGenerator frameFilenameGenerator) {
-    _frameFilenameGenerator = frameFilenameGenerator ?? _basicFrameFilenameGenerator;
+    assert(frameFilenameGenerator != null);
+    _frameFilenameGenerator = frameFilenameGenerator;
   }
 
-  _DiagramFlutterBinding get _binding => _DiagramFlutterBinding.instance();
+  _DiagramFlutterBinding get _binding => _DiagramFlutterBinding.instance;
 
   /// Advances the animation clock by the given duration.
   ///
@@ -294,15 +268,15 @@ class DiagramController {
   /// [builder] in logical coordinates, multiplied by the [pixelRatio].
   ///
   /// Time will be advanced by [duration] before taking the snapshot.
-  Future<ui.Image> drawDiagramToImage({Duration duration: Duration.zero}) async {
+  Future<ui.Image> drawDiagramToImage({Duration duration: Duration.zero}) {
     advanceTime(duration);
     return _binding.takeSnapshot();
   }
 
   /// Draws the widget returned by [builder] and writes it to [outputFile].
   ///
-  /// The file will be written in whatever format the suffix on the file
-  /// indicates. Valid suffixes are ".jpg", ".jpeg", ".png", ".gif", and ".tga".
+  /// The file will be written in PNG format, and the only acceptable suffix
+  /// for the [outputFile] is ".png".
   Future<File> drawDiagramToFile(
     File outputFile, {
     ui.ImageByteFormat format: ui.ImageByteFormat.png,
@@ -312,11 +286,12 @@ class DiagramController {
       // If output path is relative, make it relative to the output directory.
       outputFile = new File(path.join(outputDirectory.absolute.path, outputFile.path));
     }
-    ui.Image captured = await drawDiagramToImage();
-    ByteData encoded = await captured.toByteData(format: format);
-    List<int> bytes = encoded.buffer.asUint8List().toList();
+    assert(outputFile.path.endsWith('.png'));
+    final ui.Image captured = await drawDiagramToImage();
+    final ByteData encoded = await captured.toByteData(format: format);
+    final List<int> bytes = encoded.buffer.asUint8List().toList();
     print('Writing ${bytes.length} bytes, ${captured.width}x${captured.height} '
-        '${_byteFormatToString(format)}, to ${outputFile.absolute.path}.');
+        '${_byteFormatToString(format)}, to: ${outputFile.absolute.path}');
     await outputFile.writeAsBytes(bytes);
     return outputFile;
   }
@@ -350,10 +325,10 @@ class DiagramController {
     assert(start >= Duration.zero);
 
     Duration now = start;
-    List<ui.Image> outputImages = <ui.Image>[];
+    final List<ui.Image> outputImages = <ui.Image>[];
     while (now <= end) {
       ui.Image captured = await drawDiagramToImage();
-      print('Generated frame for $now, ${captured.width}x${captured.height}');
+      print('Generated frame for $now, ${captured.width}x${captured.height}.');
       outputImages.add(captured);
       advanceTime(frameDuration);
       now += frameDuration;
@@ -366,8 +341,8 @@ class DiagramController {
   ///
   /// The filenames are determined by [frameFilenameGenerator].
   ///
-  /// The files will be written in whatever format the suffix on the file
-  /// indicates. Valid suffixes are ".jpg", ".jpeg", ".png", ".gif", and ".tga".
+  /// The files will be written in PNG format, and the only acceptable suffix
+  /// for the filenames generated by [frameFilenameGenerator] is ".png".
   ///
   /// The animation will start at timestamp [start], end at [end], with the time
   /// between frames specified by [frameDuration].  For instance, to generate
@@ -397,14 +372,14 @@ class DiagramController {
 
     Duration now = start;
     int index = 0;
-    List<File> outputFiles = <File>[];
+    final List<File> outputFiles = <File>[];
     while (now <= end) {
       File outputFile = _getFrameFilename(now, index);
       ui.Image captured = await drawDiagramToImage();
       ByteData encoded = await captured.toByteData(format: format);
       List<int> bytes = encoded.buffer.asUint8List().toList();
       print('Writing frame $index ($now), ${bytes.length} bytes, ${captured.width}x${captured.height} '
-          '${_byteFormatToString(format)}, to ${outputFile.absolute.path}');
+          '${_byteFormatToString(format)}, to: ${outputFile.absolute.path}');
       outputFile.writeAsBytesSync(bytes);
       advanceTime(frameDuration);
       outputFiles.add(outputFile);

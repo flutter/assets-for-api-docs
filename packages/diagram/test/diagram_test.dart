@@ -22,20 +22,16 @@ File filenameGenerator(Duration timestamp, int index) {
   return new File('test_name_${timestamp.inMilliseconds}_$index.png');
 }
 
-class TestAnimatedDiagram extends StatefulWidget {
+class TestAnimatedDiagram extends StatelessWidget {
   TestAnimatedDiagram({Key key, this.size: 1.0}) : super(key: key);
 
   final double size;
 
-  _TestAnimatedDiagramState createState() => new _TestAnimatedDiagramState();
-}
-
-class _TestAnimatedDiagramState extends State<TestAnimatedDiagram> {
   Widget build(BuildContext context) {
     return new AnimatedContainer(
       duration: const Duration(seconds: 1),
-      width: widget.size,
-      height: widget.size,
+      width: size,
+      height: size,
       decoration: new ShapeDecoration(
         shape: const BeveledRectangleBorder(
           borderRadius: const BorderRadius.all(const Radius.circular(10.0)),
@@ -61,6 +57,22 @@ void main() {
     test('can create an image from a static widget', () async {
       DiagramController controller = new DiagramController(
         builder: buildStaticDiagram,
+        outputDirectory: outputDir,
+        frameFilenameGenerator: filenameGenerator,
+        pixelRatio: 1.0,
+        screenDimensions: const Size(100.0, 100.0),
+      );
+
+      ui.Image captured = await controller.drawDiagramToImage();
+      expect(captured.width, equals(100));
+      expect(captured.height, equals(50));
+      ByteData output = await captured.toByteData(format: ui.ImageByteFormat.rawRgba);
+      expect(output.lengthInBytes, equals(20000));
+    });
+
+    test('allows a null builder', () async {
+      DiagramController controller = new DiagramController(
+        builder: null,
         outputDirectory: outputDir,
         frameFilenameGenerator: filenameGenerator,
         pixelRatio: 1.0,
