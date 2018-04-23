@@ -3,6 +3,8 @@
 // found in the LICENSE file.
 
 import 'dart:io';
+import 'dart:ui' as ui;
+import 'dart:typed_data';
 
 import '../lib/diagram.dart';
 import 'package:test/test.dart';
@@ -65,11 +67,11 @@ void main() {
         screenDimensions: const Size(100.0, 100.0),
       );
 
-      image.Image captured = await controller.drawDiagramToImage();
+      ui.Image captured = await controller.drawDiagramToImage();
       expect(captured.width, equals(100));
       expect(captured.height, equals(50));
-      expect(captured.length, equals(5000));
-      expect(captured[captured.index(50, 10)], equals(0xdd000000)); // Check a pixel value
+      ByteData output = await captured.toByteData(format: ui.ImageByteFormat.rawRgba);
+      expect(output.lengthInBytes, equals(20000));
     });
 
     test('can write an image from static widget to a file', () async {
@@ -103,14 +105,14 @@ void main() {
       );
 
       controller.builder = (BuildContext context) => new TestAnimatedDiagram(key: key, size: 50.0);
-      List<image.Image> outputImages = await controller.drawAnimatedDiagramToImages(
+      List<ui.Image> outputImages = await controller.drawAnimatedDiagramToImages(
         end: const Duration(milliseconds: 1200),
         frameDuration: const Duration(milliseconds: 200),
       );
       expect(outputImages.length, equals(7));
       List<int> expectedSizes = <int>[1, 11, 21, 31, 41, 50, 50];
       int count = 0;
-      for (image.Image capturedImage in outputImages) {
+      for (ui.Image capturedImage in outputImages) {
         expect(capturedImage.width, equals(expectedSizes[count]));
         expect(capturedImage.height, equals(expectedSizes[count]));
         ++count;
