@@ -108,10 +108,10 @@ class DiagramGenerator {
   }) async {
     final Process process = await processStarter(flutterCommand, args, workingDirectory: projectDir);
     final List<String> lines = <String>[];
-    process.stdout.transform(UTF8.decoder).transform(const LineSplitter()).listen((String data) {
+    process.stdout.transform(utf8.decoder).transform(const LineSplitter()).listen((String data) {
       lines.add(data);
     });
-    process.stderr.transform(UTF8.decoder).transform(const LineSplitter()).listen((String data) {
+    process.stderr.transform(utf8.decoder).transform(const LineSplitter()).listen((String data) {
       lines.add(data);
     });
     final DateTime startWait = new DateTime.now();
