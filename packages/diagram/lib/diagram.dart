@@ -255,7 +255,7 @@ class DiagramController {
   /// files.
   Directory outputDirectory;
 
-  double get pixelRation => _binding.pixelRatio;
+  double get pixelRatio => _binding.pixelRatio;
   set pixelRatio(double ratio) => _binding.pixelRatio = ratio;
 
   /// The generator for filenames when calling drawAnimatedDiagramToFile.
