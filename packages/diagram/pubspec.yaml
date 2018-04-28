@@ -14,5 +14,9 @@ dev_dependencies:
     sdk: flutter
   image: ^1.0.30
 
+test_dependencies:
+  diagram:
+    path: .
+
 # The following section is specific to Flutter.
 flutter:

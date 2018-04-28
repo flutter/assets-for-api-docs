@@ -31,6 +31,7 @@ class _Diagram extends StatelessWidget {
   final GlobalKey boundaryKey;
   final Widget child;
 
+  @override
   Widget build(BuildContext context) {
     return new MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -100,20 +101,26 @@ class _DiagramViewConfiguration extends ViewConfiguration {
 // diagrams can control their timeline and physical device size.
 class _DiagramFlutterBinding extends BindingBase
     with
-        GestureBinding, //
+        GestureBinding,
         ServicesBinding,
         SchedulerBinding,
         PaintingBinding,
         RendererBinding,
         WidgetsBinding {
+  @override
+  void initInstances() {
+    super.initInstances();
+    _controller = new WidgetController(this);
+  }
+
+  WidgetController _controller;
 
   /// The current [_DiagramFlutterBinding], if one has been created.
   static _DiagramFlutterBinding get instance {
-    if (_instance == null) {
-      _instance = new _DiagramFlutterBinding();
-    }
+    _instance ??= new _DiagramFlutterBinding();
     return _instance;
   }
+
   static _DiagramFlutterBinding _instance;
 
   @override
@@ -148,6 +155,10 @@ class _DiagramFlutterBinding extends BindingBase
   set screenDimensions(Size screenDimensions) {
     _screenDimensions = screenDimensions;
     handleMetricsChanged();
+  }
+
+  Future<TestGesture> startGesture(Offset downLocation, {int pointer}) {
+    return _controller.startGesture(downLocation, pointer: pointer);
   }
 
   @override
@@ -244,6 +255,9 @@ class DiagramController {
   /// files.
   Directory outputDirectory;
 
+  double get pixelRatio => _binding.pixelRatio;
+  set pixelRatio(double ratio) => _binding.pixelRatio = ratio;
+
   /// The generator for filenames when calling drawAnimatedDiagramToFile.
   ///
   /// If the returned filenames are relative paths, they will be relative to
@@ -257,10 +271,21 @@ class DiagramController {
 
   _DiagramFlutterBinding get _binding => _DiagramFlutterBinding.instance;
 
+  /// Start a gesture.  The returned [TestGesture] can be used to provide
+  /// further interaction. It may be necessary to call [advanceTime] with
+  /// no arguments to schedule a frame after interacting with the returned
+  /// gesture ([startGesture] automatically does this for you for the initial
+  /// tap down event).
+  Future<TestGesture> startGesture(Offset location, {int pointer}) async {
+    final TestGesture gesture = await _binding.startGesture(location, pointer: pointer);
+    advanceTime(); // Schedule a frame.
+    return gesture;
+  }
+
   /// Advances the animation clock by the given duration.
   ///
   /// The [increment] must be greater than, or equal to, [Duration.zero].
-  void advanceTime(Duration increment) => _binding.pump(duration: increment);
+  void advanceTime([Duration increment]) => _binding.pump(duration: increment ?? Duration.zero);
 
   /// Returns an [image.Image] representing the current diagram.
   ///
@@ -277,8 +302,12 @@ class DiagramController {
   ///
   /// The file will be written in PNG format, and the only acceptable suffix
   /// for the [outputFile] is ".png".
+  ///
+  /// If [duration] is specified, advance time by [duration] before taking the
+  /// snapshot.
   Future<File> drawDiagramToFile(
     File outputFile, {
+    Duration duration: Duration.zero,
     ui.ImageByteFormat format: ui.ImageByteFormat.png,
   }) async {
     assert(outputFile != null);
@@ -287,7 +316,7 @@ class DiagramController {
       outputFile = new File(path.join(outputDirectory.absolute.path, outputFile.path));
     }
     assert(outputFile.path.endsWith('.png'));
-    final ui.Image captured = await drawDiagramToImage();
+    final ui.Image captured = await drawDiagramToImage(duration: duration);
     final ByteData encoded = await captured.toByteData(format: format);
     final List<int> bytes = encoded.buffer.asUint8List().toList();
     print('Writing ${bytes.length} bytes, ${captured.width}x${captured.height} '
@@ -327,7 +356,7 @@ class DiagramController {
     Duration now = start;
     final List<ui.Image> outputImages = <ui.Image>[];
     while (now <= end) {
-      ui.Image captured = await drawDiagramToImage();
+      final ui.Image captured = await drawDiagramToImage();
       print('Generated frame for $now, ${captured.width}x${captured.height}.');
       outputImages.add(captured);
       advanceTime(frameDuration);
@@ -374,10 +403,10 @@ class DiagramController {
     int index = 0;
     final List<File> outputFiles = <File>[];
     while (now <= end) {
-      File outputFile = _getFrameFilename(now, index);
-      ui.Image captured = await drawDiagramToImage();
-      ByteData encoded = await captured.toByteData(format: format);
-      List<int> bytes = encoded.buffer.asUint8List().toList();
+      final File outputFile = _getFrameFilename(now, index);
+      final ui.Image captured = await drawDiagramToImage();
+      final ByteData encoded = await captured.toByteData(format: format);
+      final List<int> bytes = encoded.buffer.asUint8List().toList();
       print('Writing frame $index ($now), ${bytes.length} bytes, ${captured.width}x${captured.height} '
           '${_byteFormatToString(format)}, to: ${outputFile.absolute.path}');
       outputFile.writeAsBytesSync(bytes);
