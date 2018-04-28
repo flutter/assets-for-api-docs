@@ -9,6 +9,6 @@ if [[ "$1" == "analyze" ]]; then
 
 elif [[ "$1" == "test" ]]; then
   echo "Running tests."
-  (cd src && flutter test)
+  (cd diagrams && flutter test)
   (cd packages/diagram && flutter test)
 fi

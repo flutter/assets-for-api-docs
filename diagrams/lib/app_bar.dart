@@ -30,7 +30,7 @@ class _DiagramState extends State<AppBarDiagram> {
   @override
   Widget build(BuildContext context) {
     return new ConstrainedBox(
-      constraints: new BoxConstraints.tight(const Size(450.0, 217.0)),
+      constraints: new BoxConstraints.tight(const Size(450.0 * 1.2, 217.0 * 1.2)),
       child: new Theme(
         data: new ThemeData(
           primarySwatch: Colors.blue,
@@ -110,6 +110,7 @@ class AppBarDiagramStep extends DiagramStep {
 
   @override
   Future<List<File>> generateDiagrams() async {
+    controller.pixelRatio = 1.0 / 1.2;
     controller.builder = (BuildContext context) => const AppBarDiagram();
     return <File>[
       await controller.drawDiagramToFile(new File('app_bar.png')),

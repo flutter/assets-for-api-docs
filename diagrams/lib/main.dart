@@ -67,4 +67,5 @@ Future<Null> main(List<String> arguments) async {
     }
   }
   print('Total elapsed time: ${new DateTime.now().difference(start)}');
+  exit(0);
 }
