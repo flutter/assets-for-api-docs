@@ -1,8 +1,8 @@
-name: diagram
-description: A package for creating diagrams with Flutter.
+name: diagram_capture
+description: A package for capturing images of diagrams with Flutter.
 version: 0.0.1
-author:
-homepage:
+author: Chromium Authors
+homepage: http://www.flutter.io
 
 dependencies:
   flutter:
@@ -13,10 +13,6 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   image: ^1.0.30
-
-test_dependencies:
-  diagram:
-    path: .
 
 # The following section is specific to Flutter.
 flutter:

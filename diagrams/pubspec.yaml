@@ -4,8 +4,8 @@ description: Main app for building API doc assets.
 dependencies:
   flutter:
     sdk: flutter
-  diagram:
-    path: ../packages/diagram
+  diagram_capture:
+    path: ../packages/diagram_capture
   path_provider: any
   archive: 1.0.33
   process: 3.0.1

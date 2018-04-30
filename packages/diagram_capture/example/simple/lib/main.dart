@@ -5,7 +5,7 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:diagram/diagram.dart';
+import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -40,7 +40,7 @@ class _MyDiagramState extends State<MyDiagram> {
 
 Future<Null> main() async {
   final Directory directory = new Directory(
-    path.join((await getApplicationDocumentsDirectory()).absolute.path, 'diagrams'),
+    path.join((await getApplicationDocumentsDirectory()).absolute.path, 'output'),
   );
   if (directory.existsSync()) {
     directory.deleteSync(recursive: true);

@@ -1,6 +1,6 @@
-# Diagram
+# Image Capture
 
-A package for creating diagrams with Flutter.
+A package for capturing images of diagrams with Flutter.
 
 This package helps in creating diagrams for Flutter documentation. The intention
 is that any diagrams we produce are created using Flutter so that if widgets or

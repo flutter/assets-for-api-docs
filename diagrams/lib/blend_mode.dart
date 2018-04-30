@@ -7,7 +7,7 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:ui' show Image;
 
-import 'package:diagram/diagram.dart';
+import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' hide Image;
 

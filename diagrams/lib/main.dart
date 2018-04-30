@@ -6,7 +6,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
 
-import 'package:diagram/diagram.dart';
+import 'package:diagram_capture/diagram_capture.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 

@@ -5,7 +5,7 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:diagram/diagram.dart';
+import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
