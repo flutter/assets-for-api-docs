@@ -6,7 +6,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:ui' as ui;
 
-import 'package:diagram/diagram.dart';
+import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
 

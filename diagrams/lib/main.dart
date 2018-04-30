@@ -6,7 +6,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
 
-import 'package:diagram/diagram.dart';
+import 'package:diagram_capture/diagram_capture.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 
@@ -67,4 +67,5 @@ Future<Null> main(List<String> arguments) async {
     }
   }
   print('Total elapsed time: ${new DateTime.now().difference(start)}');
+  exit(0);
 }

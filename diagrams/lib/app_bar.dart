@@ -5,14 +5,16 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:diagram/diagram.dart';
+import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
 import 'utils.dart';
 
+const double _kOutputSizeScale = 1.2;
+
 class AppBarDiagram extends StatefulWidget {
-  const AppBarDiagram({ Key key }) : super(key: key);
+  const AppBarDiagram({Key key}) : super(key: key);
 
   @override
   _DiagramState createState() => new _DiagramState();
@@ -30,7 +32,10 @@ class _DiagramState extends State<AppBarDiagram> {
   @override
   Widget build(BuildContext context) {
     return new ConstrainedBox(
-      constraints: new BoxConstraints.tight(const Size(450.0, 217.0)),
+      constraints: new BoxConstraints.tight(const Size(
+        450.0 * _kOutputSizeScale,
+        217.0 * _kOutputSizeScale,
+      )),
       child: new Theme(
         data: new ThemeData(
           primarySwatch: Colors.blue,
@@ -62,7 +67,8 @@ class _DiagramState extends State<AppBarDiagram> {
                           gradient: new LinearGradient(
                             begin: const FractionalOffset(0.50, 0.0),
                             end: const FractionalOffset(0.48, 1.0),
-                            colors: <Color>[Colors.blue.shade500, Colors.blue.shade800]),
+                            colors: <Color>[Colors.blue.shade500, Colors.blue.shade800],
+                          ),
                         ),
                       ),
                       bottom: new PreferredSize(
@@ -110,6 +116,7 @@ class AppBarDiagramStep extends DiagramStep {
 
   @override
   Future<List<File>> generateDiagrams() async {
+    controller.pixelRatio = 1.0 / _kOutputSizeScale;
     controller.builder = (BuildContext context) => const AppBarDiagram();
     return <File>[
       await controller.drawDiagramToFile(new File('app_bar.png')),

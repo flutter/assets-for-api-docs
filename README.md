@@ -32,8 +32,8 @@ the `tests` directory should not be optimised.
 
 ## Generation
 
-See the [documentation for the generate.dart script in the src
-directory](src/README.md), which will will generate a number of
+See the [documentation for the generate.dart script in the `diagrams`
+directory](diagrams/README.md), which will will generate a number of
 existing assets. Feel free to add more programs there to generate
 new assets.
 
@@ -41,3 +41,4 @@ new assets.
 
 * `/videos/bee.mp4`: CC0 Creative Commons, from [https://pixabay.com/en/videos/honey-bee-insect-bee-flower-flying-211/](https://pixabay.com/en/videos/honey-bee-insect-bee-flower-flying-211/)
 * `/videos/butterfly.mp4`: CC0 Creative Commons, from [https://pixabay.com/en/videos/butterfly-flower-insect-nature-209/](https://pixabay.com/en/videos/butterfly-flower-insect-nature-209/)
+* Also see the license information for [images used in the diagrams](diagrams/assets/README.md)

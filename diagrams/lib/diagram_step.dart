@@ -4,7 +4,7 @@
 
 import 'dart:async';
 import 'dart:io';
-import 'package:diagram/diagram.dart';
+import 'package:diagram_capture/diagram_capture.dart';
 
 /// Describes a step in drawing the diagrams.
 abstract class DiagramStep {
