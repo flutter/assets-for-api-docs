@@ -24,7 +24,6 @@
 
 analyzer:
   language:
-    enableStrictCallChecks: true
     enableSuperMixins: true
   strong-mode:
     implicit-dynamic: false

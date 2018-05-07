@@ -95,7 +95,7 @@ class InkResponseSmallDiagramStep extends DiagramStep {
     final List<File> result = <File>[
       await controller.drawDiagramToFile(
         new File('ink_response_small.png'),
-        duration: const Duration(milliseconds: 550),
+        timestamp: const Duration(milliseconds: 550),
       ),
     ];
     gesture.up();

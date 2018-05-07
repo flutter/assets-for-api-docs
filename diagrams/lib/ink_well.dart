@@ -95,7 +95,7 @@ class InkWellDiagramStep extends DiagramStep {
     final List<File> result = <File>[
       await controller.drawDiagramToFile(
         new File('ink_well.png'),
-        duration: const Duration(milliseconds: 550),
+        timestamp: const Duration(milliseconds: 550),
       ),
     ];
     gesture.up();
