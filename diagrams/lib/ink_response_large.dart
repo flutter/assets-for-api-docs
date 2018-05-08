@@ -24,6 +24,7 @@ class InkResponseLargeDiagram extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new ConstrainedBox(
+      key: new UniqueKey(),
       constraints: new BoxConstraints.tight(const Size(280.0, 180.0)),
       child: new Theme(
         data: new ThemeData(
@@ -86,7 +87,6 @@ class InkResponseLargeDiagramStep extends DiagramStep {
 
   @override
   Future<List<File>> generateDiagrams() async {
-    controller.pixelRatio = 1.6;
     controller.builder = (BuildContext context) => new InkResponseLargeDiagram();
     controller.advanceTime(Duration.zero);
     final RenderBox target = splashKey.currentContext.findRenderObject();
@@ -99,7 +99,6 @@ class InkResponseLargeDiagramStep extends DiagramStep {
       ),
     ];
     gesture.up();
-    controller.pixelRatio = 1.0;
     return result;
   }
 }

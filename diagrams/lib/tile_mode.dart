@@ -66,6 +66,7 @@ class TileModeDiagram extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new ConstrainedBox(
+      key: new UniqueKey(),
       constraints: const BoxConstraints.tightFor(width: width, height: height),
       child: DefaultTextStyle.merge(
       style: const TextStyle(

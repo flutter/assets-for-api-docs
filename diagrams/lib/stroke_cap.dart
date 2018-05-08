@@ -121,6 +121,7 @@ class StrokeCapPainterWidget extends StatelessWidget {
     );
 
     return new ConstrainedBox(
+      key: new UniqueKey(),
       constraints: new BoxConstraints.tight(const Size(150.0, 100.0)),
       child: new Container(
         padding: const EdgeInsets.all(18.0),

@@ -11,8 +11,6 @@ import 'package:flutter/material.dart';
 import 'diagram_step.dart';
 import 'utils.dart';
 
-const double _kOutputSizeScale = 1.2;
-
 class AppBarDiagram extends StatefulWidget {
   const AppBarDiagram({Key key}) : super(key: key);
 
@@ -32,9 +30,10 @@ class _DiagramState extends State<AppBarDiagram> {
   @override
   Widget build(BuildContext context) {
     return new ConstrainedBox(
+      key: new UniqueKey(),
       constraints: new BoxConstraints.tight(const Size(
-        450.0 * _kOutputSizeScale,
-        217.0 * _kOutputSizeScale,
+        540.0,
+        260.0,
       )),
       child: new Theme(
         data: new ThemeData(
@@ -116,10 +115,10 @@ class AppBarDiagramStep extends DiagramStep {
 
   @override
   Future<List<File>> generateDiagrams() async {
-    controller.pixelRatio = 1.0 / _kOutputSizeScale;
     controller.builder = (BuildContext context) => const AppBarDiagram();
-    return <File>[
+    final List<File> results = <File>[
       await controller.drawDiagramToFile(new File('app_bar.png')),
     ];
+    return results;
   }
 }

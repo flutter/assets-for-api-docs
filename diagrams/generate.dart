@@ -207,7 +207,7 @@ class ProcessPool {
       );
     } catch (e) {
       failedJobs.add(job);
-      print('Job $job failed: $e');
+      print('\nJob $job failed: $e');
     } finally {
       inProgressJobs.remove(job);
       if (pendingJobs.isNotEmpty) {
@@ -215,7 +215,6 @@ class ProcessPool {
         inProgressJobs[newJob] = _scheduleJob(newJob);
       } else {
         if (inProgressJobs.isEmpty) {
-          print('');
           completer.complete(completedJobs);
         }
       }
@@ -241,7 +240,11 @@ class ProcessPool {
       final WorkerJob job = pendingJobs.removeAt(0);
       inProgressJobs[job] = _scheduleJob(job);
     }
-    return completer.future;
+    return completer.future.then((Map<WorkerJob, List<int>> result) {
+      stdout.write('\n');
+      stdout.flush();
+      return result;
+    });
   }
 }
 

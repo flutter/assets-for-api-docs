@@ -53,6 +53,7 @@ class ColorSwatchDiagram extends ColorDiagram {
       ));
     }
     return new ConstrainedBox(
+      key: new UniqueKey(),
       constraints: const BoxConstraints(minWidth: _kSwatchWidth, maxWidth: _kSwatchWidth),
       child: new Material(
         color: Colors.white,
@@ -91,6 +92,7 @@ class ColorListDiagram extends ColorDiagram {
       ));
     }
     return new ConstrainedBox(
+      key: new UniqueKey(),
       constraints: const BoxConstraints(minWidth: _kSwatchWidth, maxWidth: _kSwatchWidth),
       child: new Material(
         color: Colors.white,

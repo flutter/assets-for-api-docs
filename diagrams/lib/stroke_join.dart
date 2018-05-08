@@ -80,8 +80,8 @@ class StrokeJoinDescription extends CustomPainter {
         ) +
         center;
     final Offset shortEnd = new Offset(
-          0.5 * 20.0 * math.cos(radians),
-          0.5 * 20.0 * math.sin(radians),
+          20.0 * math.cos(radians),
+          20.0 * math.sin(radians),
         ) +
         center;
 
