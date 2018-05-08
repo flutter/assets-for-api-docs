@@ -207,7 +207,7 @@ class ProcessPool {
       );
     } catch (e) {
       failedJobs.add(job);
-      print('Job $job failed: $e');
+      print('\nJob $job failed: $e');
     } finally {
       inProgressJobs.remove(job);
       if (pendingJobs.isNotEmpty) {
@@ -215,7 +215,6 @@ class ProcessPool {
         inProgressJobs[newJob] = _scheduleJob(newJob);
       } else {
         if (inProgressJobs.isEmpty) {
-          print('');
           completer.complete(completedJobs);
         }
       }
@@ -241,7 +240,11 @@ class ProcessPool {
       final WorkerJob job = pendingJobs.removeAt(0);
       inProgressJobs[job] = _scheduleJob(job);
     }
-    return completer.future;
+    return completer.future.then((Map<WorkerJob, List<int>> result) {
+      stdout.write('\n');
+      stdout.flush();
+      return result;
+    });
   }
 }
 
@@ -344,10 +347,8 @@ class DiagramGenerator {
     assert(metadataFile.existsSync());
     final Map<String, dynamic> metadata = json.decode(metadataFile.readAsStringSync());
     final String baseDir = path.dirname(metadataFile.absolute.path);
-    final List<File> frameFiles = <File>[];
-    for (String name in metadata['frame_files']) {
-      frameFiles.add(new File(path.normalize(path.join(baseDir, name))));
-    }
+    final List<File> frameFiles = metadata['frame_files']
+        .map<File>((dynamic name) => new File(path.normalize(path.join(baseDir, name)))).toList();
     metadata['frame_files'] = frameFiles;
     metadata['metadata_file'] = path.normalize(metadataFile.absolute.path);
     return metadata;
@@ -403,7 +404,7 @@ class DiagramGenerator {
       final Map<String, dynamic> metadata = _loadMetadata(metadataFile);
       metadataList.add(metadata);
       animationFiles.add(metadata['metadata_file']);
-      animationFiles.addAll(metadata['frame_files'].map((File file) => path.normalize(file.absolute.path)));
+      animationFiles.addAll(metadata['frame_files'].map((File file) => file.absolute.path));
     }
     final List<File> staticFiles = inputFiles.where((File input) {
       if (!input.isAbsolute) {

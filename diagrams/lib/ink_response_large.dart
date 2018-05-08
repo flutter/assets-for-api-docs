@@ -86,7 +86,6 @@ class InkResponseLargeDiagramStep extends DiagramStep {
 
   @override
   Future<List<File>> generateDiagrams() async {
-    controller.pixelRatio = 1.6;
     controller.builder = (BuildContext context) => new InkResponseLargeDiagram();
     controller.advanceTime(Duration.zero);
     final RenderBox target = splashKey.currentContext.findRenderObject();
@@ -99,7 +98,6 @@ class InkResponseLargeDiagramStep extends DiagramStep {
       ),
     ];
     gesture.up();
-    controller.pixelRatio = 1.0;
     return result;
   }
 }

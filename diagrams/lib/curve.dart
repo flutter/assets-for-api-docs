@@ -24,16 +24,14 @@ class CurveDescription extends CustomPainter {
   final Curve curve;
 
   Widget get widget {
-    return new KeyedSubtree(
-      child: new ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 130.0),
-        child: new AspectRatio(
-          aspectRatio: 1.7,
-          child: new Padding(
-            padding: new EdgeInsets.all(ui.window.devicePixelRatio),
-            child: new CustomPaint(
-              painter: this,
-            ),
+    return new ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: 130.0),
+      child: new AspectRatio(
+        aspectRatio: 1.7,
+        child: new Padding(
+          padding: new EdgeInsets.all(ui.window.devicePixelRatio),
+          child: new CustomPaint(
+            painter: this,
           ),
         ),
       ),

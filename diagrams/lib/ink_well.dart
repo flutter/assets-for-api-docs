@@ -86,7 +86,6 @@ class InkWellDiagramStep extends DiagramStep {
 
   @override
   Future<List<File>> generateDiagrams() async {
-    controller.pixelRatio = 1.6;
     controller.builder = (BuildContext context) => new InkWellDiagram();
     controller.advanceTime(Duration.zero);
     final RenderBox target = splashKey.currentContext.findRenderObject();
@@ -99,7 +98,6 @@ class InkWellDiagramStep extends DiagramStep {
       ),
     ];
     gesture.up();
-    controller.pixelRatio = 1.0;
     return result;
   }
 }

@@ -80,8 +80,8 @@ class StrokeJoinDescription extends CustomPainter {
         ) +
         center;
     final Offset shortEnd = new Offset(
-          0.5 * 20.0 * math.cos(radians),
-          0.5 * 20.0 * math.sin(radians),
+          20.0 * math.cos(radians),
+          20.0 * math.sin(radians),
         ) +
         center;
 
@@ -100,13 +100,13 @@ class StrokeJoinDescription extends CustomPainter {
       ..strokeMiterLimit = strokeMiterLimit
       ..strokeWidth = 20.0;
 
-    Path line = new Path()
-      ..moveTo(start.dx, start.dy) // vertical axis
+    Path line = new Path() // Line
+      ..moveTo(start.dx, start.dy)
       ..lineTo(middle.dx, middle.dy)
       ..lineTo(end.dx, end.dy);
     canvas.drawPath(line, linePaint);
-    line = new Path()
-      ..moveTo(start.dx + center.dy - 20.0, start.dy) // vertical axis
+    line = new Path() // Center area, to highlight the part with the join.
+      ..moveTo(start.dx + center.dy - 20.0, start.dy)
       ..lineTo(middle.dx, middle.dy)
       ..lineTo(shortEnd.dx, shortEnd.dy);
     canvas.drawPath(line, centerPaint);

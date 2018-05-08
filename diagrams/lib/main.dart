@@ -56,18 +56,19 @@ Future<Null> main(List<String> arguments) async {
     new InkResponseLargeDiagramStep(controller),
     new InkResponseSmallDiagramStep(controller),
     new InkWellDiagramStep(controller),
-    new TileModeDiagramStep(controller),
-    new StrokeJoinDiagramStep(controller),
     new StrokeCapDiagramStep(controller),
+    new StrokeJoinDiagramStep(controller),
+    new TileModeDiagramStep(controller),
   ];
 
   for (DiagramStep step in steps) {
     final Directory stepOutputDirectory = new Directory(path.join(outputDirectory.absolute.path, step.category));
     stepOutputDirectory.createSync(recursive: true);
     controller.outputDirectory = stepOutputDirectory;
+    controller.pixelRatio = 1.0;
     final List<File> files = await step.generateDiagrams();
     for (File file in files) {
-      print('Created file $file');
+      print('Created file ${file.path}');
     }
   }
   final DateTime end = new DateTime.now();

@@ -78,16 +78,16 @@ class StrokeCapDescription extends CustomPainter {
       ..strokeCap = cap
       ..strokeWidth = 20.0;
 
-    Path line = new Path()
-      ..moveTo(start.dx, start.dy) // vertical axis
+    Path line = new Path() // Line
+      ..moveTo(start.dx, start.dy)
       ..lineTo(middle.dx, middle.dy);
     canvas.drawPath(line, linePaint);
-    line = new Path()
-      ..moveTo(start.dx, start.dy) // vertical axis
+    line = new Path() // Start point, so that it doesn't show the starting end cap.
+      ..moveTo(start.dx, start.dy)
       ..lineTo(start.dx, start.dy);
     canvas.drawPath(line, startPaint);
-    line = new Path()
-      ..moveTo(middle.dx, middle.dy) // vertical axis
+    line = new Path() // End point, a different color to highlight the cap.
+      ..moveTo(middle.dx, middle.dy)
       ..lineTo(middle.dx, middle.dy);
     canvas.drawPath(line, endPaint);
     _capPainter.paint(
