@@ -45,6 +45,7 @@ class BoxFitDiagram extends StatelessWidget {
       ),
     );
     return new Container(
+      key: new UniqueKey(),
       width: 300.0,
       height: 90.0,
       child: new Row(

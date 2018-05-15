@@ -2,10 +2,12 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
+import 'package:path/path.dart' as path;
 import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -18,8 +20,8 @@ Widget buildStaticDiagram(BuildContext context) {
   );
 }
 
-File filenameGenerator(Duration timestamp, int index) {
-  return new File('test_name_${timestamp.inMilliseconds}_$index.png');
+File filenameGenerator() {
+  return new File('test_name');
 }
 
 class TestAnimatedDiagram extends StatelessWidget {
@@ -80,7 +82,7 @@ void main() {
       final DiagramController controller = new DiagramController(
         builder: buildStaticDiagram,
         outputDirectory: outputDir,
-        frameFilenameGenerator: filenameGenerator,
+        filenameGenerator: filenameGenerator,
         pixelRatio: 1.0,
         screenDimensions: const Size(100.0, 100.0),
       );
@@ -96,7 +98,7 @@ void main() {
       final DiagramController controller = new DiagramController(
         builder: null,
         outputDirectory: outputDir,
-        frameFilenameGenerator: filenameGenerator,
+        filenameGenerator: filenameGenerator,
         pixelRatio: 1.0,
         screenDimensions: const Size(100.0, 100.0),
       );
@@ -112,7 +114,7 @@ void main() {
       final DiagramController controller = new DiagramController(
         builder: buildStaticDiagram,
         outputDirectory: outputDir,
-        frameFilenameGenerator: filenameGenerator,
+        filenameGenerator: filenameGenerator,
         pixelRatio: 1.0,
         screenDimensions: const Size(100.0, 100.0),
       );
@@ -133,7 +135,7 @@ void main() {
       final DiagramController controller = new DiagramController(
         builder: (BuildContext context) => new TestAnimatedDiagram(key: key, size: 1.0),
         outputDirectory: outputDir,
-        frameFilenameGenerator: filenameGenerator,
+        filenameGenerator: filenameGenerator,
         pixelRatio: 1.0,
         screenDimensions: const Size(100.0, 100.0),
       );
@@ -158,22 +160,35 @@ void main() {
       final DiagramController controller = new DiagramController(
         builder: (BuildContext context) => new TestAnimatedDiagram(key: key, size: 1.0),
         outputDirectory: outputDir,
-        frameFilenameGenerator: filenameGenerator,
+        filenameGenerator: filenameGenerator,
         pixelRatio: 1.0,
         screenDimensions: const Size(100.0, 100.0),
       );
 
       controller.builder = (BuildContext context) => new TestAnimatedDiagram(key: key, size: 50.0);
-      final List<File> outputFiles = await controller.drawAnimatedDiagramToFiles(
+      final File outputFile = await controller.drawAnimatedDiagramToFiles(
         end: const Duration(milliseconds: 1200),
-        frameDuration: const Duration(milliseconds: 200),
+        frameRate: 5.0,
       );
-      expect(outputFiles.length, equals(7));
-      expect(outputFiles[0].path.endsWith('test_name_0_0.png'), isTrue);
-      expect(outputFiles[6].path.endsWith('test_name_1200_6.png'), isTrue);
-      final List<int> expectedSizes = <int>[1, 11, 21, 31, 41, 50, 50];
+      expect(outputFile.path.endsWith('test_name.json'), isTrue);
       int count = 0;
-      for (File file in outputFiles) {
+      expect(outputFile.existsSync(), isTrue);
+      expect(outputFile.lengthSync(), greaterThan(0));
+
+      Map<String, dynamic> _loadMetadata(File metadataFile) {
+        final Map<String, dynamic> metadata = json.decode(metadataFile.readAsStringSync());
+        final String baseDir = path.dirname(metadataFile.absolute.path);
+        final List<File> frameFiles = metadata['frame_files']
+            .map<File>((dynamic name) => new File(path.normalize(path.join(baseDir, name)))).toList();
+        metadata['frame_files'] = frameFiles;
+        return metadata;
+      }
+      final Map<String, dynamic> metadata = _loadMetadata(outputFile);
+      final List<File> frames = metadata['frame_files'];
+      expect(frames.length, equals(7));
+      expect(frames[0].path, endsWith('test_name_00000.png'));
+      final List<int> expectedSizes = <int>[1, 11, 21, 31, 41, 50, 50];
+      for (File file in frames) {
         expect(file.existsSync(), isTrue);
         expect(file.lengthSync(), greaterThan(0));
         final List<int> imageContents = file.readAsBytesSync();
@@ -188,7 +203,7 @@ void main() {
       final DiagramController controller = new DiagramController(
         builder: buildStaticDiagram,
         outputDirectory: outputDir,
-        frameFilenameGenerator: filenameGenerator,
+        filenameGenerator: filenameGenerator,
         pixelRatio: 3.0,
         screenDimensions: const Size(100.0, 100.0),
       );
@@ -201,14 +216,14 @@ void main() {
       expect(decodedImage.width, equals(300));
       expect(decodedImage.height, equals(150));
       expect(decodedImage.length, equals(45000));
-      expect(decodedImage[decodedImage.index(150, 30)], equals(0xdd000000)); // Check a pixel value
+      expect(decodedImage[decodedImage.index(150, 75)], equals(0xdd000000)); // Check a pixel value
     });
 
     test('can inject gestures', () async {
       final DiagramController controller = new DiagramController(
         builder: (BuildContext context) => new TestTappableDiagram(),
         outputDirectory: outputDir,
-        frameFilenameGenerator: filenameGenerator,
+        filenameGenerator: filenameGenerator,
         pixelRatio: 1.0,
         screenDimensions: const Size(100.0, 100.0),
       );

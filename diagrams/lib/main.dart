@@ -20,6 +20,8 @@ import 'diagram_step.dart';
 import 'ink_response_large.dart';
 import 'ink_response_small.dart';
 import 'ink_well.dart';
+import 'stroke_cap.dart';
+import 'stroke_join.dart';
 import 'tile_mode.dart';
 
 Future<Directory> prepareOutputDirectory() async {
@@ -54,6 +56,8 @@ Future<Null> main(List<String> arguments) async {
     new InkResponseLargeDiagramStep(controller),
     new InkResponseSmallDiagramStep(controller),
     new InkWellDiagramStep(controller),
+    new StrokeCapDiagramStep(controller),
+    new StrokeJoinDiagramStep(controller),
     new TileModeDiagramStep(controller),
   ];
 
@@ -61,11 +65,23 @@ Future<Null> main(List<String> arguments) async {
     final Directory stepOutputDirectory = new Directory(path.join(outputDirectory.absolute.path, step.category));
     stepOutputDirectory.createSync(recursive: true);
     controller.outputDirectory = stepOutputDirectory;
+    controller.pixelRatio = 1.0;
     final List<File> files = await step.generateDiagrams();
     for (File file in files) {
-      print('Created file $file');
+      print('Created file ${file.path}');
     }
   }
-  print('Total elapsed time: ${new DateTime.now().difference(start)}');
+  final DateTime end = new DateTime.now();
+  final Duration elapsed = end.difference(start);
+  const Duration minExecutionTime = const Duration(seconds: 5);
+  print('Total elapsed time: $elapsed');
+  if (elapsed < minExecutionTime) {
+    // If the app runs for less time than this, then it will throw an exception
+    // when we exit because flutter run start trying to sync files to the device
+    // after the process exits, and fails.
+    await new Future<Null>.delayed(minExecutionTime - elapsed);
+  }
+  // Have to actually exit the app, otherwise flutter run won't ever exit,
+  // and the generation script won't continue.
   exit(0);
 }

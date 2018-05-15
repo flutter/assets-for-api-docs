@@ -7,6 +7,7 @@ import 'dart:io';
 
 import 'package:archive/archive.dart';
 import 'package:args/args.dart';
+import 'package:diagram_capture/animation_metadata.dart';
 import 'package:path/path.dart' as path;
 import 'package:platform/platform.dart' as platform_pkg;
 import 'package:process/process.dart';
@@ -71,6 +72,7 @@ class ProcessRunner {
     Directory workingDirectory,
     bool printOutput: true,
     bool failOk: false,
+    Stream<List<int>> stdin,
   }) async {
     workingDirectory ??= defaultWorkingDirectory ?? Directory.current;
     if (printOutput) {
@@ -79,8 +81,14 @@ class ProcessRunner {
     final List<int> output = <int>[];
     final Completer<Null> stdoutComplete = new Completer<Null>();
     final Completer<Null> stderrComplete = new Completer<Null>();
+    final Completer<Null> stdinComplete = new Completer<Null>();
+
     Process process;
     Future<int> allComplete() async {
+      if (stdin != null) {
+        await stdinComplete.future;
+        await process.stdin.close();
+      }
       await stderrComplete.future;
       await stdoutComplete.future;
       return process.exitCode;
@@ -92,6 +100,11 @@ class ProcessRunner {
         workingDirectory: workingDirectory.absolute.path,
         environment: environment,
       );
+      if (stdin != null) {
+        stdin.listen((List<int> data) {
+          process.stdin.add(data);
+        }, onDone: () async => stdinComplete.complete());
+      }
       process.stdout.listen(
         (List<int> event) {
           output.addAll(event);
@@ -175,7 +188,7 @@ class ProcessPool {
 
   void _printReport() {
     final int totalJobs = completedJobs.length + inProgressJobs.length + pendingJobs.length;
-    final String percent = ((100 * completedJobs.length) ~/ totalJobs).toString().padLeft(3);
+    final String percent = totalJobs == 0 ? '100' : ((100 * completedJobs.length) ~/ totalJobs).toString().padLeft(3);
     final String completed = completedJobs.length.toString().padLeft(3);
     final String total = totalJobs.toString().padRight(3);
     final String inProgress = inProgressJobs.length.toString().padLeft(2);
@@ -194,7 +207,7 @@ class ProcessPool {
       );
     } catch (e) {
       failedJobs.add(job);
-      print('Job $job failed: $e');
+      print('\nJob $job failed: $e');
     } finally {
       inProgressJobs.remove(job);
       if (pendingJobs.isNotEmpty) {
@@ -206,8 +219,8 @@ class ProcessPool {
         }
       }
       jobDone.complete(output);
+      _printReport();
     }
-    _printReport();
     return jobDone.future;
   }
 
@@ -227,7 +240,11 @@ class ProcessPool {
       final WorkerJob job = pendingJobs.removeAt(0);
       inProgressJobs[job] = _scheduleJob(job);
     }
-    return completer.future;
+    return completer.future.then((Map<WorkerJob, List<int>> result) {
+      stdout.write('\n');
+      stdout.flush();
+      return result;
+    });
   }
 }
 
@@ -248,6 +265,7 @@ class DiagramGenerator {
 
   static const String flutterCommand = 'flutter';
   static const String optiPngCommand = 'optipng';
+  static const String ffmpegCommand = 'ffmpeg';
   static const String adbCommand = 'adb';
 
   /// The path to the main for the diagram drawing app.
@@ -274,11 +292,14 @@ class DiagramGenerator {
   Directory temporaryDirectory;
 
   Future<Null> generateDiagrams() async {
+    final DateTime startTime = new DateTime.now();
     await _createScreenshots();
-    await _optimizeImages(await _transferImages());
+    final List<File> outputFiles = await _combineAnimations(await _transferImages());
+    await _optimizeImages(outputFiles);
     if (cleanup) {
       await temporaryDirectory.delete(recursive: true);
     }
+    print('Elapsed time for diagram generation: ${new DateTime.now().difference(startTime)}');
   }
 
   Future<Null> _createScreenshots() async {
@@ -289,7 +310,17 @@ class DiagramGenerator {
 
   Future<List<File>> _transferImages() async {
     print('Collecting images from device.');
-    final List<String> args = <String>[adbCommand, 'exec-out', 'run-as', '$appClass', 'tar', 'c', '-C', 'app_flutter/diagrams', '.'];
+    final List<String> args = <String>[
+      adbCommand,
+      'exec-out',
+      'run-as',
+      '$appClass',
+      'tar',
+      'c',
+      '-C',
+      'app_flutter/diagrams',
+      '.',
+    ];
     final List<int> tarData = await processRunner.runProcess(
       args,
       workingDirectory: temporaryDirectory,
@@ -299,7 +330,6 @@ class DiagramGenerator {
     for (ArchiveFile file in new TarDecoder().decodeBytes(tarData)) {
       if (file.isFile) {
         files.add(new File(file.name));
-        print('Saving ${file.name}');
         new File(path.join(temporaryDirectory.absolute.path, file.name))
           ..createSync(recursive: true)
           ..writeAsBytesSync(file.content);
@@ -308,18 +338,113 @@ class DiagramGenerator {
     return files;
   }
 
+  Stream<List<int>> _concatInputs(List<File> files) async* {
+    for (File file in files) {
+      final Stream<List<int>> fileStream = file.openRead();
+      await for (List<int> block in fileStream) {
+        yield block;
+      }
+    }
+  }
+
+  Future<List<File>> _buildMoviesFromMetadata(List<AnimationMetadata> metadataList) async {
+    final Directory destDir = new Directory(path.joinAll(path.split(projectDir)..removeLast()));
+    final List<File> outputs = <File>[];
+    for (AnimationMetadata metadata in metadataList) {
+      final String prefix = '${metadata.category}/${metadata.name}';
+      final File destination = new File(path.join(destDir.path, '$prefix.mp4'));
+      if (destination.existsSync()) {
+        destination.deleteSync();
+      }
+      print('Converting ${metadata.name} animation to mp4.');
+      await processRunner.runProcess(
+        <String>[
+          ffmpegCommand,
+          '-i', '-', // read in the concatenated frame files from stdin.
+          '-framerate', metadata.frameRate.toStringAsFixed(3),
+          '-tune', 'animation', // Optimize the encoder for cell animation.
+          '-preset', 'veryslow', // Use the slowest (best quality) compression preset.
+          '-crf', '0', // lossless quality
+          '-c:v', 'libx264', // encode to mp4 H.264
+          '-y', // overwrite output
+          '-vf', 'format=yuv420p', // video format set to YUV420 color space for compatibility.
+          destination.path, // output movie.
+        ],
+        workingDirectory: temporaryDirectory,
+        stdin: _concatInputs(metadata.frameFiles),
+        printOutput: false,
+      );
+      outputs.add(destination);
+    }
+    return outputs;
+  }
+
+  Future<List<File>> _combineAnimations(List<File> inputFiles) async {
+    final List<File> metadataFiles = inputFiles.where((File input) {
+      return input.path.endsWith('.json');
+    }).toList();
+    // Collect all the animation frames that are in the metadata files so that
+    // we can eliminate them from the other files that were transferred.
+    final Set<String> animationFiles = new Set<String>();
+    final List<AnimationMetadata> metadataList = <AnimationMetadata>[];
+    for (File metadataFile in metadataFiles) {
+      if (!metadataFile.isAbsolute) {
+        metadataFile = new File(
+          path.normalize(
+            path.join(temporaryDirectory.absolute.path, metadataFile.path),
+          ),
+        );
+      }
+      final AnimationMetadata metadata = new AnimationMetadata.fromFile(metadataFile);
+      metadataList.add(metadata);
+      animationFiles.add(metadata.metadataFile.absolute.path);
+      animationFiles.addAll(metadata.frameFiles.map((File file) => file.absolute.path));
+    }
+    final List<File> staticFiles = inputFiles.where((File input) {
+      if (!input.isAbsolute) {
+        input = new File(
+          path.normalize(
+            path.join(temporaryDirectory.absolute.path, input.path),
+          ),
+        );
+      } else {
+        input = new File(path.normalize(input.path));
+      }
+      return !animationFiles.contains(input.absolute.path);
+    }).toList();
+    final List<File> convertedFiles = await _buildMoviesFromMetadata(metadataList);
+    return staticFiles..addAll(convertedFiles);
+  }
+
   Future<Null> _optimizeImages(List<File> files) async {
     final Directory destDir = new Directory(path.joinAll(path.split(projectDir)..removeLast()));
     final List<WorkerJob> jobs = <WorkerJob>[];
     for (File imagePath in files) {
+      if (!imagePath.path.endsWith('.png')) {
+        continue;
+      }
       final File destination = new File(path.join(destDir.path, imagePath.path));
       if (destination.existsSync()) {
         destination.deleteSync();
       }
-      jobs.add(new WorkerJob(<String>[optiPngCommand, '-zc1-9', '-zm1-9', '-zs0-3', '-f0-5', imagePath.path, '-out', destination.path], workingDirectory: temporaryDirectory));
+      jobs.add(new WorkerJob(
+        <String>[
+          optiPngCommand,
+          '-zc1-9',
+          '-zm1-9',
+          '-zs0-3',
+          '-f0-5',
+          imagePath.path,
+          '-out',
+          destination.path,
+        ],
+        workingDirectory: temporaryDirectory,
+      ));
     }
-    final ProcessPool pool = new ProcessPool();
-    await pool.startWorkers(jobs);
+    if (jobs.isNotEmpty) {
+      final ProcessPool pool = new ProcessPool();
+      await pool.startWorkers(jobs);
+    }
   }
 }
 
@@ -340,6 +465,7 @@ Future<Null> main(List<String> arguments) async {
   Directory temporaryDirectory;
   if (flags['tmpdir'] != null && flags['tmpdir'].isNotEmpty) {
     temporaryDirectory = new Directory(flags['tmpdir']);
+    temporaryDirectory.createSync(recursive: true);
     keepTmp = true;
   }
 

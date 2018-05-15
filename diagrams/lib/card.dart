@@ -14,6 +14,7 @@ class CardDiagram extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new ConstrainedBox(
+      key: new UniqueKey(),
       constraints: new BoxConstraints.tight(const Size(400.0, 150.0)),
       child: new Container(
         alignment: FractionalOffset.center,

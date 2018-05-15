@@ -35,14 +35,15 @@ Future<Image> getImage(ImageProvider provider) {
   return completer.future;
 }
 
-class Demo extends StatelessWidget {
-  const Demo(this.mode);
+class BlendModeDiagram extends StatelessWidget {
+  const BlendModeDiagram(this.mode);
 
   final BlendMode mode;
 
   @override
   Widget build(BuildContext context) {
     return new ConstrainedBox(
+      key: new UniqueKey(),
       constraints: new BoxConstraints.tight(const Size.square(400.0)),
       child: new DecoratedBox(
         decoration: new ShapeDecoration(
@@ -242,7 +243,7 @@ class BlendModeDiagramStep extends DiagramStep {
 
     final List<File> outputFiles = <File>[];
     for (BlendMode mode in BlendMode.values) {
-      controller.builder = (BuildContext context) => new Demo(mode);
+      controller.builder = (BuildContext context) => new BlendModeDiagram(mode);
       outputFiles.add(await controller.drawDiagramToFile(new File('blend_mode_${describeEnum(mode)}.png')));
     }
     return outputFiles;

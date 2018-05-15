@@ -24,6 +24,7 @@ class InkResponseSmallDiagram extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new ConstrainedBox(
+      key: new UniqueKey(),
       constraints: new BoxConstraints.tight(const Size(280.0, 180.0)),
       child: new Theme(
         data: new ThemeData(
@@ -86,7 +87,6 @@ class InkResponseSmallDiagramStep extends DiagramStep {
 
   @override
   Future<List<File>> generateDiagrams() async {
-    controller.pixelRatio = 1.6;
     controller.builder = (BuildContext context) => new InkResponseSmallDiagram();
     controller.advanceTime(Duration.zero);
     final RenderBox target = splashKey.currentContext.findRenderObject();
@@ -95,11 +95,10 @@ class InkResponseSmallDiagramStep extends DiagramStep {
     final List<File> result = <File>[
       await controller.drawDiagramToFile(
         new File('ink_response_small.png'),
-        duration: const Duration(milliseconds: 550),
+        timestamp: const Duration(milliseconds: 550),
       ),
     ];
     gesture.up();
-    controller.pixelRatio = 1.0;
     return result;
   }
 }
