@@ -11,11 +11,14 @@ available for linking and reference.
 
 Reference the assets with this URL structure:
 
-`https://flutter.github.io/assets-for-api-docs/<library>/<asset>`
+`https://flutter.github.io/assets-for-api-docs/assets/<library>/<asset>`
 
 For example, an image named `app_bar.png` about `AppBar` from the
-material library would go in the `material/` directory and be at
-`https://flutter.github.io/assets-for-api-docs/material/app_bar.png`.
+material library would go in the `assets/material/` directory and be at
+`https://flutter.github.io/assets-for-api-docs/assets/material/app_bar.png`.
+
+All asset files should be under the `assets` directory in an appropriate
+subdirectory.
 
 ## Optimization
 
@@ -28,17 +31,20 @@ optipng -zc1-9 -zm1-9 -zs0-3 -f0-5 *.png
 ```
 
 Be careful about applying this aggressively. In particular, files in
-the `tests` directory should not be optimised.
+the `tests` directory should not be optimized.
+
+The automatic generation tool will automatically apply optimization to
+the assets it generates.
 
 ## Generation
 
 See the [documentation for the generate.dart script in the `diagrams`
-directory](diagrams/README.md), which will will generate a number of
-existing assets. Feel free to add more modules there to generate
-new assets.
+directory](diagrams/README.md), which will will regenerate a number of
+existing assets using the flutter version you have installed. Feel free
+to add more modules there to generate new assets.
 
 ## Origin of third-party content
 
-* `/videos/bee.mp4`: CC0 Creative Commons, from [https://pixabay.com/en/videos/honey-bee-insect-bee-flower-flying-211/](https://pixabay.com/en/videos/honey-bee-insect-bee-flower-flying-211/)
-* `/videos/butterfly.mp4`: CC0 Creative Commons, from [https://pixabay.com/en/videos/butterfly-flower-insect-nature-209/](https://pixabay.com/en/videos/butterfly-flower-insect-nature-209/)
+* `/assets/videos/bee.mp4`: CC0 Creative Commons, from [https://pixabay.com/en/videos/honey-bee-insect-bee-flower-flying-211/](https://pixabay.com/en/videos/honey-bee-insect-bee-flower-flying-211/)
+* `/assets/videos/butterfly.mp4`: CC0 Creative Commons, from [https://pixabay.com/en/videos/butterfly-flower-insect-nature-209/](https://pixabay.com/en/videos/butterfly-flower-insect-nature-209/)
 * Also see the license information for [images used in the diagrams](diagrams/assets/README.md)

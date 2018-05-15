@@ -348,7 +348,7 @@ class DiagramGenerator {
   }
 
   Future<List<File>> _buildMoviesFromMetadata(List<AnimationMetadata> metadataList) async {
-    final Directory destDir = new Directory(path.joinAll(path.split(projectDir)..removeLast()));
+    final Directory destDir = new Directory(path.joinAll(path.split(projectDir)..removeLast()..add('assets')));
     final List<File> outputs = <File>[];
     for (AnimationMetadata metadata in metadataList) {
       final String prefix = '${metadata.category}/${metadata.name}';
