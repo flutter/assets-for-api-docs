@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
@@ -17,6 +16,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:path/path.dart' as path;
 import 'package:vector_math/vector_math_64.dart';
+
+import 'animation_metadata.dart';
 
 // The diagram host widget. Diagrams are wrapped by this widget to provide
 // the needed structure for capturing them.
@@ -382,35 +383,35 @@ class DiagramController {
   /// underscore followed by four digits describing the frame number, and
   /// ending in ".png" (e.g. "frame_0000.png").
   ///
-  /// The animation will start at timestamp [start], end at [end], with the time
-  /// between frames specified by [frameDuration].  For instance, to generate
-  /// 11 frames of an animation that is 1 second long, set [start] to
+  /// The animation will start at timestamp [start], end at [end], with the
+  /// frame rate (in frames per second) specified by [frameRate].  For instance,
+  /// to generate 11 frames of an animation that is 1 second long, set [start] to
   /// [Duration.zero] (the default), set [end] to `const Duration(seconds: 1)`,
-  /// and set [frameDuration] to `const Duration(milliseconds: 100)`. The
+  /// and set [frameRate] to `11.0`. The
   /// animation includes the frames at [start] and [end].
   ///
   /// None of the parameters may be null. The [start] parameter must be less
-  /// than or equal to the [end] parameter, and the [frameDuration] must be
-  /// less than or equal to the time between [start] and [end]. The [end] and
-  /// [frameDuration] parameters must be greater than [Duration.zero]. The
-  /// [start] parameter must be greater than or equal to [Duration.zero].
+  /// than or equal to the [end] parameter. The [end] parameter must be greater
+  /// than [Duration.zero]. The [start] parameter must be greater than or equal
+  /// to [Duration.zero]. The [frameRate] must be greater than zero.
   Future<File> drawAnimatedDiagramToFiles({
     Duration start: Duration.zero,
     @required Duration end,
-    @required Duration frameDuration,
+    @required double frameRate,
     ui.ImageByteFormat format: ui.ImageByteFormat.png,
-    Map<String, dynamic> metadata,
+    String name,
+    String category,
   }) async {
     assert(end != null);
     assert(start != null);
-    assert(frameDuration != null);
+    assert(frameRate != null);
     assert(end >= start);
-    assert(frameDuration <= (end - start));
-    assert(frameDuration > Duration.zero);
+    assert(frameRate > 0.0);
     assert(end > Duration.zero);
     assert(start >= Duration.zero);
 
     Duration now = start;
+    final Duration frameDuration = new Duration(microseconds: (1e6 / frameRate).round());
     int index = 0;
     final List<File> outputFiles = <File>[];
     while (now <= end) {
@@ -426,28 +427,16 @@ class DiagramController {
       now += frameDuration;
       ++index;
     }
-
-    metadata ??= <String, dynamic>{};
-    if (!metadata.containsKey('name')) {
-      metadata['name'] = 'unknown';
-    }
-    if (!metadata.containsKey('category')) {
-      metadata['category'] = 'unknown';
-    }
-    metadata.addAll(<String, dynamic>{
-      'duration_ms': (end - start).inMilliseconds,
-      'frame_rate_fps': (1000 / frameDuration.inMilliseconds).round(),
-      'frame_files': outputFiles.map<String>((File file) {
-        return path.basename(file.path);
-      }).toList(),
-    });
     final File metadataFile = _getMetadataFilename();
-    const JsonEncoder encoder = const JsonEncoder.withIndent('  ');
-    print('Metadata: $metadata');
-    final String jsonMetadata = encoder.convert(metadata);
-    metadataFile.writeAsStringSync(jsonMetadata);
-
-    return metadataFile;
+    final AnimationMetadata metadata = new AnimationMetadata.fromData(
+      name: name,
+      category: category,
+      duration: end - start,
+      frameRate: 1e6 / frameDuration.inMicroseconds,
+      frameFiles: outputFiles,
+      metadataFile: metadataFile,
+    );
+    return metadata.saveToFile();
   }
 
   static File _basicFilenameGenerator() {
@@ -482,7 +471,7 @@ class DiagramController {
       outputFile = new File(
         path.join(
           outputDirectory.absolute.path,
-          '${outputFile.path}_${index.toString().padLeft(4, '0')}.png',
+          '${outputFile.path}_${index.toString().padLeft(5, '0')}.png',
         ),
       );
     }

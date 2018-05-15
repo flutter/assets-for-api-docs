@@ -13,6 +13,8 @@ import 'package:flutter/material.dart';
 import 'diagram_step.dart';
 
 const double _kFontSize = 14.0;
+const Duration _kAnimationDuration = const Duration(seconds: 5);
+const double _kAnimationFrameRate = 60.0;
 
 class StrokeJoinDescription extends CustomPainter {
   StrokeJoinDescription({
@@ -130,7 +132,7 @@ class StrokeJoinDescription extends CustomPainter {
 class StrokeJoinPainterWidget extends StatefulWidget {
   const StrokeJoinPainterWidget({
     this.filename,
-    this.duration: const Duration(seconds: 6),
+    this.duration: _kAnimationDuration,
     this.startAngle: 0.0,
     this.endAngle: 360.0,
     this.join: StrokeJoin.miter,
@@ -239,10 +241,12 @@ class StrokeJoinDiagramStep extends DiagramStep {
       controller.builder = (BuildContext context) => stroke;
       controller.filenameGenerator = () => new File(stroke.filename);
       outputFiles.add(
-        await controller.drawAnimatedDiagramToFiles(end: const Duration(seconds: 6), frameDuration: const Duration(milliseconds: 200), metadata: <String, dynamic>{
-          'name': stroke.filename,
-          'category': category,
-        }),
+        await controller.drawAnimatedDiagramToFiles(
+          end: _kAnimationDuration,
+          frameRate: _kAnimationFrameRate,
+          name: stroke.filename,
+          category: category,
+        ),
       );
     }
     return outputFiles;

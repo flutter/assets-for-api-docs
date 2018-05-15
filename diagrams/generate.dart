@@ -3,11 +3,11 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:archive/archive.dart';
 import 'package:args/args.dart';
+import 'package:diagram_capture/animation_metadata.dart';
 import 'package:path/path.dart' as path;
 import 'package:platform/platform.dart' as platform_pkg;
 import 'package:process/process.dart';
@@ -292,12 +292,14 @@ class DiagramGenerator {
   Directory temporaryDirectory;
 
   Future<Null> generateDiagrams() async {
+    final DateTime startTime = new DateTime.now();
     await _createScreenshots();
     final List<File> outputFiles = await _combineAnimations(await _transferImages());
     await _optimizeImages(outputFiles);
     if (cleanup) {
       await temporaryDirectory.delete(recursive: true);
     }
+    print('Elapsed time for diagram generation: ${new DateTime.now().difference(startTime)}');
   }
 
   Future<Null> _createScreenshots() async {
@@ -336,24 +338,6 @@ class DiagramGenerator {
     return files;
   }
 
-  Map<String, dynamic> _loadMetadata(File metadataFile) {
-    if (!metadataFile.isAbsolute) {
-      metadataFile = new File(
-        path.normalize(
-          path.join(temporaryDirectory.absolute.path, metadataFile.path),
-        ),
-      );
-    }
-    assert(metadataFile.existsSync());
-    final Map<String, dynamic> metadata = json.decode(metadataFile.readAsStringSync());
-    final String baseDir = path.dirname(metadataFile.absolute.path);
-    final List<File> frameFiles = metadata['frame_files']
-        .map<File>((dynamic name) => new File(path.normalize(path.join(baseDir, name)))).toList();
-    metadata['frame_files'] = frameFiles;
-    metadata['metadata_file'] = path.normalize(metadataFile.absolute.path);
-    return metadata;
-  }
-
   Stream<List<int>> _concatInputs(List<File> files) async* {
     for (File file in files) {
       final Stream<List<int>> fileStream = file.openRead();
@@ -363,28 +347,31 @@ class DiagramGenerator {
     }
   }
 
-  Future<List<File>> _buildMoviesFromMetadata(List<Map<String, dynamic>> metadataList) async {
+  Future<List<File>> _buildMoviesFromMetadata(List<AnimationMetadata> metadataList) async {
     final Directory destDir = new Directory(path.joinAll(path.split(projectDir)..removeLast()));
     final List<File> outputs = <File>[];
-    for (Map<String, dynamic> metadata in metadataList) {
-      final String prefix = '${metadata['category']}/${metadata['name']}';
+    for (AnimationMetadata metadata in metadataList) {
+      final String prefix = '${metadata.category}/${metadata.name}';
       final File destination = new File(path.join(destDir.path, '$prefix.mp4'));
       if (destination.existsSync()) {
         destination.deleteSync();
       }
-      print('Converting ${metadata['name']} animation to mp4.');
+      print('Converting ${metadata.name} animation to mp4.');
       await processRunner.runProcess(
         <String>[
           ffmpegCommand,
-          '-framerate', metadata['frame_rate_fps'].toString(),
           '-i', '-', // read in the concatenated frame files from stdin.
+          '-framerate', metadata.frameRate.toStringAsFixed(3),
+          '-tune', 'animation', // Optimize the encoder for cell animation.
+          '-preset', 'veryslow', // Use the slowest (best quality) compression preset.
+          '-crf', '0', // lossless quality
           '-c:v', 'libx264', // encode to mp4 H.264
           '-y', // overwrite output
           '-vf', 'format=yuv420p', // video format set to YUV420 color space for compatibility.
           destination.path, // output movie.
         ],
         workingDirectory: temporaryDirectory,
-        stdin: _concatInputs(metadata['frame_files']),
+        stdin: _concatInputs(metadata.frameFiles),
         printOutput: false,
       );
       outputs.add(destination);
@@ -399,12 +386,19 @@ class DiagramGenerator {
     // Collect all the animation frames that are in the metadata files so that
     // we can eliminate them from the other files that were transferred.
     final Set<String> animationFiles = new Set<String>();
-    final List<Map<String, dynamic>> metadataList = <Map<String, dynamic>>[];
+    final List<AnimationMetadata> metadataList = <AnimationMetadata>[];
     for (File metadataFile in metadataFiles) {
-      final Map<String, dynamic> metadata = _loadMetadata(metadataFile);
+      if (!metadataFile.isAbsolute) {
+        metadataFile = new File(
+          path.normalize(
+            path.join(temporaryDirectory.absolute.path, metadataFile.path),
+          ),
+        );
+      }
+      final AnimationMetadata metadata = new AnimationMetadata.fromFile(metadataFile);
       metadataList.add(metadata);
-      animationFiles.add(metadata['metadata_file']);
-      animationFiles.addAll(metadata['frame_files'].map((File file) => file.absolute.path));
+      animationFiles.add(metadata.metadataFile.absolute.path);
+      animationFiles.addAll(metadata.frameFiles.map((File file) => file.absolute.path));
     }
     final List<File> staticFiles = inputFiles.where((File input) {
       if (!input.isAbsolute) {
@@ -471,6 +465,7 @@ Future<Null> main(List<String> arguments) async {
   Directory temporaryDirectory;
   if (flags['tmpdir'] != null && flags['tmpdir'].isNotEmpty) {
     temporaryDirectory = new Directory(flags['tmpdir']);
+    temporaryDirectory.createSync(recursive: true);
     keepTmp = true;
   }
 

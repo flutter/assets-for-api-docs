@@ -59,7 +59,7 @@ Future<Null> main() async {
   // Capture some frames.
   await controller.drawAnimatedDiagramToFiles(
     end: const Duration(seconds: 1),
-    frameDuration: const Duration(milliseconds: 100),
+    frameRate: 10.0,
   );
 
   controller.builder = (BuildContext context) => const Text('Done');

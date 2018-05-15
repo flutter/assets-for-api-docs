@@ -168,7 +168,7 @@ void main() {
       controller.builder = (BuildContext context) => new TestAnimatedDiagram(key: key, size: 50.0);
       final File outputFile = await controller.drawAnimatedDiagramToFiles(
         end: const Duration(milliseconds: 1200),
-        frameDuration: const Duration(milliseconds: 200),
+        frameRate: 5.0,
       );
       expect(outputFile.path.endsWith('test_name.json'), isTrue);
       int count = 0;
@@ -186,7 +186,7 @@ void main() {
       final Map<String, dynamic> metadata = _loadMetadata(outputFile);
       final List<File> frames = metadata['frame_files'];
       expect(frames.length, equals(7));
-      expect(frames[0].path, endsWith('test_name_0000.png'));
+      expect(frames[0].path, endsWith('test_name_00000.png'));
       final List<int> expectedSizes = <int>[1, 11, 21, 31, 41, 50, 50];
       for (File file in frames) {
         expect(file.existsSync(), isTrue);
