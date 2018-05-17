@@ -31,7 +31,7 @@ optipng -zc1-9 -zm1-9 -zs0-3 -f0-5 *.png
 ```
 
 Be careful about applying this aggressively. In particular, files in
-the `tests` directory should not be optimized.
+the `assets/tests` directory should not be optimized.
 
 The automatic generation tool will automatically apply optimization to
 the assets it generates.
