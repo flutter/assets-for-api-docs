@@ -82,30 +82,34 @@ class FakeProcessManager extends Mock implements ProcessManager {
   void _setupMock() {
     // Note that not all possible types of invocations are covered here, just the ones
     // expected to be called.
-    // TODO(gspencer): make this more general so that any call will be captured.
     when(start(
       typed(captureAny),
       environment: typed(captureAny, named: 'environment'),
       workingDirectory: typed(captureAny, named: 'workingDirectory'),
+      includeParentEnvironment: typed(captureAny, named: 'includeParentEnvironment'),
+      runInShell: typed(captureAny, named: 'runInShell'),
+      mode: typed(captureAny, named: 'mode'),
     )).thenAnswer(_nextProcess);
-
-    when(start(typed(captureAny))).thenAnswer(_nextProcess);
 
     when(run(
       typed(captureAny),
       environment: typed(captureAny, named: 'environment'),
       workingDirectory: typed(captureAny, named: 'workingDirectory'),
+      includeParentEnvironment: typed(captureAny, named: 'includeParentEnvironment'),
+      runInShell: typed(captureAny, named: 'runInShell'),
+      stdoutEncoding: typed(captureAny, named: 'stdoutEncoding'),
+      stderrEncoding: typed(captureAny, named: 'stderrEncoding'),
     )).thenAnswer(_nextResult);
 
-    when(run(typed(captureAny))).thenAnswer(_nextResult);
-
     when(runSync(
-        typed(captureAny),
-        environment: typed(captureAny, named: 'environment'),
-        workingDirectory: typed(captureAny, named: 'workingDirectory')
+      typed(captureAny),
+      environment: typed(captureAny, named: 'environment'),
+      workingDirectory: typed(captureAny, named: 'workingDirectory'),
+      includeParentEnvironment: typed(captureAny, named: 'includeParentEnvironment'),
+      runInShell: typed(captureAny, named: 'runInShell'),
+      stdoutEncoding: typed(captureAny, named: 'stdoutEncoding'),
+      stderrEncoding: typed(captureAny, named: 'stderrEncoding'),
     )).thenAnswer(_nextResultSync);
-
-    when(runSync(typed(captureAny))).thenAnswer(_nextResultSync);
 
     when(killPid(typed(captureAny), typed(captureAny))).thenReturn(true);
 
