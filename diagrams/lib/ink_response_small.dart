@@ -86,7 +86,10 @@ class InkResponseSmallDiagramStep extends DiagramStep {
   final String category = 'material';
 
   @override
-  Future<List<File>> generateDiagrams() async {
+  Future<List<File>> generateDiagrams({List<String> onlyGenerate}) async {
+    if (onlyGenerate.isNotEmpty && !onlyGenerate.contains('ink_response_small')) {
+      return <File>[];
+    }
     controller.builder = (BuildContext context) => new InkResponseSmallDiagram();
     controller.advanceTime(Duration.zero);
     final RenderBox target = splashKey.currentContext.findRenderObject();

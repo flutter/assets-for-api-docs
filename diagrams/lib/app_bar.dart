@@ -114,7 +114,10 @@ class AppBarDiagramStep extends DiagramStep {
   final String category = 'material';
 
   @override
-  Future<List<File>> generateDiagrams() async {
+  Future<List<File>> generateDiagrams({List<String> onlyGenerate}) async {
+    if (onlyGenerate.isNotEmpty && !onlyGenerate.contains('app_bar')) {
+      return <File>[];
+    }
     controller.builder = (BuildContext context) => const AppBarDiagram();
     final List<File> results = <File>[
       await controller.drawDiagramToFile(new File('app_bar.png')),

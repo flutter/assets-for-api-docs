@@ -139,7 +139,7 @@ class StrokeCapDiagramStep extends DiagramStep {
   final String category = 'dart-ui';
 
   @override
-  Future<List<File>> generateDiagrams() async {
+  Future<List<File>> generateDiagrams({List<String> onlyGenerate}) async {
     final List<StrokeCapPainterWidget> caps = <StrokeCapPainterWidget>[
       const StrokeCapPainterWidget(
         filename: 'butt_cap',
@@ -157,6 +157,9 @@ class StrokeCapDiagramStep extends DiagramStep {
 
     final List<File> outputFiles = <File>[];
     for (StrokeCapPainterWidget cap in caps) {
+      if (onlyGenerate != null && !onlyGenerate.contains(cap.filename)) {
+        continue;
+      }
       print('Drawing stroke diagram for ${cap.cap} (${cap.filename})');
       controller.builder = (BuildContext context) => cap;
       outputFiles.add(

@@ -86,7 +86,10 @@ class InkWellDiagramStep extends DiagramStep {
   final String category = 'material';
 
   @override
-  Future<List<File>> generateDiagrams() async {
+  Future<List<File>> generateDiagrams({List<String> onlyGenerate}) async {
+    if (onlyGenerate.isNotEmpty && !onlyGenerate.contains('ink_well')) {
+      return <File>[];
+    }
     controller.builder = (BuildContext context) => new InkWellDiagram();
     controller.advanceTime(Duration.zero);
     final RenderBox target = splashKey.currentContext.findRenderObject();

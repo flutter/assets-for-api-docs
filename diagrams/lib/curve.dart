@@ -168,7 +168,7 @@ class CurveDiagramStep extends DiagramStep {
   final String category = 'animation';
 
   @override
-  Future<List<File>> generateDiagrams() async {
+  Future<List<File>> generateDiagrams({List<String> onlyGenerate}) async {
     final List<CurvePainterWidget> curves = <CurvePainterWidget>[
       new CurvePainterWidget('bounce_in', 'Curves.bounceIn', Curves.bounceIn),
       new CurvePainterWidget('bounce_in_out', 'Curves.bounceInOut', Curves.bounceInOut),
@@ -192,9 +192,13 @@ class CurveDiagramStep extends DiagramStep {
 
     final List<File> outputFiles = <File>[];
     for (CurvePainterWidget curve in curves) {
+      final String filename = 'curve_${curve.filename}';
+      if (onlyGenerate.isNotEmpty && !onlyGenerate.contains(filename)) {
+        continue;
+      }
       print('Drawing curve for ${curve.caption} (${curve.filename})');
       controller.builder = (BuildContext context) => curve;
-      outputFiles.add(await controller.drawDiagramToFile(new File('curve_${curve.filename}.png')));
+      outputFiles.add(await controller.drawDiagramToFile(new File('$filename.png')));
     }
     return outputFiles;
   }

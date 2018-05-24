@@ -23,5 +23,9 @@ abstract class DiagramStep {
   /// Generates all diagrams in this step.
   ///
   /// Returns a list of Files where the diagrams were written.
-  Future<List<File>> generateDiagrams();
+  ///
+  /// If `onlyGenerate` is supplied, then only generate diagrams which match one
+  /// of the given file basename. Only matches the basename with no suffix, not
+  /// the path.
+  Future<List<File>> generateDiagrams({List<String> onlyGenerate: const <String>[]});
 }

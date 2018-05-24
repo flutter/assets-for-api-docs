@@ -208,7 +208,7 @@ class StrokeJoinDiagramStep extends DiagramStep {
   final String category = 'dart-ui';
 
   @override
-  Future<List<File>> generateDiagrams() async {
+  Future<List<File>> generateDiagrams({List<String> onlyGenerate}) async {
     final List<StrokeJoinPainterWidget> strokes = <StrokeJoinPainterWidget>[
       const StrokeJoinPainterWidget(
         filename: 'miter_0_join',
@@ -237,6 +237,9 @@ class StrokeJoinDiagramStep extends DiagramStep {
 
     final List<File> outputFiles = <File>[];
     for (StrokeJoinPainterWidget stroke in strokes) {
+      if (onlyGenerate != null && !onlyGenerate.contains(stroke.filename)) {
+        continue;
+      }
       print('Drawing stroke diagram for ${stroke.join} (${stroke.filename})');
       controller.builder = (BuildContext context) => stroke;
       controller.filenameGenerator = () => new File(stroke.filename);

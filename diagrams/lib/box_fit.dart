@@ -84,7 +84,7 @@ class BoxFitDiagramStep extends DiagramStep {
   final String category = 'painting';
 
   @override
-  Future<List<File>> generateDiagrams() async {
+  Future<List<File>> generateDiagrams({List<String> onlyGenerate}) async {
     final List<BoxFitDiagram> boxFitDiagrams = <BoxFitDiagram>[];
     for (BoxFit fit in BoxFit.values) {
       boxFitDiagrams.add(new BoxFitDiagram(fit));
@@ -92,10 +92,14 @@ class BoxFitDiagramStep extends DiagramStep {
 
     final List<File> outputFiles = <File>[];
     for (BoxFitDiagram boxFitDiagram in boxFitDiagrams) {
+      final String filename = 'box_fit_${describeEnum(boxFitDiagram.fit)}';
+      if (onlyGenerate.isNotEmpty && !onlyGenerate.contains(filename)) {
+        continue;
+      }
       controller.builder = (BuildContext context) => boxFitDiagram;
       outputFiles.add(
         await controller.drawDiagramToFile(
-          new File('box_fit_${describeEnum(boxFitDiagram.fit)}.png'),
+          new File('$filename.png'),
         ),
       );
     }

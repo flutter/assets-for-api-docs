@@ -236,15 +236,19 @@ class BlendModeDiagramStep extends DiagramStep {
   final String category = 'dart-ui';
 
   @override
-  Future<List<File>> generateDiagrams() async {
+  Future<List<File>> generateDiagrams({List<String> onlyGenerate}) async {
     destinationImage ??= await getImage(const ExactAssetImage(destinationImageName));
     sourceImage ??= await getImage(const ExactAssetImage(sourceImageName));
     gridImage ??= await getImage(const ExactAssetImage(gridImageName));
 
     final List<File> outputFiles = <File>[];
     for (BlendMode mode in BlendMode.values) {
+      final String filename = 'blend_mode_${describeEnum(mode)}';
+      if (onlyGenerate.isNotEmpty && !onlyGenerate.contains(filename)) {
+        continue;
+      }
       controller.builder = (BuildContext context) => new BlendModeDiagram(mode);
-      outputFiles.add(await controller.drawDiagramToFile(new File('blend_mode_${describeEnum(mode)}.png')));
+      outputFiles.add(await controller.drawDiagramToFile(new File('$filename.png')));
     }
     return outputFiles;
   }

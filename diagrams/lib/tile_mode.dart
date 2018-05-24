@@ -22,7 +22,7 @@ enum GradientMode { linear, radial, }
 class TileModeDiagram extends StatelessWidget {
   const TileModeDiagram(this.gradientMode, this.tileMode);
 
-  String get name => 'tile_mode_${describeEnum(tileMode)}_${describeEnum(gradientMode)}.png';
+  String get name => 'tile_mode_${describeEnum(tileMode)}_${describeEnum(gradientMode)}';
 
   final GradientMode gradientMode;
   final TileMode tileMode;
@@ -119,7 +119,7 @@ class TileModeDiagramStep extends DiagramStep {
   final String category = 'dart-ui';
 
   @override
-  Future<List<File>> generateDiagrams() async {
+  Future<List<File>> generateDiagrams({List<String> onlyGenerate}) async {
     final List<TileModeDiagram> tileModeDiagrams = <TileModeDiagram>[];
     for (TileMode mode in TileMode.values) {
       for (GradientMode gradient in GradientMode.values) {
@@ -129,8 +129,11 @@ class TileModeDiagramStep extends DiagramStep {
 
     final List<File> outputFiles = <File>[];
     for (TileModeDiagram tileModeDiagram in tileModeDiagrams) {
+      if (onlyGenerate != null && !onlyGenerate.contains(tileModeDiagram.name)) {
+        continue;
+      }
       controller.builder = (BuildContext context) => tileModeDiagram;
-      outputFiles.add(await controller.drawDiagramToFile(new File(tileModeDiagram.name)));
+      outputFiles.add(await controller.drawDiagramToFile(new File('${tileModeDiagram.name}.png')));
     }
     return outputFiles;
   }

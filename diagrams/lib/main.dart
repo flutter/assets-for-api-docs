@@ -6,6 +6,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:args/args.dart';
 import 'package:diagram_capture/diagram_capture.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
@@ -26,7 +27,10 @@ import 'tile_mode.dart';
 
 Future<Directory> prepareOutputDirectory() async {
   final Directory directory = new Directory(
-    path.join((await getApplicationDocumentsDirectory()).absolute.path, 'diagrams'),
+    path.join(
+      (await getApplicationDocumentsDirectory()).absolute.path,
+      'diagrams',
+    ),
   );
   if (directory.existsSync()) {
     directory.deleteSync(recursive: true);
@@ -35,7 +39,18 @@ Future<Directory> prepareOutputDirectory() async {
   return directory;
 }
 
-Future<Null> main(List<String> arguments) async {
+Future<Null> main() async {
+  final List<String> arguments = window.defaultRouteName.length > 5
+      ? Uri.decodeComponent(window.defaultRouteName.substring(5)).split(' ')
+      : <String>[];
+  final ArgParser parser = new ArgParser();
+  parser.addMultiOption('category');
+  parser.addMultiOption('name');
+  final ArgResults flags = parser.parse(arguments);
+
+  final List<String> categories = flags['category'];
+  final List<String> names = flags['name'];
+
   final DateTime start = new DateTime.now();
   final Directory outputDirectory = await prepareOutputDirectory();
 
@@ -62,18 +77,21 @@ Future<Null> main(List<String> arguments) async {
   ];
 
   for (DiagramStep step in steps) {
+    if (!categories.contains(step.category)) {
+      continue;
+    }
     final Directory stepOutputDirectory = new Directory(path.join(outputDirectory.absolute.path, step.category));
     stepOutputDirectory.createSync(recursive: true);
     controller.outputDirectory = stepOutputDirectory;
     controller.pixelRatio = 1.0;
-    final List<File> files = await step.generateDiagrams();
+    final List<File> files = await step.generateDiagrams(onlyGenerate: names);
     for (File file in files) {
       print('Created file ${file.path}');
     }
   }
   final DateTime end = new DateTime.now();
   final Duration elapsed = end.difference(start);
-  const Duration minExecutionTime = const Duration(seconds: 5);
+  const Duration minExecutionTime = const Duration(seconds: 10);
   print('Total elapsed time: $elapsed');
   if (elapsed < minExecutionTime) {
     // If the app runs for less time than this, then it will throw an exception

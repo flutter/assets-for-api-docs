@@ -115,7 +115,7 @@ class ColorsDiagramStep extends DiagramStep {
   final String category = 'material';
 
   @override
-  Future<List<File>> generateDiagrams() async {
+  Future<List<File>> generateDiagrams({List<String> onlyGenerate}) async {
     const List<int> palette = const <int>[50, 100, 200, 300, 400, 500, 600, 700, 800, 900];
     const List<int> accentPalette = const <int>[100, 200, 400, 700];
     const List<int> greyPalette = const <int>[50, 100, 200, 300, 350, 400, 500, 600, 700, 800, 850, 900];
@@ -175,6 +175,9 @@ class ColorsDiagramStep extends DiagramStep {
 
     final List<File> outputFiles = <File>[];
     for (ColorDiagram colorDiagram in colorDiagrams) {
+      if (onlyGenerate.isNotEmpty && !onlyGenerate.contains(colorDiagram.name)) {
+        continue;
+      }
       controller.builder = (BuildContext context) => colorDiagram;
       outputFiles.add(
         await controller.drawDiagramToFile(new File('${colorDiagram.name}.png')),

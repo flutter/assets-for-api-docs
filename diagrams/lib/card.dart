@@ -60,7 +60,10 @@ class CardDiagramStep extends DiagramStep {
   final String category = 'material';
 
   @override
-  Future<List<File>> generateDiagrams() async {
+  Future<List<File>> generateDiagrams({List<String> onlyGenerate}) async {
+    if (onlyGenerate.isNotEmpty && !onlyGenerate.contains('card')) {
+      return <File>[];
+    }
     controller.builder = (BuildContext context) => new CardDiagram();
     return <File>[
       await controller.drawDiagramToFile(new File('card.png')),
