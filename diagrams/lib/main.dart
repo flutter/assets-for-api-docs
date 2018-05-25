@@ -77,13 +77,14 @@ Future<Null> main() async {
   ];
 
   for (DiagramStep step in steps) {
-    if (!categories.contains(step.category)) {
+    if (categories.isNotEmpty && !categories.contains(step.category)) {
       continue;
     }
     final Directory stepOutputDirectory = new Directory(path.join(outputDirectory.absolute.path, step.category));
     stepOutputDirectory.createSync(recursive: true);
     controller.outputDirectory = stepOutputDirectory;
     controller.pixelRatio = 1.0;
+    print('Working on step ${step.runtimeType}');
     final List<File> files = await step.generateDiagrams(onlyGenerate: names);
     for (File file in files) {
       print('Created file ${file.path}');

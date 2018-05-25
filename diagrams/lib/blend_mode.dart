@@ -35,10 +35,13 @@ Future<Image> getImage(ImageProvider provider) {
   return completer.future;
 }
 
-class BlendModeDiagram extends StatelessWidget {
+class BlendModeDiagram extends StatelessWidget implements DiagramMetadata {
   const BlendModeDiagram(this.mode);
 
   final BlendMode mode;
+
+  @override
+  String get name => 'blend_mode_${describeEnum(mode)}';
 
   @override
   Widget build(BuildContext context) {
@@ -235,21 +238,26 @@ class BlendModeDiagramStep extends DiagramStep {
   @override
   final String category = 'dart-ui';
 
+  List<BlendModeDiagram> _diagrams;
   @override
-  Future<List<File>> generateDiagrams({List<String> onlyGenerate}) async {
-    destinationImage ??= await getImage(const ExactAssetImage(destinationImageName));
-    sourceImage ??= await getImage(const ExactAssetImage(sourceImageName));
-    gridImage ??= await getImage(const ExactAssetImage(gridImageName));
+  Future<List<DiagramMetadata>> get diagrams async {
+    if (_diagrams == null) {
+      destinationImage ??= await getImage(const ExactAssetImage(destinationImageName));
+      sourceImage ??= await getImage(const ExactAssetImage(sourceImageName));
+      gridImage ??= await getImage(const ExactAssetImage(gridImageName));
 
-    final List<File> outputFiles = <File>[];
-    for (BlendMode mode in BlendMode.values) {
-      final String filename = 'blend_mode_${describeEnum(mode)}';
-      if (onlyGenerate.isNotEmpty && !onlyGenerate.contains(filename)) {
-        continue;
+      _diagrams = <BlendModeDiagram>[];
+      for (BlendMode mode in BlendMode.values) {
+        _diagrams.add(new BlendModeDiagram(mode));
       }
-      controller.builder = (BuildContext context) => new BlendModeDiagram(mode);
-      outputFiles.add(await controller.drawDiagramToFile(new File('$filename.png')));
     }
-    return outputFiles;
+    return _diagrams;
+  }
+
+  @override
+  Future<File> generateDiagram(DiagramMetadata diagram) async {
+    final BlendModeDiagram typedDiagram = diagram;
+    controller.builder = (BuildContext context) => typedDiagram;
+    return await controller.drawDiagramToFile(new File('${diagram.name}.png'));
   }
 }
