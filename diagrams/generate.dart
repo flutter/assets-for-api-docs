@@ -284,9 +284,7 @@ class DiagramGenerator {
 
   /// The output asset directory for all the categories.
   static String get assetDir {
-    return path.joinAll(path.split(projectDir)
-      ..removeLast()
-      ..add('assets'));
+    return path.joinAll(path.split(projectDir)..removeLast()..add('assets'));
   }
 
   /// Whether or not to cleanup the temporaryDirectory after generating diagrams.
@@ -485,14 +483,14 @@ Future<Null> main(List<String> arguments) async {
     exit(0);
   }
 
-  bool keepTmp = flags['keep-tmp'];
+  bool keepTemporaryDirectory = flags['keep-tmp'];
   Directory temporaryDirectory;
   if (flags['tmpdir'] != null && flags['tmpdir'].isNotEmpty) {
     temporaryDirectory = new Directory(flags['tmpdir']);
     temporaryDirectory.createSync(recursive: true);
-    keepTmp = true;
+    keepTemporaryDirectory = true;
   }
 
-  new DiagramGenerator(temporaryDirectory: temporaryDirectory, cleanup: !keepTmp)
+  new DiagramGenerator(temporaryDirectory: temporaryDirectory, cleanup: !keepTemporaryDirectory,)
     ..generateDiagrams(flags['category'], flags['name']);
 }
