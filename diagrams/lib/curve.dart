@@ -183,7 +183,7 @@ class CurveDiagramStep extends DiagramStep {
       new CurvePainterWidget('elastic_out', 'Curves.elasticOut', Curves.elasticOut),
       new CurvePainterWidget('fast_out_slow_in', 'Curves.fastOutSlowIn', Curves.fastOutSlowIn),
       new CurvePainterWidget('linear', 'Curves.linear', Curves.linear),
-      new CurvePainterWidget('interval', 'const Interval(0.25, 0.25)', const Interval(0.25, 0.75)),
+      new CurvePainterWidget('interval', 'const Interval(0.25, 0.75)', const Interval(0.25, 0.75)),
       new CurvePainterWidget('sawtooth', 'const SawTooth(3)', const SawTooth(3)),
       new CurvePainterWidget('threshold', 'const Threshold(0.75)', const Threshold(0.75)),
       new CurvePainterWidget('flipped', 'Curves.bounceIn.flipped', Curves.bounceIn.flipped),
