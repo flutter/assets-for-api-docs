@@ -82,7 +82,6 @@ void main() {
       final DiagramController controller = new DiagramController(
         builder: buildStaticDiagram,
         outputDirectory: outputDir,
-        filenameGenerator: filenameGenerator,
         pixelRatio: 1.0,
         screenDimensions: const Size(100.0, 100.0),
       );
@@ -98,7 +97,6 @@ void main() {
       final DiagramController controller = new DiagramController(
         builder: null,
         outputDirectory: outputDir,
-        filenameGenerator: filenameGenerator,
         pixelRatio: 1.0,
         screenDimensions: const Size(100.0, 100.0),
       );
@@ -114,7 +112,6 @@ void main() {
       final DiagramController controller = new DiagramController(
         builder: buildStaticDiagram,
         outputDirectory: outputDir,
-        filenameGenerator: filenameGenerator,
         pixelRatio: 1.0,
         screenDimensions: const Size(100.0, 100.0),
       );
@@ -135,7 +132,6 @@ void main() {
       final DiagramController controller = new DiagramController(
         builder: (BuildContext context) => new TestAnimatedDiagram(key: key, size: 1.0),
         outputDirectory: outputDir,
-        filenameGenerator: filenameGenerator,
         pixelRatio: 1.0,
         screenDimensions: const Size(100.0, 100.0),
       );
@@ -160,7 +156,6 @@ void main() {
       final DiagramController controller = new DiagramController(
         builder: (BuildContext context) => new TestAnimatedDiagram(key: key, size: 1.0),
         outputDirectory: outputDir,
-        filenameGenerator: filenameGenerator,
         pixelRatio: 1.0,
         screenDimensions: const Size(100.0, 100.0),
       );
@@ -169,6 +164,7 @@ void main() {
       final File outputFile = await controller.drawAnimatedDiagramToFiles(
         end: const Duration(milliseconds: 1200),
         frameRate: 5.0,
+        name: 'test_name',
       );
       expect(outputFile.path.endsWith('test_name.json'), isTrue);
       int count = 0;
@@ -203,7 +199,6 @@ void main() {
       final DiagramController controller = new DiagramController(
         builder: buildStaticDiagram,
         outputDirectory: outputDir,
-        filenameGenerator: filenameGenerator,
         pixelRatio: 3.0,
         screenDimensions: const Size(100.0, 100.0),
       );
@@ -223,7 +218,6 @@ void main() {
       final DiagramController controller = new DiagramController(
         builder: (BuildContext context) => new TestTappableDiagram(),
         outputDirectory: outputDir,
-        filenameGenerator: filenameGenerator,
         pixelRatio: 1.0,
         screenDimensions: const Size(100.0, 100.0),
       );

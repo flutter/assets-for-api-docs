@@ -14,12 +14,15 @@ import 'utils.dart';
 
 final GlobalKey splashKey = new GlobalKey();
 
-class InkResponseLargeDiagram extends StatelessWidget {
+class InkResponseLargeDiagram extends StatelessWidget implements DiagramMetadata {
   InkResponseLargeDiagram({Key key}) : super(key: key);
 
   final GlobalKey canvasKey = new GlobalKey();
   final GlobalKey childKey = new GlobalKey();
   final GlobalKey heroKey = new GlobalKey();
+
+  @override
+  String get name => 'ink_response_large';
 
   @override
   Widget build(BuildContext context) {
@@ -80,24 +83,30 @@ class InkResponseLargeDiagram extends StatelessWidget {
 }
 
 class InkResponseLargeDiagramStep extends DiagramStep {
-  InkResponseLargeDiagramStep(DiagramController controller) : super(controller);
+  InkResponseLargeDiagramStep(DiagramController controller) : super(controller) {
+    _diagrams.add(new InkResponseLargeDiagram());
+  }
+
+  final List<InkResponseLargeDiagram> _diagrams = <InkResponseLargeDiagram>[];
 
   @override
   final String category = 'material';
 
   @override
-  Future<List<File>> generateDiagrams() async {
-    controller.builder = (BuildContext context) => new InkResponseLargeDiagram();
+  Future<List<DiagramMetadata>> get diagrams async => _diagrams;
+
+  @override
+  Future<File> generateDiagram(DiagramMetadata diagram) async {
+    final InkResponseLargeDiagram typedDiagram = diagram;
+    controller.builder = (BuildContext context) => typedDiagram;
     controller.advanceTime(Duration.zero);
     final RenderBox target = splashKey.currentContext.findRenderObject();
     final Offset targetOffset = target.localToGlobal(target.size.bottomRight(Offset.zero));
     final TestGesture gesture = await controller.startGesture(targetOffset);
-    final List<File> result = <File>[
-      await controller.drawDiagramToFile(
-        new File('ink_response_large.png'),
-        timestamp: const Duration(milliseconds: 550),
-      ),
-    ];
+    final File result = await controller.drawDiagramToFile(
+      new File('${diagram.name}.png'),
+      timestamp: const Duration(milliseconds: 550),
+    );
     gesture.up();
     return result;
   }

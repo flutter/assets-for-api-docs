@@ -11,10 +11,13 @@ import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
 
-class BoxFitDiagram extends StatelessWidget {
+class BoxFitDiagram extends StatelessWidget implements DiagramMetadata {
   const BoxFitDiagram(this.fit);
 
   final BoxFit fit;
+
+  @override
+  String get name => 'box_fit_${describeEnum(fit)}';
 
   @override
   Widget build(BuildContext context) {
@@ -78,27 +81,24 @@ class BoxFitDiagram extends StatelessWidget {
 }
 
 class BoxFitDiagramStep extends DiagramStep {
-  BoxFitDiagramStep(DiagramController controller) : super(controller);
+  BoxFitDiagramStep(DiagramController controller) : super(controller) {
+    for (BoxFit fit in BoxFit.values) {
+      _diagrams.add(new BoxFitDiagram(fit));
+    }
+  }
 
   @override
   final String category = 'painting';
 
-  @override
-  Future<List<File>> generateDiagrams() async {
-    final List<BoxFitDiagram> boxFitDiagrams = <BoxFitDiagram>[];
-    for (BoxFit fit in BoxFit.values) {
-      boxFitDiagrams.add(new BoxFitDiagram(fit));
-    }
+  final List<BoxFitDiagram> _diagrams = <BoxFitDiagram>[];
 
-    final List<File> outputFiles = <File>[];
-    for (BoxFitDiagram boxFitDiagram in boxFitDiagrams) {
-      controller.builder = (BuildContext context) => boxFitDiagram;
-      outputFiles.add(
-        await controller.drawDiagramToFile(
-          new File('box_fit_${describeEnum(boxFitDiagram.fit)}.png'),
-        ),
-      );
-    }
-    return outputFiles;
+  @override
+  Future<List<DiagramMetadata>> get diagrams async => _diagrams;
+
+  @override
+  Future<File> generateDiagram(DiagramMetadata diagram) async {
+    final BoxFitDiagram typedDiagram = diagram;
+    controller.builder = (BuildContext context) => typedDiagram;
+    return await controller.drawDiagramToFile(new File('${diagram.name}.png'));
   }
 }

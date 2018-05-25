@@ -33,7 +33,7 @@ void main() {
         'adb exec-out run-as io.flutter.api.diagrams tar c -C app_flutter/diagrams .': null,
       };
       processManager.fakeResults = calls;
-      await generator.generateDiagrams();
+      await generator.generateDiagrams(<String>[], <String>[]);
       processManager.verifyCalls(calls.keys.toList());
     });
   });
