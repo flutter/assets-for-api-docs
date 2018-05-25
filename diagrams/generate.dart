@@ -364,7 +364,7 @@ class DiagramGenerator {
           '-framerate', metadata.frameRate.toStringAsFixed(3),
           '-tune', 'animation', // Optimize the encoder for cell animation.
           '-preset', 'veryslow', // Use the slowest (best quality) compression preset.
-          '-crf', '0', // lossless quality
+          '-crf', '1', // almost lossless quality (can't use lossless '0' because Safari doesn't support it)
           '-c:v', 'libx264', // encode to mp4 H.264
           '-y', // overwrite output
           '-vf', 'format=yuv420p', // video format set to YUV420 color space for compatibility.
