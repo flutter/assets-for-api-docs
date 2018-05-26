@@ -17,12 +17,17 @@ const double height = 200.0;
 const double spacing = 8.0;
 const double borderSize = 1.0;
 
-enum GradientMode { linear, radial, }
+enum GradientMode {
+  linear,
+  radial,
+  radialWithFocal,
+}
 
 class TileModeDiagram extends StatelessWidget {
   const TileModeDiagram(this.gradientMode, this.tileMode);
 
-  String get name => 'tile_mode_${describeEnum(tileMode)}_${describeEnum(gradientMode)}.png';
+  String get name =>
+      'tile_mode_${describeEnum(tileMode)}_${describeEnum(gradientMode)}.png';
 
   final GradientMode gradientMode;
   final TileMode tileMode;
@@ -59,6 +64,19 @@ class TileModeDiagram extends StatelessWidget {
           tileMode: tileMode,
         );
         break;
+      case GradientMode.radialWithFocal:
+        gradient = new RadialGradient(
+          center: FractionalOffset.center,
+          focal: const FractionalOffset(0.5, 0.42),
+          radius: 0.2,
+          colors: const <Color>[
+            const Color(0xFF0000FF),
+            const Color(0xFF00FF00)
+          ],
+          stops: const <double>[0.0, 1.0],
+          tileMode: tileMode,
+        );
+        break;
     }
     return gradient;
   }
@@ -69,44 +87,44 @@ class TileModeDiagram extends StatelessWidget {
       key: new UniqueKey(),
       constraints: const BoxConstraints.tightFor(width: width, height: height),
       child: DefaultTextStyle.merge(
-      style: const TextStyle(
-        fontSize: 10.0,
-        color: const Color(0xFF000000),
-      ),
-      child: new Directionality(
-        textDirection: TextDirection.ltr,
-        child: new Center(
-          child: new Container(
-            margin: const EdgeInsets.all(spacing),
-            width: width,
-            decoration: new BoxDecoration(
-              border: new Border.all(width: borderSize),
-              color: const Color(0xFFFFFFFF),
-            ),
-            child: new Column(
-              children: <Widget>[
-                new Expanded(
-                  child: new Container(
-                    decoration: new BoxDecoration(
-                      gradient: _buildGradient(),
-                      border: const Border(
-                        bottom: const BorderSide(width: 1.0),
+        style: const TextStyle(
+          fontSize: 10.0,
+          color: const Color(0xFF000000),
+        ),
+        child: new Directionality(
+          textDirection: TextDirection.ltr,
+          child: new Center(
+            child: new Container(
+              margin: const EdgeInsets.all(spacing),
+              width: width,
+              decoration: new BoxDecoration(
+                border: new Border.all(width: borderSize),
+                color: const Color(0xFFFFFFFF),
+              ),
+              child: new Column(
+                children: <Widget>[
+                  new Expanded(
+                    child: new Container(
+                      decoration: new BoxDecoration(
+                        gradient: _buildGradient(),
+                        border: const Border(
+                          bottom: const BorderSide(width: 1.0),
+                        ),
                       ),
                     ),
                   ),
-                ),
-                new Container(height: 3.0),
-                new Text(
-                  '$gradientModeName Gradient',
-                  textAlign: TextAlign.center,
-                ),
-                new Text('$tileMode', textAlign: TextAlign.center),
-                new Container(height: 3.0),
-              ],
+                  new Container(height: 3.0),
+                  new Text(
+                    '$gradientModeName Gradient',
+                    textAlign: TextAlign.center,
+                  ),
+                  new Text('$tileMode', textAlign: TextAlign.center),
+                  new Container(height: 3.0),
+                ],
+              ),
             ),
           ),
         ),
-      ),
       ),
     );
   }
@@ -130,7 +148,8 @@ class TileModeDiagramStep extends DiagramStep {
     final List<File> outputFiles = <File>[];
     for (TileModeDiagram tileModeDiagram in tileModeDiagrams) {
       controller.builder = (BuildContext context) => tileModeDiagram;
-      outputFiles.add(await controller.drawDiagramToFile(new File(tileModeDiagram.name)));
+      outputFiles.add(
+          await controller.drawDiagramToFile(new File(tileModeDiagram.name)));
     }
     return outputFiles;
   }
