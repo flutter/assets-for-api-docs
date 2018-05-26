@@ -11,8 +11,11 @@ import 'package:flutter/material.dart';
 import 'diagram_step.dart';
 import 'utils.dart';
 
-class AppBarDiagram extends StatefulWidget {
-  const AppBarDiagram({Key key}) : super(key: key);
+class AppBarDiagram extends StatefulWidget implements DiagramMetadata {
+  const AppBarDiagram({Key key, @required this.name}) : super(key: key);
+
+  @override
+  final String name;
 
   @override
   _DiagramState createState() => new _DiagramState();
@@ -114,11 +117,12 @@ class AppBarDiagramStep extends DiagramStep {
   final String category = 'material';
 
   @override
-  Future<List<File>> generateDiagrams() async {
-    controller.builder = (BuildContext context) => const AppBarDiagram();
-    final List<File> results = <File>[
-      await controller.drawDiagramToFile(new File('app_bar.png')),
-    ];
-    return results;
+  Future<List<DiagramMetadata>> get diagrams async => <DiagramMetadata>[const AppBarDiagram(name: 'app_bar')];
+
+  @override
+  Future<File> generateDiagram(DiagramMetadata diagram) async {
+    final AppBarDiagram typedDiagram = diagram;
+    controller.builder = (BuildContext context) => typedDiagram;
+    return await controller.drawDiagramToFile(new File('${diagram.name}.png'));
   }
 }

@@ -14,8 +14,8 @@ const double _kSwatchWidth = 400.0;
 const double _kFontSize = 19.0;
 const double _kPadding = 10.0;
 
-abstract class ColorDiagram extends StatelessWidget {
-  /// The name of the page. Used for constructing output filenames in commands.
+abstract class ColorDiagram extends StatelessWidget implements DiagramMetadata {
+  @override
   String get name;
 }
 
@@ -109,17 +109,11 @@ class ColorListDiagram extends ColorDiagram {
 }
 
 class ColorsDiagramStep extends DiagramStep {
-  ColorsDiagramStep(DiagramController controller) : super(controller);
-
-  @override
-  final String category = 'material';
-
-  @override
-  Future<List<File>> generateDiagrams() async {
+  ColorsDiagramStep(DiagramController controller) : super(controller) {
     const List<int> palette = const <int>[50, 100, 200, 300, 400, 500, 600, 700, 800, 900];
     const List<int> accentPalette = const <int>[100, 200, 400, 700];
     const List<int> greyPalette = const <int>[50, 100, 200, 300, 350, 400, 500, 600, 700, 800, 850, 900];
-    final List<ColorDiagram> colorDiagrams = <ColorDiagram>[
+    _diagrams.addAll(<ColorDiagram>[
       new ColorSwatchDiagram('Colors.red', Colors.red, palette),
       new ColorSwatchDiagram('Colors.pink', Colors.pink, palette),
       new ColorSwatchDiagram('Colors.purple', Colors.purple, palette),
@@ -171,15 +165,21 @@ class ColorsDiagramStep extends DiagramStep {
         'white30': Colors.white30,
         'white70': Colors.white70,
       }),
-    ];
+    ]);
+  }
 
-    final List<File> outputFiles = <File>[];
-    for (ColorDiagram colorDiagram in colorDiagrams) {
-      controller.builder = (BuildContext context) => colorDiagram;
-      outputFiles.add(
-        await controller.drawDiagramToFile(new File('${colorDiagram.name}.png')),
-      );
-    }
-    return outputFiles;
+  @override
+  final String category = 'material';
+
+  final List<ColorDiagram> _diagrams = <ColorDiagram>[];
+
+  @override
+  Future<List<DiagramMetadata>> get diagrams async => _diagrams;
+
+  @override
+  Future<File> generateDiagram(DiagramMetadata diagram) async {
+    final ColorDiagram typedDiagram = diagram;
+    controller.builder = (BuildContext context) => typedDiagram;
+    return await controller.drawDiagramToFile(new File('${diagram.name}.png'));
   }
 }

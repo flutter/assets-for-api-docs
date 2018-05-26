@@ -20,14 +20,13 @@ const double borderSize = 1.0;
 enum GradientMode {
   linear,
   radial,
-  radialWithFocal,
 }
 
-class TileModeDiagram extends StatelessWidget {
+class TileModeDiagram extends StatelessWidget implements DiagramMetadata {
   const TileModeDiagram(this.gradientMode, this.tileMode);
 
-  String get name =>
-      'tile_mode_${describeEnum(tileMode)}_${describeEnum(gradientMode)}.png';
+  @override
+  String get name => 'tile_mode_${describeEnum(tileMode)}_${describeEnum(gradientMode)}';
 
   final GradientMode gradientMode;
   final TileMode tileMode;
@@ -44,10 +43,7 @@ class TileModeDiagram extends StatelessWidget {
         gradient = new LinearGradient(
           begin: const FractionalOffset(0.4, 0.5),
           end: const FractionalOffset(0.6, 0.5),
-          colors: const <Color>[
-            const Color(0xFF0000FF),
-            const Color(0xFF00FF00)
-          ],
+          colors: const <Color>[const Color(0xFF0000FF), const Color(0xFF00FF00)],
           stops: const <double>[0.0, 1.0],
           tileMode: tileMode,
         );
@@ -56,10 +52,7 @@ class TileModeDiagram extends StatelessWidget {
         gradient = new RadialGradient(
           center: FractionalOffset.center,
           radius: 0.2,
-          colors: const <Color>[
-            const Color(0xFF0000FF),
-            const Color(0xFF00FF00)
-          ],
+          colors: const <Color>[const Color(0xFF0000FF), const Color(0xFF00FF00)],
           stops: const <double>[0.0, 1.0],
           tileMode: tileMode,
         );
@@ -131,26 +124,26 @@ class TileModeDiagram extends StatelessWidget {
 }
 
 class TileModeDiagramStep extends DiagramStep {
-  TileModeDiagramStep(DiagramController controller) : super(controller);
+  TileModeDiagramStep(DiagramController controller) : super(controller) {
+    for (TileMode mode in TileMode.values) {
+      for (GradientMode gradient in GradientMode.values) {
+        _diagrams.add(new TileModeDiagram(gradient, mode));
+      }
+    }
+  }
 
   @override
   final String category = 'dart-ui';
 
-  @override
-  Future<List<File>> generateDiagrams() async {
-    final List<TileModeDiagram> tileModeDiagrams = <TileModeDiagram>[];
-    for (TileMode mode in TileMode.values) {
-      for (GradientMode gradient in GradientMode.values) {
-        tileModeDiagrams.add(new TileModeDiagram(gradient, mode));
-      }
-    }
+  final List<TileModeDiagram> _diagrams = <TileModeDiagram>[];
 
-    final List<File> outputFiles = <File>[];
-    for (TileModeDiagram tileModeDiagram in tileModeDiagrams) {
-      controller.builder = (BuildContext context) => tileModeDiagram;
-      outputFiles.add(
-          await controller.drawDiagramToFile(new File(tileModeDiagram.name)));
-    }
-    return outputFiles;
+  @override
+  Future<List<DiagramMetadata>> get diagrams async => _diagrams;
+
+  @override
+  Future<File> generateDiagram(DiagramMetadata diagram) async {
+    final TileModeDiagram typedDiagram = diagram;
+    controller.builder = (BuildContext context) => typedDiagram;
+    return await controller.drawDiagramToFile(new File('${diagram.name}.png'));
   }
 }

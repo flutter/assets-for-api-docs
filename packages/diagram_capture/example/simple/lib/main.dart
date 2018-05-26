@@ -56,10 +56,11 @@ Future<Null> main() async {
   // Start the implicit animation by changing the builder.
   controller.builder = (BuildContext context) => const MyDiagram(size: 50.0);
 
-  // Capture some frames.
+  // Capture some frames, which returns the animation metadata file.
   await controller.drawAnimatedDiagramToFiles(
     end: const Duration(seconds: 1),
     frameRate: 10.0,
+    name: 'done',
   );
 
   controller.builder = (BuildContext context) => const Text('Done');

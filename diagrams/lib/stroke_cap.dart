@@ -16,7 +16,7 @@ class StrokeCapDescription extends CustomPainter {
   StrokeCapDescription({
     this.filename,
     this.cap,
-  })  : _capPainter = _createLabelPainter(cap.toString());
+  }) : _capPainter = _createLabelPainter(cap.toString());
 
   static const EdgeInsets padding = const EdgeInsets.all(3.0);
 
@@ -105,13 +105,11 @@ class StrokeCapDescription extends CustomPainter {
   }
 }
 
-class StrokeCapPainterWidget extends StatelessWidget {
-  const StrokeCapPainterWidget({
-    this.filename,
-    this.cap: StrokeCap.round,
-  });
+class StrokeCapDiagram extends StatelessWidget implements DiagramMetadata {
+  const StrokeCapDiagram({this.name, this.cap: StrokeCap.round});
 
-  final String filename;
+  @override
+  final String name;
   final StrokeCap cap;
 
   @override
@@ -133,36 +131,35 @@ class StrokeCapPainterWidget extends StatelessWidget {
 }
 
 class StrokeCapDiagramStep extends DiagramStep {
-  StrokeCapDiagramStep(DiagramController controller) : super(controller);
+  StrokeCapDiagramStep(DiagramController controller) : super(controller) {
+    _diagrams.addAll(<StrokeCapDiagram>[
+      const StrokeCapDiagram(
+        name: 'butt_cap',
+        cap: StrokeCap.butt,
+      ),
+      const StrokeCapDiagram(
+        name: 'round_cap',
+        cap: StrokeCap.round,
+      ),
+      const StrokeCapDiagram(
+        name: 'square_cap',
+        cap: StrokeCap.square,
+      ),
+    ]);
+  }
 
   @override
   final String category = 'dart-ui';
 
-  @override
-  Future<List<File>> generateDiagrams() async {
-    final List<StrokeCapPainterWidget> caps = <StrokeCapPainterWidget>[
-      const StrokeCapPainterWidget(
-        filename: 'butt_cap',
-        cap: StrokeCap.butt,
-      ),
-      const StrokeCapPainterWidget(
-        filename: 'round_cap',
-        cap: StrokeCap.round,
-      ),
-      const StrokeCapPainterWidget(
-        filename: 'square_cap',
-        cap: StrokeCap.square,
-      ),
-    ];
+  final List<StrokeCapDiagram> _diagrams = <StrokeCapDiagram>[];
 
-    final List<File> outputFiles = <File>[];
-    for (StrokeCapPainterWidget cap in caps) {
-      print('Drawing stroke diagram for ${cap.cap} (${cap.filename})');
-      controller.builder = (BuildContext context) => cap;
-      outputFiles.add(
-        await controller.drawDiagramToFile(new File('${cap.filename}.png')),
-      );
-    }
-    return outputFiles;
+  @override
+  Future<List<DiagramMetadata>> get diagrams async => _diagrams;
+
+  @override
+  Future<File> generateDiagram(DiagramMetadata diagram) async {
+    final StrokeCapDiagram typedDiagram = diagram;
+    controller.builder = (BuildContext context) => typedDiagram;
+    return await controller.drawDiagramToFile(new File('${diagram.name}.png'));
   }
 }

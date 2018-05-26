@@ -217,11 +217,9 @@ class DiagramController {
   DiagramController({
     WidgetBuilder builder,
     this.outputDirectory,
-    AnimationFilenameGenerator filenameGenerator,
     double pixelRatio: 1.0,
     Size screenDimensions: _kDefaultDiagramViewportSize,
   }) {
-    _filenameGenerator = filenameGenerator ?? _basicFilenameGenerator;
     outputDirectory ??= Directory.current;
     _binding.pixelRatio = pixelRatio;
     _binding.screenDimensions = screenDimensions;
@@ -259,17 +257,6 @@ class DiagramController {
 
   double get pixelRatio => _binding.pixelRatio;
   set pixelRatio(double ratio) => _binding.pixelRatio = ratio;
-
-  /// The generator for filenames when calling drawAnimatedDiagramToFile.
-  ///
-  /// If the returned filenames are relative paths, they will be relative to
-  /// [outputDirectory]. Must not be null.
-  AnimationFilenameGenerator get filenameGenerator => _filenameGenerator;
-  AnimationFilenameGenerator _filenameGenerator = _basicFilenameGenerator;
-  set filenameGenerator(AnimationFilenameGenerator frameFilenameGenerator) {
-    assert(frameFilenameGenerator != null);
-    _filenameGenerator = frameFilenameGenerator;
-  }
 
   _DiagramFlutterBinding get _binding => _DiagramFlutterBinding.instance;
 
@@ -376,10 +363,10 @@ class DiagramController {
   /// A JSON metadata file will also be written, containing information about
   /// the duration, frame rate for the animation, and the frame files written,
   /// used by the generator in converting it to a video. The name of this file
-  /// is determined by [filenameGenerator].
+  /// is determined by [nameGenerator].
   ///
   /// The files will be written in PNG format. Animation frames are named with
-  /// the base name returned by [filenameGenerator], and ending with an
+  /// the base name returned by [nameGenerator], and ending with an
   /// underscore followed by four digits describing the frame number, and
   /// ending in ".png" (e.g. "frame_0000.png").
   ///
@@ -399,9 +386,10 @@ class DiagramController {
     @required Duration end,
     @required double frameRate,
     ui.ImageByteFormat format: ui.ImageByteFormat.png,
-    String name,
+    @required String name,
     String category,
   }) async {
+    assert(name != null);
     assert(end != null);
     assert(start != null);
     assert(frameRate != null);
@@ -415,7 +403,7 @@ class DiagramController {
     int index = 0;
     final List<File> outputFiles = <File>[];
     while (now <= end) {
-      final File outputFile = _getFrameFilename(now, index);
+      final File outputFile = _getFrameFilename(now, index, name);
       final ui.Image captured = await drawDiagramToImage();
       final ByteData encoded = await captured.toByteData(format: format);
       final List<int> bytes = encoded.buffer.asUint8List().toList();
@@ -427,7 +415,7 @@ class DiagramController {
       now += frameDuration;
       ++index;
     }
-    final File metadataFile = _getMetadataFilename();
+    final File metadataFile = new File(path.join(outputDirectory.absolute.path, '$name.json'));
     final AnimationMetadata metadata = new AnimationMetadata.fromData(
       name: name,
       category: category,
@@ -437,10 +425,6 @@ class DiagramController {
       metadataFile: metadataFile,
     );
     return metadata.saveToFile();
-  }
-
-  static File _basicFilenameGenerator() {
-    return new File('frame');
   }
 
   String _byteFormatToString(ui.ImageByteFormat format) {
@@ -455,26 +439,12 @@ class DiagramController {
     return null;
   }
 
-  File _getMetadataFilename() {
-    File outputFile = filenameGenerator();
-    if (!outputFile.isAbsolute && outputDirectory != null) {
-      // If output path is relative, make it relative to the output directory.
-      outputFile = new File(path.join(outputDirectory.absolute.path, '${outputFile.path}.json'));
-    }
-    return outputFile;
-  }
-
-  File _getFrameFilename(Duration timestamp, int index) {
-    File outputFile = filenameGenerator();
-    if (!outputFile.isAbsolute && outputDirectory != null) {
-      // If output path is relative, make it relative to the output directory.
-      outputFile = new File(
-        path.join(
-          outputDirectory.absolute.path,
-          '${outputFile.path}_${index.toString().padLeft(5, '0')}.png',
-        ),
-      );
-    }
-    return outputFile;
+  File _getFrameFilename(Duration timestamp, int index, String name) {
+    return new File(
+      path.join(
+        outputDirectory.absolute.path,
+        '${name}_${index.toString().padLeft(5, '0')}.png',
+      ),
+    );
   }
 }

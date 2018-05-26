@@ -15,12 +15,9 @@ import 'diagram_step.dart';
 const double _kFontSize = 14.0;
 
 class CurveDescription extends CustomPainter {
-  CurveDescription(this.filename, this.caption, this.curve) : _caption = _createLabelPainter(caption);
-
-  final String filename;
+  CurveDescription(this.caption, this.curve) : _caption = _createLabelPainter(caption);
 
   final String caption;
-
   final Curve curve;
 
   Widget get widget {
@@ -136,14 +133,16 @@ class CurveDescription extends CustomPainter {
   }
 }
 
-class CurvePainterWidget extends StatelessWidget {
-  CurvePainterWidget(
-    this.filename,
+class CurveDiagram extends StatelessWidget implements DiagramMetadata {
+  CurveDiagram(
+    String name,
     this.caption,
     Curve curve,
-  ) : description = new CurveDescription(filename, caption, curve);
+  )   : description = new CurveDescription(caption, curve),
+        name = 'curve_$name';
 
-  final String filename;
+  @override
+  final String name;
   final String caption;
   final CurveDescription description;
 
@@ -162,40 +161,41 @@ class CurvePainterWidget extends StatelessWidget {
 }
 
 class CurveDiagramStep extends DiagramStep {
-  CurveDiagramStep(DiagramController controller) : super(controller);
+  CurveDiagramStep(DiagramController controller) : super(controller) {
+    _diagrams.addAll(<CurveDiagram>[
+      new CurveDiagram('bounce_in', 'Curves.bounceIn', Curves.bounceIn),
+      new CurveDiagram('bounce_in_out', 'Curves.bounceInOut', Curves.bounceInOut),
+      new CurveDiagram('bounce_out', 'Curves.bounceOut', Curves.bounceOut),
+      new CurveDiagram('decelerate', 'Curves.decelerate', Curves.decelerate),
+      new CurveDiagram('ease', 'Curves.ease', Curves.ease),
+      new CurveDiagram('ease_in', 'Curves.easeIn', Curves.easeIn),
+      new CurveDiagram('ease_in_out', 'Curves.easeInOut', Curves.easeInOut),
+      new CurveDiagram('ease_out', 'Curves.easeOut', Curves.easeOut),
+      new CurveDiagram('elastic_in', 'Curves.elasticIn', Curves.elasticIn),
+      new CurveDiagram('elastic_in_out', 'Curves.elasticInOut', Curves.elasticInOut),
+      new CurveDiagram('elastic_out', 'Curves.elasticOut', Curves.elasticOut),
+      new CurveDiagram('fast_out_slow_in', 'Curves.fastOutSlowIn', Curves.fastOutSlowIn),
+      new CurveDiagram('linear', 'Curves.linear', Curves.linear),
+      new CurveDiagram('interval', 'const Interval(0.25, 0.75)', const Interval(0.25, 0.75)),
+      new CurveDiagram('sawtooth', 'const SawTooth(3)', const SawTooth(3)),
+      new CurveDiagram('threshold', 'const Threshold(0.75)', const Threshold(0.75)),
+      new CurveDiagram('flipped', 'Curves.bounceIn.flipped', Curves.bounceIn.flipped),
+      new CurveDiagram('flipped_curve', 'const FlippedCurve(Curves.bounceIn)', const FlippedCurve(Curves.bounceIn)),
+    ]);
+  }
 
   @override
   final String category = 'animation';
 
-  @override
-  Future<List<File>> generateDiagrams() async {
-    final List<CurvePainterWidget> curves = <CurvePainterWidget>[
-      new CurvePainterWidget('bounce_in', 'Curves.bounceIn', Curves.bounceIn),
-      new CurvePainterWidget('bounce_in_out', 'Curves.bounceInOut', Curves.bounceInOut),
-      new CurvePainterWidget('bounce_out', 'Curves.bounceOut', Curves.bounceOut),
-      new CurvePainterWidget('decelerate', 'Curves.decelerate', Curves.decelerate),
-      new CurvePainterWidget('ease', 'Curves.ease', Curves.ease),
-      new CurvePainterWidget('ease_in', 'Curves.easeIn', Curves.easeIn),
-      new CurvePainterWidget('ease_in_out', 'Curves.easeInOut', Curves.easeInOut),
-      new CurvePainterWidget('ease_out', 'Curves.easeOut', Curves.easeOut),
-      new CurvePainterWidget('elastic_in', 'Curves.elasticIn', Curves.elasticIn),
-      new CurvePainterWidget('elastic_in_out', 'Curves.elasticInOut', Curves.elasticInOut),
-      new CurvePainterWidget('elastic_out', 'Curves.elasticOut', Curves.elasticOut),
-      new CurvePainterWidget('fast_out_slow_in', 'Curves.fastOutSlowIn', Curves.fastOutSlowIn),
-      new CurvePainterWidget('linear', 'Curves.linear', Curves.linear),
-      new CurvePainterWidget('interval', 'const Interval(0.25, 0.75)', const Interval(0.25, 0.75)),
-      new CurvePainterWidget('sawtooth', 'const SawTooth(3)', const SawTooth(3)),
-      new CurvePainterWidget('threshold', 'const Threshold(0.75)', const Threshold(0.75)),
-      new CurvePainterWidget('flipped', 'Curves.bounceIn.flipped', Curves.bounceIn.flipped),
-      new CurvePainterWidget('flipped_curve', 'const FlippedCurve(Curves.bounceIn)', const FlippedCurve(Curves.bounceIn)),
-    ];
+  final List<CurveDiagram> _diagrams = <CurveDiagram>[];
 
-    final List<File> outputFiles = <File>[];
-    for (CurvePainterWidget curve in curves) {
-      print('Drawing curve for ${curve.caption} (${curve.filename})');
-      controller.builder = (BuildContext context) => curve;
-      outputFiles.add(await controller.drawDiagramToFile(new File('curve_${curve.filename}.png')));
-    }
-    return outputFiles;
+  @override
+  Future<List<DiagramMetadata>> get diagrams async => _diagrams;
+
+  @override
+  Future<File> generateDiagram(DiagramMetadata diagram) async {
+    final CurveDiagram typedDiagram = diagram;
+    controller.builder = (BuildContext context) => typedDiagram;
+    return await controller.drawDiagramToFile(new File('${diagram.name}.png'));
   }
 }

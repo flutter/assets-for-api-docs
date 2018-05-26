@@ -129,9 +129,9 @@ class StrokeJoinDescription extends CustomPainter {
   }
 }
 
-class StrokeJoinPainterWidget extends StatefulWidget {
-  const StrokeJoinPainterWidget({
-    this.filename,
+class StrokeJoinDiagram extends StatefulWidget implements DiagramMetadata {
+  const StrokeJoinDiagram({
+    this.name,
     this.duration: _kAnimationDuration,
     this.startAngle: 0.0,
     this.endAngle: 360.0,
@@ -139,7 +139,8 @@ class StrokeJoinPainterWidget extends StatefulWidget {
     this.strokeMiterLimit: 4.0,
   });
 
-  final String filename;
+  @override
+  final String name;
   final Duration duration;
   final double startAngle;
   final double endAngle;
@@ -150,13 +151,13 @@ class StrokeJoinPainterWidget extends StatefulWidget {
   StrokeJoinPainterState createState() => new StrokeJoinPainterState();
 }
 
-class StrokeJoinPainterState extends State<StrokeJoinPainterWidget> //
+class StrokeJoinPainterState extends State<StrokeJoinDiagram> //
     with
-        TickerProviderStateMixin<StrokeJoinPainterWidget> {
+        TickerProviderStateMixin<StrokeJoinDiagram> {
   AnimationController controller;
 
   @override
-  void didUpdateWidget(StrokeJoinPainterWidget oldWidget) {
+  void didUpdateWidget(StrokeJoinDiagram oldWidget) {
     super.didUpdateWidget(oldWidget);
     controller.value = 0.0;
     controller.forward();
@@ -202,53 +203,51 @@ class StrokeJoinPainterState extends State<StrokeJoinPainterWidget> //
 }
 
 class StrokeJoinDiagramStep extends DiagramStep {
-  StrokeJoinDiagramStep(DiagramController controller) : super(controller);
+  StrokeJoinDiagramStep(DiagramController controller) : super(controller) {
+    _diagrams.addAll(<StrokeJoinDiagram>[
+      const StrokeJoinDiagram(
+        name: 'miter_0_join',
+        join: StrokeJoin.miter,
+        strokeMiterLimit: 0.0,
+      ),
+      const StrokeJoinDiagram(
+        name: 'miter_4_join',
+        join: StrokeJoin.miter,
+        strokeMiterLimit: 4.0,
+      ),
+      const StrokeJoinDiagram(
+        name: 'miter_6_join',
+        join: StrokeJoin.miter,
+        strokeMiterLimit: 6.0,
+      ),
+      const StrokeJoinDiagram(
+        name: 'round_join',
+        join: StrokeJoin.round,
+      ),
+      const StrokeJoinDiagram(
+        name: 'bevel_join',
+        join: StrokeJoin.bevel,
+      ),
+    ]);
+  }
 
   @override
   final String category = 'dart-ui';
 
-  @override
-  Future<List<File>> generateDiagrams() async {
-    final List<StrokeJoinPainterWidget> strokes = <StrokeJoinPainterWidget>[
-      const StrokeJoinPainterWidget(
-        filename: 'miter_0_join',
-        join: StrokeJoin.miter,
-        strokeMiterLimit: 0.0,
-      ),
-      const StrokeJoinPainterWidget(
-        filename: 'miter_4_join',
-        join: StrokeJoin.miter,
-        strokeMiterLimit: 4.0,
-      ),
-      const StrokeJoinPainterWidget(
-        filename: 'miter_6_join',
-        join: StrokeJoin.miter,
-        strokeMiterLimit: 6.0,
-      ),
-      const StrokeJoinPainterWidget(
-        filename: 'round_join',
-        join: StrokeJoin.round,
-      ),
-      const StrokeJoinPainterWidget(
-        filename: 'bevel_join',
-        join: StrokeJoin.bevel,
-      ),
-    ];
+  final List<StrokeJoinDiagram> _diagrams = <StrokeJoinDiagram>[];
 
-    final List<File> outputFiles = <File>[];
-    for (StrokeJoinPainterWidget stroke in strokes) {
-      print('Drawing stroke diagram for ${stroke.join} (${stroke.filename})');
-      controller.builder = (BuildContext context) => stroke;
-      controller.filenameGenerator = () => new File(stroke.filename);
-      outputFiles.add(
-        await controller.drawAnimatedDiagramToFiles(
-          end: _kAnimationDuration,
-          frameRate: _kAnimationFrameRate,
-          name: stroke.filename,
-          category: category,
-        ),
-      );
-    }
-    return outputFiles;
+  @override
+  Future<List<DiagramMetadata>> get diagrams async => _diagrams;
+
+  @override
+  Future<File> generateDiagram(DiagramMetadata diagram) async {
+    final StrokeJoinDiagram typedDiagram = diagram;
+    controller.builder = (BuildContext context) => typedDiagram;
+    return await controller.drawAnimatedDiagramToFiles(
+      end: _kAnimationDuration,
+      frameRate: _kAnimationFrameRate,
+      name: diagram.name,
+      category: category,
+    );
   }
 }

@@ -20,8 +20,33 @@ abstract class DiagramStep {
   /// used in the URL for linking to the image on the documentation website.
   String get category;
 
-  /// Generates all diagrams in this step.
+  /// Returns the list of all available diagrams for this step.
+  Future<List<DiagramMetadata>> get diagrams;
+
+  /// Generates the given diagram and returns the resulting [File].
+  Future<File> generateDiagram(DiagramMetadata diagram);
+
+  /// Generates all diagrams for this step.
   ///
   /// Returns a list of Files where the diagrams were written.
-  Future<List<File>> generateDiagrams();
+  ///
+  /// If `onlyGenerate` is supplied, then only generate diagrams which match one
+  /// of the given file basename. Only matches the basename with no suffix, not
+  /// the path.
+  Future<List<File>> generateDiagrams({List<String> onlyGenerate: const <String>[]}) async {
+    final List<File> files = <File>[];
+    for (DiagramMetadata diagram in await diagrams) {
+      if (onlyGenerate.isNotEmpty && !onlyGenerate.contains(diagram.name)) {
+        continue;
+      }
+      files.add(await generateDiagram(diagram));
+    }
+    return files;
+  }
+}
+
+/// Mixin class for an individual diagram in a step to provide metadata about
+/// the Diagram for filtering (e.g. filename).
+abstract class DiagramMetadata {
+  String get name;
 }

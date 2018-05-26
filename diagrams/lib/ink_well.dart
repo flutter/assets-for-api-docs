@@ -14,12 +14,15 @@ import 'utils.dart';
 
 final GlobalKey splashKey = new GlobalKey();
 
-class InkWellDiagram extends StatelessWidget {
+class InkWellDiagram extends StatelessWidget implements DiagramMetadata {
   InkWellDiagram({Key key}) : super(key: key);
 
   final GlobalKey canvasKey = new GlobalKey();
   final GlobalKey childKey = new GlobalKey();
   final GlobalKey heroKey = new GlobalKey();
+
+  @override
+  String get name => 'ink_well';
 
   @override
   Widget build(BuildContext context) {
@@ -80,24 +83,31 @@ class InkWellDiagram extends StatelessWidget {
 }
 
 class InkWellDiagramStep extends DiagramStep {
-  InkWellDiagramStep(DiagramController controller) : super(controller);
+  InkWellDiagramStep(DiagramController controller) : super(controller) {
+    _diagrams.add(new InkWellDiagram());
+  }
+
+  final List<InkWellDiagram> _diagrams = <InkWellDiagram>[];
 
   @override
   final String category = 'material';
 
   @override
-  Future<List<File>> generateDiagrams() async {
-    controller.builder = (BuildContext context) => new InkWellDiagram();
+  Future<List<DiagramMetadata>> get diagrams async => _diagrams;
+
+  @override
+  Future<File> generateDiagram(DiagramMetadata diagram) async {
+    final InkWellDiagram typedDiagram = diagram;
+    controller.builder = (BuildContext context) => typedDiagram;
+
     controller.advanceTime(Duration.zero);
     final RenderBox target = splashKey.currentContext.findRenderObject();
     final Offset targetOffset = target.localToGlobal(target.size.bottomRight(Offset.zero));
     final TestGesture gesture = await controller.startGesture(targetOffset);
-    final List<File> result = <File>[
-      await controller.drawDiagramToFile(
-        new File('ink_well.png'),
-        timestamp: const Duration(milliseconds: 550),
-      ),
-    ];
+    final File result = await controller.drawDiagramToFile(
+      new File('${diagram.name}.png'),
+      timestamp: const Duration(milliseconds: 550),
+    );
     gesture.up();
     return result;
   }

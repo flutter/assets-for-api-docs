@@ -10,7 +10,12 @@ import 'package:diagram_capture/diagram_capture.dart';
 
 import 'diagram_step.dart';
 
-class CardDiagram extends StatelessWidget {
+class CardDiagram extends StatelessWidget implements DiagramMetadata {
+  const CardDiagram();
+
+  @override
+  String get name => 'card';
+
   @override
   Widget build(BuildContext context) {
     return new ConstrainedBox(
@@ -60,10 +65,12 @@ class CardDiagramStep extends DiagramStep {
   final String category = 'material';
 
   @override
-  Future<List<File>> generateDiagrams() async {
-    controller.builder = (BuildContext context) => new CardDiagram();
-    return <File>[
-      await controller.drawDiagramToFile(new File('card.png')),
-    ];
+  Future<List<DiagramMetadata>> get diagrams async => <DiagramMetadata>[const CardDiagram()];
+
+  @override
+  Future<File> generateDiagram(DiagramMetadata diagram) async {
+    final CardDiagram typedDiagram = diagram;
+    controller.builder = (BuildContext context) => typedDiagram;
+    return await controller.drawDiagramToFile(new File('${diagram.name}.png'));
   }
 }

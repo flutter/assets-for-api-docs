@@ -277,8 +277,14 @@ class DiagramGenerator {
   /// The class that the app runs as.
   static const String appClass = 'io.flutter.api.diagrams';
 
+  /// The path to the top of the repo.
   static String get projectDir {
     return path.joinAll(path.split(path.absolute(path.fromUri(Platform.script)))..removeLast());
+  }
+
+  /// The output asset directory for all the categories.
+  static String get assetDir {
+    return path.joinAll(path.split(projectDir)..removeLast()..add('assets'));
   }
 
   /// Whether or not to cleanup the temporaryDirectory after generating diagrams.
@@ -291,9 +297,9 @@ class DiagramGenerator {
   /// into.
   Directory temporaryDirectory;
 
-  Future<Null> generateDiagrams() async {
+  Future<Null> generateDiagrams(List<String> categories, List<String> names) async {
     final DateTime startTime = new DateTime.now();
-    await _createScreenshots();
+    await _createScreenshots(categories, names);
     final List<File> outputFiles = await _combineAnimations(await _transferImages());
     await _optimizeImages(outputFiles);
     if (cleanup) {
@@ -302,9 +308,21 @@ class DiagramGenerator {
     print('Elapsed time for diagram generation: ${new DateTime.now().difference(startTime)}');
   }
 
-  Future<Null> _createScreenshots() async {
+  Future<Null> _createScreenshots(List<String> categories, List<String> names) async {
     print('Creating images.');
-    final List<String> args = <String>[flutterCommand, 'run', dartPath];
+    final List<String> filters = <String>[];
+    for (String category in categories) {
+      filters.add('--category');
+      filters.add(category);
+    }
+    for (String name in names) {
+      filters.add('--name');
+      filters.add(path.basenameWithoutExtension(name));
+    }
+    final List<String> filterArgs = filters.isNotEmpty
+        ? <String>['--route', 'args:${Uri.encodeComponent(filters.join(' '))}']
+        : <String>[];
+    final List<String> args = <String>[flutterCommand, 'run'] + filterArgs + <String>[dartPath];
     await processRunner.runProcess(args, workingDirectory: new Directory(projectDir));
   }
 
@@ -348,7 +366,7 @@ class DiagramGenerator {
   }
 
   Future<List<File>> _buildMoviesFromMetadata(List<AnimationMetadata> metadataList) async {
-    final Directory destDir = new Directory(path.joinAll(path.split(projectDir)..removeLast()..add('assets')));
+    final Directory destDir = new Directory(assetDir);
     final List<File> outputs = <File>[];
     for (AnimationMetadata metadata in metadataList) {
       final String prefix = '${metadata.category}/${metadata.name}';
@@ -417,7 +435,7 @@ class DiagramGenerator {
   }
 
   Future<Null> _optimizeImages(List<File> files) async {
-    final Directory destDir = new Directory(path.joinAll(path.split(projectDir)..removeLast()));
+    final Directory destDir = new Directory(assetDir);
     final List<WorkerJob> jobs = <WorkerJob>[];
     for (File imagePath in files) {
       if (!imagePath.path.endsWith('.png')) {
@@ -453,6 +471,10 @@ Future<Null> main(List<String> arguments) async {
   parser.addFlag('help', help: 'Print help.');
   parser.addFlag('keep-tmp', help: "Don't cleanup after a run (don't remove temporary directory).");
   parser.addOption('tmpdir', help: 'Specify a temporary directory to use (implies --keep-tmp)');
+  parser.addMultiOption('category', help: 'Specify the categories of diagrams that should be '
+      'generated. The category is the asset directory they are placed in.');
+  parser.addMultiOption('name', help: 'Specify the name of diagrams that should be generated. The '
+      'name is the basename of the output file and may be specified with or without the suffix.');
   final ArgResults flags = parser.parse(arguments);
 
   if (flags['help']) {
@@ -461,13 +483,14 @@ Future<Null> main(List<String> arguments) async {
     exit(0);
   }
 
-  bool keepTmp = flags['keep-tmp'];
+  bool keepTemporaryDirectory = flags['keep-tmp'];
   Directory temporaryDirectory;
   if (flags['tmpdir'] != null && flags['tmpdir'].isNotEmpty) {
     temporaryDirectory = new Directory(flags['tmpdir']);
     temporaryDirectory.createSync(recursive: true);
-    keepTmp = true;
+    keepTemporaryDirectory = true;
   }
 
-  new DiagramGenerator(temporaryDirectory: temporaryDirectory, cleanup: !keepTmp)..generateDiagrams();
+  new DiagramGenerator(temporaryDirectory: temporaryDirectory, cleanup: !keepTemporaryDirectory,)
+    ..generateDiagrams(flags['category'], flags['name']);
 }
