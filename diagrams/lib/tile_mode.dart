@@ -20,6 +20,7 @@ const double borderSize = 1.0;
 enum GradientMode {
   linear,
   radial,
+  radialWithFocal,
 }
 
 class TileModeDiagram extends StatelessWidget implements DiagramMetadata {
