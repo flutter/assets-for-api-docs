@@ -21,6 +21,7 @@ const double borderSize = 1.0;
 enum GradientMode {
   linear,
   radial,
+  radialWithFocal,
   sweep,
 }
 
@@ -67,6 +68,19 @@ class TileModeDiagram extends StatelessWidget implements DiagramMetadata {
           center: FractionalOffset.center,
           startAngle: 0.0,
           endAngle: math.pi / 2,
+          colors: const <Color>[
+            const Color(0xFF0000FF),
+            const Color(0xFF00FF00)
+          ],
+          stops: const <double>[0.0, 1.0],
+          tileMode: tileMode,
+        );
+        break;
+      case GradientMode.radialWithFocal:
+        gradient = new RadialGradient(
+          center: FractionalOffset.center,
+          focal: const FractionalOffset(0.5, 0.42),
+          radius: 0.2,
           colors: const <Color>[
             const Color(0xFF0000FF),
             const Color(0xFF00FF00)
