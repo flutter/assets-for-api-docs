@@ -4,6 +4,7 @@
 
 import 'dart:async';
 import 'dart:io';
+import 'dart:math' as math;
 
 import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/foundation.dart';
@@ -21,6 +22,7 @@ enum GradientMode {
   linear,
   radial,
   radialWithFocal,
+  sweep,
 }
 
 class TileModeDiagram extends StatelessWidget implements DiagramMetadata {
@@ -53,7 +55,23 @@ class TileModeDiagram extends StatelessWidget implements DiagramMetadata {
         gradient = new RadialGradient(
           center: FractionalOffset.center,
           radius: 0.2,
-          colors: const <Color>[const Color(0xFF0000FF), const Color(0xFF00FF00)],
+          colors: const <Color>[
+            const Color(0xFF0000FF),
+            const Color(0xFF00FF00)
+          ],
+          stops: const <double>[0.0, 1.0],
+          tileMode: tileMode,
+        );
+        break;
+      case GradientMode.sweep:
+        gradient = new SweepGradient(
+          center: FractionalOffset.center,
+          startAngle: 0.0,
+          endAngle: math.pi / 2,
+          colors: const <Color>[
+            const Color(0xFF0000FF),
+            const Color(0xFF00FF00)
+          ],
           stops: const <double>[0.0, 1.0],
           tileMode: tileMode,
         );
