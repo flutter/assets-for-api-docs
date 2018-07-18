@@ -227,7 +227,7 @@ void main() {
       List<int> imageContents = actualOutputFile.readAsBytesSync();
       image.Image decodedImage = image.decodePng(imageContents);
       expect(decodedImage.width, equals(88));
-      expect(decodedImage.height, equals(36));
+      expect(decodedImage.height, equals(48));
       expect(decodedImage[decodedImage.index(44, 18)], equals(0xfff39621)); // Check a pixel value
 
       final TestGesture gesture = await controller.startGesture(const Offset(50.0, 50.0));
