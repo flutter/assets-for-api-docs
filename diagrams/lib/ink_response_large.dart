@@ -107,7 +107,7 @@ class InkResponseLargeDiagramStep extends DiagramStep {
       new File('${diagram.name}.png'),
       timestamp: const Duration(milliseconds: 550),
     );
-    gesture.up();
+    await gesture.up();
     return result;
   }
 }

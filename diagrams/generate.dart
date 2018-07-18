@@ -231,7 +231,7 @@ class ProcessPool {
     if (jobs == null || jobs.isEmpty) {
       return <WorkerJob, List<int>>{};
     }
-    completer = new Completer<Null>();
+    completer = new Completer<Map<WorkerJob, List<int>>>();
     pendingJobs = jobs;
     for (int i = 0; i < numWorkers; ++i) {
       if (pendingJobs.isEmpty) {
