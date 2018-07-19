@@ -20,7 +20,7 @@ class CardDiagram extends StatelessWidget implements DiagramMetadata {
   Widget build(BuildContext context) {
     return new ConstrainedBox(
       key: new UniqueKey(),
-      constraints: new BoxConstraints.tight(const Size(400.0, 150.0)),
+      constraints: new BoxConstraints.tight(const Size(400.0, 154.0)),
       child: new Container(
         alignment: FractionalOffset.center,
         padding: const EdgeInsets.all(5.0),
