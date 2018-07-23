@@ -378,8 +378,10 @@ class DiagramGenerator {
       await processRunner.runProcess(
         <String>[
           ffmpegCommand,
+          '-framerate', metadata.frameRate.toStringAsFixed(2),
           '-i', '-', // read in the concatenated frame files from stdin.
-          '-framerate', metadata.frameRate.toStringAsFixed(3),
+          // Yes, specify the -framerate flag twice: once for input, once for output.
+          '-framerate', metadata.frameRate.toStringAsFixed(2),
           '-tune', 'animation', // Optimize the encoder for cell animation.
           '-preset', 'veryslow', // Use the slowest (best quality) compression preset.
           '-crf', '1', // almost lossless quality (can't use lossless '0' because Safari doesn't support it)
