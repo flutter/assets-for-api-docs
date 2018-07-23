@@ -402,7 +402,9 @@ class DiagramController {
     final Duration frameDuration = new Duration(microseconds: (1e6 / frameRate).round());
     int index = 0;
     final List<File> outputFiles = <File>[];
-    while (now <= end) {
+    // Add an extra millisecond to account for possible rounding error: we want
+    // to make sure to get the last frame.
+    while (now <= (end + const Duration(milliseconds: 1))) {
       final File outputFile = _getFrameFilename(now, index, name);
       final ui.Image captured = await drawDiagramToImage();
       final ByteData encoded = await captured.toByteData(format: format);
