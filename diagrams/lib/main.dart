@@ -17,21 +17,14 @@ import 'box_fit.dart';
 import 'card.dart';
 import 'colors.dart';
 import 'curve.dart';
-import 'decorated_box_transition.dart';
 import 'diagram_step.dart';
-import 'fade_transition.dart';
 import 'ink_response_large.dart';
 import 'ink_response_small.dart';
 import 'ink_well.dart';
-import 'positioned_transition.dart';
-import 'relative_positioned_transition.dart';
-import 'rotation_transition.dart';
-import 'scale_transition.dart';
-import 'size_transition.dart';
-import 'slide_transition.dart';
 import 'stroke_cap.dart';
 import 'stroke_join.dart';
 import 'tile_mode.dart';
+import 'transitions.dart';
 
 Future<Directory> prepareOutputDirectory() async {
   final Directory directory = new Directory(
@@ -76,20 +69,13 @@ Future<Null> main() async {
     new CardDiagramStep(controller),
     new ColorsDiagramStep(controller),
     new CurveDiagramStep(controller),
-    new DecoratedBoxTransitionDiagramStep(controller),
-    new FadeTransitionDiagramStep(controller),
     new InkResponseLargeDiagramStep(controller),
     new InkResponseSmallDiagramStep(controller),
     new InkWellDiagramStep(controller),
-    new PositionedTransitionDiagramStep(controller),
-    new RelativePositionedTransitionDiagramStep(controller),
-    new RotationTransitionDiagramStep(controller),
-    new ScaleTransitionDiagramStep(controller),
-    new SizeTransitionDiagramStep(controller),
-    new SlideTransitionDiagramStep(controller),
     new StrokeCapDiagramStep(controller),
     new StrokeJoinDiagramStep(controller),
     new TileModeDiagramStep(controller),
+    new TransitionDiagramStep(controller),
   ];
 
   for (DiagramStep step in steps) {
