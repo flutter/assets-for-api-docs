@@ -29,21 +29,6 @@ class CurveDescription extends CustomPainter {
   final Curve curve;
   final double position;
 
-  Widget get widget {
-    return new ConstrainedBox(
-      constraints: const BoxConstraints(maxWidth: 130.0),
-      child: new AspectRatio(
-        aspectRatio: 1.7,
-        child: new Padding(
-          padding: new EdgeInsets.all(ui.window.devicePixelRatio),
-          child: new CustomPaint(
-            painter: this,
-          ),
-        ),
-      ),
-    );
-  }
-
   static final TextPainter _t = _createLabelPainter('t', style: FontStyle.italic);
   static final TextPainter _x = _createLabelPainter('x', style: FontStyle.italic);
   static final TextPainter _zero = _createLabelPainter('0.0');
@@ -159,8 +144,8 @@ class CurveDescription extends CustomPainter {
       1.0 - curve.transform(position),
     ).withinRect(area);
     // Skip drawing the tracing line if we're at 0.0 because we want the
-    // initial paused state to not include the arrows. They just add clutter
-    // before the animation is started.
+    // initial paused state to not include the position indicators. They just
+    // add clutter before the animation is started.
     if (position != 0.0) {
       final Path positionLine = new Path()
         ..moveTo(activePoint.dx, area.bottom)
