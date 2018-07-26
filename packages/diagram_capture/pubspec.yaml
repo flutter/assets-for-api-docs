@@ -8,11 +8,9 @@ dependencies:
   flutter:
     sdk: flutter
   path_provider: any
+  path: ^1.6.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   image: ^1.0.30
-
-# The following section is specific to Flutter.
-flutter:

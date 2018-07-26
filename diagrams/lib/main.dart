@@ -24,6 +24,7 @@ import 'ink_well.dart';
 import 'stroke_cap.dart';
 import 'stroke_join.dart';
 import 'tile_mode.dart';
+import 'transitions.dart';
 
 Future<Directory> prepareOutputDirectory() async {
   final Directory directory = new Directory(
@@ -74,6 +75,7 @@ Future<Null> main() async {
     new StrokeCapDiagramStep(controller),
     new StrokeJoinDiagramStep(controller),
     new TileModeDiagramStep(controller),
+    new TransitionDiagramStep(controller),
   ];
 
   for (DiagramStep step in steps) {

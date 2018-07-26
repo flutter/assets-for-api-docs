@@ -378,6 +378,7 @@ class DiagramGenerator {
       await processRunner.runProcess(
         <String>[
           ffmpegCommand,
+          '-loglevel', 'fatal', // Only print fatal errors.
           '-framerate', metadata.frameRate.toStringAsFixed(2),
           '-i', '-', // read in the concatenated frame files from stdin.
           // Yes, specify the -framerate flag twice: once for input, once for output.
@@ -392,7 +393,7 @@ class DiagramGenerator {
         ],
         workingDirectory: temporaryDirectory,
         stdin: _concatInputs(metadata.frameFiles),
-        printOutput: false,
+        printOutput: true,
       );
       outputs.add(destination);
     }
