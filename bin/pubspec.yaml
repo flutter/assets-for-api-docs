@@ -1,0 +1,11 @@
+name: generator
+description: Generator script for building API doc assets.
+
+dependencies:
+  archive: 1.0.33
+  process: 3.0.1
+  animation_metadata:
+    path: ../packages/animation_metadata
+
+dev_dependencies:
+  mockito: any

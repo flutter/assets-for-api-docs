@@ -1,1 +1,1 @@
-exclude: [diagrams, packages, testing]
+exclude: [utils, packages, bin]

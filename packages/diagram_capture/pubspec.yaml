@@ -9,8 +9,10 @@ dependencies:
     sdk: flutter
   path_provider: any
   path: ^1.6.2
+  animation_metadata:
+    path: ../animation_metadata
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  image: ^1.0.30
+  image: ^2.0.4

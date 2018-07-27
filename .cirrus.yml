@@ -1,0 +1,34 @@
+container:
+  image: cirrusci/flutter:base
+
+task:
+  env:
+    BUILD_DIR: "/tmp/build"
+    CIRRUS_WORKING_DIR: "$BUILD_DIR/assets-for-api-docs"
+    FLUTTER_DIR: "$BUILD_DIR/flutter"
+
+  git_fetch_script: git fetch origin
+  setup_script: |
+    # Clone Flutter master repo
+    git clone https://github.com/flutter/flutter.git "$FLUTTER_DIR"
+
+    # disable analytics on the bots and download Flutter dependencies
+    "$FLUTTER_DIR/bin/flutter" config --no-analytics
+
+    # update packages
+    ./bin/update_packages.sh
+
+  matrix:
+    - name: analyze
+      env:
+        SHARD: analyze
+      test_script:
+        - ./bin/testing.sh analyze
+    - name: tests-linux
+      env:
+        SHARD: tests
+      test_script:
+        - ./bin/testing.sh test
+      container:
+        cpu: 4
+        memory: 8G
