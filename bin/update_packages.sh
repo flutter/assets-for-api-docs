@@ -14,3 +14,7 @@ REPO_DIR="$(dirname "$SCRIPT_DIR")"
 for dir in "$REPO_DIR/bin" "$REPO_DIR/packages/"* "$REPO_DIR/utils/"*; do
   (cd "$dir" && flutter packages get)
 done
+
+# Also update packages just with pub in bin, since there are non-flutter packages
+# there.
+(cd "$REPO_DIR/bin" && pub get)
