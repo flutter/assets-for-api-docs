@@ -4,6 +4,7 @@
 
 library diagrams;
 
+export 'src/animation_diagram.dart';
 export 'src/app_bar.dart';
 export 'src/blend_mode.dart';
 export 'src/box_fit.dart';
@@ -11,6 +12,7 @@ export 'src/card.dart';
 export 'src/colors.dart';
 export 'src/curve.dart';
 export 'src/diagram_step.dart';
+export 'src/implicit_animations.dart';
 export 'src/ink_response_large.dart';
 export 'src/ink_response_small.dart';
 export 'src/ink_well.dart';

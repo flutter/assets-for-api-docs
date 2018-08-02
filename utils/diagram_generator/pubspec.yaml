@@ -8,7 +8,7 @@ dependencies:
     path: ../../packages/diagram_capture
   diagrams:
     path: ../../packages/diagrams
-  path_provider: any
+  path_provider: ^0.4.1
   archive: 1.0.33
   process: 3.0.1
 

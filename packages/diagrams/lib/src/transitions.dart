@@ -4,23 +4,23 @@
 
 import 'dart:async';
 import 'dart:io';
-import 'dart:ui' as ui;
 
 import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'animation_diagram.dart';
 import 'diagram_step.dart';
 
 final GlobalKey _transitionKey = new GlobalKey();
 
-const Duration _kAnimationDuration = const Duration(seconds: 2);
 const Duration _kOverallAnimationDuration = const Duration(seconds: 6);
 const double _kAnimationFrameRate = 60.0;
 const double _kLogoSize = 150.0;
 
 class TransitionDiagramStep extends DiagramStep {
   TransitionDiagramStep(DiagramController controller) : super(controller) {
+    _diagrams.add(const AlignTransitionDiagram());
     _diagrams.add(const DecoratedBoxTransitionDiagram());
     _diagrams.add(const FadeTransitionDiagram());
     _diagrams.add(const PositionedTransitionDiagram());
@@ -29,9 +29,18 @@ class TransitionDiagramStep extends DiagramStep {
     _diagrams.add(const ScaleTransitionDiagram());
     _diagrams.add(const SizeTransitionDiagram());
     _diagrams.add(const SlideTransitionDiagram());
+    _diagrams.add(const AlignTransitionDiagram(decorate: false));
+    _diagrams.add(const DecoratedBoxTransitionDiagram(decorate: false));
+    _diagrams.add(const FadeTransitionDiagram(decorate: false));
+    _diagrams.add(const PositionedTransitionDiagram(decorate: false));
+    _diagrams.add(const RelativePositionedTransitionDiagram(decorate: false));
+    _diagrams.add(const RotationTransitionDiagram(decorate: false));
+    _diagrams.add(const ScaleTransitionDiagram(decorate: false));
+    _diagrams.add(const SizeTransitionDiagram(decorate: false));
+    _diagrams.add(const SlideTransitionDiagram(decorate: false));
   }
 
-  final List<TransitionDiagram<dynamic>> _diagrams = <TransitionDiagram<dynamic>>[];
+  final List<AnimationDiagram<dynamic>> _diagrams = <AnimationDiagram<dynamic>>[];
 
   @override
   final String category = 'widgets';
@@ -41,7 +50,7 @@ class TransitionDiagramStep extends DiagramStep {
 
   @override
   Future<File> generateDiagram(DiagramMetadata diagram) async {
-    final TransitionDiagram<dynamic> typedDiagram = diagram;
+    final AnimationDiagram<dynamic> typedDiagram = diagram;
     controller.builder = (BuildContext context) => typedDiagram;
 
     final Map<Duration, DiagramKeyframe> keyframes = <Duration, DiagramKeyframe>{
@@ -70,97 +79,41 @@ class TransitionDiagramStep extends DiagramStep {
   }
 }
 
-Widget content({bool small = false}) {
-  if (small) {
-    return const FlutterLogo(size: _kLogoSize / 2.0);
+class AlignTransitionDiagram extends AnimationDiagram<AlignmentGeometry> {
+  const AlignTransitionDiagram({Key key, bool decorate = true}) : super(key: key, decorate: decorate);
+
+  @override
+  Curve get curve => Curves.fastOutSlowIn;
+
+  @override
+  Animation<AlignmentGeometry> buildAnimation(AnimationController controller) {
+    return _offsetTween.animate(
+      new CurvedAnimation(
+        parent: controller,
+        curve: curve,
+      ),
+    );
   }
-  return const Padding(
-    padding: const EdgeInsets.all(8.0),
-    child: const FlutterLogo(size: _kLogoSize),
+
+  static final Tween<AlignmentGeometry> _offsetTween = new AlignmentGeometryTween(
+    begin: AlignmentDirectional.bottomStart,
+    end: AlignmentDirectional.center,
   );
-}
-
-abstract class TransitionDiagram<T> extends StatefulWidget implements DiagramMetadata {
-  const TransitionDiagram({
-    Key key,
-  }) : super(key: key);
-
-  /// The animation curve for both the animation and the sparkline to use.
-  Curve get curve;
-  Animation<T> buildAnimation(AnimationController controller);
-  Widget buildTransition(BuildContext context, Animation<T> animation);
 
   @override
-  TransitionDiagramState<T> createState() => new TransitionDiagramState<T>();
-}
-
-class TransitionDiagramState<T> extends State<TransitionDiagram<T>> //
-    with
-        TickerProviderStateMixin<TransitionDiagram<T>> {
-  bool selected = false;
-  Animation<T> animation;
-  AnimationController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = new AnimationController(
-      duration: _kAnimationDuration,
-      vsync: this,
-    )..addListener(() {
-      setState(() {});
-    });
-    animation = widget.buildAnimation(_controller);
-  }
-
-  @override
-  void dispose() {
-    _controller?.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return new GestureDetector(
-      onTap: () {
-        setState(() {
-          selected = !selected;
-          selected ? _controller.forward() : _controller.reverse();
-        });
-      },
-      child: new Container(
-        // Height must be an even number for ffmpeg to be able to create a video
-        // from the output.
-        constraints: const BoxConstraints.tightFor(width: 300.0, height: 376.0),
-        padding: const EdgeInsets.all(25.0),
-        color: const Color(0xffffffff),
-        child: new Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            new Container(
-              alignment: Alignment.center,
-              constraints: const BoxConstraints.tightFor(width: 250.0, height: 250.0),
-              child: widget.buildTransition(context, animation),
-            ),
-            new Container(height: 25.0),
-            new Container(
-              width: 100.0,
-              height: 50.0,
-              child: Sparkline(curve: widget.curve, position: _controller.value),
-            ),
-          ],
-        ),
+  Widget buildTransition(BuildContext context, Animation<AlignmentGeometry> animation) {
+    return new Center(
+      child: new AlignTransition(
+        key: _transitionKey,
+        alignment: animation,
+        child: const SampleWidget(small: true),
       ),
     );
   }
 }
 
-class DecoratedBoxTransitionDiagram extends TransitionDiagram<Decoration> {
-  const DecoratedBoxTransitionDiagram({Key key}) : super(key: key);
-
-  @override
-  String get name => 'decorated_box_transition';
+class DecoratedBoxTransitionDiagram extends AnimationDiagram<Decoration> {
+  const DecoratedBoxTransitionDiagram({Key key, bool decorate = true}) : super(key: key, decorate: decorate);
 
   @override
   Curve get curve => Curves.decelerate;
@@ -195,14 +148,14 @@ class DecoratedBoxTransitionDiagram extends TransitionDiagram<Decoration> {
       child: new Container(
         width: 158.0,
         height: 158.0,
-        child: content(),
+        child: const SampleWidget(),
       ),
     );
   }
 }
 
-class FadeTransitionDiagram extends TransitionDiagram<double> {
-  const FadeTransitionDiagram({Key key}) : super(key: key);
+class FadeTransitionDiagram extends AnimationDiagram<double> {
+  const FadeTransitionDiagram({Key key, bool decorate = true}) : super(key: key, decorate: decorate);
 
   @override
   Curve get curve => Curves.fastOutSlowIn;
@@ -218,23 +171,17 @@ class FadeTransitionDiagram extends TransitionDiagram<double> {
   }
 
   @override
-  String get name => 'fade_transition';
-
-  @override
   Widget buildTransition(BuildContext context, Animation<double> animation) {
     return new FadeTransition(
       key: _transitionKey,
       opacity: animation,
-      child: content(),
+      child: const SampleWidget(),
     );
   }
 }
 
-class PositionedTransitionDiagram extends TransitionDiagram<RelativeRect> {
-  const PositionedTransitionDiagram({Key key}) : super(key: key);
-
-  @override
-  String get name => 'positioned_transition';
+class PositionedTransitionDiagram extends AnimationDiagram<RelativeRect> {
+  const PositionedTransitionDiagram({Key key, bool decorate = true}) : super(key: key, decorate: decorate);
 
   @override
   Curve get curve => Curves.elasticInOut;
@@ -257,11 +204,11 @@ class PositionedTransitionDiagram extends TransitionDiagram<RelativeRect> {
     return new Center(
       child: new Stack(
         children: <Widget>[
-          new Container(color: const Color(0xffffffff), width: 250.0, height: 250.0),
+          new Container(width: 250.0, height: 250.0),
           new PositionedTransition(
             key: _transitionKey,
             rect: animation,
-            child: content(small: true),
+            child: const SampleWidget(small: true),
           ),
         ],
       ),
@@ -269,11 +216,8 @@ class PositionedTransitionDiagram extends TransitionDiagram<RelativeRect> {
   }
 }
 
-class RelativePositionedTransitionDiagram extends TransitionDiagram<Rect> {
-  const RelativePositionedTransitionDiagram({Key key}) : super(key: key);
-
-  @override
-  String get name => 'relative_positioned_transition';
+class RelativePositionedTransitionDiagram extends AnimationDiagram<Rect> {
+  const RelativePositionedTransitionDiagram({Key key, bool decorate = true}) : super(key: key, decorate: decorate);
 
   @override
   Curve get curve => Curves.elasticInOut;
@@ -301,7 +245,7 @@ class RelativePositionedTransitionDiagram extends TransitionDiagram<Rect> {
             key: _transitionKey,
             size: const Size(150.0, 150.0),
             rect: animation,
-            child: content(small: true),
+            child: const SampleWidget(small: true),
           ),
         ],
       ),
@@ -309,11 +253,8 @@ class RelativePositionedTransitionDiagram extends TransitionDiagram<Rect> {
   }
 }
 
-class RotationTransitionDiagram extends TransitionDiagram<double> {
-  const RotationTransitionDiagram({Key key}) : super(key: key);
-
-  @override
-  String get name => 'rotation_transition';
+class RotationTransitionDiagram extends AnimationDiagram<double> {
+  const RotationTransitionDiagram({Key key, bool decorate = true}) : super(key: key, decorate: decorate);
 
   @override
   Curve get curve => Curves.elasticOut;
@@ -331,16 +272,13 @@ class RotationTransitionDiagram extends TransitionDiagram<double> {
     return new RotationTransition(
       key: _transitionKey,
       turns: animation,
-      child: content(),
+      child: const SampleWidget(),
     );
   }
 }
 
-class ScaleTransitionDiagram extends TransitionDiagram<double> {
-  const ScaleTransitionDiagram({Key key}) : super(key: key);
-
-  @override
-  String get name => 'scale_transition';
+class ScaleTransitionDiagram extends AnimationDiagram<double> {
+  const ScaleTransitionDiagram({Key key, bool decorate = true}) : super(key: key, decorate: decorate);
 
   @override
   Curve get curve => Curves.fastOutSlowIn;
@@ -360,16 +298,13 @@ class ScaleTransitionDiagram extends TransitionDiagram<double> {
     return new ScaleTransition(
       key: _transitionKey,
       scale: animation,
-      child: content(),
+      child: const SampleWidget(),
     );
   }
 }
 
-class SizeTransitionDiagram extends TransitionDiagram<double> {
-  const SizeTransitionDiagram({Key key}) : super(key: key);
-
-  @override
-  String get name => 'size_transition';
+class SizeTransitionDiagram extends AnimationDiagram<double> {
+  const SizeTransitionDiagram({Key key, bool decorate = true}) : super(key: key, decorate: decorate);
 
   @override
   Curve get curve => Curves.fastOutSlowIn;
@@ -387,23 +322,24 @@ class SizeTransitionDiagram extends TransitionDiagram<double> {
   @override
   Widget buildTransition(BuildContext context, Animation<double> animation) {
     return new Container(
+      // TODO(gspencer): remove these constraints when
+      // https://github.com/flutter/flutter/issues/19850 is fixed.
+      // SizeTransition hard codes alignment at the beginning, so we have
+      // to restrict the width to make it look centered.
       constraints: const BoxConstraints.tightFor(width: _kLogoSize),
       child: new SizeTransition(
         key: _transitionKey,
         axis: Axis.vertical,
         axisAlignment: 0.0,
         sizeFactor: animation,
-        child: content(),
+        child: const SampleWidget(),
       ),
     );
   }
 }
 
-class SlideTransitionDiagram extends TransitionDiagram<Offset> {
-  const SlideTransitionDiagram({Key key}) : super(key: key);
-
-  @override
-  String get name => 'slide_transition';
+class SlideTransitionDiagram extends AnimationDiagram<Offset> {
+  const SlideTransitionDiagram({Key key, bool decorate = true}) : super(key: key, decorate: decorate);
 
   @override
   Curve get curve => Curves.elasticIn;
@@ -429,100 +365,8 @@ class SlideTransitionDiagram extends TransitionDiagram<Offset> {
       child: new SlideTransition(
         key: _transitionKey,
         position: animation,
-        child: content(),
+        child: const SampleWidget(),
       ),
     );
   }
 }
-
-/// A custom painter to draw the graph of the curve.
-class SparklinePainter extends CustomPainter {
-  SparklinePainter(this.curve, this.position);
-
-  final Curve curve;
-  final double position;
-
-  static final Paint _axisPaint = new Paint()
-    ..color = Colors.black45
-    ..style = PaintingStyle.stroke
-    ..strokeWidth = 2.0;
-
-  static final Paint _sparklinePaint = new Paint()
-    ..color = Colors.blue.shade900
-    ..style = PaintingStyle.stroke
-    ..strokeCap = StrokeCap.round
-    ..strokeWidth = 4.0;
-
-  static final Paint _graphProgressPaint = new Paint()
-    ..color = Colors.black26
-    ..style = PaintingStyle.stroke
-    ..strokeCap = StrokeCap.round
-    ..strokeWidth = 4.0;
-
-  static final Paint _positionCirclePaint = new Paint()
-    ..color = Colors.blue.shade900
-    ..style = PaintingStyle.fill;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    assert(size != Size.zero);
-    const double unit = 4.0;
-    const double leftMargin = unit;
-    const double rightMargin = unit;
-    const double topMargin = unit;
-
-    final Rect area = new Rect.fromLTRB(
-      leftMargin,
-      topMargin,
-      size.width - rightMargin,
-      size.height - topMargin,
-    );
-    final Path axes = new Path()
-      ..moveTo(area.left, area.top) // vertical axis
-      ..lineTo(area.left, area.bottom) // origin
-      ..lineTo(area.right, area.bottom); // horizontal axis
-    canvas.drawPath(axes, _axisPaint);
-    final Offset activePoint = new FractionalOffset(
-      position,
-      1.0 - curve.transform(position),
-    ).withinRect(area);
-
-    // The sparkline itself.
-    final Path sparkline = new Path()..moveTo(area.left, area.bottom);
-    final double stepSize = 1.0 / (area.width * ui.window.devicePixelRatio);
-    for (double t = 0.0; t <= position; t += stepSize) {
-      final Offset point = new FractionalOffset(t, 1.0 - curve.transform(t)).withinRect(area);
-      sparkline.lineTo(point.dx, point.dy);
-    }
-    canvas.drawPath(sparkline, _sparklinePaint);
-    final Offset startPoint = new FractionalOffset(
-      position,
-      1.0 - curve.transform(position),
-    ).withinRect(area);
-    final Path graphProgress = new Path()..moveTo(startPoint.dx, startPoint.dy);
-    for (double t = position; t <= 1.0; t += stepSize) {
-      final Offset point = new FractionalOffset(t, 1.0 - curve.transform(t)).withinRect(area);
-      graphProgress.lineTo(point.dx, point.dy);
-    }
-    canvas.drawPath(graphProgress, _graphProgressPaint);
-    canvas.drawCircle(new Offset(activePoint.dx, activePoint.dy), 4.0, _positionCirclePaint);
-  }
-
-  @override
-  bool shouldRepaint(SparklinePainter oldDelegate) {
-    return curve != oldDelegate.curve || position != oldDelegate.position;
-  }
-}
-
-class Sparkline extends StatelessWidget {
-  const Sparkline({Key key, this.curve, this.position});
-
-  final Curve curve;
-  final double position;
-
-  @override
-  Widget build(BuildContext context) {
-    return new CustomPaint(painter: SparklinePainter(curve, position));
-  }
-}
-
