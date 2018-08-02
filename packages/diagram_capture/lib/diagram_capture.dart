@@ -7,6 +7,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
+import 'package:animation_metadata/animation_metadata.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -16,8 +17,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:path/path.dart' as path;
 import 'package:vector_math/vector_math_64.dart';
-
-import 'animation_metadata.dart';
 
 // The diagram host widget. Diagrams are wrapped by this widget to provide
 // the needed structure for capturing them.

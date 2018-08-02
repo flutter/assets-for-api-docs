@@ -1,0 +1,18 @@
+name: diagram_generator
+description: Main app for building API doc assets.
+
+dependencies:
+  flutter:
+    sdk: flutter
+  diagram_capture:
+    path: ../../packages/diagram_capture
+  diagrams:
+    path: ../../packages/diagrams
+  path_provider: any
+  archive: 1.0.33
+  process: 3.0.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  mockito: any
