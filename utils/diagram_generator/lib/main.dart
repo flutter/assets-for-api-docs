@@ -55,6 +55,7 @@ Future<Null> main() async {
     new CardDiagramStep(controller),
     new ColorsDiagramStep(controller),
     new CurveDiagramStep(controller),
+    new ImplicitAnimationDiagramStep(controller),
     new InkResponseLargeDiagramStep(controller),
     new InkResponseSmallDiagramStep(controller),
     new InkWellDiagramStep(controller),
@@ -80,7 +81,7 @@ Future<Null> main() async {
   }
   final DateTime end = new DateTime.now();
   final Duration elapsed = end.difference(start);
-  const Duration minExecutionTime = const Duration(seconds: 10);
+  const Duration minExecutionTime = Duration(seconds: 10);
   print('Total elapsed time: $elapsed');
   if (elapsed < minExecutionTime) {
     // If the app runs for less time than this, then it will throw an exception

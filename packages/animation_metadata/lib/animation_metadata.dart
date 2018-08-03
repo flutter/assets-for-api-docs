@@ -56,7 +56,7 @@ class AnimationMetadata {
         return path.relative(file.path, from: path.dirname(metadataFile.absolute.path));
       }).toList(),
     };
-    const JsonEncoder encoder = const JsonEncoder.withIndent('  ');
+    const JsonEncoder encoder = JsonEncoder.withIndent('  ');
     print('Metadata: $metadata');
     final String jsonMetadata = encoder.convert(metadata);
     return metadataFile.writeAsString(jsonMetadata);

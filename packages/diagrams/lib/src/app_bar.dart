@@ -46,7 +46,7 @@ class _DiagramState extends State<AppBarDiagram> {
           color: const Color(0xFFFFFFFF),
           child: new MediaQuery(
             data: const MediaQueryData(
-              padding: const EdgeInsets.all(0.0),
+              padding: EdgeInsets.all(0.0),
             ),
             child: new Stack(
               children: <Widget>[
@@ -81,7 +81,7 @@ class _DiagramState extends State<AppBarDiagram> {
                           padding: const EdgeInsets.all(4.0),
                           child: const Placeholder(
                             strokeWidth: 2.0,
-                            color: const Color(0xFFFFFFFF),
+                            color: Color(0xFFFFFFFF),
                           ),
                         ),
                       ),

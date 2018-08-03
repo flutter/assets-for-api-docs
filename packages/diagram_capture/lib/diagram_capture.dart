@@ -52,7 +52,7 @@ class _Diagram extends StatelessWidget {
   }
 }
 
-const Size _kDefaultDiagramViewportSize = const Size(1280.0, 1024.0);
+const Size _kDefaultDiagramViewportSize = Size(1280.0, 1024.0);
 
 // View configuration that allows diagrams to not match the physical dimensions
 // of the device. This will change the view used to display the flutter surface
@@ -98,6 +98,21 @@ class _DiagramViewConfiguration extends ViewConfiguration {
   String toString() => '_DiagramViewConfiguration';
 }
 
+// Provides a concrete implementation of WidgetController.
+class _DiagramWidgetController extends WidgetController {
+  _DiagramWidgetController(WidgetsBinding binding) : super(binding);
+
+  @override
+  _DiagramFlutterBinding get binding => super.binding;
+
+  @override
+  Future<Null> pump([
+    Duration duration
+  ]) {
+    return TestAsyncUtils.guard(() => binding.pump(duration: duration));
+  }
+}
+
 // Provides a binding different from the regular Flutter binding so that
 // diagrams can control their timeline and physical device size.
 class _DiagramFlutterBinding extends BindingBase
@@ -111,7 +126,7 @@ class _DiagramFlutterBinding extends BindingBase
   @override
   void initInstances() {
     super.initInstances();
-    _controller = new WidgetController(this);
+    _controller = new _DiagramWidgetController(this);
   }
 
   WidgetController _controller;
@@ -193,13 +208,14 @@ class _DiagramFlutterBinding extends BindingBase
   /// Advances time by the given duration, and generates a new frame.
   ///
   /// The [duration] must not be null, or less than [Duration.zero].
-  void pump({Duration duration: Duration.zero}) {
+  Future<Null>  pump({Duration duration: Duration.zero}) {
     assert(duration != null);
     assert(duration >= Duration.zero);
     _timestamp += duration;
 
     handleBeginFrame(_timestamp);
     handleDrawFrame();
+    return new Future<Null>.value();
   }
 }
 

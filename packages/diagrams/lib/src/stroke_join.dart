@@ -13,7 +13,7 @@ import 'package:flutter/material.dart';
 import 'diagram_step.dart';
 
 const double _kFontSize = 14.0;
-const Duration _kAnimationDuration = const Duration(seconds: 5);
+const Duration _kAnimationDuration = Duration(seconds: 5);
 const double _kAnimationFrameRate = 60.0;
 
 class StrokeJoinDescription extends CustomPainter {
@@ -28,7 +28,7 @@ class StrokeJoinDescription extends CustomPainter {
             ? 'Miter Limit: ${strokeMiterLimit.toStringAsFixed(1)}' + (strokeMiterLimit == 4.0 ? ' (default)' : '')
             : '');
 
-  static const EdgeInsets padding = const EdgeInsets.all(8.0);
+  static const EdgeInsets padding = EdgeInsets.all(8.0);
 
   final String filename;
   final double angle;

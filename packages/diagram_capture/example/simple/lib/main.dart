@@ -29,8 +29,8 @@ class _MyDiagramState extends State<MyDiagram> {
       width: widget.size,
       height: widget.size,
       decoration: const ShapeDecoration(
-        shape: const BeveledRectangleBorder(
-          borderRadius: const BorderRadius.all(const Radius.circular(10.0)),
+        shape: BeveledRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10.0)),
         ),
         color: Color(0xfeedbeef),
       ),

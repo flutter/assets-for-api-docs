@@ -110,9 +110,9 @@ class ColorListDiagram extends ColorDiagram {
 
 class ColorsDiagramStep extends DiagramStep {
   ColorsDiagramStep(DiagramController controller) : super(controller) {
-    const List<int> palette = const <int>[50, 100, 200, 300, 400, 500, 600, 700, 800, 900];
-    const List<int> accentPalette = const <int>[100, 200, 400, 700];
-    const List<int> greyPalette = const <int>[50, 100, 200, 300, 350, 400, 500, 600, 700, 800, 850, 900];
+    const List<int> palette = <int>[50, 100, 200, 300, 400, 500, 600, 700, 800, 900];
+    const List<int> accentPalette = <int>[100, 200, 400, 700];
+    const List<int> greyPalette = <int>[50, 100, 200, 300, 350, 400, 500, 600, 700, 800, 850, 900];
     _diagrams.addAll(<ColorDiagram>[
       new ColorSwatchDiagram('Colors.red', Colors.red, palette),
       new ColorSwatchDiagram('Colors.pink', Colors.pink, palette),

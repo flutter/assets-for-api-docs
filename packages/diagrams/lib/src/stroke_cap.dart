@@ -18,7 +18,7 @@ class StrokeCapDescription extends CustomPainter {
     this.cap,
   }) : _capPainter = _createLabelPainter(cap.toString());
 
-  static const EdgeInsets padding = const EdgeInsets.all(3.0);
+  static const EdgeInsets padding = EdgeInsets.all(3.0);
 
   final String filename;
   final StrokeCap cap;

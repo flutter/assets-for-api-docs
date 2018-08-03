@@ -14,7 +14,7 @@ import 'package:flutter/material.dart';
 import 'diagram_step.dart';
 
 const double _kFontSize = 14.0;
-const Duration _kCurveAnimationDuration = const Duration(seconds: 2);
+const Duration _kCurveAnimationDuration = Duration(seconds: 2);
 const double _kCurveAnimationFrameRate = 60.0;
 
 /// A custom painter to draw the graph of the curve.
@@ -212,8 +212,8 @@ class TranslateSampleTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const BorderRadius outerRadius = const BorderRadius.all(
-      const Radius.circular(8.0),
+    const BorderRadius outerRadius = BorderRadius.all(
+      Radius.circular(8.0),
     );
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -239,8 +239,8 @@ class TranslateSampleTile extends StatelessWidget {
                 child: new Container(
                   decoration: const BoxDecoration(
                     color: Colors.green,
-                    borderRadius: const BorderRadius.all(
-                      const Radius.circular(4.0),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(4.0),
                     ),
                   ),
                   width: blockWidth,
@@ -440,11 +440,11 @@ class CurveDiagramStep extends DiagramStep {
       const CurveDiagram(name: 'elastic_out', caption: 'Curves.elasticOut', curve: Curves.elasticOut),
       const CurveDiagram(name: 'fast_out_slow_in', caption: 'Curves.fastOutSlowIn', curve: Curves.fastOutSlowIn),
       new CurveDiagram(name: 'flipped', caption: 'Curves.bounceIn.flipped', curve: Curves.bounceIn.flipped),
-      const CurveDiagram(name: 'flipped_curve', caption: 'FlippedCurve(Curves.bounceIn)', curve: const FlippedCurve(Curves.bounceIn)),
-      const CurveDiagram(name: 'interval', caption: 'Interval(0.25, 0.75)', curve: const Interval(0.25, 0.75)),
+      const CurveDiagram(name: 'flipped_curve', caption: 'FlippedCurve(Curves.bounceIn)', curve: FlippedCurve(Curves.bounceIn)),
+      const CurveDiagram(name: 'interval', caption: 'Interval(0.25, 0.75)', curve: Interval(0.25, 0.75)),
       const CurveDiagram(name: 'linear', caption: 'Curves.linear', curve: Curves.linear),
-      const CurveDiagram(name: 'sawtooth', caption: 'SawTooth(3)', curve: const SawTooth(3)),
-      const CurveDiagram(name: 'threshold', caption: 'Threshold(0.75)', curve: const Threshold(0.75)),
+      const CurveDiagram(name: 'sawtooth', caption: 'SawTooth(3)', curve: SawTooth(3)),
+      const CurveDiagram(name: 'threshold', caption: 'Threshold(0.75)', curve: Threshold(0.75)),
     ]);
   }
 
