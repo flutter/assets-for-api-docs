@@ -46,7 +46,7 @@ class TileModeDiagram extends StatelessWidget implements DiagramMetadata {
         gradient = new LinearGradient(
           begin: const FractionalOffset(0.4, 0.5),
           end: const FractionalOffset(0.6, 0.5),
-          colors: const <Color>[const Color(0xFF0000FF), const Color(0xFF00FF00)],
+          colors: const <Color>[Color(0xFF0000FF), Color(0xFF00FF00)],
           stops: const <double>[0.0, 1.0],
           tileMode: tileMode,
         );
@@ -55,10 +55,7 @@ class TileModeDiagram extends StatelessWidget implements DiagramMetadata {
         gradient = new RadialGradient(
           center: FractionalOffset.center,
           radius: 0.2,
-          colors: const <Color>[
-            const Color(0xFF0000FF),
-            const Color(0xFF00FF00)
-          ],
+          colors: const <Color>[Color(0xFF0000FF), Color(0xFF00FF00)],
           stops: const <double>[0.0, 1.0],
           tileMode: tileMode,
         );
@@ -68,10 +65,7 @@ class TileModeDiagram extends StatelessWidget implements DiagramMetadata {
           center: FractionalOffset.center,
           startAngle: 0.0,
           endAngle: math.pi / 2,
-          colors: const <Color>[
-            const Color(0xFF0000FF),
-            const Color(0xFF00FF00)
-          ],
+          colors: const <Color>[Color(0xFF0000FF), Color(0xFF00FF00)],
           stops: const <double>[0.0, 1.0],
           tileMode: tileMode,
         );
@@ -81,10 +75,7 @@ class TileModeDiagram extends StatelessWidget implements DiagramMetadata {
           center: FractionalOffset.center,
           focal: const FractionalOffset(0.5, 0.42),
           radius: 0.2,
-          colors: const <Color>[
-            const Color(0xFF0000FF),
-            const Color(0xFF00FF00)
-          ],
+          colors: const <Color>[Color(0xFF0000FF), Color(0xFF00FF00)],
           stops: const <double>[0.0, 1.0],
           tileMode: tileMode,
         );
@@ -101,7 +92,7 @@ class TileModeDiagram extends StatelessWidget implements DiagramMetadata {
       child: DefaultTextStyle.merge(
         style: const TextStyle(
           fontSize: 10.0,
-          color: const Color(0xFF000000),
+          color: Color(0xFF000000),
         ),
         child: new Directionality(
           textDirection: TextDirection.ltr,
@@ -120,7 +111,7 @@ class TileModeDiagram extends StatelessWidget implements DiagramMetadata {
                       decoration: new BoxDecoration(
                         gradient: _buildGradient(),
                         border: const Border(
-                          bottom: const BorderSide(width: 1.0),
+                          bottom: BorderSide(width: 1.0),
                         ),
                       ),
                     ),

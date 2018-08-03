@@ -14,7 +14,7 @@ import 'diagram_step.dart';
 
 final GlobalKey _transitionKey = new GlobalKey();
 
-const Duration _kOverallAnimationDuration = const Duration(seconds: 6);
+const Duration _kOverallAnimationDuration = Duration(seconds: 6);
 const double _kAnimationFrameRate = 60.0;
 const double _kLogoSize = 150.0;
 
@@ -40,7 +40,7 @@ class TransitionDiagramStep extends DiagramStep {
     _diagrams.add(const SlideTransitionDiagram(decorate: false));
   }
 
-  final List<AnimationDiagram<dynamic>> _diagrams = <AnimationDiagram<dynamic>>[];
+  final List<TransitionDiagram<dynamic>> _diagrams = <TransitionDiagram<dynamic>>[];
 
   @override
   final String category = 'widgets';
@@ -50,7 +50,7 @@ class TransitionDiagramStep extends DiagramStep {
 
   @override
   Future<File> generateDiagram(DiagramMetadata diagram) async {
-    final AnimationDiagram<dynamic> typedDiagram = diagram;
+    final TransitionDiagram<dynamic> typedDiagram = diagram;
     controller.builder = (BuildContext context) => typedDiagram;
 
     final Map<Duration, DiagramKeyframe> keyframes = <Duration, DiagramKeyframe>{
@@ -79,7 +79,7 @@ class TransitionDiagramStep extends DiagramStep {
   }
 }
 
-class AlignTransitionDiagram extends AnimationDiagram<AlignmentGeometry> {
+class AlignTransitionDiagram extends TransitionDiagram<AlignmentGeometry> {
   const AlignTransitionDiagram({Key key, bool decorate = true}) : super(key: key, decorate: decorate);
 
   @override
@@ -112,7 +112,7 @@ class AlignTransitionDiagram extends AnimationDiagram<AlignmentGeometry> {
   }
 }
 
-class DecoratedBoxTransitionDiagram extends AnimationDiagram<Decoration> {
+class DecoratedBoxTransitionDiagram extends TransitionDiagram<Decoration> {
   const DecoratedBoxTransitionDiagram({Key key, bool decorate = true}) : super(key: key, decorate: decorate);
 
   @override
@@ -126,8 +126,8 @@ class DecoratedBoxTransitionDiagram extends AnimationDiagram<Decoration> {
     ));
   }
 
-  static const BorderRadius _beginRadius = const BorderRadius.all(const Radius.circular(50.0));
-  static const BorderRadius _endRadius = const BorderRadius.all(const Radius.circular(0.0));
+  static const BorderRadius _beginRadius = BorderRadius.all(Radius.circular(50.0));
+  static const BorderRadius _endRadius = BorderRadius.all(Radius.circular(0.0));
   static final DecorationTween _decorationTween = new DecorationTween(
     begin: new BoxDecoration(
       borderRadius: _beginRadius,
@@ -136,7 +136,7 @@ class DecoratedBoxTransitionDiagram extends AnimationDiagram<Decoration> {
     ),
     end: const BoxDecoration(
       borderRadius: _endRadius,
-      color: const Color(0xffffffff),
+      color: Color(0xffffffff),
     ),
   );
 
@@ -154,7 +154,7 @@ class DecoratedBoxTransitionDiagram extends AnimationDiagram<Decoration> {
   }
 }
 
-class FadeTransitionDiagram extends AnimationDiagram<double> {
+class FadeTransitionDiagram extends TransitionDiagram<double> {
   const FadeTransitionDiagram({Key key, bool decorate = true}) : super(key: key, decorate: decorate);
 
   @override
@@ -180,7 +180,7 @@ class FadeTransitionDiagram extends AnimationDiagram<double> {
   }
 }
 
-class PositionedTransitionDiagram extends AnimationDiagram<RelativeRect> {
+class PositionedTransitionDiagram extends TransitionDiagram<RelativeRect> {
   const PositionedTransitionDiagram({Key key, bool decorate = true}) : super(key: key, decorate: decorate);
 
   @override
@@ -216,7 +216,7 @@ class PositionedTransitionDiagram extends AnimationDiagram<RelativeRect> {
   }
 }
 
-class RelativePositionedTransitionDiagram extends AnimationDiagram<Rect> {
+class RelativePositionedTransitionDiagram extends TransitionDiagram<Rect> {
   const RelativePositionedTransitionDiagram({Key key, bool decorate = true}) : super(key: key, decorate: decorate);
 
   @override
@@ -253,7 +253,7 @@ class RelativePositionedTransitionDiagram extends AnimationDiagram<Rect> {
   }
 }
 
-class RotationTransitionDiagram extends AnimationDiagram<double> {
+class RotationTransitionDiagram extends TransitionDiagram<double> {
   const RotationTransitionDiagram({Key key, bool decorate = true}) : super(key: key, decorate: decorate);
 
   @override
@@ -277,7 +277,7 @@ class RotationTransitionDiagram extends AnimationDiagram<double> {
   }
 }
 
-class ScaleTransitionDiagram extends AnimationDiagram<double> {
+class ScaleTransitionDiagram extends TransitionDiagram<double> {
   const ScaleTransitionDiagram({Key key, bool decorate = true}) : super(key: key, decorate: decorate);
 
   @override
@@ -303,7 +303,7 @@ class ScaleTransitionDiagram extends AnimationDiagram<double> {
   }
 }
 
-class SizeTransitionDiagram extends AnimationDiagram<double> {
+class SizeTransitionDiagram extends TransitionDiagram<double> {
   const SizeTransitionDiagram({Key key, bool decorate = true}) : super(key: key, decorate: decorate);
 
   @override
@@ -338,7 +338,7 @@ class SizeTransitionDiagram extends AnimationDiagram<double> {
   }
 }
 
-class SlideTransitionDiagram extends AnimationDiagram<Offset> {
+class SlideTransitionDiagram extends TransitionDiagram<Offset> {
   const SlideTransitionDiagram({Key key, bool decorate = true}) : super(key: key, decorate: decorate);
 
   @override

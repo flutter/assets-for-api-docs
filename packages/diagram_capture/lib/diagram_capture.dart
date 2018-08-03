@@ -52,7 +52,7 @@ class _Diagram extends StatelessWidget {
   }
 }
 
-const Size _kDefaultDiagramViewportSize = const Size(1280.0, 1024.0);
+const Size _kDefaultDiagramViewportSize = Size(1280.0, 1024.0);
 
 // View configuration that allows diagrams to not match the physical dimensions
 // of the device. This will change the view used to display the flutter surface

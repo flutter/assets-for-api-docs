@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
 
-const Duration _kAnimationDuration = const Duration(seconds: 2);
+const Duration _kAnimationDuration = Duration(seconds: 2);
 const double _kFontSize = 14.0;
 const double _kLogoSize = 150.0;
 
@@ -33,12 +33,15 @@ String _getName(Type type) {
   );
 }
 
-abstract class AnimationDiagram<T> extends StatefulWidget implements DiagramMetadata {
-  const AnimationDiagram({
+/// A base class for diagrams that show explicit animation transitions, like
+/// [FadeTransition]. See transitions.dart for more examples.
+abstract class TransitionDiagram<T> extends StatefulWidget implements DiagramMetadata {
+  const TransitionDiagram({
     Key key,
     this.decorate = true,
   }) : super(key: key);
 
+  /// Whether or not to decorate this diagram with an animation curve and top label.
   final bool decorate;
 
   /// The animation curve for both the animation and the sparkline to use.
@@ -49,15 +52,15 @@ abstract class AnimationDiagram<T> extends StatefulWidget implements DiagramMeta
   @override
   String get name => _getName(runtimeType) + (decorate ? '' : '_plain');
 
+  /// The label to be shown on the top of the diagram if [decorate] is true.
   String get caption => _getCaption(runtimeType);
 
   @override
-  AnimationDiagramState<T> createState() => new AnimationDiagramState<T>();
+  TransitionDiagramState<T> createState() => new TransitionDiagramState<T>();
 }
 
-class AnimationDiagramState<T> extends State<AnimationDiagram<T>> //
-    with
-        TickerProviderStateMixin<AnimationDiagram<T>> {
+class TransitionDiagramState<T> extends State<TransitionDiagram<T>>
+    with TickerProviderStateMixin<TransitionDiagram<T>> {
   bool selected = false;
   Animation<T> animation;
   AnimationController _controller;
@@ -94,7 +97,7 @@ class AnimationDiagramState<T> extends State<AnimationDiagram<T>> //
           new Text(
             widget.caption,
             style: const TextStyle(
-              color: const Color(0xff000000),
+              color: Color(0xff000000),
               fontStyle: FontStyle.normal,
               fontSize: _kFontSize,
             ),
@@ -102,7 +105,7 @@ class AnimationDiagramState<T> extends State<AnimationDiagram<T>> //
           new Container(
             alignment: Alignment.center,
             decoration: new BoxDecoration(
-              borderRadius: const BorderRadius.all(const Radius.circular(10.0)),
+              borderRadius: const BorderRadius.all(Radius.circular(10.0)),
               border: new Border.all(color: Colors.black26, width: 1.0),
             ),
             constraints: const BoxConstraints.tightFor(width: 250.0, height: 250.0),
@@ -181,7 +184,7 @@ class ImplicitAnimationDiagramState<T> extends State<ImplicitAnimationDiagram<T>
             new Text(
               widget.caption,
               style: const TextStyle(
-                color: const Color(0xff000000),
+                color: Color(0xff000000),
                 fontStyle: FontStyle.normal,
                 fontSize: _kFontSize,
               ),
@@ -308,8 +311,8 @@ class SampleWidget extends StatelessWidget {
       return const FlutterLogo(size: _kLogoSize / 2.0);
     }
     return const Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: const FlutterLogo(size: _kLogoSize),
+      padding: EdgeInsets.all(8.0),
+      child: FlutterLogo(size: _kLogoSize),
     );
   }
 }

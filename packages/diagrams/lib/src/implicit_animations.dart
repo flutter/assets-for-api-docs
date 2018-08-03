@@ -14,8 +14,8 @@ import 'diagram_step.dart';
 
 final GlobalKey _transitionKey = new GlobalKey();
 
-const Duration _kOverallAnimationDuration = const Duration(seconds: 6);
-const Duration _kAnimationDuration = const Duration(seconds: 2);
+const Duration _kOverallAnimationDuration =Duration(seconds: 6);
+const Duration _kAnimationDuration =Duration(seconds: 2);
 const double _kAnimationFrameRate = 60.0;
 
 class ImplicitAnimationDiagramStep extends DiagramStep {
@@ -193,14 +193,14 @@ class AnimatedPhysicalModelDiagram extends ImplicitAnimationDiagram<AlignmentGeo
 
   @override
   Widget buildImplicitAnimation(BuildContext context, bool selected) {
-    const Radius selectedRadius = const Radius.circular(75.0);
-    const Radius unselectedRadius = const Radius.circular(5.0);
-    const BorderRadius selectedBorder = const BorderRadius.only(
+    const Radius selectedRadius = Radius.circular(75.0);
+    const Radius unselectedRadius = Radius.circular(5.0);
+    const BorderRadius selectedBorder = BorderRadius.only(
       topLeft: selectedRadius,
       topRight: selectedRadius,
       bottomLeft: selectedRadius,
     );
-    const BorderRadius unselectedBorder = const BorderRadius.all(unselectedRadius);
+    const BorderRadius unselectedBorder = BorderRadius.all(unselectedRadius);
     return Center(
       child: new Container(
         alignment: Alignment.center,
@@ -312,7 +312,7 @@ class AnimatedThemeDiagram extends ImplicitAnimationDiagram<AlignmentGeometry> {
         key: _transitionKey,
         child: const ChoiceChip(
           selected: false,
-          label: const Text('AnimatedTheme'),
+          label: Text('AnimatedTheme'),
         ),
       ),
     );

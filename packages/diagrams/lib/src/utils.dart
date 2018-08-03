@@ -88,7 +88,7 @@ class LabelPainter extends CustomPainter {
 
   Map<Label, TextPainter> _painters;
 
-  static const TextStyle _labelTextStyle = const TextStyle(color: const Color(0xFF000000));
+  static const TextStyle _labelTextStyle = TextStyle(color: Color(0xFF000000));
 
   static const double margin = 16.0;
 

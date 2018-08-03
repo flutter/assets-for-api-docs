@@ -52,7 +52,7 @@ class BlendModeDiagram extends StatelessWidget implements DiagramMetadata {
         decoration: new ShapeDecoration(
           shape: new Border.all(width: 1.0, color: Colors.white) + new Border.all(width: 1.0, color: Colors.black),
           image: const DecorationImage(
-            image: const ExactAssetImage(gridImageName),
+            image: ExactAssetImage(gridImageName),
             repeat: ImageRepeat.repeat,
           ),
         ),
@@ -88,7 +88,7 @@ class BlendModeDiagram extends StatelessWidget implements DiagramMetadata {
                     color: Colors.white,
                     child: const Text(
                       '⟵ destination ⟶',
-                      style: const TextStyle(
+                      style: TextStyle(
                         inherit: false,
                         fontFamily: 'monospace',
                         color: Colors.black,
@@ -108,7 +108,7 @@ class BlendModeDiagram extends StatelessWidget implements DiagramMetadata {
                       color: Colors.white,
                       child: const Text(
                         '⟵ source ⟶',
-                        style: const TextStyle(
+                        style: TextStyle(
                           inherit: false,
                           fontFamily: 'monospace',
                           color: Colors.black,
@@ -148,57 +148,57 @@ class BlendModePainter extends CustomPainter {
     canvas.restore();
   }
 
-  static const List<Color> bars = const <Color>[
-    const Color(0xFFFF0000),
-    const Color(0xC0FF0000),
-    const Color(0x40FF0000),
-    const Color(0xFF00FF00),
-    const Color(0xC000FF00),
-    const Color(0x4000FF00),
-    const Color(0xFF0000FF),
-    const Color(0xC00000FF),
-    const Color(0x400000FF),
-    const Color(0xFFFFFFFF),
-    const Color(0xC0FFFFFF),
-    const Color(0x40FFFFFF),
-    const Color(0xFF000000),
-    const Color(0x80000000),
-    const Color(0x00000000),
+  static const List<Color> bars = <Color>[
+    Color(0xFFFF0000),
+    Color(0xC0FF0000),
+    Color(0x40FF0000),
+    Color(0xFF00FF00),
+    Color(0xC000FF00),
+    Color(0x4000FF00),
+    Color(0xFF0000FF),
+    Color(0xC00000FF),
+    Color(0x400000FF),
+    Color(0xFFFFFFFF),
+    Color(0xC0FFFFFF),
+    Color(0x40FFFFFF),
+    Color(0xFF000000),
+    Color(0x80000000),
+    Color(0x00000000),
   ];
 
-  static const List<List<Color>> gradients = const <List<Color>>[
-    const <Color>[
-      const Color(0xFFFF0000),
-      const Color(0xFF00FF00),
-      const Color(0xFF0000FF),
-      const Color(0xFFFF0000),
-      const Color(0xFF00FF00),
-      const Color(0xFF0000FF),
-      const Color(0xFFFF0000),
-      const Color(0xFF00FF00),
-      const Color(0xFF0000FF),
+  static const List<List<Color>> gradients = <List<Color>>[
+    <Color>[
+      Color(0xFFFF0000),
+      Color(0xFF00FF00),
+      Color(0xFF0000FF),
+      Color(0xFFFF0000),
+      Color(0xFF00FF00),
+      Color(0xFF0000FF),
+      Color(0xFFFF0000),
+      Color(0xFF00FF00),
+      Color(0xFF0000FF),
     ],
-    const <Color>[
-      const Color(0x80FF0000),
-      const Color(0x8000FF00),
-      const Color(0x800000FF),
-      const Color(0x80FF0000),
-      const Color(0x8000FF00),
-      const Color(0x800000FF),
-      const Color(0x80FF0000),
-      const Color(0x8000FF00),
-      const Color(0x800000FF),
+    <Color>[
+      Color(0x80FF0000),
+      Color(0x8000FF00),
+      Color(0x800000FF),
+      Color(0x80FF0000),
+      Color(0x8000FF00),
+      Color(0x800000FF),
+      Color(0x80FF0000),
+      Color(0x8000FF00),
+      Color(0x800000FF),
     ],
-    const <Color>[
-      const Color(0xFF000000),
-      const Color(0x00000000),
-      const Color(0xFF000000),
-      const Color(0xFF000000),
-      const Color(0x00000000),
-      const Color(0xFF000000),
-      const Color(0xFF000000),
-      const Color(0x00000000),
-      const Color(0xFF000000),
+    <Color>[
+      Color(0xFF000000),
+      Color(0x00000000),
+      Color(0xFF000000),
+      Color(0xFF000000),
+      Color(0x00000000),
+      Color(0xFF000000),
+      Color(0xFF000000),
+      Color(0x00000000),
+      Color(0xFF000000),
     ],
   ];
 
