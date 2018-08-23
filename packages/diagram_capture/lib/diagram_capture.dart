@@ -118,6 +118,7 @@ class _DiagramWidgetController extends WidgetController {
 class _DiagramFlutterBinding extends BindingBase
     with
         GestureBinding,
+        SemanticsBinding,
         ServicesBinding,
         SchedulerBinding,
         PaintingBinding,

@@ -7,4 +7,6 @@ homepage: http://www.flutter.io
 dependencies:
   path: ^1.6.2
 
-dev_dependencies:
+environment:
+  sdk: ">=2.0.0-dev.61.0 <3.0.0"
+
