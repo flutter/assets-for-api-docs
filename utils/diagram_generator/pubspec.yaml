@@ -9,10 +9,15 @@ dependencies:
   diagrams:
     path: ../../packages/diagrams
   path_provider: ^0.4.1
-  archive: 1.0.33
-  process: 3.0.1
+  archive: 2.0.3
+  process: 3.0.5
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   mockito: any
+  
+environment:
+  sdk: ">=2.0.0-dev.61.0 <3.0.0"
+  flutter: ">=0.1.4 <2.0.0"
+
