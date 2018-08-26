@@ -12,6 +12,7 @@ export 'src/card.dart';
 export 'src/colors.dart';
 export 'src/curve.dart';
 export 'src/diagram_step.dart';
+export 'src/heroes.dart';
 export 'src/implicit_animations.dart';
 export 'src/ink_response_large.dart';
 export 'src/ink_response_small.dart';

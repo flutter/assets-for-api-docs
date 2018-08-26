@@ -55,6 +55,9 @@ apt-get.
 To convert animations into mp4 files, it needs `ffmpeg`, available for macOS via Homebrew and Linux
 via apt-get.
 
+The generator currently only supports running on an Android runtime. An Android
+device or emulator must be running before invoking the `generate.dart` script.
+
 The Android `adb` command and the `flutter` command need to both be available and in a directory in
 the `PATH` environment variable. Be sure it is the same one that is running as a server (which is
 often started by your IDE, so use the same `adb` the IDE is running).
