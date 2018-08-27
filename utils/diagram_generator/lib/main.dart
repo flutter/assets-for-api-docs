@@ -55,6 +55,7 @@ Future<Null> main() async {
     new CardDiagramStep(controller),
     new ColorsDiagramStep(controller),
     new CurveDiagramStep(controller),
+    new HeroesDiagramStep(controller),
     new ImplicitAnimationDiagramStep(controller),
     new InkResponseLargeDiagramStep(controller),
     new InkResponseSmallDiagramStep(controller),
