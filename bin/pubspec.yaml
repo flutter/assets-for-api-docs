@@ -9,6 +9,7 @@ dependencies:
 
 dev_dependencies:
   mockito: any
+  test: ^1.5.1+1
   
 environment:
   sdk: ">=2.0.0-dev.61.0 <3.0.0"
