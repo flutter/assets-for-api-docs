@@ -60,6 +60,7 @@ Future<Null> main() async {
     new InkResponseLargeDiagramStep(controller),
     new InkResponseSmallDiagramStep(controller),
     new InkWellDiagramStep(controller),
+    new SliverAppBarDiagramStep(controller),
     new StrokeCapDiagramStep(controller),
     new StrokeJoinDiagramStep(controller),
     new TileModeDiagramStep(controller),
