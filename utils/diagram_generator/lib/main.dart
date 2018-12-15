@@ -53,6 +53,8 @@ Future<Null> main() async {
     new BlendModeDiagramStep(controller),
     new BoxFitDiagramStep(controller),
     new CardDiagramStep(controller),
+    new TextFormFieldDiagramStep(controller),
+    new TextFormFieldFocusedDiagramStep(controller),
     new ColorsDiagramStep(controller),
     new CurveDiagramStep(controller),
     new HeroesDiagramStep(controller),

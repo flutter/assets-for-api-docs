@@ -9,6 +9,8 @@ export 'src/app_bar.dart';
 export 'src/blend_mode.dart';
 export 'src/box_fit.dart';
 export 'src/card.dart';
+export 'src/text_form_field.dart';
+export 'src/text_form_field_focused.dart';
 export 'src/colors.dart';
 export 'src/curve.dart';
 export 'src/diagram_step.dart';
