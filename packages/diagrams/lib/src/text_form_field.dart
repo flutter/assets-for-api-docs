@@ -48,7 +48,7 @@ class TextFormFieldDiagram extends StatelessWidget implements DiagramMetadata {
                       child: TextFormField(
                         key: textFormFieldKey,
                         maxLength: 10,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           //icon: 'asdf',
                           labelText: 'Label',
                           helperText: 'Helper',

@@ -48,7 +48,7 @@ class TextFormFieldFocusedDiagram extends StatelessWidget implements DiagramMeta
                       key: textFormFieldKey,
                       autofocus: true,
                       maxLength: 10,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         //icon: 'asdf',
                         labelText: 'Label',
                         helperText: 'Helper',
@@ -126,7 +126,7 @@ class TextFormFieldFocusedDiagramStep extends DiagramStep {
 
     // Wait 1 second to let the input animate to focused.
     final Completer<void> completer = Completer<void>();
-    Timer(Duration(seconds: 1), completer.complete);
+    Timer(const Duration(seconds: 1), completer.complete);
     await completer.future;
 
     return await controller.drawDiagramToFile(
