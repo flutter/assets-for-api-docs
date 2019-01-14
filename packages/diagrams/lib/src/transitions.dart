@@ -162,12 +162,10 @@ class FadeTransitionDiagram extends TransitionDiagram<double> {
 
   @override
   Animation<double> buildAnimation(AnimationController controller) {
-    return new ReverseAnimation(
-      new CurvedAnimation(
-        parent: controller,
-        curve: curve,
-      ),
-    );
+    return new CurvedAnimation(
+      parent: controller,
+      curve: curve,
+  );
   }
 
   @override
@@ -285,11 +283,9 @@ class ScaleTransitionDiagram extends TransitionDiagram<double> {
 
   @override
   Animation<double> buildAnimation(AnimationController controller) {
-    return new ReverseAnimation(
-      new CurvedAnimation(
-        parent: controller,
-        curve: curve,
-      ),
+    return new CurvedAnimation(
+      parent: controller,
+      curve: curve,
     );
   }
 
@@ -311,11 +307,9 @@ class SizeTransitionDiagram extends TransitionDiagram<double> {
 
   @override
   Animation<double> buildAnimation(AnimationController controller) {
-    return new ReverseAnimation(
-      new CurvedAnimation(
-        parent: controller,
-        curve: curve,
-      ),
+    return new CurvedAnimation(
+      parent: controller,
+      curve: curve,
     );
   }
 
