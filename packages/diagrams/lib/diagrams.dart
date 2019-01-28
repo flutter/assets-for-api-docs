@@ -20,6 +20,7 @@ export 'src/ink_well.dart';
 export 'src/sliver_app_bars.dart';
 export 'src/stroke_cap.dart';
 export 'src/stroke_join.dart';
+export 'src/strut.dart';
 export 'src/tile_mode.dart';
 export 'src/transitions.dart';
 export 'src/utils.dart';

@@ -63,6 +63,7 @@ Future<Null> main() async {
     new SliverAppBarDiagramStep(controller),
     new StrokeCapDiagramStep(controller),
     new StrokeJoinDiagramStep(controller),
+    new StrutDiagramStep(controller),
     new TileModeDiagramStep(controller),
     new TransitionDiagramStep(controller),
   ];
