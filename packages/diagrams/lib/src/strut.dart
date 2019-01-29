@@ -35,28 +35,28 @@ class StrutDropCapDiagram extends  StrutDiagram {
             fontFamily: 'Serif'
           ),
           children: <TextSpan>[
-            const TextSpan(
+            TextSpan(
               text: 'T',
               style: TextStyle(
                 fontSize: 37,
                 fontFamily: 'Serif'
               ),
             ),
-            const TextSpan(
+            TextSpan(
               text: 'in the moonlight as\n',
               style: TextStyle(
                 fontSize: 14,
                 fontFamily: 'Serif'
               ),
             ),
-            const TextSpan(
+            TextSpan(
               text: 'Dash the bird fluttered\n',
               style: TextStyle(
                 fontSize: 14,
                 fontFamily: 'Serif'
               ),
             ),
-            const TextSpan(
+            TextSpan(
               text: 'off into the distance.',
               style: TextStyle(
                 fontSize: 14,
@@ -76,7 +76,7 @@ class StrutDropCapDiagram extends  StrutDiagram {
 }
 
 class StrutAsciiArtDiagram extends  StrutDiagram {
-  const StrutAsciiArtDiagram();
+  StrutAsciiArtDiagram();
 
   @override
   String get name => 'strut_force_text_ascii_art';
@@ -94,14 +94,14 @@ class StrutAsciiArtDiagram extends  StrutDiagram {
             fontFamily: 'Roboto',
           ),
           children: <TextSpan>[
-            const TextSpan(
+            TextSpan(
               text: '^^^M^^^\n',
               style: TextStyle(
                 fontSize: 30,
                 fontFamily: 'Roboto',
               ),
             ),
-            const TextSpan(
+            TextSpan(
               text: 'M------M\n',
               style: TextStyle(
                 fontSize: 30,
@@ -123,7 +123,7 @@ class StrutAsciiArtDiagram extends  StrutDiagram {
 
 class StrutDiagramStep extends DiagramStep {
   StrutDiagramStep(DiagramController controller) : super(controller) {
-    _diagrams.addAll(<ColorDiagram>[
+    _diagrams.addAll(<StrutDiagram>[
       StrutDropCapDiagram(),
       StrutAsciiArtDiagram(),
     ]);
