@@ -30,42 +30,42 @@ class StrutDropCapDiagram extends  StrutDiagram {
       child: Text.rich(
         TextSpan(
           text: '       he candle flickered\n',
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 14,
             fontFamily: 'Serif'
           ),
           children: <TextSpan>[
-            TextSpan(
+            const TextSpan(
               text: 'T',
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 37,
                 fontFamily: 'Serif'
               ),
             ),
-            TextSpan(
+            const TextSpan(
               text: 'in the moonlight as\n',
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 14,
                 fontFamily: 'Serif'
               ),
             ),
-            TextSpan(
+            const TextSpan(
               text: 'Dash the bird fluttered\n',
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 14,
                 fontFamily: 'Serif'
               ),
             ),
-            TextSpan(
+            const TextSpan(
               text: 'off into the distance.',
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 14,
                 fontFamily: 'Serif'
               ),
             ),
           ],
         ),
-        strutStyle: StrutStyle(
+        strutStyle: const StrutStyle(
           fontFamily: 'Serif',
           fontSize: 14,
           forceStrutHeight: true,
@@ -89,28 +89,28 @@ class StrutAsciiArtDiagram extends  StrutDiagram {
       child: Text.rich(
         TextSpan(
           text: '---------         ---------\n',
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 14,
             fontFamily: 'Roboto',
           ),
           children: <TextSpan>[
-            TextSpan(
+            const TextSpan(
               text: '^^^M^^^\n',
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 30,
                 fontFamily: 'Roboto',
               ),
             ),
-            TextSpan(
+            const TextSpan(
               text: 'M------M\n',
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 30,
                 fontFamily: 'Roboto',
               ),
             ),
           ],
         ),
-        strutStyle: StrutStyle(
+        strutStyle: const StrutStyle(
           fontFamily: 'Roboto',
           fontSize: 14,
           height: 1,
