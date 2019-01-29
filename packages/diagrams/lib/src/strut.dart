@@ -17,7 +17,7 @@ abstract class StrutDiagram extends StatelessWidget implements DiagramMetadata {
 }
 
 class StrutDropCapDiagram extends  StrutDiagram {
-  const StrutDropCapDiagram();
+  StrutDropCapDiagram();
 
   @override
   String get name => 'strut_force_text_drop_cap';
@@ -27,45 +27,45 @@ class StrutDropCapDiagram extends  StrutDiagram {
     return ConstrainedBox(
       key: UniqueKey(),
       constraints: BoxConstraints.tight(const Size(400.0, 154.0)),
-      child: Text.rich(
+      child: const Text.rich(
         TextSpan(
           text: '       he candle flickered\n',
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 14,
             fontFamily: 'Serif'
           ),
           children: <TextSpan>[
             const TextSpan(
               text: 'T',
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 37,
                 fontFamily: 'Serif'
               ),
             ),
             const TextSpan(
               text: 'in the moonlight as\n',
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 14,
                 fontFamily: 'Serif'
               ),
             ),
             const TextSpan(
               text: 'Dash the bird fluttered\n',
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 14,
                 fontFamily: 'Serif'
               ),
             ),
             const TextSpan(
               text: 'off into the distance.',
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 14,
                 fontFamily: 'Serif'
               ),
             ),
           ],
         ),
-        strutStyle: const StrutStyle(
+        strutStyle: StrutStyle(
           fontFamily: 'Serif',
           fontSize: 14,
           forceStrutHeight: true,
@@ -86,31 +86,31 @@ class StrutAsciiArtDiagram extends  StrutDiagram {
     return ConstrainedBox(
       key: UniqueKey(),
       constraints: BoxConstraints.tight(const Size(400.0, 154.0)),
-      child: Text.rich(
+      child: const Text.rich(
         TextSpan(
           text: '---------         ---------\n',
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 14,
             fontFamily: 'Roboto',
           ),
           children: <TextSpan>[
             const TextSpan(
               text: '^^^M^^^\n',
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 30,
                 fontFamily: 'Roboto',
               ),
             ),
             const TextSpan(
               text: 'M------M\n',
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 30,
                 fontFamily: 'Roboto',
               ),
             ),
           ],
         ),
-        strutStyle: const StrutStyle(
+        strutStyle: StrutStyle(
           fontFamily: 'Roboto',
           fontSize: 14,
           height: 1,
