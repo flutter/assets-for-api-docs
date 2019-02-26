@@ -45,8 +45,8 @@ class SubShapeDiagram extends ShapeDiagram {
   }
 }
 
-class ColorsDiagramStep extends DiagramStep {
-  ColorsDiagramStep(DiagramController controller) : super(controller) {
+class ShapeDiagramStep extends DiagramStep {
+  ShapeDiagramStep(DiagramController controller) : super(controller) {
     _diagrams.addAll(<ShapeDiagram>[
       new SubShapeDiagram('Shape.circle', CircleBorder(), 400, 400),
       new SubShapeDiagram('Shape.rectangle', RoundedRectangleBorder(), 400, 400),
@@ -82,7 +82,7 @@ class ColorsDiagramStep extends DiagramStep {
   }
 
   @override
-  final String category = 'material';
+  final String category = 'painting';
 
   final List<ShapeDiagram> _diagrams = <ShapeDiagram>[];
 

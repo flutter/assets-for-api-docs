@@ -49,6 +49,7 @@ Future<Null> main() async {
 
   // Add the diagram steps here.
   final List<DiagramStep> steps = <DiagramStep>[
+    new ShapeDiagramStep(controller),
     new AppBarDiagramStep(controller),
     new BlendModeDiagramStep(controller),
     new BoxFitDiagramStep(controller),

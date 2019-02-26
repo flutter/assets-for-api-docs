@@ -17,6 +17,7 @@ export 'src/implicit_animations.dart';
 export 'src/ink_response_large.dart';
 export 'src/ink_response_small.dart';
 export 'src/ink_well.dart';
+export 'src/shapes.dart';
 export 'src/sliver_app_bars.dart';
 export 'src/stroke_cap.dart';
 export 'src/stroke_join.dart';
