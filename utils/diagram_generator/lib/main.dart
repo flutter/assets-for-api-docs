@@ -49,7 +49,6 @@ Future<Null> main() async {
 
   // Add the diagram steps here.
   final List<DiagramStep> steps = <DiagramStep>[
-    new ShapeDiagramStep(controller),
     new AppBarDiagramStep(controller),
     new BlendModeDiagramStep(controller),
     new BoxFitDiagramStep(controller),
@@ -61,6 +60,7 @@ Future<Null> main() async {
     new InkResponseLargeDiagramStep(controller),
     new InkResponseSmallDiagramStep(controller),
     new InkWellDiagramStep(controller),
+    new ShapeDiagramStep(controller),
     new SliverAppBarDiagramStep(controller),
     new StrokeCapDiagramStep(controller),
     new StrokeJoinDiagramStep(controller),
