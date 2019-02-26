@@ -10,18 +10,14 @@ import 'package:diagram_capture/diagram_capture.dart';
 
 import 'diagram_step.dart';
 
-abstract class ShapeDiagram extends StatelessWidget implements DiagramMetadata {
-  @override
-  String get name;
-}
-
-class SubShapeDiagram extends ShapeDiagram {
-  SubShapeDiagram(
+class ShapeDiagram extends StatelessWidget implements DiagramMetadata {
+  const ShapeDiagram({
+    Key key,
     this.name,
     this.shapeBorder,
     this.width,
     this.height
-  );
+  }) : super(key: key);
 
   @override
   final String name;
@@ -31,10 +27,13 @@ class SubShapeDiagram extends ShapeDiagram {
 
   @override
   Widget build(BuildContext context) {
+    const double padding = 50.0;
     return Container(
+      height: height + padding,
+      width: width + padding,
       alignment: Alignment.center,
       child: Material(
-        color: Colors.blueAccent[400],
+        color: Colors.blue,
         shape: shapeBorder,
         child: SizedBox(
           width: width,
@@ -47,36 +46,77 @@ class SubShapeDiagram extends ShapeDiagram {
 
 class ShapeDiagramStep extends DiagramStep {
   ShapeDiagramStep(DiagramController controller) : super(controller) {
+    const String circleName = 'Shape.circle';
+    const String rectangleName = 'Shape.rectangle';
+    const String roundedRectangleName = 'Shape.rounded_rectangle';
+    const String stadiumName = 'Shape.stadium';
+    const String continuousRectangleName = 'Shape.continuous_rectangle';
+    const String continuousStadiumName = 'Shape.continuous_stadium';
+    const String beveledRectangleName = 'Shape.beveled_rectangle';
+
+    const double width = 200.0;
+    const double height = 200.0;
+    const double radius = 75.0;
+
     _diagrams.addAll(<ShapeDiagram>[
-      new SubShapeDiagram('Shape.circle', CircleBorder(), 400, 400),
-      new SubShapeDiagram('Shape.rectangle', RoundedRectangleBorder(), 400, 400),
-      new SubShapeDiagram(
-        'Shape.rounded_rectangle',
-        RoundedRectangleBorder(
+      ShapeDiagram(
+        name: circleName,
+        shapeBorder: CircleBorder(),
+        width: width,
+        height: height,
+        key: const ValueKey<String>(circleName),
+      ),
+      ShapeDiagram(
+        name: rectangleName,
+        shapeBorder: RoundedRectangleBorder(),
+        width: width,
+        height: height,
+        key: const ValueKey<String>(rectangleName),
+      ),
+      ShapeDiagram(
+        name: roundedRectangleName,
+        shapeBorder: RoundedRectangleBorder(
           borderRadius: const BorderRadius.all(
-              Radius.circular(100.0)
+            Radius.circular(radius)
           )
         ),
-        400,
-        400,
+        width: width,
+        height: height,
+        key: const ValueKey<String>(roundedRectangleName),
       ),
-      new SubShapeDiagram('Shape.stadium', StadiumBorder(), 400, 200),
-      new SubShapeDiagram('Shape.continuous_rectangle',
-        ContinuousRectangleBorder(
-          borderRadius: 100
-        ),
-        400,
-        400,
+      ShapeDiagram(
+        name: stadiumName,
+        shapeBorder: StadiumBorder(),
+        width: width,
+        height: height / 2,
+        key: const ValueKey<String>(stadiumName),
       ),
-      new SubShapeDiagram('Shape.continuous_stadium', ContinuousStadiumBorder(), 100, 100),
-      new SubShapeDiagram('Shape.beveled_rectangle',
-        BeveledRectangleBorder(
-          borderRadius: const BorderRadius.all(
-            Radius.circular(100.0)
-          )
+      ShapeDiagram(
+        name: continuousRectangleName,
+        shapeBorder: ContinuousRectangleBorder(
+          borderRadius: radius,
         ),
-        100,
-        100,
+        width: width,
+        height: height,
+        key: const ValueKey<String>(continuousRectangleName),
+      ),
+       ShapeDiagram(
+         name: continuousStadiumName,
+         shapeBorder: ContinuousStadiumBorder(),
+         width: width,
+         height: height / 2,
+         key: const ValueKey<String>(continuousStadiumName),
+       ),
+       ShapeDiagram(
+         name: beveledRectangleName,
+         shapeBorder: BeveledRectangleBorder(
+           borderRadius: const BorderRadius.all(
+             Radius.circular(radius)
+           )
+         ),
+         width: width,
+         height: height,
+         key: const ValueKey<String>(beveledRectangleName),
       ),
     ]);
   }
