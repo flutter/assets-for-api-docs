@@ -415,7 +415,7 @@ class DiagramGenerator {
     }).toList();
     // Collect all the animation frames that are in the metadata files so that
     // we can eliminate them from the other files that were transferred.
-    final Set<String> animationFiles = new Set<String>();
+    final Set<String> animationFiles = <String>{};
     final List<AnimationMetadata> metadataList = <AnimationMetadata>[];
     for (File metadataFile in metadataFiles) {
       if (!metadataFile.isAbsolute) {
