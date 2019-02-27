@@ -463,6 +463,7 @@ class CurveDiagramStep extends DiagramStep {
       const CurveDiagram(name: 'elastic_in_out', caption: 'Curves.elasticInOut', curve: Curves.elasticInOut),
       const CurveDiagram(name: 'elastic_out', caption: 'Curves.elasticOut', curve: Curves.elasticOut),
       const CurveDiagram(name: 'fast_out_slow_in', caption: 'Curves.fastOutSlowIn', curve: Curves.fastOutSlowIn),
+      const CurveDiagram(name: 'slowCenter', caption: 'Curves.slowCenter', curve: Curves.slowCenter),
       new CurveDiagram(name: 'flipped', caption: 'Curves.bounceIn.flipped', curve: Curves.bounceIn.flipped),
       const CurveDiagram(name: 'flipped_curve', caption: 'FlippedCurve(Curves.bounceIn)', curve: FlippedCurve(Curves.bounceIn)),
       const CurveDiagram(name: 'interval', caption: 'Interval(0.25, 0.75)', curve: Interval(0.25, 0.75)),
