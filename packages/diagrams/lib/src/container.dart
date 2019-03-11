@@ -4,10 +4,8 @@
 
 import 'dart:async';
 import 'dart:io';
-
 import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
-
 import 'diagram_step.dart';
 
 class ContainerDiagram extends StatelessWidget implements DiagramMetadata {
@@ -26,7 +24,7 @@ class ContainerDiagram extends StatelessWidget implements DiagramMetadata {
           color: Colors.white,
           child: Center(
             child: Container(
-              margin: EdgeInsets.all(10.0),
+              margin: const EdgeInsets.all(10.0),
               color: Colors.amber[600],
               width: 48.0,
               height: 48.0,
@@ -36,22 +34,26 @@ class ContainerDiagram extends StatelessWidget implements DiagramMetadata {
         break;
       case 'container_b':
         return Center(
-            child: Container(
-              constraints: BoxConstraints.expand(
-                height:
-                Theme.of(context).textTheme.display1.fontSize * 1.1 + 200.0,
-              ),
-              padding: const EdgeInsets.all(8.0),
-              color: Colors.blue[600],
-              alignment: Alignment.center,
-              child: Text('Hello World',
-                  style: Theme.of(context)
-                      .textTheme
-                      .display1
-                      .copyWith(color: Colors.white)),
-              transform: Matrix4.rotationZ(0.1),
+          child: Container(
+            constraints: BoxConstraints.expand(
+              height:
+              Theme.of(context).textTheme.display1.fontSize * 1.1 + 200.0,
             ),
-          );
+            padding: const EdgeInsets.all(8.0),
+            color: Colors.blue[600],
+            alignment: Alignment.center,
+            child: Text('Hello World',
+                style: Theme.of(context)
+                    .textTheme
+                    .display1
+                    .copyWith(color: Colors.white)
+            ),
+            transform: Matrix4.rotationZ(0.1),
+          ),
+        );
+        break;
+      default:
+        return const Text('Error');
         break;
     }
   }
