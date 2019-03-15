@@ -57,7 +57,7 @@ class AlignDiagram extends StatelessWidget implements DiagramMetadata {
               child: Stack(
                 children: const <Widget>[
                   Align(
-                    alignment: FractionalOffset(0.2, 0.6),
+                    alignment: Alignment(0.2, 0.6),
                     child: FlutterLogo(
                       size: 60.0,
                     ),
