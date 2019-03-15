@@ -16,101 +16,93 @@ class AlignDiagram extends StatelessWidget implements DiagramMetadata {
 
   @override
   Widget build(BuildContext context) {
-    Widget returnWidget;
+    List<Widget> diagramChildren;
+    const Widget logo = FlutterLogo(size: 60);
+    const Icon origin = Icon(
+      Icons.fiber_manual_record,
+      size: 20
+    );
     switch (name) {
       case 'align_constant':
-        returnWidget = Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            const Padding(
-              padding: EdgeInsets.only(bottom: 10.0),
-              child: Text('Alignment.topRight'),
+        diagramChildren = <Widget>[
+          const Padding(
+            padding: EdgeInsets.only(bottom: 10.0),
+            child: Text('Alignment.topRight'),
+          ),
+          Container(
+            height: 120.0,
+            width: 120.0,
+            color: Colors.blue[50],
+            child: const Align(
+              alignment: Alignment.topRight,
+              child: logo,
             ),
-            Container(
-              height: 120.0,
-              width: 120.0,
-              color: Colors.blue[50],
-              child: const Align(
-                alignment: Alignment.topRight,
-                child: FlutterLogo(
-                  size: 60.0,
-                ),
-              ),
-            ),
-          ],
-        );
+          ),
+        ];
         break;
       case 'align_alignment':
-        returnWidget = Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            const Padding(
-              padding: EdgeInsets.only(bottom: 10.0),
-              child: Text('Alignment Origin'),
+        diagramChildren = <Widget>[
+          const Padding(
+            padding: EdgeInsets.only(bottom: 10.0),
+            child: Text('Alignment Origin'),
+          ),
+          Container(
+            height: 120.0,
+            width: 120.0,
+            color: Colors.blue[50],
+            child: Stack(
+              children: const <Widget>[
+                Align(
+                  alignment: Alignment(0.2, 0.6),
+                  child: logo,
+                ),
+                Align(
+                  alignment: Alignment.center,
+                  child: origin,
+                ),
+              ],
             ),
-            Container(
-              height: 120.0,
-              width: 120.0,
-              color: Colors.blue[50],
-              child: Stack(
-                children: const <Widget>[
-                  Align(
-                    alignment: Alignment(0.2, 0.6),
-                    child: FlutterLogo(
-                      size: 60.0,
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.center,
-                    child: Icon(Icons.fiber_manual_record, size: 20),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        );
+          ),
+        ];
         break;
       case 'align_fractional_offset':
-        returnWidget = Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            const Padding(
-              padding: EdgeInsets.only(bottom: 10.0),
-              child: Text('Fractional Offset Origin'),
+        diagramChildren = <Widget>[
+          const Padding(
+            padding: EdgeInsets.only(bottom: 10.0),
+            child: Text('Fractional Offset Origin'),
+          ),
+          Container(
+            height: 120.0,
+            width: 120.0,
+            color: Colors.blue[50],
+            child: Stack(
+              children: const <Widget>[
+                Align(
+                  alignment: FractionalOffset(0.2, 0.6),
+                  child: logo,
+                ),
+                origin,
+              ],
             ),
-            Container(
-              height: 120.0,
-              width: 120.0,
-              color: Colors.blue[50],
-              child: Stack(
-                children: const <Widget>[
-                  Align(
-                    alignment: FractionalOffset(0.2, 0.6),
-                    child: FlutterLogo(
-                      size: 60.0,
-                    ),
-                  ),
-                  Icon(Icons.fiber_manual_record, size: 20),
-                ],
-              ),
-            ),
-          ],
-        );
+          ),
+        ];
         break;
       default:
-        returnWidget = const Text('Error');
+        diagramChildren = <Widget>[const Text('Error')];
         break;
     }
     return new ConstrainedBox(
       key: new UniqueKey(),
       constraints: new BoxConstraints.tight(const Size(250.0, 250.0)),
       child: new Container(
-          alignment: FractionalOffset.center,
-          color: Colors.white,
-          child: returnWidget),
+        alignment: FractionalOffset.center,
+        color: Colors.white,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: diagramChildren,
+        ),
+      ),
     );
   }
 }
