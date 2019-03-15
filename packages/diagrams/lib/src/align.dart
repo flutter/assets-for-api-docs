@@ -16,79 +16,53 @@ class AlignDiagram extends StatelessWidget implements DiagramMetadata {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> diagramChildren;
+//    List<Widget> diagramChildren;
     const Widget logo = FlutterLogo(size: 60);
     const Icon origin = Icon(
       Icons.fiber_manual_record,
-      size: 20
+      size: 20,
     );
+    Widget heading;
+    Widget containerChild;
     switch (name) {
       case 'align_constant':
-        diagramChildren = <Widget>[
-          const Padding(
-            padding: EdgeInsets.only(bottom: 10.0),
-            child: Text('Alignment.topRight'),
-          ),
-          Container(
-            height: 120.0,
-            width: 120.0,
-            color: Colors.blue[50],
-            child: const Align(
-              alignment: Alignment.topRight,
-              child: logo,
-            ),
-          ),
-        ];
+        heading = const Text('Alignment.topRight');
+        containerChild = const Align(
+          alignment: Alignment.topRight,
+          child: logo,
+        );
         break;
       case 'align_alignment':
-        diagramChildren = <Widget>[
-          const Padding(
-            padding: EdgeInsets.only(bottom: 10.0),
-            child: Text('Alignment Origin'),
-          ),
-          Container(
-            height: 120.0,
-            width: 120.0,
-            color: Colors.blue[50],
-            child: Stack(
-              children: const <Widget>[
-                Align(
-                  alignment: Alignment(0.2, 0.6),
-                  child: logo,
-                ),
-                Align(
-                  alignment: Alignment.center,
-                  child: origin,
-                ),
-              ],
+        heading = const Text('Alignment Origin');
+        containerChild = Stack(
+          children: const <Widget>[
+            Align(
+              alignment: Alignment(0.2, 0.6),
+              child: logo,
             ),
-          ),
-        ];
+            Align(
+              alignment: Alignment.center,
+              child: origin,
+            ),
+          ],
+        );
+
         break;
       case 'align_fractional_offset':
-        diagramChildren = <Widget>[
-          const Padding(
-            padding: EdgeInsets.only(bottom: 10.0),
-            child: Text('Fractional Offset Origin'),
-          ),
-          Container(
-            height: 120.0,
-            width: 120.0,
-            color: Colors.blue[50],
-            child: Stack(
-              children: const <Widget>[
-                Align(
-                  alignment: FractionalOffset(0.2, 0.6),
-                  child: logo,
-                ),
-                origin,
-              ],
+        heading = const Text('Fractional Offset Origin');
+        containerChild = Stack(
+          children: const <Widget>[
+            Align(
+              alignment: FractionalOffset(0.2, 0.6),
+              child: logo,
             ),
-          ),
-        ];
+            origin,
+          ],
+        );
         break;
       default:
-        diagramChildren = <Widget>[const Text('Error')];
+        heading = const Text('Error');
+        containerChild = const Text('Error');
         break;
     }
     return new ConstrainedBox(
@@ -100,7 +74,17 @@ class AlignDiagram extends StatelessWidget implements DiagramMetadata {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
-          children: diagramChildren,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(bottom: 10.0),
+              child: heading,
+            ),
+            Container(
+                height: 120.0,
+                width: 120.0,
+                color: Colors.blue[50],
+                child: containerChild),
+          ],
         ),
       ),
     );
