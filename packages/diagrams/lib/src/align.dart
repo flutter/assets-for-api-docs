@@ -19,14 +19,14 @@ class AlignDiagram extends StatelessWidget implements DiagramMetadata {
 //    List<Widget> diagramChildren;
     const Widget logo = FlutterLogo(size: 60);
     const Icon origin = Icon(
-      Icons.fiber_manual_record,
+      Icons.gps_fixed,
       size: 20,
     );
     Widget heading;
     Widget containerChild;
     switch (name) {
       case 'align_constant':
-        heading = const Text('Alignment.topRight');
+        heading = Text(Alignment.topRight.toString());
         containerChild = const Align(
           alignment: Alignment.topRight,
           child: logo,
@@ -56,7 +56,10 @@ class AlignDiagram extends StatelessWidget implements DiagramMetadata {
               alignment: FractionalOffset(0.2, 0.6),
               child: logo,
             ),
-            origin,
+            Align(
+              alignment: FractionalOffset(-0.1, -0.1),
+              child: origin,
+            ),
           ],
         );
         break;
