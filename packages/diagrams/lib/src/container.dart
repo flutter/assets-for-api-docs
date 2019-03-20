@@ -35,10 +35,8 @@ class ContainerDiagram extends StatelessWidget implements DiagramMetadata {
       case 'container_b':
         return Center(
           child: Container(
-            constraints: BoxConstraints.expand(
-              height:
-              Theme.of(context).textTheme.display1.fontSize * 1.1 + 200.0,
-            ),
+            width: 450,
+            height: 250,
             padding: const EdgeInsets.all(8.0),
             color: Colors.blue[600],
             alignment: Alignment.center,
