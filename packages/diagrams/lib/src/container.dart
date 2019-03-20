@@ -16,8 +16,8 @@ class ContainerDiagram extends StatelessWidget implements DiagramMetadata {
 
   @override
   Widget build(BuildContext context) {
-    switch(name) {
-      case 'container_a' :
+    switch (name) {
+      case 'container_a':
         return Container(
           height: 250,
           width: 250,
@@ -33,22 +33,24 @@ class ContainerDiagram extends StatelessWidget implements DiagramMetadata {
         );
         break;
       case 'container_b':
-        return Center(
-          child: Container(
-            constraints: BoxConstraints.expand(
-              height:
-              Theme.of(context).textTheme.display1.fontSize * 1.1 + 200.0,
+        return Container(
+          height: 250,
+          width: 450,
+          color: Colors.white,
+          child: Center(
+            child: Container(
+              height: 250,
+              width: 450,
+              padding: const EdgeInsets.all(8.0),
+              color: Colors.blue[600],
+              alignment: Alignment.center,
+              child: Text('Hello World',
+                  style: Theme.of(context)
+                      .textTheme
+                      .display1
+                      .copyWith(color: Colors.white)),
+              transform: Matrix4.rotationZ(0.1),
             ),
-            padding: const EdgeInsets.all(8.0),
-            color: Colors.blue[600],
-            alignment: Alignment.center,
-            child: Text('Hello World',
-              style: Theme.of(context)
-                .textTheme
-                .display1
-                .copyWith(color: Colors.white)
-            ),
-            transform: Matrix4.rotationZ(0.1),
           ),
         );
         break;
@@ -66,8 +68,7 @@ class ContainerDiagramStep extends DiagramStep {
   final String category = 'widgets';
 
   @override
-  Future<List<DiagramMetadata>> get diagrams async =>
-      <DiagramMetadata>[
+  Future<List<DiagramMetadata>> get diagrams async => <DiagramMetadata>[
         const ContainerDiagram('container_a'),
         const ContainerDiagram('container_b'),
       ];
