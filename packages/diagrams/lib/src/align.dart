@@ -16,7 +16,6 @@ class AlignDiagram extends StatelessWidget implements DiagramMetadata {
 
   @override
   Widget build(BuildContext context) {
-//    List<Widget> diagramChildren;
     const Widget logo = FlutterLogo(size: 60);
     const Icon origin = Icon(
       Icons.gps_fixed,

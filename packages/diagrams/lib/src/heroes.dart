@@ -40,6 +40,8 @@ class _HeroesDiagramState extends State<HeroesDiagram> {
       textDirection: TextDirection.ltr,
       child: new Container(
         color: Colors.white,
+        height:480.0,
+        width: 900.0,
         child: new Stack(
           children: <Widget>[
             new Center(

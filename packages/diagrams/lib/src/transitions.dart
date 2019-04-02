@@ -315,19 +315,25 @@ class SizeTransitionDiagram extends TransitionDiagram<double> {
 
   @override
   Widget buildTransition(BuildContext context, Animation<double> animation) {
-    return new Container(
-      // TODO(gspencer): remove these constraints when
-      // https://github.com/flutter/flutter/issues/19850 is fixed.
-      // SizeTransition hard codes alignment at the beginning, so we have
-      // to restrict the width to make it look centered.
-      constraints: const BoxConstraints.tightFor(width: _kLogoSize),
-      child: new SizeTransition(
-        key: _transitionKey,
-        axis: Axis.vertical,
-        axisAlignment: 0.0,
-        sizeFactor: animation,
-        child: const SampleWidget(),
-      ),
+    return Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+        new Container(
+          // TODO(gspencer): remove these constraints when
+          // https://github.com/flutter/flutter/issues/19850 is fixed.
+          // SizeTransition hard codes alignment at the beginning, so we have
+          // to restrict the width to make it look centered.
+          constraints: const BoxConstraints.tightFor(width: _kLogoSize),
+          child: new SizeTransition(
+            key: _transitionKey,
+            axis: Axis.vertical,
+            axisAlignment: 0.0,
+            sizeFactor: animation,
+            child: const SampleWidget(),
+          ),
+        ),
+      ],
     );
   }
 }
