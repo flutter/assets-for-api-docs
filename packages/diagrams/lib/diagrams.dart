@@ -20,6 +20,7 @@ export 'src/ink_response_large.dart';
 export 'src/ink_response_small.dart';
 export 'src/ink_well.dart';
 export 'src/list_view.dart';
+export 'src/raised_button.dart';
 export 'src/sliver_app_bars.dart';
 export 'src/stroke_cap.dart';
 export 'src/stroke_join.dart';
