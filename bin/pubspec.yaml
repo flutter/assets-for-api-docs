@@ -13,5 +13,5 @@ dev_dependencies:
   front_end: ^0.1.13
   
 environment:
-  sdk: ">=2.0.0-dev.61.0 <3.0.0"
+  sdk: ">=2.2.0 <3.0.0"
 
