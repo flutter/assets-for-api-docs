@@ -27,8 +27,8 @@ class BottomNavigationBarDiagram extends StatelessWidget implements DiagramMetad
           appBar: AppBar(
             title: const Text('BottomNavigationBar Sample'),
           ),
-          body: Center(
-            child: const Text(
+          body: const Center(
+            child: Text(
               'Index 0: Home',
               style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
             ),
