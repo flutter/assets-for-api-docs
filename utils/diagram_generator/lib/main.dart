@@ -52,6 +52,7 @@ Future<Null> main() async {
     new AlignDiagramStep(controller),
     new AppBarDiagramStep(controller),
     new BlendModeDiagramStep(controller),
+    new BottomNavigationBarDiagramStep(controller),
     new BoxFitDiagramStep(controller),
     new CardDiagramStep(controller),
     new ColorsDiagramStep(controller),
