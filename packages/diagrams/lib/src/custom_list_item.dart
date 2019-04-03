@@ -39,7 +39,7 @@ class _VideoDescription extends StatelessWidget {
             user,
             style: const TextStyle(fontSize: 10.0),
           ),
-          const Padding(padding: EdgeInsets.symmetric(vertical: 1.0),
+          const Padding(padding: EdgeInsets.symmetric(vertical: 1.0)),
           Text(
             '$viewCount views',
             style: const TextStyle(fontSize: 10.0),
