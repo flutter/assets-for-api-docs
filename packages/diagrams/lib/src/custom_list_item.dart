@@ -53,13 +53,11 @@ class _VideoDescription extends StatelessWidget {
 /// to help provide inspiration for alternative ways to create list items.
 class CustomListItem extends StatelessWidget {
   const CustomListItem({
-    this.imageUrl,
     this.user,
     this.viewCount,
     this.title,
   });
 
-  final String imageUrl;
   final String user;
   final int viewCount;
   final String title;
@@ -71,7 +69,7 @@ class CustomListItem extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Expanded(child: Image.network(imageUrl), flex: 2),
+          const Expanded(child: FlutterLogo(size: 96), flex: 2),
           Expanded(
             child: _VideoDescription(
               title: title,
@@ -108,7 +106,6 @@ class CustomListItemDiagram extends StatelessWidget
           itemExtent: 106.0,
           itemBuilder: (BuildContext context, int index) {
             return const CustomListItem(
-              imageUrl: 'http://i3.ytimg.com/vi/sPW7nDBqt8w/hqdefault.jpg',
               user: 'Flutter',
               viewCount: 999000,
               title: 'The Flutter YouTube Channel is Here!',
@@ -124,7 +121,7 @@ class CustomListItemDiagramStep extends DiagramStep {
   CustomListItemDiagramStep(DiagramController controller) : super(controller);
 
   @override
-  final String category = 'material';
+  final String category = 'widgets';
 
   @override
   Future<List<DiagramMetadata>> get diagrams async => <DiagramMetadata>[
