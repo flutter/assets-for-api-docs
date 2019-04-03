@@ -57,15 +57,15 @@ class _VideoDescription extends StatelessWidget {
 class CustomListItem extends StatelessWidget {
   const CustomListItem({
     this.thumbnail,
+    this.title,
     this.user,
     this.viewCount,
-    this.title,
   });
 
   final Widget thumbnail;
+  final String title;
   final String user;
   final int viewCount;
-  final String title;
 
   @override
   Widget build(BuildContext context) {
