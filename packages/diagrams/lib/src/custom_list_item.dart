@@ -151,8 +151,8 @@ class CustomListItemDiagramStep extends DiagramStep {
 
   @override
   Future<List<DiagramMetadata>> get diagrams async => <DiagramMetadata>[
-        const CustomListItemDiagram('custom_list_item'),
-      ];
+    const CustomListItemDiagram('custom_list_item'),
+  ];
 
   @override
   Future<File> generateDiagram(DiagramMetadata diagram) async {
