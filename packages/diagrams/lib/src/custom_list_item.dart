@@ -27,16 +27,24 @@ class _VideoDescription extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text(title,
+          Text(
+            title,
             style: const TextStyle(
               fontWeight: FontWeight.w500,
               fontSize: 14.0,
             ),
           ),
           const Padding(padding: EdgeInsets.symmetric(vertical: 2.0)),
-          Text(user, style: const TextStyle(fontSize: 10.0)),
-          const Padding(padding: EdgeInsets.symmetric(vertical: 1.0)),
-          Text('$viewCount views', style: const TextStyle(fontSize: 10.0),
+          Text(
+            user,
+            style: const TextStyle(
+              fontSize: 10.0,
+            ),
+          ),
+          const Padding(padding: EdgeInsets.symmetric(vertical: 1.0),
+          Text(
+            '$viewCount views',
+            style: const TextStyle(fontSize: 10.0),
           ),
         ],
       ),
@@ -80,7 +88,10 @@ class CustomListItem extends StatelessWidget {
             ),
             flex: 3,
           ),
-          const Icon(Icons.more_vert, size: 16.0),
+          const Icon(
+            Icons.more_vert,
+            size: 16.0,
+          ),
         ],
       ),
     );
@@ -109,13 +120,22 @@ class CustomListItemDiagram extends StatelessWidget implements DiagramMetadata {
             CustomListItem(
               user: 'Flutter',
               viewCount: 999000,
-              thumbnail: Icon(Icons.videocam, size: 80, color: Colors.blueGrey),
+              thumbnail: Icon(
+                Icons.videocam,
+                size: 80,
+                color: Colors.blueGrey,
+              ),
               title: 'The Flutter YouTube Channel',
             ),
             CustomListItem(
               user: 'Dash',
               viewCount: 884000,
-              thumbnail: Icon(Icons.flight_takeoff, size: 80, color: Colors.blueGrey),
+              thumbnail:
+                Icon(
+                  Icons.flight_takeoff,
+                  size: 80,
+                  color: Colors.blueGrey,
+                ),
               title: 'Announcing Flutter 1.0',
             ),
           ],
@@ -133,8 +153,8 @@ class CustomListItemDiagramStep extends DiagramStep {
 
   @override
   Future<List<DiagramMetadata>> get diagrams async => <DiagramMetadata>[
-    const CustomListItemDiagram('custom_list_item'),
-  ];
+        const CustomListItemDiagram('custom_list_item'),
+      ];
 
   @override
   Future<File> generateDiagram(DiagramMetadata diagram) async {
