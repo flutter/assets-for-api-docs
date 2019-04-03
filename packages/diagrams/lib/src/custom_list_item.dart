@@ -37,9 +37,7 @@ class _VideoDescription extends StatelessWidget {
           const Padding(padding: EdgeInsets.symmetric(vertical: 2.0)),
           Text(
             user,
-            style: const TextStyle(
-              fontSize: 10.0,
-            ),
+            style: const TextStyle(fontSize: 10.0),
           ),
           const Padding(padding: EdgeInsets.symmetric(vertical: 1.0),
           Text(
