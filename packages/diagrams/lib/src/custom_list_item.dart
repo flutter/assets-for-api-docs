@@ -27,19 +27,16 @@ class _VideoDescription extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text(
-            title,
-            style: TextStyle(
+          Text(title,
+            style: const TextStyle(
               fontWeight: FontWeight.w500,
               fontSize: 14.0,
             ),
           ),
           const Padding(padding: EdgeInsets.symmetric(vertical: 2.0)),
-          Text(user, style: TextStyle(fontSize: 10.0)),
+          Text(user, style: const TextStyle(fontSize: 10.0)),
           const Padding(padding: EdgeInsets.symmetric(vertical: 1.0)),
-          Text(
-            '$viewCount views',
-            style: TextStyle(fontSize: 10.0),
+          Text('$viewCount views', style: const TextStyle(fontSize: 10.0),
           ),
         ],
       ),
@@ -53,11 +50,13 @@ class _VideoDescription extends StatelessWidget {
 /// to help provide inspiration for alternative ways to create list items.
 class CustomListItem extends StatelessWidget {
   const CustomListItem({
+    this.thumbnail,
     this.user,
     this.viewCount,
     this.title,
   });
 
+  final Widget thumbnail;
   final String user;
   final int viewCount;
   final String title;
@@ -69,7 +68,7 @@ class CustomListItem extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          const Expanded(child: FlutterLogo(size: 96), flex: 2),
+          Expanded(child: thumbnail, flex: 2),
           Expanded(
             child: _VideoDescription(
               title: title,
@@ -85,8 +84,7 @@ class CustomListItem extends StatelessWidget {
   }
 }
 
-class CustomListItemDiagram extends StatelessWidget
-    implements DiagramMetadata {
+class CustomListItemDiagram extends StatelessWidget implements DiagramMetadata {
   const CustomListItemDiagram(this.name);
 
   @override
@@ -101,16 +99,23 @@ class CustomListItemDiagram extends StatelessWidget
         alignment: FractionalOffset.center,
         padding: const EdgeInsets.all(5.0),
         color: Colors.white,
-        child: ListView.builder(
+        child: ListView(
           padding: const EdgeInsets.all(8.0),
           itemExtent: 106.0,
-          itemBuilder: (BuildContext context, int index) {
-            return const CustomListItem(
+          children: const <CustomListItem>[
+            CustomListItem(
               user: 'Flutter',
               viewCount: 999000,
-              title: 'The Flutter YouTube Channel is Here!',
-            );
-          },
+              thumbnail: Icon(Icons.videocam, size: 80, color: Colors.blueGrey),
+              title: 'The Flutter YouTube Channel',
+            ),
+            CustomListItem(
+              user: 'Dash',
+              viewCount: 884000,
+              thumbnail: Icon(Icons.flight_takeoff, size: 80, color: Colors.blueGrey),
+              title: 'Announcing Flutter 1.0',
+            ),
+          ],
         ),
       ),
     );
@@ -132,6 +137,8 @@ class CustomListItemDiagramStep extends DiagramStep {
   Future<File> generateDiagram(DiagramMetadata diagram) async {
     final CustomListItemDiagram typedDiagram = diagram;
     controller.builder = (BuildContext context) => typedDiagram;
-    return await controller.drawDiagramToFile(new File('${diagram.name}.png'));
+    return await controller.drawDiagramToFile(
+      new File('${diagram.name}.png'),
+    );
   }
 }
