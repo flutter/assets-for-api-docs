@@ -46,8 +46,10 @@ class ListTileDiagram extends StatelessWidget implements DiagramMetadata {
               ),
             ),
             Card(
-              child:
-                  ListTile(title: Text('One-line dense ListTile'), dense: true),
+              child: ListTile(
+                title: Text('One-line dense ListTile'),
+                dense: true,
+              ),
             ),
             Card(
               child: ListTile(
