@@ -8,6 +8,7 @@ export 'src/align.dart';
 export 'src/animation_diagram.dart';
 export 'src/app_bar.dart';
 export 'src/blend_mode.dart';
+export 'src/bottom_navigation_bar.dart';
 export 'src/box_fit.dart';
 export 'src/card.dart';
 export 'src/colors.dart';
