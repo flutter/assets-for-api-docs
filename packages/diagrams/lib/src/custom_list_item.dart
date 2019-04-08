@@ -114,26 +114,21 @@ class CustomListItemDiagram extends StatelessWidget implements DiagramMetadata {
         child: ListView(
           padding: const EdgeInsets.all(8.0),
           itemExtent: 106.0,
-          children: const <CustomListItem>[
+          children: <CustomListItem>[
             CustomListItem(
               user: 'Flutter',
               viewCount: 999000,
-              thumbnail: Icon(
-                Icons.videocam,
-                size: 80,
-                color: Colors.blueGrey,
+              thumbnail: Container(
+                decoration: BoxDecoration(color: Colors.blue),
               ),
               title: 'The Flutter YouTube Channel',
             ),
             CustomListItem(
               user: 'Dash',
               viewCount: 884000,
-              thumbnail:
-                Icon(
-                  Icons.flight_takeoff,
-                  size: 80,
-                  color: Colors.blueGrey,
-                ),
+              thumbnail: Container(
+                decoration: BoxDecoration(color: Colors.yellow),
+              ),
               title: 'Announcing Flutter 1.0',
             ),
           ],
