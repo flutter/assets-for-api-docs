@@ -8,6 +8,9 @@ import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 import 'diagram_step.dart';
 
+/// Since users are misusing ListTile material widget, this example was created
+/// to help provide inspiration for alternative ways to create list items.
+
 class _VideoDescription extends StatelessWidget {
   const _VideoDescription({
     Key key,
@@ -51,9 +54,6 @@ class _VideoDescription extends StatelessWidget {
 }
 
 /// A sample list item that looks similar to a YouTube related video item.
-///
-/// Since users are misusing ListTile material widget, this example was created
-/// to help provide inspiration for alternative ways to create list items.
 class CustomListItem extends StatelessWidget {
   const CustomListItem({
     this.thumbnail,
@@ -171,6 +171,7 @@ class _ArticleDescription extends StatelessWidget {
   }
 }
 
+/// A sample article list item with multi-line [title] and [subtitle]s.
 class CustomListItemTwo extends StatelessWidget {
   CustomListItemTwo({
     Key key,
