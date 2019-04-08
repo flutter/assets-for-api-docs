@@ -245,7 +245,7 @@ class CustomListItemDiagram extends StatelessWidget implements DiagramMetadata {
                   user: 'Flutter',
                   viewCount: 999000,
                   thumbnail: Container(
-                    decoration: BoxDecoration(color: Colors.blue),
+                    decoration: const BoxDecoration(color: Colors.blue),
                   ),
                   title: 'The Flutter YouTube Channel',
                 ),
@@ -253,7 +253,7 @@ class CustomListItemDiagram extends StatelessWidget implements DiagramMetadata {
                   user: 'Dash',
                   viewCount: 884000,
                   thumbnail: Container(
-                    decoration: BoxDecoration(color: Colors.yellow),
+                    decoration: const BoxDecoration(color: Colors.yellow),
                   ),
                   title: 'Announcing Flutter 1.0',
                 ),
@@ -275,7 +275,7 @@ class CustomListItemDiagram extends StatelessWidget implements DiagramMetadata {
               children: <Widget>[
                 CustomListItemTwo(
                   thumbnail: Container(
-                    decoration: BoxDecoration(color: Colors.pink),
+                    decoration: const BoxDecoration(color: Colors.pink),
                   ),
                   title: 'Flutter 1.0 Launch',
                   subtitle:
@@ -287,7 +287,7 @@ class CustomListItemDiagram extends StatelessWidget implements DiagramMetadata {
                 ),
                 CustomListItemTwo(
                   thumbnail: Container(
-                    decoration: BoxDecoration(color: Colors.blue),
+                    decoration: const BoxDecoration(color: Colors.blue),
                   ),
                   title: 'Flutter 1.2 Release - Continual updates to the framework',
                   subtitle: 'Flutter once again improves and makes updates.',
