@@ -173,7 +173,7 @@ class _ArticleDescription extends StatelessWidget {
 
 /// A sample article list item with multi-line [title] and [subtitle]s.
 class CustomListItemTwo extends StatelessWidget {
-  CustomListItemTwo({
+  const CustomListItemTwo({
     Key key,
     this.thumbnail,
     this.title,
