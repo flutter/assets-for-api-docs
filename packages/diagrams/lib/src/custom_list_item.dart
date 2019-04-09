@@ -123,7 +123,7 @@ class _ArticleDescription extends StatelessWidget {
             children: <Widget>[
               Text(
                 '$title',
-                maxLines: 1,
+                maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
@@ -132,7 +132,7 @@ class _ArticleDescription extends StatelessWidget {
               const Padding(padding: EdgeInsets.only(bottom: 2.0)),
               Text(
                 '$subtitle',
-                maxLines: 3,
+                maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
                   fontSize: 12.0,
@@ -141,7 +141,7 @@ class _ArticleDescription extends StatelessWidget {
               ),
             ],
           ),
-          flex: 3,
+          flex: 2,
         ),
         Expanded(
           child: Column(
@@ -164,7 +164,7 @@ class _ArticleDescription extends StatelessWidget {
               ),
             ],
           ),
-          flex: 2,
+          flex: 1,
         ),
       ],
     );
@@ -173,7 +173,7 @@ class _ArticleDescription extends StatelessWidget {
 
 /// A sample article list item with multi-line [title] and [subtitle]s.
 class CustomListItemTwo extends StatelessWidget {
-  CustomListItemTwo({
+  const CustomListItemTwo({
     Key key,
     this.thumbnail,
     this.title,
