@@ -410,6 +410,7 @@ class DiagramController {
     @required String name,
     String category,
     Map<Duration, DiagramKeyframe> keyframes,
+    Function gestureCallback,
   }) async {
     assert(name != null);
     assert(end != null);
@@ -440,7 +441,8 @@ class DiagramController {
           keys.removeAt(0);
         }
       }
-
+      if(gestureCallback != null)
+        gestureCallback(this, now);
       final File outputFile = _getFrameFilename(now, index, name);
       final ui.Image captured = await drawDiagramToImage();
       final ByteData encoded = await captured.toByteData(format: format);
