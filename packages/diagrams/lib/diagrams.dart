@@ -16,6 +16,7 @@ export 'src/container.dart';
 export 'src/curve.dart';
 export 'src/custom_list_item.dart';
 export 'src/diagram_step.dart';
+export 'src/flow.dart';
 export 'src/heroes.dart';
 export 'src/implicit_animations.dart';
 export 'src/ink_response_large.dart';
