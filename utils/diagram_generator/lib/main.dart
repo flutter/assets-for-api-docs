@@ -59,6 +59,7 @@ Future<Null> main() async {
     new ContainerDiagramStep(controller),
     new CurveDiagramStep(controller),
     new CustomListItemDiagramStep(controller),
+    new FlowDiagramStep(controller),
     new HeroesDiagramStep(controller),
     new ImplicitAnimationDiagramStep(controller),
     new InkResponseLargeDiagramStep(controller),
