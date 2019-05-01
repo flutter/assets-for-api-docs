@@ -23,8 +23,7 @@ class FlowDiagram extends StatefulWidget implements DiagramMetadata {
   State<FlowDiagram> createState() => FlowDiagramState();
 }
 
-class FlowDiagramState extends State<FlowDiagram>
-  with SingleTickerProviderStateMixin {
+class FlowDiagramState extends State<FlowDiagram> with SingleTickerProviderStateMixin {
   AnimationController menuAnimation;
   int active = 1;
   final Map<int, IconData> menuItems = <IconData>[
@@ -41,7 +40,7 @@ class FlowDiagramState extends State<FlowDiagram>
     menuAnimation = AnimationController(
       lowerBound: 1,
       upperBound: 1000,
-      duration: Duration(milliseconds: 250),
+      duration: const Duration(milliseconds: 250),
       vsync: this,
     );
   }
@@ -52,13 +51,11 @@ class FlowDiagramState extends State<FlowDiagram>
       onTap: () {
         if (k != 4)
           active = k;
-        menuAnimation.value == 1000
-          ? menuAnimation.reverse()
-          : menuAnimation.forward();
+        menuAnimation.value == 1000 ? menuAnimation.reverse() : menuAnimation.forward();
         setState(() {});
       },
       child: Container(
-        width: MediaQuery.of(context).size.width / 5,
+        width: 110,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: active == k ? Colors.amber[700] : Colors.blue,
@@ -81,14 +78,20 @@ class FlowDiagramState extends State<FlowDiagram>
   @override
   Widget build(BuildContext context) {
     return new ConstrainedBox(
-      constraints: new BoxConstraints.tight(const Size(510.0, 110.0)),
-      child: Flow(
-      delegate: FlowMenuDelegate(menuAnimation: menuAnimation),
-      children: menuItems
-        .map<int, Widget>((int k, IconData v) => MapEntry<int, Widget>(k, buildItem(k, v)))
-        .values
-        .toList(),
-    ),);
+      constraints: new BoxConstraints.tight(const Size(560.0, 150.0)),
+      child: new Container(
+        alignment: FractionalOffset.center,
+        padding: const EdgeInsets.only(left: 5.0),
+        color: Colors.white,
+        child:Flow(
+          delegate: FlowMenuDelegate(menuAnimation: menuAnimation),
+          children: menuItems
+            .map<int, Widget>((int k, IconData v) => MapEntry<int, Widget>(k, buildItem(k, v)))
+            .values
+            .toList(),
+        ),
+      ),
+    );
   }
 }
 
@@ -124,28 +127,24 @@ class FlowDiagramStep extends DiagramStep {
 
   void tapFlowMenuItem(DiagramController controller, Duration now) async {
     RenderBox target;
-    Offset targetOffset;
     switch (now.inMilliseconds) {
       case 1000:
         target = keys[4].currentContext.findRenderObject();
-        targetOffset = target.localToGlobal(target.size.center(Offset.zero));
         break;
       case 2000:
         target = keys[0].currentContext.findRenderObject();
-        targetOffset = target.localToGlobal(target.size.topRight(Offset.zero));
         break;
       case 3100:
         target = keys[4].currentContext.findRenderObject();
-        targetOffset = target.localToGlobal(target.size.center(Offset.zero));
         break;
       case 4100:
         target = keys[3].currentContext.findRenderObject();
-        targetOffset = target.localToGlobal(target.size.bottomLeft(Offset.zero));
         break;
       default:
         target = keys[4].currentContext.findRenderObject();
         return;
     }
+    final Offset targetOffset = target.localToGlobal(target.size.center(Offset.zero));
     final TestGesture gesture = await controller.startGesture(targetOffset);
     gesture.up();
   }
