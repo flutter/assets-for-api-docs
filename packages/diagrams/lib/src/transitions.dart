@@ -229,8 +229,8 @@ class RelativePositionedTransitionDiagram extends TransitionDiagram<Rect> {
   }
 
   static final RectTween _rectTween = new RectTween(
-    begin: new Rect.fromLTRB(0.0, 0.0, 50.0, 50.0),
-    end: new Rect.fromLTRB(140.0, 140.0, 150.0, 150.0),
+    begin: const Rect.fromLTRB(0.0, 0.0, 50.0, 50.0),
+    end: const Rect.fromLTRB(140.0, 140.0, 150.0, 150.0),
   );
 
   @override

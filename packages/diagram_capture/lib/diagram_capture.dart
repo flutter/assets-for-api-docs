@@ -442,7 +442,7 @@ class DiagramController {
         }
       }
 
-      if(gestureCallback != null)
+      if (gestureCallback != null)
         gestureCallback(this, now);
       final File outputFile = _getFrameFilename(now, index, name);
       final ui.Image captured = await drawDiagramToImage();
