@@ -73,7 +73,7 @@ class TabsDiagramState extends State<TabsDiagram> with SingleTickerProviderState
               return Center(
                 child: Text(
                   'This is the ${tab.text} tab',
-                  style: TextStyle(fontSize: 36),
+                  style: const TextStyle(fontSize: 36),
                 ),
               );
             }).toList(),
