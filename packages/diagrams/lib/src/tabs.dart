@@ -11,12 +11,12 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'diagram_step.dart';
 
-const Duration _kTabScrollDuration = Duration(milliseconds: 300);
+const Duration _kTabAnimationDuration = Duration(milliseconds: 300);
 const Duration _kPauseDuration = Duration(seconds: 1);
 final Duration _kTotalAnimationTime =
-    _kTabScrollDuration
+    _kTabAnimationDuration
   + _kPauseDuration
-  + _kTabScrollDuration
+  + _kTabAnimationDuration
   + _kPauseDuration;
 const double _kAnimationFrameRate = 60.0;
 final List<GlobalKey> _tabKeys = <GlobalKey>[
@@ -36,8 +36,8 @@ class TabsDiagram extends StatefulWidget implements DiagramMetadata {
 
 class TabsDiagramState extends State<TabsDiagram> with SingleTickerProviderStateMixin {
   final List<Tab> myTabs = <Tab>[
-    Tab(key: _tabKeys[0], text: 'Left'),
-    Tab(key: _tabKeys[1], text: 'Right'),
+    Tab(key: _tabKeys[0], text: 'left'),
+    Tab(key: _tabKeys[1], text: 'right'),
   ];
 
   TabController _tabController;
@@ -70,7 +70,12 @@ class TabsDiagramState extends State<TabsDiagram> with SingleTickerProviderState
           body: TabBarView(
             controller: _tabController,
             children: myTabs.map((Tab tab) {
-              return Center(child: Text(tab.text));
+              return Center(
+                child: Text(
+                  'This is the ${tab.text} tab',
+                  style: TextStyle(fontSize: 36),
+                ),
+              );
             }).toList(),
           ),
         ),
