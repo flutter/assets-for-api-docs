@@ -11,9 +11,18 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'diagram_step.dart';
 
-final Duration _kTotalDuration = _kPauseDuration * 5;
+const Duration _kTabScrollDuration = Duration(milliseconds: 300);
 const Duration _kPauseDuration = Duration(seconds: 1);
+final Duration _kTotalAnimationTime =
+    _kTabScrollDuration
+  + _kPauseDuration
+  + _kTabScrollDuration
+  + _kPauseDuration;
 const double _kAnimationFrameRate = 60.0;
+final List<GlobalKey> _tabKeys = <GlobalKey>[
+  GlobalKey(),
+  GlobalKey(),
+];
 
 class TabsDiagram extends StatefulWidget implements DiagramMetadata {
   const TabsDiagram(this.name);
@@ -26,9 +35,9 @@ class TabsDiagram extends StatefulWidget implements DiagramMetadata {
 }
 
 class TabsDiagramState extends State<TabsDiagram> with SingleTickerProviderStateMixin {
-  final List<Tab> myTabs = const <Tab>[
-    Tab(text: 'Left'),
-    Tab(text: 'Right'),
+  final List<Tab> myTabs = <Tab>[
+    Tab(key: _tabKeys[0], text: 'Left'),
+    Tab(key: _tabKeys[1], text: 'Right'),
   ];
 
   TabController _tabController;
@@ -37,8 +46,6 @@ class TabsDiagramState extends State<TabsDiagram> with SingleTickerProviderState
   void initState() {
     super.initState();
     _tabController = TabController(vsync: this, length: myTabs.length);
-
-    // schedule a callback to invoke taps after specific amount of time
   }
 
   @override
@@ -49,11 +56,10 @@ class TabsDiagramState extends State<TabsDiagram> with SingleTickerProviderState
 
   @override
   Widget build(BuildContext context) {
-    // return ConstrainedBox(
-    //   key: UniqueKey(),
-    //   constraints: BoxConstraints.tight(const Size(540.0, 260.0)),
-    //   child: MaterialApp(
-      return MaterialApp(
+    return ConstrainedBox(
+      key: UniqueKey(),
+      constraints: BoxConstraints.tight(const Size(540.0, 960.0)),
+      child: MaterialApp(
         home: Scaffold(
           appBar: AppBar(
             bottom: TabBar(
@@ -68,11 +74,12 @@ class TabsDiagramState extends State<TabsDiagram> with SingleTickerProviderState
             }).toList(),
           ),
         ),
-      );
-    //   ),
-    // );
+      ),
+    );
   }
 }
+
+
 
 class TabsDiagramStep extends DiagramStep {
   TabsDiagramStep(DiagramController controller) : super(controller);
@@ -85,15 +92,33 @@ class TabsDiagramStep extends DiagramStep {
     const TabsDiagram('tabs'),
   ];
 
+  void tapTabs(DiagramController controller, Duration now) async {
+    RenderBox target;
+    switch(now.inMilliseconds) {
+      case 0:
+        target = _tabKeys[1].currentContext.findRenderObject();
+        break;
+      case 1300:
+        target = _tabKeys[0].currentContext.findRenderObject();
+        break;
+      default:
+        return;
+    }
+    final Offset targetOffset = target.localToGlobal(target.size.center(Offset.zero));
+    final TestGesture gesture = await controller.startGesture(targetOffset);
+    gesture.up();
+  }
+
   @override
   Future<File> generateDiagram(DiagramMetadata diagram) async {
     final TabsDiagram typedDiagram = diagram;
     controller.builder = (BuildContext context) => typedDiagram;
     return await controller.drawAnimatedDiagramToFiles(
-      end: _kTotalDuration,
+      end: _kTotalAnimationTime,
       frameRate: _kAnimationFrameRate,
       name: diagram.name,
       category: category,
+      gestureCallback: tapTabs,
     );
   }
 }
