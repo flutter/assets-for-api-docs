@@ -12,7 +12,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'diagram_step.dart';
 
 const Duration _kTabAnimationDuration = Duration(milliseconds: 300);
-const Duration _kPauseDuration = Duration(seconds: 1);
+const Duration _kPauseDuration = Duration(seconds: 2);
 final Duration _kTotalAnimationTime =
     _kTabAnimationDuration
   + _kPauseDuration
@@ -103,7 +103,7 @@ class TabsDiagramStep extends DiagramStep {
       case 0:
         target = _tabKeys[1].currentContext.findRenderObject();
         break;
-      case 1300:
+      case 2300:
         target = _tabKeys[0].currentContext.findRenderObject();
         break;
       default:
