@@ -12,7 +12,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'diagram_step.dart';
 
 const Duration _kTabAnimationDuration = Duration(milliseconds: 300);
-const Duration _kPauseDuration = Duration(seconds: 1);
+const Duration _kPauseDuration = Duration(seconds: 2);
 final Duration _kTotalAnimationTime =
     _kTabAnimationDuration
   + _kPauseDuration
@@ -36,8 +36,8 @@ class TabsDiagram extends StatefulWidget implements DiagramMetadata {
 
 class TabsDiagramState extends State<TabsDiagram> with SingleTickerProviderStateMixin {
   final List<Tab> myTabs = <Tab>[
-    Tab(key: _tabKeys[0], text: 'left'),
-    Tab(key: _tabKeys[1], text: 'right'),
+    Tab(key: _tabKeys[0], text: 'LEFT'),
+    Tab(key: _tabKeys[1], text: 'RIGHT'),
   ];
 
   TabController _tabController;
@@ -70,9 +70,10 @@ class TabsDiagramState extends State<TabsDiagram> with SingleTickerProviderState
           body: TabBarView(
             controller: _tabController,
             children: myTabs.map((Tab tab) {
+              final String label = tab.text.toLowerCase();
               return Center(
                 child: Text(
-                  'This is the ${tab.text} tab',
+                  'This is the $label tab',
                   style: const TextStyle(fontSize: 36),
                 ),
               );
@@ -103,7 +104,7 @@ class TabsDiagramStep extends DiagramStep {
       case 0:
         target = _tabKeys[1].currentContext.findRenderObject();
         break;
-      case 1300:
+      case 2300:
         target = _tabKeys[0].currentContext.findRenderObject();
         break;
       default:
