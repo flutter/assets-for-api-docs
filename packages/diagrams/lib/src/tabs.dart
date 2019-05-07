@@ -36,8 +36,8 @@ class TabsDiagram extends StatefulWidget implements DiagramMetadata {
 
 class TabsDiagramState extends State<TabsDiagram> with SingleTickerProviderStateMixin {
   final List<Tab> myTabs = <Tab>[
-    Tab(key: _tabKeys[0], text: 'left'),
-    Tab(key: _tabKeys[1], text: 'right'),
+    Tab(key: _tabKeys[0], text: 'LEFT'),
+    Tab(key: _tabKeys[1], text: 'RIGHT'),
   ];
 
   TabController _tabController;
@@ -70,9 +70,10 @@ class TabsDiagramState extends State<TabsDiagram> with SingleTickerProviderState
           body: TabBarView(
             controller: _tabController,
             children: myTabs.map((Tab tab) {
+              final String label = tab.text.toLowerCase();
               return Center(
                 child: Text(
-                  'This is the ${tab.text} tab',
+                  'This is the $label tab',
                   style: const TextStyle(fontSize: 36),
                 ),
               );
