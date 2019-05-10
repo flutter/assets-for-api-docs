@@ -29,51 +29,53 @@ class FlowDiagram extends StatefulWidget implements DiagramMetadata {
 
 class FlowDiagramState extends State<FlowDiagram> with SingleTickerProviderStateMixin {
   AnimationController menuAnimation;
-  int active = 1;
-  final Map<int, IconData> menuItems = <IconData>[
+  IconData lastTapped = Icons.notifications;
+  final List<IconData> menuItems = <IconData>[
     Icons.home,
     Icons.new_releases,
     Icons.notifications,
     Icons.settings,
     Icons.menu,
-  ].asMap();
+  ];
+
+  void _updateMenu(IconData icon) {
+    setState(() {
+      if (icon != Icons.menu)
+        lastTapped = icon;
+    });
+  }
 
   @override
   void initState() {
     super.initState();
     menuAnimation = AnimationController(
-      lowerBound: 1,
-      upperBound: 1000,
-      duration: const Duration(milliseconds: 250),
+      lowerBound: 0,
+      upperBound: 1,
+      duration: const Duration(milliseconds: 500),
       vsync: this,
     );
   }
 
-  Widget buildItem(int k, IconData v) {
-    return GestureDetector(
-      key: keys[k],
-      onTap: () {
-        if (k != 4)
-          active = k;
-        menuAnimation.value == 1000 ? menuAnimation.reverse() : menuAnimation.forward();
-        setState(() {});
-      },
-      child: Container(
-        width: 110,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: active == k ? Colors.amber[700] : Colors.blue,
-          boxShadow: const <BoxShadow>[BoxShadow(
-            color: Colors.black12,
-            blurRadius: 10,
-          )]
-        ),
-        child: Center(
-          child: Icon(
-            v,
-            color: Colors.white,
-            size: 50,
-          ),
+  Widget flowMenuItem(IconData icon) {
+    final double buttonDiameter = MediaQuery.of(context).size.width / menuItems.length;
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5.0),
+      child: RawMaterialButton(
+        key: keys[menuItems.indexOf(icon)],
+        fillColor: lastTapped == icon ? Colors.amber[700] : Colors.blue,
+        splashColor: Colors.amber[100],
+        shape: CircleBorder(),
+        constraints: BoxConstraints.tight(Size(buttonDiameter, buttonDiameter)),
+        onPressed: () {
+          _updateMenu(icon);
+          menuAnimation.status == AnimationStatus.completed
+            ? menuAnimation.reverse()
+            : menuAnimation.forward();
+        },
+        child: Icon(
+          icon,
+          color: Colors.white,
+          size: 45.0,
         ),
       ),
     );
@@ -82,17 +84,14 @@ class FlowDiagramState extends State<FlowDiagram> with SingleTickerProviderState
   @override
   Widget build(BuildContext context) {
     return new ConstrainedBox(
-      constraints: new BoxConstraints.tight(const Size(560.0, 150.0)),
+      constraints: new BoxConstraints.tight(const Size(450.0, 100.0)),
       child: new Container(
         alignment: FractionalOffset.center,
-        padding: const EdgeInsets.only(left: 5.0),
+        padding: const EdgeInsets.only(left: 10.0),
         color: Colors.white,
-        child:Flow(
+        child: Flow(
           delegate: FlowMenuDelegate(menuAnimation: menuAnimation),
-          children: menuItems
-            .map<int, Widget>((int k, IconData v) => MapEntry<int, Widget>(k, buildItem(k, v)))
-            .values
-            .toList(),
+          children: menuItems.map<Widget>((IconData icon) => flowMenuItem(icon)).toList(),
         ),
       ),
     );
@@ -117,7 +116,7 @@ class FlowMenuDelegate extends FlowDelegate {
       context.paintChild(
         i,
         transform: Matrix4.translationValues(
-          dx * 0.001 * menuAnimation.value,
+          dx * menuAnimation.value,
           0,
           0,
         ),
