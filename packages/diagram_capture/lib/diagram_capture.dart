@@ -99,7 +99,7 @@ class _DiagramViewConfiguration extends ViewConfiguration {
 }
 
 // Provides a concrete implementation of WidgetController.
-class _DiagramWidgetController extends WidgetController {
+class _DiagramWidgetController extends WidgetController implements TickerProvider {
   _DiagramWidgetController(WidgetsBinding binding) : super(binding);
 
   @override
@@ -110,6 +110,37 @@ class _DiagramWidgetController extends WidgetController {
     Duration duration
   ]) {
     return TestAsyncUtils.guard(() => binding.pump(duration: duration));
+  }
+
+  Set<Ticker> _tickers;
+
+  @override
+  Ticker createTicker(TickerCallback onTick) {
+    _tickers ??= <_DiagramTicker>{};
+    final _DiagramTicker result = _DiagramTicker(onTick, _removeTicker);
+    _tickers.add(result);
+    return result;
+  }
+
+  void _removeTicker(_DiagramTicker ticker) {
+    assert(_tickers != null);
+    assert(_tickers.contains(ticker));
+    _tickers.remove(ticker);
+  }
+}
+
+typedef _TickerDisposeCallback = void Function(_DiagramTicker ticker);
+
+class _DiagramTicker extends Ticker {
+  _DiagramTicker(TickerCallback onTick, this._onDispose) : super(onTick);
+
+  _TickerDisposeCallback _onDispose;
+
+  @override
+  void dispose() {
+    if (_onDispose != null)
+      _onDispose(this);
+    super.dispose();
   }
 }
 
@@ -130,7 +161,7 @@ class _DiagramFlutterBinding extends BindingBase
     _controller = new _DiagramWidgetController(this);
   }
 
-  WidgetController _controller;
+  _DiagramWidgetController _controller;
 
   /// The current [_DiagramFlutterBinding], if one has been created.
   static _DiagramFlutterBinding get instance {
@@ -173,6 +204,8 @@ class _DiagramFlutterBinding extends BindingBase
     _screenDimensions = screenDimensions;
     handleMetricsChanged();
   }
+
+  TickerProvider get vsync => _controller;
 
   Future<TestGesture> startGesture(Offset downLocation, {int pointer}) {
     return _controller.startGesture(downLocation, pointer: pointer);
@@ -278,6 +311,8 @@ class DiagramController {
 
   double get pixelRatio => _binding.pixelRatio;
   set pixelRatio(double ratio) => _binding.pixelRatio = ratio;
+
+  TickerProvider get vsync => _binding.vsync;
 
   _DiagramFlutterBinding get _binding => _DiagramFlutterBinding.instance;
 
