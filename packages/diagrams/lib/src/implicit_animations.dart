@@ -327,7 +327,7 @@ class WindowPaddingDiagram extends ImplicitAnimationDiagram<AlignmentGeometry> {
   Curve get curve => Curves.fastOutSlowIn;
 
   @override
-  Size get size => Size(400.0, 800.0);
+  Size get size => const Size(400.0, 800.0);
 
   @override
   Widget buildImplicitAnimation(BuildContext context, bool selected) {
