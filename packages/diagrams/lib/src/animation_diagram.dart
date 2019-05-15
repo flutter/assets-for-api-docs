@@ -108,7 +108,10 @@ class TransitionDiagramState<T> extends State<TransitionDiagram<T>>
               borderRadius: const BorderRadius.all(Radius.circular(10.0)),
               border: new Border.all(color: Colors.black26, width: 1.0),
             ),
-            constraints: const BoxConstraints.tightFor(width: 250.0, height: 250.0),
+            constraints: const BoxConstraints.tightFor(
+              width: 250.0,
+              height: 250.0,
+            ),
             child: widget.buildTransition(context, animation),
           ),
           new Container(height: 25.0),
@@ -133,7 +136,10 @@ class TransitionDiagramState<T> extends State<TransitionDiagram<T>>
       child: new Container(
         // Height must be an even number for ffmpeg to be able to create a video
         // from the output.
-        constraints: new BoxConstraints.tightFor(width: widget.decorate ? 300.0 : 250.0, height: widget.decorate ? 378.0 : 250.0),
+        constraints: new BoxConstraints.tightFor(
+          width: widget.decorate ? 300.0 : 250.0,
+          height: widget.decorate ? 378.0 : 250.0,
+        ),
         padding: new EdgeInsets.only(
           top: 25.0 - (widget.decorate ? _kFontSize - 1.0 : 0.0),
           left: 25.0,
@@ -158,6 +164,8 @@ abstract class ImplicitAnimationDiagram<T> extends StatefulWidget implements Dia
   String get name => _getName(runtimeType);
 
   String get caption => _getCaption(runtimeType);
+
+  Size get size => const Size(250.0, 250.0);
 
   @override
   ImplicitAnimationDiagramState<T> createState() => new ImplicitAnimationDiagramState<T>();
@@ -192,7 +200,10 @@ class ImplicitAnimationDiagramState<T> extends State<ImplicitAnimationDiagram<T>
             new Container(
               // Height must be an even number for ffmpeg to be able to create a video
               // from the output.
-              constraints: const BoxConstraints.tightFor(width: 250.0, height: 250.0),
+              constraints: BoxConstraints.tightFor(
+                width: widget.size.width,
+                height: widget.size.height,
+              ),
               padding: const EdgeInsets.only(
                 top: 25.0 - _kFontSize - 1.0,
                 left: 25.0,

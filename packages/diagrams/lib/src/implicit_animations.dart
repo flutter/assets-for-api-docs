@@ -14,8 +14,8 @@ import 'diagram_step.dart';
 
 final GlobalKey _transitionKey = new GlobalKey();
 
-const Duration _kOverallAnimationDuration =Duration(seconds: 6);
-const Duration _kAnimationDuration =Duration(seconds: 2);
+const Duration _kOverallAnimationDuration = Duration(seconds: 6);
+const Duration _kAnimationDuration = Duration(seconds: 2);
 const double _kAnimationFrameRate = 60.0;
 
 class ImplicitAnimationDiagramStep extends DiagramStep {
@@ -29,6 +29,7 @@ class ImplicitAnimationDiagramStep extends DiagramStep {
     _diagrams.add(const AnimatedPositionedDiagram());
     _diagrams.add(const AnimatedPositionedDirectionalDiagram());
     _diagrams.add(const AnimatedThemeDiagram());
+    _diagrams.add(const WindowPaddingDiagram());
   }
 
   final List<ImplicitAnimationDiagram<dynamic>> _diagrams = <ImplicitAnimationDiagram<dynamic>>[];
@@ -315,6 +316,100 @@ class AnimatedThemeDiagram extends ImplicitAnimationDiagram<AlignmentGeometry> {
           label: Text('AnimatedTheme'),
         ),
       ),
+    );
+  }
+}
+
+class WindowPaddingDiagram extends ImplicitAnimationDiagram<AlignmentGeometry> {
+  const WindowPaddingDiagram({Key key}) : super(key: key);
+
+  @override
+  Curve get curve => Curves.fastOutSlowIn;
+
+  @override
+  Size get size => const Size(400.0, 800.0);
+
+  @override
+  Widget buildImplicitAnimation(BuildContext context, bool selected) {
+    return Stack(
+      key: _transitionKey,
+      children: <Widget>[
+        SizedBox(
+          height: 45,
+          child: Container(
+            color: Colors.red,
+          ),
+        ),
+        Align(
+          alignment: AlignmentDirectional.bottomCenter,
+          child: SizedBox(
+            height: 30,
+            child: Container(
+              color: Colors.red,
+            ),
+          ),
+        ),
+        // "Notch"
+        Align(
+          alignment: AlignmentDirectional.topCenter,
+          child: ClipRRect(
+            borderRadius: const BorderRadius.only(
+              bottomLeft: Radius.circular(15.0),
+              bottomRight: Radius.circular(15.0),
+            ),
+            child: Container(color: Colors.black, width: size.width * .6, height: 40),
+          ),
+        ),
+
+        // "Keyboard"
+        Align(
+          alignment: AlignmentDirectional.bottomCenter,
+          child: Container(
+            height: selected ? size.height * .4 : 0,
+            width: size.width,
+            child: Container(
+              color: Colors.grey,
+              child: const Center(
+                child: Text(
+                  'KEYBOARD',
+                  style: TextStyle(
+                    fontSize: 40,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+        // "Bottom button"
+        Align(
+          alignment: AlignmentDirectional.bottomCenter,
+          child: Container(
+            height: 20,
+            child: Align(
+              alignment: AlignmentDirectional.topCenter,
+              child: ClipRRect(
+                borderRadius: const BorderRadius.all(Radius.circular(12.0)),
+                child: Container(
+                  color: Colors.black,
+                  height: 10,
+                  width: size.width * .4,
+                ),
+              ),
+            ),
+          ),
+        ),
+        Align(
+          alignment: AlignmentDirectional.center,
+          child: Text(
+            '${selected ? 'Bottom padding absorbed by insets' : 'Bottom padding equals viewPadding'}\n\n'
+            'window.viewInsets.bottom: ${selected ? size.height * .4 : 0}\n'
+            'window.viewPadding.bottom: 40\n'
+            'window.padding.bottom: ${selected ? 0 : 40}\n',
+            style: const TextStyle(fontSize: 20),
+          ),
+        ),
+      ],
     );
   }
 }
