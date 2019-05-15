@@ -369,8 +369,8 @@ class WindowPaddingDiagram extends ImplicitAnimationDiagram<AlignmentGeometry> {
             width: size.width,
             child: Container(
               color: Colors.grey,
-              child: Center(
-                child: const Text(
+              child: const Center(
+                child: Text(
                   'KEYBOARD',
                   style: TextStyle(
                     fontSize: 40,
