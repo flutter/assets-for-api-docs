@@ -104,7 +104,7 @@ class CheckboxListTileDiagram extends StatefulWidget implements DiagramMetadata 
 }
 
 class _CheckboxListTileDiagramState extends State<CheckboxListTileDiagram> {
-  bool isSelected = false;
+  bool _isSelected = false;
 
   @override
   Widget build(BuildContext context) {
@@ -139,10 +139,10 @@ class _CheckboxListTileDiagramState extends State<CheckboxListTileDiagram> {
             child: LinkedLabelCheckbox(
               label: 'Linked, tappable label text',
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              value: isSelected,
+              value: _isSelected,
               onChanged: (bool newValue) {
                 setState(() {
-                  isSelected = newValue;
+                  _isSelected = newValue;
                 });
               }),
             ),
@@ -158,10 +158,10 @@ class _CheckboxListTileDiagramState extends State<CheckboxListTileDiagram> {
               child: LabeledCheckbox(
                   label: 'This is the label text',
                   padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                  value: isSelected,
+                  value: _isSelected,
                   onChanged: (bool newValue) {
                     setState(() {
-                      isSelected = newValue;
+                      _isSelected = newValue;
                     });
                   },
                 ),
