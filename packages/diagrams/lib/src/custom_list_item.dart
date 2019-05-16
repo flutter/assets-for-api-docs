@@ -97,7 +97,7 @@ class CustomListItem extends StatelessWidget {
 }
 
 class _ArticleDescription extends StatelessWidget {
-  _ArticleDescription({
+  const _ArticleDescription({
     Key key,
     this.title,
     this.subtitle,
