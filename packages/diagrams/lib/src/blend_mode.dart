@@ -16,9 +16,9 @@ import 'diagram_step.dart';
 Completer<Null> touch;
 final GlobalKey key = new GlobalKey();
 
-const String destinationImageName = 'assets/blend_mode_destination.jpeg';
-const String sourceImageName = 'assets/blend_mode_source.png';
-const String gridImageName = 'assets/blend_mode_grid.png';
+const ImageProvider destinationImageProvider = ExactAssetImage('assets/blend_mode_destination.jpeg', package: 'diagrams');
+const ImageProvider sourceImageProvider = ExactAssetImage('assets/blend_mode_source.png', package: 'diagrams');
+const ImageProvider gridImageProvider = ExactAssetImage('assets/blend_mode_grid.png', package: 'diagrams');
 
 Image destinationImage, sourceImage, gridImage;
 int pageIndex = 0;
@@ -31,7 +31,7 @@ Future<Image> getImage(ImageProvider provider) {
     stream.removeListener(listener);
   }
 
-  stream.addListener(listener);
+  stream.addListener(listener, onError: (dynamic error, StackTrace stack) { print(error); throw error; });
   return completer.future;
 }
 
@@ -52,7 +52,7 @@ class BlendModeDiagram extends StatelessWidget implements DiagramMetadata {
         decoration: new ShapeDecoration(
           shape: new Border.all(width: 1.0, color: Colors.white) + new Border.all(width: 1.0, color: Colors.black),
           image: const DecorationImage(
-            image: ExactAssetImage(gridImageName),
+            image: gridImageProvider,
             repeat: ImageRepeat.repeat,
           ),
         ),
@@ -242,9 +242,9 @@ class BlendModeDiagramStep extends DiagramStep {
   @override
   Future<List<DiagramMetadata>> get diagrams async {
     if (_diagrams == null) {
-      destinationImage ??= await getImage(const ExactAssetImage(destinationImageName, package: 'diagrams'));
-      sourceImage ??= await getImage(const ExactAssetImage(sourceImageName, package: 'diagrams'));
-      gridImage ??= await getImage(const ExactAssetImage(gridImageName, package: 'diagrams'));
+      destinationImage ??= await getImage(destinationImageProvider);
+      sourceImage ??= await getImage(sourceImageProvider);
+      gridImage ??= await getImage(gridImageProvider);
 
       _diagrams = <BlendModeDiagram>[];
       for (BlendMode mode in BlendMode.values) {

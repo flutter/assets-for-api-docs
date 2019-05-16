@@ -20,29 +20,24 @@ material library would go in the `assets/material/` directory and be at
 All asset files should be under the `assets` directory in an appropriate
 subdirectory.
 
-## Optimization
+## Creating images
 
-Please consider optimization tools for assets.
-
-For PNGs, we recommend `optipng`, using the following command line:
-
-```bash
-optipng -zc1-9 -zm1-9 -zs0-3 -f0-5 *.png
-```
-
-Be careful about applying this aggressively. In particular, files in
-the `assets/tests` directory should not be optimized.
-
-The automatic generation tool will automatically apply optimization to
-the assets it generates.
+Images must be code-generated, see the `packages/diagrams/lib/src/` directory.
 
 ## Generation
 
-See the [documentation for the generate.dart script in the `diagrams`
-directory](packages/diagrams/README.md), in conjunction with the
-[`generate.dart`](./bin/generate.dart) script. It will regenerate almost all of
-existing assets using the Flutter version you have installed. Feel free
-to add more modules in the `diagrams` package to generate new assets.
+See the [`generate.dart`](./bin/generate.dart) script. It will
+regenerate almost all of existing assets using the Flutter version you
+have installed.
+
+Typically, you plug in an Android phone and run:
+
+```sh
+PATH=~/dev/flutter/bin/cache/dart-sdk/bin:~/Android/Sdk/platform-tools:$PATH bin/generate.sh
+```
+
+You may wish to add the `--category` argument to focus just on the
+images you need updating.
 
 ### Prerequisites
 
@@ -58,12 +53,30 @@ via apt-get.
 The generator currently only supports running on an Android runtime. An Android
 device or emulator must be running before invoking the `generate.dart` script.
 
-The Android `adb` command and the `flutter` command need to both be available and in a directory in
-the `PATH` environment variable. Be sure it is the same one that is running as a server (which is
-often started by your IDE, so use the same `adb` the IDE is running).
+The Android `adb` command, the `flutter` command, and the `dart`
+command need to both be available and in a directory in the `PATH`
+environment variable. For `adb`, be sure it is the same one that is
+running as a server (which is often started by your IDE, so use the
+same `adb` the IDE is running).
 
 The `generate.dart` script only works on macOS and Linux, because of the supporting apps it needs to
 run.
+
+## Optimization
+
+Please consider optimization tools for assets.
+
+For PNGs, we recommend `optipng`, using the following command line:
+
+```bash
+optipng -zc1-9 -zm1-9 -zs0-3 -f0-5 *.png
+```
+
+Be careful about applying this aggressively. In particular, files in
+the `assets/tests` directory should not be optimized.
+
+The automatic generation tool will automatically apply optimization to
+the assets it generates.
 
 ## Origin of third-party content
 

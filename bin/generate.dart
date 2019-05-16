@@ -484,13 +484,14 @@ Future<Null> main(List<String> arguments) async {
   parser.addFlag('keep-tmp', help: "Don't cleanup after a run (don't remove temporary directory).");
   parser.addOption('tmpdir', help: 'Specify a temporary directory to use (implies --keep-tmp)');
   parser.addMultiOption('category', help: 'Specify the categories of diagrams that should be '
-      'generated. The category is the asset directory they are placed in.');
+      'generated. The category is the name of the subdirectory of the assets/ directory in which '
+      'the images will be placed, as determined by the DiagramStep.category property.');
   parser.addMultiOption('name', help: 'Specify the name of diagrams that should be generated. The '
       'name is the basename of the output file and may be specified with or without the suffix.');
   final ArgResults flags = parser.parse(arguments);
 
   if (flags['help']) {
-    print('generate.dart [flags] [files...]');
+    print('generate.dart [flags]');
     print(parser.usage);
     exit(0);
   }
