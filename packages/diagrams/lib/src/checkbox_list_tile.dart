@@ -29,24 +29,26 @@ class LinkedLabelCheckbox extends StatelessWidget {
       padding: padding,
       child: Row(
         children: <Widget>[
+          Expanded(
+            child: RichText(
+              text: TextSpan(
+                text: label,
+                style: TextStyle(
+                  color: Colors.blueAccent,
+                  decoration: TextDecoration.underline,
+                ),
+                recognizer: TapGestureRecognizer()
+                  ..onTap = () {
+                    print('Link has been tapped.');
+                  },
+              ),
+            ),
+          ),
           Checkbox(
             value: value,
             onChanged: (bool newValue) {
               onChanged(newValue);
             },
-          ),
-          RichText(
-            text: TextSpan(
-              text: label,
-              style: TextStyle(
-                color: Colors.blueAccent,
-                decoration: TextDecoration.underline,
-              ),
-              recognizer: TapGestureRecognizer()
-                ..onTap = () {
-                  print('Link has been tapped.');
-                },
-            ),
           ),
         ],
       ),
@@ -77,13 +79,13 @@ class LabeledCheckbox extends StatelessWidget {
         padding: padding,
         child: Row(
           children: <Widget>[
+            Expanded(child: Text(label)),
             Checkbox(
               value: value,
               onChanged: (bool newValue) {
                 onChanged(newValue);
               },
             ),
-            Text(label),
           ],
         ),
       ),
@@ -136,7 +138,7 @@ class _CheckboxListTileDiagramState extends State<CheckboxListTileDiagram> {
             color: Colors.white,
             child: LinkedLabelCheckbox(
               label: 'Linked, tappable label text',
-              padding: const EdgeInsets.symmetric(horizontal: 5.0),
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
               value: isSelected,
               onChanged: (bool newValue) {
                 setState(() {
@@ -151,7 +153,7 @@ class _CheckboxListTileDiagramState extends State<CheckboxListTileDiagram> {
             constraints: BoxConstraints.tight(const Size(400.0, 100.0)),
             child: Container(
               alignment: FractionalOffset.center,
-              padding: const EdgeInsets.all(5.0),
+              padding: const EdgeInsets.all(20.0),
               color: Colors.white,
               child: LabeledCheckbox(
                   label: 'This is the label text',
