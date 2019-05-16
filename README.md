@@ -1,7 +1,7 @@
 # assets-for-api-docs
 
 This repo is used to host and serve static assets in support of
-[docs.flutter.io](https://docs.flutter.io), as well as some manual tests that use
+[docs.flutter.dev](https://docs.flutter.dev), as well as some manual tests that use
 specially-crafted graphics.
 
 Assets committed to this repo and pushed to GitHub are immediately
