@@ -64,7 +64,7 @@ class FlowDiagramState extends State<FlowDiagram> with SingleTickerProviderState
         key: keys[menuItems.indexOf(icon)],
         fillColor: lastTapped == icon ? Colors.amber[700] : Colors.blue,
         splashColor: Colors.amber[100],
-        shape: CircleBorder(),
+        shape: const CircleBorder(),
         constraints: BoxConstraints.tight(Size(buttonDiameter, buttonDiameter)),
         onPressed: () {
           _updateMenu(icon);
