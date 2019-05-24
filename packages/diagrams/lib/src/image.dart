@@ -3,14 +3,10 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 import 'dart:ui' as ui;
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
-import 'diagram_step.dart';
 
 class DiagramImage extends ImageProvider<DiagramImage> implements ui.Codec, ui.FrameInfo {
   DiagramImage(
@@ -58,7 +54,10 @@ class DiagramImage extends ImageProvider<DiagramImage> implements ui.Codec, ui.F
         result.complete(this);
       } else {
         final double percentComplete = controller.value / controller.upperBound;
-        chunkEvents.add(ImageChunkEvent((percentComplete * _totalBytes).floor(), _totalBytes));
+        chunkEvents.add(ImageChunkEvent(
+          cumulativeBytesLoaded: (percentComplete * _totalBytes).floor(),
+          expectedTotalBytes: _totalBytes,
+        ));
       }
     });
     controller.animateTo(controller.upperBound);
