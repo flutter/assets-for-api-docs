@@ -96,8 +96,8 @@ class DiagramImage extends ImageProvider<DiagramImage> implements ui.Codec, ui.F
   int get hashCode => hashValues(image, scale);
 }
 
-class LoadingProgressImageDiagramStep extends DiagramStep<ImageDiagram> {
-  LoadingProgressImageDiagramStep(DiagramController controller) : super(controller);
+class ImageDiagramsStep extends DiagramStep<ImageDiagram> {
+  ImageDiagramsStep(DiagramController controller) : super(controller);
 
   @override
   final String category = 'widgets';
