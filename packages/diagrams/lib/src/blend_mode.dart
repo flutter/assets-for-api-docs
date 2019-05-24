@@ -26,12 +26,19 @@ int pageIndex = 0;
 Future<Image> getImage(ImageProvider provider) {
   final Completer<Image> completer = new Completer<Image>();
   final ImageStream stream = provider.resolve(const ImageConfiguration());
-  void listener(ImageInfo image, bool sync) {
-    completer.complete(image.image);
-    stream.removeListener(listener);
-  }
+  ImageStreamListener listener;
+  listener = ImageStreamListener(
+    (ImageInfo image, bool sync) {
+      completer.complete(image.image);
+      stream.removeListener(listener);
+    },
+    onError: (dynamic error, StackTrace stack) {
+      print(error);
+      throw error;
+    },
+  );
 
-  stream.addListener(listener, onError: (dynamic error, StackTrace stack) { print(error); throw error; });
+  stream.addListener(listener);
   return completer.future;
 }
 
