@@ -110,19 +110,18 @@ class _DiagramState extends State<AppBarDiagram> {
   }
 }
 
-class AppBarDiagramStep extends DiagramStep {
+class AppBarDiagramStep extends DiagramStep<AppBarDiagram> {
   AppBarDiagramStep(DiagramController controller) : super(controller);
 
   @override
   final String category = 'material';
 
   @override
-  Future<List<DiagramMetadata>> get diagrams async => <DiagramMetadata>[const AppBarDiagram(name: 'app_bar')];
+  Future<List<AppBarDiagram>> get diagrams async => <AppBarDiagram>[const AppBarDiagram(name: 'app_bar')];
 
   @override
-  Future<File> generateDiagram(DiagramMetadata diagram) async {
-    final AppBarDiagram typedDiagram = diagram;
-    controller.builder = (BuildContext context) => typedDiagram;
+  Future<File> generateDiagram(AppBarDiagram diagram) async {
+    controller.builder = (BuildContext context) => diagram;
     return await controller.drawDiagramToFile(new File('${diagram.name}.png'));
   }
 }

@@ -18,7 +18,7 @@ const Duration _kOverallAnimationDuration = Duration(seconds: 6);
 const double _kAnimationFrameRate = 60.0;
 const double _kLogoSize = 150.0;
 
-class TransitionDiagramStep extends DiagramStep {
+class TransitionDiagramStep extends DiagramStep<TransitionDiagram<dynamic>> {
   TransitionDiagramStep(DiagramController controller) : super(controller) {
     _diagrams.add(const AlignTransitionDiagram());
     _diagrams.add(const DecoratedBoxTransitionDiagram());
@@ -46,12 +46,11 @@ class TransitionDiagramStep extends DiagramStep {
   final String category = 'widgets';
 
   @override
-  Future<List<DiagramMetadata>> get diagrams async => _diagrams;
+  Future<List<TransitionDiagram<dynamic>>> get diagrams async => _diagrams;
 
   @override
-  Future<File> generateDiagram(DiagramMetadata diagram) async {
-    final TransitionDiagram<dynamic> typedDiagram = diagram;
-    controller.builder = (BuildContext context) => typedDiagram;
+  Future<File> generateDiagram(TransitionDiagram<dynamic> diagram) async {
+    controller.builder = (BuildContext context) => diagram;
 
     final Map<Duration, DiagramKeyframe> keyframes = <Duration, DiagramKeyframe>{
       Duration.zero: (Duration now) async {

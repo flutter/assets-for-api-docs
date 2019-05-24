@@ -86,23 +86,22 @@ class ListViewDiagram extends StatelessWidget implements DiagramMetadata {
   }
 }
 
-class ListViewDiagramStep extends DiagramStep {
+class ListViewDiagramStep extends DiagramStep<ListViewDiagram> {
   ListViewDiagramStep(DiagramController controller) : super(controller);
 
   @override
   final String category = 'widgets';
 
   @override
-  Future<List<DiagramMetadata>> get diagrams async => <DiagramMetadata>[
+  Future<List<ListViewDiagram>> get diagrams async => <ListViewDiagram>[
         const ListViewDiagram('list_view'),
         const ListViewDiagram('list_view_builder'),
         const ListViewDiagram('list_view_separated'),
       ];
 
   @override
-  Future<File> generateDiagram(DiagramMetadata diagram) async {
-    final ListViewDiagram typedDiagram = diagram;
-    controller.builder = (BuildContext context) => typedDiagram;
+  Future<File> generateDiagram(ListViewDiagram diagram) async {
+    controller.builder = (BuildContext context) => diagram;
     return await controller.drawDiagramToFile(new File('${diagram.name}.png'));
   }
 }

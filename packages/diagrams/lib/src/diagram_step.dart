@@ -7,7 +7,7 @@ import 'dart:io';
 import 'package:diagram_capture/diagram_capture.dart';
 
 /// Describes a step in drawing the diagrams.
-abstract class DiagramStep {
+abstract class DiagramStep<T extends DiagramMetadata> {
   DiagramStep(this.controller);
 
   final DiagramController controller;
@@ -21,10 +21,10 @@ abstract class DiagramStep {
   String get category;
 
   /// Returns the list of all available diagrams for this step.
-  Future<List<DiagramMetadata>> get diagrams;
+  Future<List<T>> get diagrams;
 
   /// Generates the given diagram and returns the resulting [File].
-  Future<File> generateDiagram(DiagramMetadata diagram);
+  Future<File> generateDiagram(T diagram);
 
   /// Generates all diagrams for this step.
   ///
@@ -35,7 +35,7 @@ abstract class DiagramStep {
   /// the path.
   Future<List<File>> generateDiagrams({List<String> onlyGenerate: const <String>[]}) async {
     final List<File> files = <File>[];
-    for (DiagramMetadata diagram in await diagrams) {
+    for (T diagram in await diagrams) {
       if (onlyGenerate.isNotEmpty && !onlyGenerate.contains(diagram.name)) {
         continue;
       }

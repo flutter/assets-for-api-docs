@@ -308,22 +308,21 @@ class CustomListItemDiagram extends StatelessWidget implements DiagramMetadata {
   }
 }
 
-class CustomListItemDiagramStep extends DiagramStep {
+class CustomListItemDiagramStep extends DiagramStep<CustomListItemDiagram> {
   CustomListItemDiagramStep(DiagramController controller) : super(controller);
 
   @override
   final String category = 'widgets';
 
   @override
-  Future<List<DiagramMetadata>> get diagrams async => <DiagramMetadata>[
+  Future<List<CustomListItemDiagram>> get diagrams async => <CustomListItemDiagram>[
     const CustomListItemDiagram('custom_list_item_a'),
     const CustomListItemDiagram('custom_list_item_b'),
   ];
 
   @override
-  Future<File> generateDiagram(DiagramMetadata diagram) async {
-    final CustomListItemDiagram typedDiagram = diagram;
-    controller.builder = (BuildContext context) => typedDiagram;
+  Future<File> generateDiagram(CustomListItemDiagram diagram) async {
+    controller.builder = (BuildContext context) => diagram;
     return await controller.drawDiagramToFile(
       new File('${diagram.name}.png'),
     );

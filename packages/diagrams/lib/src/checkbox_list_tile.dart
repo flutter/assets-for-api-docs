@@ -174,23 +174,22 @@ class _CheckboxListTileDiagramState extends State<CheckboxListTileDiagram> {
   }
 }
 
-class CheckboxListTileDiagramStep extends DiagramStep {
+class CheckboxListTileDiagramStep extends DiagramStep<CheckboxListTileDiagram> {
   CheckboxListTileDiagramStep(DiagramController controller) : super(controller);
 
   @override
   final String category = 'material';
 
   @override
-  Future<List<DiagramMetadata>> get diagrams async => <DiagramMetadata>[
+  Future<List<CheckboxListTileDiagram>> get diagrams async => <CheckboxListTileDiagram>[
     const CheckboxListTileDiagram('checkbox_list_tile'),
     const CheckboxListTileDiagram('checkbox_list_tile_semantics'),
     const CheckboxListTileDiagram('checkbox_list_tile_custom'),
   ];
 
   @override
-  Future<File> generateDiagram(DiagramMetadata diagram) async {
-    final CheckboxListTileDiagram typedDiagram = diagram;
-    controller.builder = (BuildContext context) => typedDiagram;
+  Future<File> generateDiagram(CheckboxListTileDiagram diagram) async {
+    controller.builder = (BuildContext context) => diagram;
     return await controller.drawDiagramToFile(new File('${diagram.name}.png'));
   }
 }

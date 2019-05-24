@@ -222,23 +222,22 @@ class _RadioListTileDiagramState extends State<RadioListTileDiagram> {
   }
 }
 
-class RadioListTileDiagramStep extends DiagramStep {
+class RadioListTileDiagramStep extends DiagramStep<RadioListTileDiagram> {
   RadioListTileDiagramStep(DiagramController controller) : super(controller);
 
   @override
   final String category = 'material';
 
   @override
-  Future<List<DiagramMetadata>> get diagrams async => <DiagramMetadata>[
+  Future<List<RadioListTileDiagram>> get diagrams async => <RadioListTileDiagram>[
     const RadioListTileDiagram('radio_list_tile'),
     const RadioListTileDiagram('radio_list_tile_semantics'),
     const RadioListTileDiagram('radio_list_tile_custom'),
   ];
 
   @override
-  Future<File> generateDiagram(DiagramMetadata diagram) async {
-    final RadioListTileDiagram typedDiagram = diagram;
-    controller.builder = (BuildContext context) => typedDiagram;
+  Future<File> generateDiagram(RadioListTileDiagram diagram) async {
+    controller.builder = (BuildContext context) => diagram;
     return await controller.drawDiagramToFile(new File('${diagram.name}.png'));
   }
 }

@@ -93,23 +93,22 @@ class AlignDiagram extends StatelessWidget implements DiagramMetadata {
   }
 }
 
-class AlignDiagramStep extends DiagramStep {
+class AlignDiagramStep extends DiagramStep<AlignDiagram> {
   AlignDiagramStep(DiagramController controller) : super(controller);
 
   @override
   final String category = 'widgets';
 
   @override
-  Future<List<DiagramMetadata>> get diagrams async => <DiagramMetadata>[
+  Future<List<AlignDiagram>> get diagrams async => <AlignDiagram>[
         const AlignDiagram('align_constant'),
         const AlignDiagram('align_alignment'),
         const AlignDiagram('align_fractional_offset'),
       ];
 
   @override
-  Future<File> generateDiagram(DiagramMetadata diagram) async {
-    final AlignDiagram typedDiagram = diagram;
-    controller.builder = (BuildContext context) => typedDiagram;
+  Future<File> generateDiagram(AlignDiagram diagram) async {
+    controller.builder = (BuildContext context) => diagram;
     return await controller.drawDiagramToFile(new File('${diagram.name}.png'));
   }
 }

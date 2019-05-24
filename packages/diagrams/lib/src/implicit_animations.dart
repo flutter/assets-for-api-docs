@@ -18,7 +18,7 @@ const Duration _kOverallAnimationDuration = Duration(seconds: 6);
 const Duration _kAnimationDuration = Duration(seconds: 2);
 const double _kAnimationFrameRate = 60.0;
 
-class ImplicitAnimationDiagramStep extends DiagramStep {
+class ImplicitAnimationDiagramStep extends DiagramStep<ImplicitAnimationDiagram<dynamic>> {
   ImplicitAnimationDiagramStep(DiagramController controller) : super(controller) {
     _diagrams.add(const AnimatedAlignDiagram());
     _diagrams.add(const AnimatedContainerDiagram());
@@ -38,12 +38,11 @@ class ImplicitAnimationDiagramStep extends DiagramStep {
   final String category = 'widgets';
 
   @override
-  Future<List<DiagramMetadata>> get diagrams async => _diagrams;
+  Future<List<ImplicitAnimationDiagram<dynamic>>> get diagrams async => _diagrams;
 
   @override
-  Future<File> generateDiagram(DiagramMetadata diagram) async {
-    final ImplicitAnimationDiagram<dynamic> typedDiagram = diagram;
-    controller.builder = (BuildContext context) => typedDiagram;
+  Future<File> generateDiagram(ImplicitAnimationDiagram<dynamic> diagram) async {
+    controller.builder = (BuildContext context) => diagram;
 
     final Map<Duration, DiagramKeyframe> keyframes = <Duration, DiagramKeyframe>{
       Duration.zero: (Duration now) async {

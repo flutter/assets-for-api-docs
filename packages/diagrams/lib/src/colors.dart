@@ -108,7 +108,7 @@ class ColorListDiagram extends ColorDiagram {
   }
 }
 
-class ColorsDiagramStep extends DiagramStep {
+class ColorsDiagramStep extends DiagramStep<ColorDiagram> {
   ColorsDiagramStep(DiagramController controller) : super(controller) {
     const List<int> palette = <int>[50, 100, 200, 300, 400, 500, 600, 700, 800, 900];
     const List<int> accentPalette = <int>[100, 200, 400, 700];
@@ -174,12 +174,11 @@ class ColorsDiagramStep extends DiagramStep {
   final List<ColorDiagram> _diagrams = <ColorDiagram>[];
 
   @override
-  Future<List<DiagramMetadata>> get diagrams async => _diagrams;
+  Future<List<ColorDiagram>> get diagrams async => _diagrams;
 
   @override
-  Future<File> generateDiagram(DiagramMetadata diagram) async {
-    final ColorDiagram typedDiagram = diagram;
-    controller.builder = (BuildContext context) => typedDiagram;
+  Future<File> generateDiagram(ColorDiagram diagram) async {
+    controller.builder = (BuildContext context) => diagram;
     return await controller.drawDiagramToFile(new File('${diagram.name}.png'));
   }
 }

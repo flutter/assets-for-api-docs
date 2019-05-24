@@ -48,7 +48,7 @@ Future<Null> main() async {
   );
 
   // Add the diagram steps here.
-  final List<DiagramStep> steps = <DiagramStep>[
+  final List<DiagramStep<DiagramMetadata>> steps = <DiagramStep<DiagramMetadata>>[
     AlignDiagramStep(controller),
     AppBarDiagramStep(controller),
     BlendModeDiagramStep(controller),
@@ -62,6 +62,7 @@ Future<Null> main() async {
     CustomListItemDiagramStep(controller),
     FlowDiagramStep(controller),
     HeroesDiagramStep(controller),
+    ImageDiagramsStep(controller),
     ImplicitAnimationDiagramStep(controller),
     InkResponseLargeDiagramStep(controller),
     InkResponseSmallDiagramStep(controller),
@@ -79,7 +80,7 @@ Future<Null> main() async {
     TransitionDiagramStep(controller),
   ];
 
-  for (DiagramStep step in steps) {
+  for (DiagramStep<DiagramMetadata> step in steps) {
     if (categories.isNotEmpty && !categories.contains(step.category)) {
       continue;
     }

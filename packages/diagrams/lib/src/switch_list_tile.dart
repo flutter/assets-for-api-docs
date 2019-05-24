@@ -177,23 +177,22 @@ class _SwitchListTileDiagramState extends State<SwitchListTileDiagram> {
   }
 }
 
-class SwitchListTileDiagramStep extends DiagramStep {
+class SwitchListTileDiagramStep extends DiagramStep<SwitchListTileDiagram> {
   SwitchListTileDiagramStep(DiagramController controller) : super(controller);
 
   @override
   final String category = 'material';
 
   @override
-  Future<List<DiagramMetadata>> get diagrams async => <DiagramMetadata>[
+  Future<List<SwitchListTileDiagram>> get diagrams async => <SwitchListTileDiagram>[
     const SwitchListTileDiagram('switch_list_tile'),
     const SwitchListTileDiagram('switch_list_tile_semantics'),
     const SwitchListTileDiagram('switch_list_tile_custom'),
   ];
 
   @override
-  Future<File> generateDiagram(DiagramMetadata diagram) async {
-    final SwitchListTileDiagram typedDiagram = diagram;
-    controller.builder = (BuildContext context) => typedDiagram;
+  Future<File> generateDiagram(SwitchListTileDiagram diagram) async {
+    controller.builder = (BuildContext context) => diagram;
     return await controller.drawDiagramToFile(new File('${diagram.name}.png'));
   }
 }

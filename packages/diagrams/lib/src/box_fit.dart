@@ -80,7 +80,7 @@ class BoxFitDiagram extends StatelessWidget implements DiagramMetadata {
   }
 }
 
-class BoxFitDiagramStep extends DiagramStep {
+class BoxFitDiagramStep extends DiagramStep<BoxFitDiagram> {
   BoxFitDiagramStep(DiagramController controller) : super(controller) {
     for (BoxFit fit in BoxFit.values) {
       _diagrams.add(new BoxFitDiagram(fit));
@@ -93,12 +93,11 @@ class BoxFitDiagramStep extends DiagramStep {
   final List<BoxFitDiagram> _diagrams = <BoxFitDiagram>[];
 
   @override
-  Future<List<DiagramMetadata>> get diagrams async => _diagrams;
+  Future<List<BoxFitDiagram>> get diagrams async => _diagrams;
 
   @override
-  Future<File> generateDiagram(DiagramMetadata diagram) async {
-    final BoxFitDiagram typedDiagram = diagram;
-    controller.builder = (BuildContext context) => typedDiagram;
+  Future<File> generateDiagram(BoxFitDiagram diagram) async {
+    controller.builder = (BuildContext context) => diagram;
     return await controller.drawDiagramToFile(new File('${diagram.name}.png'));
   }
 }

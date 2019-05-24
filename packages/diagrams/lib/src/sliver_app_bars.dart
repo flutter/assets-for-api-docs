@@ -223,7 +223,7 @@ class SliverAppBarDiagramState extends State<SliverAppBarDiagram> with TickerPro
   }
 }
 
-class SliverAppBarDiagramStep extends DiagramStep {
+class SliverAppBarDiagramStep extends DiagramStep<SliverAppBarDiagram> {
   SliverAppBarDiagramStep(DiagramController controller) : super(controller) {
     for (bool pinned in <bool>[false, true]) {
       for (bool floating in <bool>[false, true]) {
@@ -245,12 +245,11 @@ class SliverAppBarDiagramStep extends DiagramStep {
   final List<SliverAppBarDiagram> _diagrams = <SliverAppBarDiagram>[];
 
   @override
-  Future<List<DiagramMetadata>> get diagrams async => _diagrams;
+  Future<List<SliverAppBarDiagram>> get diagrams async => _diagrams;
 
   @override
-  Future<File> generateDiagram(DiagramMetadata diagram) async {
-    final SliverAppBarDiagram typedDiagram = diagram;
-    controller.builder = (BuildContext context) => typedDiagram;
+  Future<File> generateDiagram(SliverAppBarDiagram diagram) async {
+    controller.builder = (BuildContext context) => diagram;
     return await controller.drawAnimatedDiagramToFiles(
       end: _kTotalDuration,
       frameRate: _kCurveAnimationFrameRate,

@@ -424,7 +424,7 @@ class CurveDiagramState extends State<CurveDiagram> with TickerProviderStateMixi
   }
 }
 
-class CurveDiagramStep extends DiagramStep {
+class CurveDiagramStep extends DiagramStep<CurveDiagram> {
   CurveDiagramStep(DiagramController controller) : super(controller) {
     _diagrams.addAll(<CurveDiagram>[
       const CurveDiagram(name: 'bounce_in', caption: 'Curves.bounceIn', curve: Curves.bounceIn),
@@ -482,12 +482,11 @@ class CurveDiagramStep extends DiagramStep {
   final List<CurveDiagram> _diagrams = <CurveDiagram>[];
 
   @override
-  Future<List<DiagramMetadata>> get diagrams async => _diagrams;
+  Future<List<CurveDiagram>> get diagrams async => _diagrams;
 
   @override
-  Future<File> generateDiagram(DiagramMetadata diagram) async {
-    final CurveDiagram typedDiagram = diagram;
-    controller.builder = (BuildContext context) => typedDiagram;
+  Future<File> generateDiagram(CurveDiagram diagram) async {
+    controller.builder = (BuildContext context) => diagram;
     return await controller.drawAnimatedDiagramToFiles(
       end: _kCurveAnimationDuration,
       frameRate: _kCurveAnimationFrameRate,

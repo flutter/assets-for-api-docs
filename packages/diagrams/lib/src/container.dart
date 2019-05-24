@@ -61,22 +61,21 @@ class ContainerDiagram extends StatelessWidget implements DiagramMetadata {
   }
 }
 
-class ContainerDiagramStep extends DiagramStep {
+class ContainerDiagramStep extends DiagramStep<ContainerDiagram> {
   ContainerDiagramStep(DiagramController controller) : super(controller);
 
   @override
   final String category = 'widgets';
 
   @override
-  Future<List<DiagramMetadata>> get diagrams async => <DiagramMetadata>[
+  Future<List<ContainerDiagram>> get diagrams async => <ContainerDiagram>[
         const ContainerDiagram('container_a'),
         const ContainerDiagram('container_b'),
       ];
 
   @override
-  Future<File> generateDiagram(DiagramMetadata diagram) async {
-    final ContainerDiagram typedDiagram = diagram;
-    controller.builder = (BuildContext context) => typedDiagram;
+  Future<File> generateDiagram(ContainerDiagram diagram) async {
+    controller.builder = (BuildContext context) => diagram;
     return await controller.drawDiagramToFile(new File('${diagram.name}.png'));
   }
 }

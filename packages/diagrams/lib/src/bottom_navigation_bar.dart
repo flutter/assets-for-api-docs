@@ -58,21 +58,20 @@ class BottomNavigationBarDiagram extends StatelessWidget implements DiagramMetad
   }
 }
 
-class BottomNavigationBarDiagramStep extends DiagramStep {
+class BottomNavigationBarDiagramStep extends DiagramStep<BottomNavigationBarDiagram> {
   BottomNavigationBarDiagramStep(DiagramController controller) : super(controller);
 
   @override
   final String category = 'material';
 
   @override
-  Future<List<DiagramMetadata>> get diagrams async => <DiagramMetadata>[
+  Future<List<BottomNavigationBarDiagram>> get diagrams async => <BottomNavigationBarDiagram>[
     const BottomNavigationBarDiagram('bottom_navigation_bar'),
   ];
 
   @override
-  Future<File> generateDiagram(DiagramMetadata diagram) async {
-    final BottomNavigationBarDiagram typedDiagram = diagram;
-    controller.builder = (BuildContext context) => typedDiagram;
+  Future<File> generateDiagram(BottomNavigationBarDiagram diagram) async {
+    controller.builder = (BuildContext context) => diagram;
     return await controller.drawDiagramToFile(new File('${diagram.name}.png'));
   }
 }

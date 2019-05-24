@@ -19,7 +19,7 @@ String _getCaption(Type type) {
 }
 
 /// Convert the caption CamelCase name into lower_with_underscores.
-String _getName(Type type) {
+String getName(Type type) {
   final RegExp uppercase = new RegExp(r'([A-Z])');
   return _getCaption(type).replaceAllMapped(
     uppercase,
@@ -50,7 +50,7 @@ abstract class TransitionDiagram<T> extends StatefulWidget implements DiagramMet
   Widget buildTransition(BuildContext context, Animation<T> animation);
 
   @override
-  String get name => _getName(runtimeType) + (decorate ? '' : '_plain');
+  String get name => getName(runtimeType) + (decorate ? '' : '_plain');
 
   /// The label to be shown on the top of the diagram if [decorate] is true.
   String get caption => _getCaption(runtimeType);
@@ -161,7 +161,7 @@ abstract class ImplicitAnimationDiagram<T> extends StatefulWidget implements Dia
   Widget buildImplicitAnimation(BuildContext context, bool selected);
 
   @override
-  String get name => _getName(runtimeType);
+  String get name => getName(runtimeType);
 
   String get caption => _getCaption(runtimeType);
 
