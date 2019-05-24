@@ -82,7 +82,7 @@ class InkResponseLargeDiagram extends StatelessWidget implements DiagramMetadata
   }
 }
 
-class InkResponseLargeDiagramStep extends DiagramStep {
+class InkResponseLargeDiagramStep extends DiagramStep<InkResponseLargeDiagram> {
   InkResponseLargeDiagramStep(DiagramController controller) : super(controller) {
     _diagrams.add(new InkResponseLargeDiagram());
   }
@@ -93,12 +93,11 @@ class InkResponseLargeDiagramStep extends DiagramStep {
   final String category = 'material';
 
   @override
-  Future<List<DiagramMetadata>> get diagrams async => _diagrams;
+  Future<List<InkResponseLargeDiagram>> get diagrams async => _diagrams;
 
   @override
-  Future<File> generateDiagram(DiagramMetadata diagram) async {
-    final InkResponseLargeDiagram typedDiagram = diagram;
-    controller.builder = (BuildContext context) => typedDiagram;
+  Future<File> generateDiagram(InkResponseLargeDiagram diagram) async {
+    controller.builder = (BuildContext context) => diagram;
     controller.advanceTime(Duration.zero);
     final RenderBox target = splashKey.currentContext.findRenderObject();
     final Offset targetOffset = target.localToGlobal(target.size.bottomRight(Offset.zero));

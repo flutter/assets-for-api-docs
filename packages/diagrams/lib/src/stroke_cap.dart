@@ -130,7 +130,7 @@ class StrokeCapDiagram extends StatelessWidget implements DiagramMetadata {
   }
 }
 
-class StrokeCapDiagramStep extends DiagramStep {
+class StrokeCapDiagramStep extends DiagramStep<StrokeCapDiagram> {
   StrokeCapDiagramStep(DiagramController controller) : super(controller) {
     _diagrams.addAll(<StrokeCapDiagram>[
       const StrokeCapDiagram(
@@ -154,12 +154,11 @@ class StrokeCapDiagramStep extends DiagramStep {
   final List<StrokeCapDiagram> _diagrams = <StrokeCapDiagram>[];
 
   @override
-  Future<List<DiagramMetadata>> get diagrams async => _diagrams;
+  Future<List<StrokeCapDiagram>> get diagrams async => _diagrams;
 
   @override
-  Future<File> generateDiagram(DiagramMetadata diagram) async {
-    final StrokeCapDiagram typedDiagram = diagram;
-    controller.builder = (BuildContext context) => typedDiagram;
+  Future<File> generateDiagram(StrokeCapDiagram diagram) async {
+    controller.builder = (BuildContext context) => diagram;
     return await controller.drawDiagramToFile(new File('${diagram.name}.png'));
   }
 }

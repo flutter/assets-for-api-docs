@@ -133,7 +133,7 @@ class TileModeDiagram extends StatelessWidget implements DiagramMetadata {
   }
 }
 
-class TileModeDiagramStep extends DiagramStep {
+class TileModeDiagramStep extends DiagramStep<TileModeDiagram> {
   TileModeDiagramStep(DiagramController controller) : super(controller) {
     for (TileMode mode in TileMode.values) {
       for (GradientMode gradient in GradientMode.values) {
@@ -148,12 +148,11 @@ class TileModeDiagramStep extends DiagramStep {
   final List<TileModeDiagram> _diagrams = <TileModeDiagram>[];
 
   @override
-  Future<List<DiagramMetadata>> get diagrams async => _diagrams;
+  Future<List<TileModeDiagram>> get diagrams async => _diagrams;
 
   @override
-  Future<File> generateDiagram(DiagramMetadata diagram) async {
-    final TileModeDiagram typedDiagram = diagram;
-    controller.builder = (BuildContext context) => typedDiagram;
+  Future<File> generateDiagram(TileModeDiagram diagram) async {
+    controller.builder = (BuildContext context) => diagram;
     return await controller.drawDiagramToFile(new File('${diagram.name}.png'));
   }
 }

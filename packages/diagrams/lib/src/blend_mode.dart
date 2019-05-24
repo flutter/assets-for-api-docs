@@ -239,7 +239,7 @@ class BlendModePainter extends CustomPainter {
   }
 }
 
-class BlendModeDiagramStep extends DiagramStep {
+class BlendModeDiagramStep extends DiagramStep<BlendModeDiagram> {
   BlendModeDiagramStep(DiagramController controller) : super(controller);
 
   @override
@@ -247,7 +247,7 @@ class BlendModeDiagramStep extends DiagramStep {
 
   List<BlendModeDiagram> _diagrams;
   @override
-  Future<List<DiagramMetadata>> get diagrams async {
+  Future<List<BlendModeDiagram>> get diagrams async {
     if (_diagrams == null) {
       destinationImage ??= await getImage(destinationImageProvider);
       sourceImage ??= await getImage(sourceImageProvider);
@@ -262,9 +262,8 @@ class BlendModeDiagramStep extends DiagramStep {
   }
 
   @override
-  Future<File> generateDiagram(DiagramMetadata diagram) async {
-    final BlendModeDiagram typedDiagram = diagram;
-    controller.builder = (BuildContext context) => typedDiagram;
+  Future<File> generateDiagram(BlendModeDiagram diagram) async {
+    controller.builder = (BuildContext context) => diagram;
     return await controller.drawDiagramToFile(new File('${diagram.name}.png'));
   }
 }

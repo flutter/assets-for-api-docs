@@ -82,7 +82,7 @@ class InkWellDiagram extends StatelessWidget implements DiagramMetadata {
   }
 }
 
-class InkWellDiagramStep extends DiagramStep {
+class InkWellDiagramStep extends DiagramStep<InkWellDiagram> {
   InkWellDiagramStep(DiagramController controller) : super(controller) {
     _diagrams.add(new InkWellDiagram());
   }
@@ -93,12 +93,11 @@ class InkWellDiagramStep extends DiagramStep {
   final String category = 'material';
 
   @override
-  Future<List<DiagramMetadata>> get diagrams async => _diagrams;
+  Future<List<InkWellDiagram>> get diagrams async => _diagrams;
 
   @override
-  Future<File> generateDiagram(DiagramMetadata diagram) async {
-    final InkWellDiagram typedDiagram = diagram;
-    controller.builder = (BuildContext context) => typedDiagram;
+  Future<File> generateDiagram(InkWellDiagram diagram) async {
+    controller.builder = (BuildContext context) => diagram;
 
     controller.advanceTime(Duration.zero);
     final RenderBox target = _splashKey.currentContext.findRenderObject();

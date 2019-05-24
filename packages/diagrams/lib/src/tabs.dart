@@ -87,14 +87,14 @@ class TabsDiagramState extends State<TabsDiagram> with SingleTickerProviderState
 
 
 
-class TabsDiagramStep extends DiagramStep {
+class TabsDiagramStep extends DiagramStep<TabsDiagram> {
   TabsDiagramStep(DiagramController controller) : super(controller);
 
   @override
   final String category = 'material';
 
   @override
-  Future<List<DiagramMetadata>> get diagrams async => <DiagramMetadata>[
+  Future<List<TabsDiagram>> get diagrams async => <TabsDiagram>[
     const TabsDiagram('tabs'),
   ];
 
@@ -116,9 +116,8 @@ class TabsDiagramStep extends DiagramStep {
   }
 
   @override
-  Future<File> generateDiagram(DiagramMetadata diagram) async {
-    final TabsDiagram typedDiagram = diagram;
-    controller.builder = (BuildContext context) => typedDiagram;
+  Future<File> generateDiagram(TabsDiagram diagram) async {
+    controller.builder = (BuildContext context) => diagram;
     return await controller.drawAnimatedDiagramToFiles(
       end: _kTotalAnimationTime,
       frameRate: _kAnimationFrameRate,

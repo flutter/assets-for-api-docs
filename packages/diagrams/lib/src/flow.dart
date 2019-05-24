@@ -125,7 +125,7 @@ class FlowMenuDelegate extends FlowDelegate {
   }
 }
 
-class FlowDiagramStep extends DiagramStep {
+class FlowDiagramStep extends DiagramStep<FlowDiagram> {
   FlowDiagramStep(DiagramController controller) : super(controller);
 
   void tapFlowMenuItem(DiagramController controller, Duration now) async {
@@ -156,14 +156,13 @@ class FlowDiagramStep extends DiagramStep {
   final String category = 'widgets';
 
   @override
-  Future<List<DiagramMetadata>> get diagrams async => <DiagramMetadata>[
+  Future<List<FlowDiagram>> get diagrams async => <FlowDiagram>[
     const FlowDiagram('flow_menu'),
   ];
 
   @override
-  Future<File> generateDiagram(DiagramMetadata diagram) async {
-    final FlowDiagram typedDiagram = diagram;
-    controller.builder = (BuildContext context) => typedDiagram;
+  Future<File> generateDiagram(FlowDiagram diagram) async {
+    controller.builder = (BuildContext context) => diagram;
     return await controller.drawAnimatedDiagramToFiles(
       end: _kTotalDuration,
       frameRate: _kAnimationFrameRate,

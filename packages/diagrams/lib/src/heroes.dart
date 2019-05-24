@@ -249,19 +249,18 @@ class RightArrowPainter extends CustomPainter {
   bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
 
-class HeroesDiagramStep extends DiagramStep {
+class HeroesDiagramStep extends DiagramStep<HeroesDiagram> {
   HeroesDiagramStep(DiagramController controller) : super(controller);
 
   @override
   final String category = 'interaction';
 
   @override
-  Future<List<DiagramMetadata>> get diagrams async => <DiagramMetadata>[const HeroesDiagram()];
+  Future<List<HeroesDiagram>> get diagrams async => <HeroesDiagram>[const HeroesDiagram()];
 
   @override
-  Future<File> generateDiagram(DiagramMetadata diagram) async {
-    final HeroesDiagram typedDiagram = diagram;
-    controller.builder = (BuildContext context) => typedDiagram;
+  Future<File> generateDiagram(HeroesDiagram diagram) async {
+    controller.builder = (BuildContext context) => diagram;
     return await controller.drawDiagramToFile(new File('${diagram.name}.png'));
   }
 }

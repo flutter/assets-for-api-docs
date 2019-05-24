@@ -202,7 +202,7 @@ class StrokeJoinPainterState extends State<StrokeJoinDiagram> //
   }
 }
 
-class StrokeJoinDiagramStep extends DiagramStep {
+class StrokeJoinDiagramStep extends DiagramStep<StrokeJoinDiagram> {
   StrokeJoinDiagramStep(DiagramController controller) : super(controller) {
     _diagrams.addAll(<StrokeJoinDiagram>[
       const StrokeJoinDiagram(
@@ -237,12 +237,11 @@ class StrokeJoinDiagramStep extends DiagramStep {
   final List<StrokeJoinDiagram> _diagrams = <StrokeJoinDiagram>[];
 
   @override
-  Future<List<DiagramMetadata>> get diagrams async => _diagrams;
+  Future<List<StrokeJoinDiagram>> get diagrams async => _diagrams;
 
   @override
-  Future<File> generateDiagram(DiagramMetadata diagram) async {
-    final StrokeJoinDiagram typedDiagram = diagram;
-    controller.builder = (BuildContext context) => typedDiagram;
+  Future<File> generateDiagram(StrokeJoinDiagram diagram) async {
+    controller.builder = (BuildContext context) => diagram;
     return await controller.drawAnimatedDiagramToFiles(
       end: _kAnimationDuration,
       frameRate: _kAnimationFrameRate,
