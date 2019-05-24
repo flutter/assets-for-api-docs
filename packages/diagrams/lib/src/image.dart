@@ -16,17 +16,15 @@ import 'diagram_step.dart';
 class DiagramImage extends ImageProvider<DiagramImage> implements ui.Codec, ui.FrameInfo {
   DiagramImage(
     this.image, {
-    this.duration = const Duration(seconds: 1),
     this.vsync,
+    this.loadingDuration,
     this.scale = 1.0,
   });
 
   @override
   final ui.Image image;
 
-  @override
-  final Duration duration;
-
+  final Duration loadingDuration;
   final TickerProvider vsync;
   final double scale;
   final StreamController<ImageChunkEvent> chunkEvents = StreamController<ImageChunkEvent>();
@@ -51,8 +49,15 @@ class DiagramImage extends ImageProvider<DiagramImage> implements ui.Codec, ui.F
   }
 
   Future<ui.Codec> _loadAsync() {
+    if (loadingDuration == null) {
+      return Future<ui.Codec>.value(this);
+    }
+
     final Completer<ui.Codec> result = Completer<ui.Codec>();
-    final AnimationController controller = AnimationController(vsync: vsync, duration: duration);
+    final AnimationController controller = AnimationController(
+      vsync: vsync,
+      duration: loadingDuration,
+    );
     controller.addListener(() {
       if (controller.status == AnimationStatus.completed) {
         controller.dispose();
@@ -79,6 +84,9 @@ class DiagramImage extends ImageProvider<DiagramImage> implements ui.Codec, ui.F
   int get repetitionCount => 0;
 
   @override
+  Duration get duration => const Duration(seconds: 1);
+
+  @override
   Future<ui.FrameInfo> getNextFrame() async {
     return this;
   }
@@ -103,7 +111,7 @@ class ImageDiagramsStep extends DiagramStep<ImageDiagram> {
   final String category = 'widgets';
 
   @override
-  Future<List<ImageDiagram>> get diagrams async => const <ImageDiagram>[
+  Future<List<ImageDiagram>> get diagrams async => <ImageDiagram>[
   ];
 
   @override
@@ -120,32 +128,43 @@ class ImageDiagramsStep extends DiagramStep<ImageDiagram> {
     final ImageProvider imageProvider = DiagramImage(
       image,
       vsync: controller.vsync,
+      loadingDuration: diagram.imageLoadingDuration,
     );
 
     controller.builder = (BuildContext context) => diagram.build(context, imageProvider);
-
-    return await controller.drawAnimatedDiagramToFiles(
-      end: diagram.duration,
+    final File result = await controller.drawAnimatedDiagramToFiles(
+      end: diagram.animationDuration,
       frameRate: diagram.frameRate,
       name: diagram.name,
       category: category,
     );
+    diagram.dispose();
+
+    return result;
   }
 }
 
-@immutable
 abstract class ImageDiagram implements DiagramMetadata {
-  const ImageDiagram();
+  const ImageDiagram(this.controller);
+
+  final DiagramController controller;
 
   @override
   String get name => getName(runtimeType);
 
+  TickerProvider get vsync => controller.vsync;
+
   Size get imageSize => const Size(300, 300);
 
-  Duration get duration => const Duration(seconds: 2);
+  Duration get imageLoadingDuration => const Duration(seconds: 1);
+
+  Duration get animationDuration => const Duration(seconds: 2);
 
   double get frameRate => 60;
 
   Widget build(BuildContext context, ImageProvider image);
+
+  @mustCallSuper
+  void dispose() {}
 }
 
