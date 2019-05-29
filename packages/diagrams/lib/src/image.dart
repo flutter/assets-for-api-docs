@@ -104,6 +104,81 @@ class DiagramImage extends ImageProvider<DiagramImage> implements ui.Codec, ui.F
   int get hashCode => hashValues(image, scale);
 }
 
+class FrameBuilderImageDiagram extends ImageDiagram {
+  FrameBuilderImageDiagram(DiagramController controller) : super(controller);
+
+  @override
+  Duration get animationDuration => const Duration(seconds: 4);
+
+  @override
+  Duration get imageLoadingDuration => const Duration(milliseconds: 500);
+
+  @override
+  Widget build(BuildContext context, ImageProvider image) {
+    return Container(
+      padding: const EdgeInsets.all(10),
+      color: Colors.white,
+      child: ConstrainedBox(
+        constraints: BoxConstraints.tight(const Size(400, 400)),
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            border: Border.all(),
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Image(
+            image: image,
+            frameBuilder: (BuildContext context, Widget child, int frame, bool wasSynchronouslyLoaded) {
+              if (wasSynchronouslyLoaded) {
+                return child;
+              }
+              return AnimatedOpacity(
+                child: child,
+                opacity: frame == null ? 0 : 1,
+                duration: const Duration(seconds: 1),
+                curve: Curves.easeOut,
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class LoadingProgressImageDiagram extends ImageDiagram {
+  const LoadingProgressImageDiagram(DiagramController controller) : super(controller);
+
+  @override
+  Widget build(BuildContext context, ImageProvider image) {
+    return Container(
+      padding: const EdgeInsets.all(10),
+      color: Colors.white,
+      child: ConstrainedBox(
+        constraints: BoxConstraints.tight(const Size(400, 400)),
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            border: Border.all(),
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Image(
+            image: image,
+            loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent loadingProgress) {
+              if (loadingProgress == null) {
+                return child;
+              }
+              return Center(
+                child: CircularProgressIndicator(
+                  value: loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes,
+                ),
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class ImageDiagramsStep extends DiagramStep<ImageDiagram> {
   ImageDiagramsStep(DiagramController controller) : super(controller);
 
@@ -112,6 +187,8 @@ class ImageDiagramsStep extends DiagramStep<ImageDiagram> {
 
   @override
   Future<List<ImageDiagram>> get diagrams async => <ImageDiagram>[
+    FrameBuilderImageDiagram(controller),
+    LoadingProgressImageDiagram(controller),
   ];
 
   @override
