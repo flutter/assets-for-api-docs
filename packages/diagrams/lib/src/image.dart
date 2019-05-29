@@ -115,11 +115,11 @@ class FrameBuilderImageDiagram extends ImageDiagram {
 
   @override
   Widget build(BuildContext context, ImageProvider image) {
-    return new Container(
+    return Container(
       padding: const EdgeInsets.all(10),
       color: Colors.white,
       child: ConstrainedBox(
-        constraints: new BoxConstraints.tight(const Size(400, 400)),
+        constraints: BoxConstraints.tight(const Size(400, 400)),
         child: DecoratedBox(
           decoration: BoxDecoration(
             border: Border.all(),
@@ -150,11 +150,11 @@ class LoadingProgressImageDiagram extends ImageDiagram {
 
   @override
   Widget build(BuildContext context, ImageProvider image) {
-    return new Container(
+    return Container(
       padding: const EdgeInsets.all(10),
       color: Colors.white,
       child: ConstrainedBox(
-        constraints: new BoxConstraints.tight(const Size(400, 400)),
+        constraints: BoxConstraints.tight(const Size(400, 400)),
         child: DecoratedBox(
           decoration: BoxDecoration(
             border: Border.all(),
