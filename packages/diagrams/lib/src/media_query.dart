@@ -78,24 +78,24 @@ class _DiagramState extends State<MediaQueryDiagram> {
                       color: Colors.black45,
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(0.0, 260, 240.0, 0.0),
-                    child: new Text(
+                  const Padding(
+                    padding: EdgeInsets.fromLTRB(0.0, 260, 240.0, 0.0),
+                    child: Text(
                       'viewInsets',
                       style: TextStyle(fontSize: 20.0),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(0.0, 100, 0.0, 0.0),
-                    child: new Container(
+                    child: Container(
                       width: 6.0,
                       height: 70.0,
                       color: Colors.black45,
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(0.0, 70, 0.0, 0.0),
-                    child: new Text(
+                  const Padding(
+                    padding: EdgeInsets.fromLTRB(0.0, 70, 0.0, 0.0),
+                    child: Text(
                       'padding',
                       style: TextStyle(fontSize: 20.0),
                     ),
@@ -108,9 +108,9 @@ class _DiagramState extends State<MediaQueryDiagram> {
                       color: Colors.black45,
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(240.0, 260.0, 0.0, 0.0),
-                    child: new Text(
+                  const Padding(
+                    padding: EdgeInsets.fromLTRB(240.0, 260.0, 0.0, 0.0),
+                    child: Text(
                       'viewPadding',
                       style: TextStyle(fontSize: 20.0),
                     ),
