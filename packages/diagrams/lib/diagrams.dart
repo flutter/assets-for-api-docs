@@ -34,6 +34,7 @@ export 'src/stroke_cap.dart';
 export 'src/stroke_join.dart';
 export 'src/switch_list_tile.dart';
 export 'src/tabs.dart';
+export 'src/text.dart';
 export 'src/tile_mode.dart';
 export 'src/transitions.dart';
 export 'src/utils.dart';
