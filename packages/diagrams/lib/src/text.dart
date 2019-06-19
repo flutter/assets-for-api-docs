@@ -4,8 +4,10 @@
 
 import 'dart:async';
 import 'dart:io';
+
 import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
+
 import 'diagram_step.dart';
 
 class TextDiagram extends StatelessWidget implements DiagramMetadata {
@@ -27,22 +29,15 @@ class TextDiagram extends StatelessWidget implements DiagramMetadata {
       textAlign: TextAlign.left,
       textDirection: TextDirection.ltr,
     );
-    switch (name) {
-      case 'text_height_diagram':
-        return Container(
-          width: 800,
-          height: 200,
-          color: Colors.white,
-          child: CustomPaint(
-            size: const Size(1000, 300),
-            painter: CurvePainter(textPainter),
-          ),
-        );
-        break;
-      default:
-        return const Text('Error');
-        break;
-    }
+    return Container(
+      width: 800,
+      height: 200,
+      color: Colors.white,
+      child: CustomPaint(
+        size: const Size(1000, 300),
+        painter: CurvePainter(textPainter),
+      ),
+    );
   }
 }
 
@@ -52,12 +47,14 @@ class CurvePainter extends CustomPainter {
 
   final TextPainter textPainter;
 
+  static const int largeIndex = 99;
+
   @override
   void paint(Canvas canvas, Size size) {
     textPainter.layout();
 
     final List<TextBox> boxes = textPainter.getBoxesForSelection(
-      const TextSelection(baseOffset: 0, extentOffset: 99)
+      const TextSelection(baseOffset: 0, extentOffset: largeIndex)
     );
 
     final Paint paint = Paint();
@@ -112,8 +109,6 @@ class CurvePainter extends CustomPainter {
       baseOffset + Offset(width, emBottom),
       paint,
     );
-
-
 
     paint.strokeWidth = 2;
     paint.style = PaintingStyle.stroke;
