@@ -176,7 +176,7 @@ class TextDiagramPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) {
-    TextDiagramPainter diagramPainter = oldDelegate;
+    final TextDiagramPainter diagramPainter = oldDelegate;
     return textPainter != diagramPainter.textPainter;
   }
 }
