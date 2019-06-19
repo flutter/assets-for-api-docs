@@ -48,28 +48,6 @@ class TextDiagram extends StatelessWidget implements DiagramMetadata {
           ),
         );
         break;
-      case 'container_b':
-        return Container(
-          height: 250,
-          width: 450,
-          color: Colors.white,
-          child: Center(
-            child: Container(
-              height: 250,
-              width: 450,
-              padding: const EdgeInsets.all(8.0),
-              color: Colors.blue[600],
-              alignment: Alignment.center,
-              child: Text('Hello World',
-                  style: Theme.of(context)
-                      .textTheme
-                      .display1
-                      .copyWith(color: Colors.white)),
-              transform: Matrix4.rotationZ(0.1),
-            ),
-          ),
-        );
-        break;
       default:
         return const Text('Error');
         break;
