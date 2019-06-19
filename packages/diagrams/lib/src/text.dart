@@ -17,7 +17,7 @@ class TextDiagram extends StatelessWidget implements DiagramMetadata {
   @override
   Widget build(BuildContext context) {
     final TextPainter textPainter = TextPainter(
-      text: TextSpan(
+      text: const TextSpan(
         text:' Aalg我हिन्दी ',
         style: TextStyle(
           fontSize: 100,
@@ -56,14 +56,14 @@ class CurvePainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     textPainter.layout();
 
-    List<TextBox> boxes = textPainter.getBoxesForSelection(
-      TextSelection(baseOffset: 0, extentOffset: 99)
+    final List<TextBox> boxes = textPainter.getBoxesForSelection(
+      const TextSelection(baseOffset: 0, extentOffset: 99)
     );
 
-    var paint = Paint();
+    final Paint paint = Paint();
     paint.color = Colors.black;
     paint.strokeWidth = 3.5;
-    final double top = 0;
+    const double top = 0;
     final double bottom = textPainter.height;
     final double baseline = textPainter.computeDistanceToActualBaseline(TextBaseline.alphabetic);
 
@@ -118,7 +118,7 @@ class CurvePainter extends CustomPainter {
     paint.strokeWidth = 2;
     paint.style = PaintingStyle.stroke;
 
-    var path = Path();
+    Path path = Path();
     path.moveTo(baseOffset.dx + width + 10, baseOffset.dy + emTop);
     path.lineTo(baseOffset.dx + width + 25, baseOffset.dy + emTop);
     path.lineTo(baseOffset.dx + width + 25, baseOffset.dy + emBottom);
@@ -134,7 +134,7 @@ class CurvePainter extends CustomPainter {
     canvas.drawPath(path, paint);
 
     TextPainter label = TextPainter(
-      text: TextSpan(
+      text: const TextSpan(
         text:'Font metrics\ndefault height',
         style: TextStyle(
           fontSize: 12,
@@ -149,7 +149,7 @@ class CurvePainter extends CustomPainter {
 
     paint.color = Colors.red[900];
     label = TextPainter(
-      text: TextSpan(
+      text: const TextSpan(
         text:'Font Size\n(EM-square)',
         style: TextStyle(
           fontSize: 12,
@@ -165,7 +165,7 @@ class CurvePainter extends CustomPainter {
     paint.color = Colors.black;
     // Baseline label
     label = TextPainter(
-      text: TextSpan(
+      text: const TextSpan(
         text:'Baseline',
         style: TextStyle(
           fontSize: 11,
