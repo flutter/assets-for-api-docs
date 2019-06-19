@@ -77,6 +77,7 @@ Future<Null> main() async {
     StrokeJoinDiagramStep(controller),
     SwitchListTileDiagramStep(controller),
     TabsDiagramStep(controller),
+    TextDiagramStep(controller),
     TileModeDiagramStep(controller),
     TransitionDiagramStep(controller),
   ];
