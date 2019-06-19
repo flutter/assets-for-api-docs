@@ -36,15 +36,6 @@ class TextDiagram extends StatelessWidget implements DiagramMetadata {
           child: CustomPaint(
             size: Size(1000, 300),
             painter: CurvePainter(textPainter),
-            child: Center(
-              child: Stack(
-                alignment: Alignment(0, 0),
-                children: <Widget>[
-                  // Text('Hello'),
-
-                ],
-              ),
-            ),
           ),
         );
         break;
