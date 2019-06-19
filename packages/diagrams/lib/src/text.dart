@@ -34,7 +34,7 @@ class TextDiagram extends StatelessWidget implements DiagramMetadata {
           height: 200,
           color: Colors.white,
           child: CustomPaint(
-            size: Size(1000, 300),
+            size: const Size(1000, 300),
             painter: CurvePainter(textPainter),
           ),
         );
