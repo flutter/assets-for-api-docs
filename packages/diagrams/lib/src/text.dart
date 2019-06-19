@@ -35,15 +35,15 @@ class TextDiagram extends StatelessWidget implements DiagramMetadata {
       color: Colors.white,
       child: CustomPaint(
         size: const Size(1000, 300),
-        painter: CurvePainter(textPainter),
+        painter: TextDiagramPainter(textPainter),
       ),
     );
   }
 }
 
-class CurvePainter extends CustomPainter {
+class TextDiagramPainter extends CustomPainter {
 
-  const CurvePainter(this.textPainter);
+  const TextDiagramPainter(this.textPainter);
 
   final TextPainter textPainter;
 
@@ -176,7 +176,8 @@ class CurvePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) {
-    return false;
+    TextDiagramPainter diagramPainter = oldDelegate;
+    return textPainter != diagramPainter.textPainter;
   }
 }
 
