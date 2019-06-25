@@ -8,9 +8,9 @@ import 'dart:ui';
 
 import 'package:args/args.dart';
 import 'package:diagram_capture/diagram_capture.dart';
+import 'package:diagrams/diagrams.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
-import 'package:diagrams/diagrams.dart';
 
 Future<Directory> prepareOutputDirectory() async {
   final Directory directory = new Directory(
@@ -48,7 +48,8 @@ Future<Null> main() async {
   );
 
   // Add the diagram steps here.
-  final List<DiagramStep<DiagramMetadata>> steps = <DiagramStep<DiagramMetadata>>[
+  final List<DiagramStep<DiagramMetadata>> steps =
+      <DiagramStep<DiagramMetadata>>[
     AlignDiagramStep(controller),
     AppBarDiagramStep(controller),
     BlendModeDiagramStep(controller),
@@ -62,6 +63,7 @@ Future<Null> main() async {
     CustomListItemDiagramStep(controller),
     FlowDiagramStep(controller),
     HeroesDiagramStep(controller),
+    IconDiagramStep(controller),
     ImageDiagramsStep(controller),
     ImplicitAnimationDiagramStep(controller),
     InkResponseLargeDiagramStep(controller),
@@ -86,7 +88,8 @@ Future<Null> main() async {
     if (categories.isNotEmpty && !categories.contains(step.category)) {
       continue;
     }
-    final Directory stepOutputDirectory = new Directory(path.join(outputDirectory.absolute.path, step.category));
+    final Directory stepOutputDirectory =
+        new Directory(path.join(outputDirectory.absolute.path, step.category));
     stepOutputDirectory.createSync(recursive: true);
     controller.outputDirectory = stepOutputDirectory;
     controller.pixelRatio = 1.0;
