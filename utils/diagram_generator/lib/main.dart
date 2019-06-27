@@ -74,6 +74,7 @@ Future<Null> main() async {
     MediaQueryDiagramStep(controller),
     RadioListTileDiagramStep(controller),
     RaisedButtonDiagramStep(controller),
+    ScaffoldDiagramStep(controller),
     SliverAppBarDiagramStep(controller),
     StrokeCapDiagramStep(controller),
     StrokeJoinDiagramStep(controller),
