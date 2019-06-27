@@ -58,6 +58,7 @@ Future<Null> main() async {
     CardDiagramStep(controller),
     CheckboxListTileDiagramStep(controller),
     ColorsDiagramStep(controller),
+    ColumnDiagramStep(controller),
     ContainerDiagramStep(controller),
     CurveDiagramStep(controller),
     CustomListItemDiagramStep(controller),

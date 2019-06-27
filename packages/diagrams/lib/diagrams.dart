@@ -13,6 +13,7 @@ export 'src/box_fit.dart';
 export 'src/card.dart';
 export 'src/checkbox_list_tile.dart';
 export 'src/colors.dart';
+export 'src/column.dart';
 export 'src/container.dart';
 export 'src/curve.dart';
 export 'src/custom_list_item.dart';
