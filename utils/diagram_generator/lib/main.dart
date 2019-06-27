@@ -77,6 +77,7 @@ Future<Null> main() async {
     RaisedButtonDiagramStep(controller),
     ScaffoldDiagramStep(controller),
     SliverAppBarDiagramStep(controller),
+    StackDiagramStep(controller),
     StrokeCapDiagramStep(controller),
     StrokeJoinDiagramStep(controller),
     SwitchListTileDiagramStep(controller),

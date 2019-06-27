@@ -33,6 +33,7 @@ export 'src/radio_list_tile.dart';
 export 'src/raised_button.dart';
 export 'src/scaffold.dart';
 export 'src/sliver_app_bars.dart';
+export 'src/stack.dart';
 export 'src/stroke_cap.dart';
 export 'src/stroke_join.dart';
 export 'src/switch_list_tile.dart';
