@@ -81,6 +81,7 @@ Future<Null> main() async {
     SwitchListTileDiagramStep(controller),
     TabsDiagramStep(controller),
     TextDiagramStep(controller),
+    TextFieldDiagramStep(controller),
     TileModeDiagramStep(controller),
     TransitionDiagramStep(controller),
   ];
