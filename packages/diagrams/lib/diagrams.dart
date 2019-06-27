@@ -31,6 +31,7 @@ export 'src/list_view.dart';
 export 'src/media_query.dart';
 export 'src/radio_list_tile.dart';
 export 'src/raised_button.dart';
+export 'src/row.dart';
 export 'src/scaffold.dart';
 export 'src/sliver_app_bars.dart';
 export 'src/stack.dart';

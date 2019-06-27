@@ -21,10 +21,11 @@ class ScaffoldDiagram extends StatefulWidget implements DiagramMetadata {
 class ScaffoldDiagramState extends State<ScaffoldDiagram> {
   int _count = 0;
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Sample Code'),
+        title: const Text('Sample Code'),
       ),
       body: Center(
         child: Text('You have pressed the button $_count times.'),

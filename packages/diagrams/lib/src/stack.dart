@@ -55,7 +55,7 @@ class StackDiagram extends StatelessWidget implements DiagramMetadata {
               color: Colors.white,
             ),
             Container(
-              padding: EdgeInsets.all(5.0),
+              padding: const EdgeInsets.all(5.0),
               alignment: Alignment.bottomCenter,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
@@ -69,7 +69,7 @@ class StackDiagram extends StatelessWidget implements DiagramMetadata {
                 ),
               ),
               child: Text(
-                "Foreground Text",
+                'Foreground Text',
                 style: TextStyle(color: Colors.white, fontSize: 20.0),
               ),
             ),
