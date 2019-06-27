@@ -10,6 +10,10 @@ import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
 
+const String _text = 'text';
+const String _textEllipsis = 'text_ellipsis';
+const String _textRich = 'text_rich';
+
 class TextDiagram extends StatelessWidget implements DiagramMetadata {
   const TextDiagram(this.name);
 
@@ -18,9 +22,74 @@ class TextDiagram extends StatelessWidget implements DiagramMetadata {
 
   @override
   Widget build(BuildContext context) {
+    Widget returnWidget;
+
+    switch (name) {
+      case _text:
+        returnWidget = const Text(
+          'Hello, Ruth! How are you?',
+          textAlign: TextAlign.center,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        );
+        break;
+      case _textEllipsis:
+        returnWidget = ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 100),
+          child: const Text(
+            'Hello, Ruth! How are you?',
+            textAlign: TextAlign.center,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+        );
+        break;
+      case _textRich:
+        returnWidget = const Text.rich(
+          TextSpan(
+            text: 'Hello', // default text style
+            children: <TextSpan>[
+              TextSpan(
+                text: ' beautiful ',
+                style: TextStyle(fontStyle: FontStyle.italic),
+              ),
+              TextSpan(
+                text: 'world',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+        );
+        break;
+      default:
+        returnWidget = const Text('Error');
+        break;
+    }
+
+    return new ConstrainedBox(
+      key: new UniqueKey(),
+      constraints: new BoxConstraints.tight(const Size(240.0, 140.0)),
+      child: new Container(
+        alignment: FractionalOffset.center,
+        padding: const EdgeInsets.all(5.0),
+        color: Colors.white,
+        child: returnWidget,
+      ),
+    );
+  }
+}
+
+class TextHeightDiagram extends StatelessWidget implements DiagramMetadata {
+  const TextHeightDiagram(this.name);
+
+  @override
+  final String name;
+
+  @override
+  Widget build(BuildContext context) {
     final TextPainter textPainter = TextPainter(
       text: const TextSpan(
-        text:' AaBbGgJj ',
+        text: ' AaBbGgJj ',
         style: TextStyle(
           fontSize: 100,
           color: Colors.black,
@@ -42,7 +111,6 @@ class TextDiagram extends StatelessWidget implements DiagramMetadata {
 }
 
 class TextDiagramPainter extends CustomPainter {
-
   const TextDiagramPainter(this.textPainter);
 
   final TextPainter textPainter;
@@ -54,22 +122,23 @@ class TextDiagramPainter extends CustomPainter {
     textPainter.layout();
 
     final List<TextBox> boxes = textPainter.getBoxesForSelection(
-      const TextSelection(baseOffset: 0, extentOffset: largeIndex)
-    );
+        const TextSelection(baseOffset: 0, extentOffset: largeIndex));
 
     final Paint paint = Paint();
     paint.color = Colors.black;
     paint.strokeWidth = 3.5;
     const double top = 0;
     final double bottom = textPainter.height;
-    final double baseline = textPainter.computeDistanceToActualBaseline(TextBaseline.alphabetic);
+    final double baseline =
+        textPainter.computeDistanceToActualBaseline(TextBaseline.alphabetic);
 
     final double ratio = 100.0 / textPainter.height;
     final double emTop = baseline - (baseline - top) * ratio;
     final double emBottom = baseline + (bottom - baseline) * ratio;
 
     final double width = boxes[boxes.length - 1].right;
-    final Offset baseOffset = Offset((size.width - width) / 2, (size.height - textPainter.height) / 2);
+    final Offset baseOffset = Offset(
+        (size.width - width) / 2, (size.height - textPainter.height) / 2);
 
     textPainter.paint(canvas, baseOffset);
     // Baseline
@@ -130,7 +199,7 @@ class TextDiagramPainter extends CustomPainter {
 
     TextPainter label = TextPainter(
       text: const TextSpan(
-        text:'Font metrics\ndefault height',
+        text: 'Font metrics\ndefault height',
         style: TextStyle(
           fontSize: 12,
           color: Colors.black,
@@ -140,12 +209,13 @@ class TextDiagramPainter extends CustomPainter {
       textDirection: TextDirection.ltr,
     );
     label.layout();
-    label.paint(canvas, baseOffset + Offset(-25.0 - 80, (top + bottom) / 2 - 16));
+    label.paint(
+        canvas, baseOffset + Offset(-25.0 - 80, (top + bottom) / 2 - 16));
 
     paint.color = Colors.red[900];
     label = TextPainter(
       text: const TextSpan(
-        text:'Font Size\n(EM-square)',
+        text: 'Font Size\n(EM-square)',
         style: TextStyle(
           fontSize: 12,
           color: Colors.black,
@@ -155,13 +225,14 @@ class TextDiagramPainter extends CustomPainter {
       textDirection: TextDirection.ltr,
     );
     label.layout();
-    label.paint(canvas, baseOffset + Offset(width + 25 + 8, (emTop + emBottom) / 2 - 16));
+    label.paint(canvas,
+        baseOffset + Offset(width + 25 + 8, (emTop + emBottom) / 2 - 16));
 
     paint.color = Colors.black;
     // Baseline label
     label = TextPainter(
       text: const TextSpan(
-        text:'Baseline',
+        text: 'Baseline',
         style: TextStyle(
           fontSize: 11,
           color: Colors.black,
@@ -358,15 +429,35 @@ class TextHeightComparisonPainter extends CustomPainter {
   }
 }
 
-class TextDiagramStep extends DiagramStep<TextDiagram> {
-  TextDiagramStep(DiagramController controller) : super(controller);
+class TextHeightDiagramStep extends DiagramStep<TextHeightDiagram> {
+  TextHeightDiagramStep(DiagramController controller) : super(controller);
 
   @override
   final String category = 'painting';
 
   @override
+  Future<List<TextHeightDiagram>> get diagrams async => <TextHeightDiagram>[
+        const TextHeightDiagram('text_height_diagram'),
+      ];
+
+  @override
+  Future<File> generateDiagram(TextHeightDiagram diagram) async {
+    controller.builder = (BuildContext context) => diagram;
+    return await controller.drawDiagramToFile(new File('${diagram.name}.png'));
+  }
+}
+
+class TextDiagramStep extends DiagramStep<TextDiagram> {
+  TextDiagramStep(DiagramController controller) : super(controller);
+
+  @override
+  final String category = 'widgets';
+
+  @override
   Future<List<TextDiagram>> get diagrams async => <TextDiagram>[
-        const TextDiagram('text_height_diagram'),
+        const TextDiagram(_text),
+        const TextDiagram(_textEllipsis),
+        const TextDiagram(_textRich),
         const TextHeightComparison('text_height_comparison_diagram'),
       ];
 
