@@ -68,7 +68,7 @@ class StackDiagram extends StatelessWidget implements DiagramMetadata {
                   ],
                 ),
               ),
-              child: Text(
+              child: const Text(
                 'Foreground Text',
                 style: TextStyle(color: Colors.white, fontSize: 20.0),
               ),

@@ -27,13 +27,13 @@ class ColumnDiagram extends StatelessWidget implements DiagramMetadata {
     switch (name) {
       case _column:
         returnWidget = Column(
-          children: <Widget>[
-            const Text('Deliver features faster'),
-            const Text('Craft beautiful UIs'),
+          children: const <Widget>[
+            Text('Deliver features faster'),
+            Text('Craft beautiful UIs'),
             Expanded(
               child: FittedBox(
                 fit: BoxFit.contain, // otherwise the logo will be tiny
-                child: const FlutterLogo(),
+                child: FlutterLogo(),
               ),
             ),
           ],

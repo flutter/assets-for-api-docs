@@ -40,7 +40,7 @@ class ScaffoldDiagramState extends State<ScaffoldDiagram> {
           _count++;
         }),
         tooltip: 'Increment Counter',
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
