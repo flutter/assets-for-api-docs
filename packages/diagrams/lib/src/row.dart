@@ -19,8 +19,6 @@ class RowDiagram extends StatelessWidget implements DiagramMetadata {
 
   @override
   final String name;
-  static const List<String> entries = <String>['A', 'B', 'C'];
-  static const List<int> colorCodes = <int>[600, 500, 100];
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +83,8 @@ class RowDiagram extends StatelessWidget implements DiagramMetadata {
           alignment: FractionalOffset.center,
           padding: const EdgeInsets.all(5.0),
           color: Colors.white,
-          child: returnWidget),
+          child: returnWidget,
+      ),
     );
   }
 }

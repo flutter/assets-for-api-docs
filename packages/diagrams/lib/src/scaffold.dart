@@ -23,26 +23,36 @@ class ScaffoldDiagramState extends State<ScaffoldDiagram> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Sample Code'),
-      ),
-      body: Center(
-        child: Text('You have pressed the button $_count times.'),
-      ),
-      bottomNavigationBar: BottomAppBar(
-        child: Container(
-          height: 50.0,
+
+    return ConstrainedBox(
+      key: UniqueKey(),
+      constraints: BoxConstraints.tight(const Size(300.0, 533.33)),
+      child: Container(
+        alignment: FractionalOffset.center,
+        padding: const EdgeInsets.all(5.0),
+        color: Colors.white,
+        child: Scaffold(
+          appBar: AppBar(
+            title: const Text('Sample Code'),
+          ),
+          body: Center(
+            child: Text('You have pressed the button $_count times.'),
+          ),
+          bottomNavigationBar: BottomAppBar(
+            child: Container(
+              height: 50.0,
+            ),
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () => setState(() {
+              _count++;
+            }),
+            tooltip: 'Increment Counter',
+            child: const Icon(Icons.add),
+          ),
+          floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => setState(() {
-          _count++;
-        }),
-        tooltip: 'Increment Counter',
-        child: const Icon(Icons.add),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }
