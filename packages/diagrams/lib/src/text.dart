@@ -122,7 +122,7 @@ class TextDiagramPainter extends CustomPainter {
     textPainter.layout();
 
     final List<TextBox> boxes = textPainter.getBoxesForSelection(
-        const TextSelection(baseOffset: 0, extentOffset: largeIndex)
+      const TextSelection(baseOffset: 0, extentOffset: largeIndex)
     );
 
     final Paint paint = Paint();
