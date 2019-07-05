@@ -129,8 +129,7 @@ class TextDiagramPainter extends CustomPainter {
     paint.strokeWidth = 3.5;
     const double top = 0;
     final double bottom = textPainter.height;
-    final double baseline =
-        textPainter.computeDistanceToActualBaseline(TextBaseline.alphabetic);
+    final double baseline = textPainter.computeDistanceToActualBaseline(TextBaseline.alphabetic);
 
     final double ratio = 100.0 / textPainter.height;
     final double emTop = baseline - (baseline - top) * ratio;
