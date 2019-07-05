@@ -122,7 +122,8 @@ class TextDiagramPainter extends CustomPainter {
     textPainter.layout();
 
     final List<TextBox> boxes = textPainter.getBoxesForSelection(
-        const TextSelection(baseOffset: 0, extentOffset: largeIndex));
+        const TextSelection(baseOffset: 0, extentOffset: largeIndex)
+    );
 
     final Paint paint = Paint();
     paint.color = Colors.black;
@@ -136,8 +137,7 @@ class TextDiagramPainter extends CustomPainter {
     final double emBottom = baseline + (bottom - baseline) * ratio;
 
     final double width = boxes[boxes.length - 1].right;
-    final Offset baseOffset = Offset(
-        (size.width - width) / 2, (size.height - textPainter.height) / 2);
+    final Offset baseOffset = Offset((size.width - width) / 2, (size.height - textPainter.height) / 2);
 
     textPainter.paint(canvas, baseOffset);
     // Baseline
@@ -208,8 +208,7 @@ class TextDiagramPainter extends CustomPainter {
       textDirection: TextDirection.ltr,
     );
     label.layout();
-    label.paint(
-        canvas, baseOffset + Offset(-25.0 - 80, (top + bottom) / 2 - 16));
+    label.paint(canvas, baseOffset + Offset(-25.0 - 80, (top + bottom) / 2 - 16));
 
     paint.color = Colors.red[900];
     label = TextPainter(
@@ -224,8 +223,7 @@ class TextDiagramPainter extends CustomPainter {
       textDirection: TextDirection.ltr,
     );
     label.layout();
-    label.paint(canvas,
-        baseOffset + Offset(width + 25 + 8, (emTop + emBottom) / 2 - 16));
+    label.paint(canvas, baseOffset + Offset(width + 25 + 8, (emTop + emBottom) / 2 - 16));
 
     paint.color = Colors.black;
     // Baseline label
