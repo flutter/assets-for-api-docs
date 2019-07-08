@@ -20,7 +20,7 @@ class TextDiagram extends StatelessWidget implements DiagramMetadata {
   Widget build(BuildContext context) {
     final TextPainter textPainter = TextPainter(
       text: const TextSpan(
-        text:' Aalg我हिन्दी ',
+        text:' AaBbGgJj ',
         style: TextStyle(
           fontSize: 100,
           color: Colors.black,
@@ -181,6 +181,183 @@ class TextDiagramPainter extends CustomPainter {
   }
 }
 
+// Height values comparison.
+class TextHeightComparison extends TextDiagram implements DiagramMetadata {
+  const TextHeightComparison(String name) : super(name);
+
+  @override
+  Widget build(BuildContext context) {
+
+    double totalHeight = 70.0 + 10;
+    for (double h in <double>[1, 1, 1.15, 2, 3]) {
+      totalHeight += 70 * h + 30;
+    }
+
+    return Container(
+      width: 600,
+      height: totalHeight,
+      color: Colors.white,
+      child: Column(
+        children: <Widget>[
+          Container(
+            width: 600,
+            height: 70,
+            color: const Color.fromARGB(255, 180, 180, 180),
+            child: const Center(
+              child: Text(
+                'Roboto, fontSize:50',
+                style: TextStyle(fontSize: 30, fontWeight: FontWeight.w700),
+              ),
+            ),
+          ),
+          const CustomPaint(
+            size: Size(600, 70.0 + 30 + 10),
+            painter: TextHeightComparisonPainter('Axy', null, 0),
+          ),
+          const CustomPaint(
+            size: Size(600, 70.0 * 1.0 + 30),
+            painter: TextHeightComparisonPainter('Axy', 1, 1),
+          ),
+          const CustomPaint(
+            size: Size(600, 70.0 * 1.15 + 30),
+            painter: TextHeightComparisonPainter('Axy', 1.15, 2),
+          ),
+          const CustomPaint(
+            size: Size(600, 70.0 * 2.0 + 30),
+            painter: TextHeightComparisonPainter('Axy', 2, 3),
+          ),
+          const CustomPaint(
+            size: Size(600, 70.0 * 3.0 + 30),
+            painter: TextHeightComparisonPainter('Axy', 3, 4),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class TextHeightComparisonPainter extends CustomPainter {
+
+  const TextHeightComparisonPainter(this.text, this.height, this.index);
+
+  final String text;
+  final double height;
+  final int index;
+
+  static const int largeIndex = 99;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final Paint paint = Paint();
+    if (index % 2 == 0) {
+      paint.color = const Color.fromARGB(255, 235, 235, 235);
+    } else {
+      paint.color = const Color.fromARGB(255, 250, 250, 250);
+    }
+    canvas.drawRect(Rect.fromLTRB(0, 0, size.width, size.height), paint);
+
+    final TextPainter textPainter = TextPainter(
+      text: TextSpan(
+        text: 'height:$height, $text',
+        style: TextStyle(
+          fontSize: 50,
+          height: height,
+          color: Colors.black,
+        ),
+      ),
+      textAlign: TextAlign.left,
+      textDirection: TextDirection.ltr,
+    );
+    textPainter.layout();
+
+    final List<TextBox> boxes = textPainter.getBoxesForSelection(
+      const TextSelection(baseOffset: 0, extentOffset: largeIndex)
+    );
+
+    paint.color = Colors.black;
+    paint.strokeWidth = 3.5;
+    const double top = 0;
+    final double bottom = textPainter.height;
+    final double baseline = textPainter.computeDistanceToActualBaseline(TextBaseline.alphabetic);
+
+    final double width = boxes[boxes.length - 1].right;
+    final Offset baseOffset = Offset((size.width - width) / 2 + 30, (size.height - textPainter.height) / 2);
+
+    textPainter.paint(canvas, baseOffset);
+
+    paint.color = Colors.red[900];
+    // Top
+    canvas.drawLine(
+      baseOffset,
+      baseOffset + Offset(width, top),
+      paint,
+    );
+
+    // Bottom
+    canvas.drawLine(
+      baseOffset + Offset(0, bottom),
+      baseOffset + Offset(width, bottom),
+      paint,
+    );
+
+    // Baseline
+    paint.color = Colors.black;
+    paint.strokeWidth = 2.5;
+    canvas.drawLine(
+      baseOffset + Offset(0, baseline),
+      baseOffset + Offset(width, baseline),
+      paint,
+    );
+
+    paint.strokeWidth = 2;
+    paint.style = PaintingStyle.stroke;
+
+    paint.color = Colors.blue[900];
+    final Path path = Path();
+    path.moveTo(baseOffset.dx - 10, baseOffset.dy + top);
+    path.lineTo(baseOffset.dx - 25, baseOffset.dy + top);
+    path.lineTo(baseOffset.dx - 25, baseOffset.dy + bottom);
+    path.lineTo(baseOffset.dx - 10, baseOffset.dy + bottom);
+    canvas.drawPath(path, paint);
+
+    TextPainter label = TextPainter(
+      text: TextSpan(
+        text:'${bottom - top}px',
+        style: const TextStyle(
+          fontSize: 20,
+          color: Colors.black,
+        ),
+      ),
+      textAlign: TextAlign.right,
+      textDirection: TextDirection.ltr,
+    );
+    label.layout();
+    label.paint(canvas, baseOffset + Offset(-25.0 - 80, (top + bottom) / 2 - 10));
+
+    paint.color = Colors.black;
+    // Baseline label
+    label = TextPainter(
+      text: const TextSpan(
+        text:'Baseline',
+        style: TextStyle(
+          fontSize: 9,
+          color: Colors.black,
+        ),
+      ),
+      textAlign: TextAlign.left,
+      textDirection: TextDirection.ltr,
+    );
+    label.layout();
+    label.paint(canvas, baseOffset + Offset(0, baseline + 1));
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    final TextHeightComparisonPainter diagramPainter = oldDelegate;
+    return text != diagramPainter.text || height != diagramPainter.height;
+  }
+}
+
 class TextDiagramStep extends DiagramStep<TextDiagram> {
   TextDiagramStep(DiagramController controller) : super(controller);
 
@@ -190,6 +367,7 @@ class TextDiagramStep extends DiagramStep<TextDiagram> {
   @override
   Future<List<TextDiagram>> get diagrams async => <TextDiagram>[
         const TextDiagram('text_height_diagram'),
+        const TextHeightComparison('text_height_comparison_diagram'),
       ];
 
   @override
