@@ -204,7 +204,7 @@ class TextHeightComparison extends TextDiagram implements DiagramMetadata {
             height: 70,
             color: Color.fromARGB(255, 180, 180, 180),
             child: Center(
-              child: Text(
+              child: const Text(
                 'Roboto, fontSize:50',
                 style: TextStyle(fontSize: 30, fontWeight: FontWeight.w700),
               ),
@@ -212,23 +212,23 @@ class TextHeightComparison extends TextDiagram implements DiagramMetadata {
           ),
           CustomPaint(
             size: const Size(600, 70.0 + 30 + 10),
-            painter: TextHeightComparisonPainter('Axy', null, 0),
+            painter: const TextHeightComparisonPainter('Axy', null, 0),
           ),
           CustomPaint(
             size: const Size(600, 70.0 * 1.0 + 30),
-            painter: TextHeightComparisonPainter('Axy', 1, 1),
+            painter: const TextHeightComparisonPainter('Axy', 1, 1),
           ),
           CustomPaint(
             size: const Size(600, 70.0 * 1.15 + 30),
-            painter: TextHeightComparisonPainter('Axy', 1.15, 2),
+            painter: const TextHeightComparisonPainter('Axy', 1.15, 2),
           ),
           CustomPaint(
             size: const Size(600, 70.0 * 2.0 + 30),
-            painter: TextHeightComparisonPainter('Axy', 2, 3),
+            painter: const TextHeightComparisonPainter('Axy', 2, 3),
           ),
           CustomPaint(
             size: const Size(600, 70.0 * 3.0 + 30),
-            painter: TextHeightComparisonPainter('Axy', 3, 4),
+            painter: const TextHeightComparisonPainter('Axy', 3, 4),
           ),
         ],
       ),
@@ -250,9 +250,9 @@ class TextHeightComparisonPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final Paint paint = Paint();
     if (index % 2 == 0) {
-      paint.color = Color.fromARGB(255, 235, 235, 235);
+      paint.color = const Color.fromARGB(255, 235, 235, 235);
     } else {
-      paint.color = Color.fromARGB(255, 250, 250, 250);
+      paint.color = const Color.fromARGB(255, 250, 250, 250);
     }
     canvas.drawRect(Rect.fromLTRB(0, 0, size.width, size.height), paint);
 
