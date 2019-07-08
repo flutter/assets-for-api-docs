@@ -202,7 +202,7 @@ class TextHeightComparison extends TextDiagram implements DiagramMetadata {
           Container(
             width: 600,
             height: 70,
-            color: Color.fromARGB(255, 180, 180, 180),
+            color: const Color.fromARGB(255, 180, 180, 180),
             child: Center(
               child: const Text(
                 'Roboto, fontSize:50',
@@ -281,8 +281,6 @@ class TextHeightComparisonPainter extends CustomPainter {
     final double baseline = textPainter.computeDistanceToActualBaseline(TextBaseline.alphabetic);
 
     final double ratio = 50.0 / textPainter.height;
-    final double emTop = baseline - (baseline - top) * ratio;
-    final double emBottom = baseline + (bottom - baseline) * ratio;
 
     final double width = boxes[boxes.length - 1].right;
     final Offset baseOffset = Offset((size.width - width) / 2 + 30, (size.height - textPainter.height) / 2);
@@ -317,7 +315,7 @@ class TextHeightComparisonPainter extends CustomPainter {
     paint.style = PaintingStyle.stroke;
 
     paint.color = Colors.blue[900];
-    Path path = Path();
+    final Path path = Path();
     path.moveTo(baseOffset.dx - 10, baseOffset.dy + top);
     path.lineTo(baseOffset.dx - 25, baseOffset.dy + top);
     path.lineTo(baseOffset.dx - 25, baseOffset.dy + bottom);
@@ -327,7 +325,7 @@ class TextHeightComparisonPainter extends CustomPainter {
     TextPainter label = TextPainter(
       text: TextSpan(
         text:'${bottom - top}px',
-        style: TextStyle(
+        style: const TextStyle(
           fontSize: 20,
           color: Colors.black,
         ),
