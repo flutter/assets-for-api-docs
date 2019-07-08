@@ -134,7 +134,7 @@ typedef _TickerDisposeCallback = void Function(_DiagramTicker ticker);
 class _DiagramTicker extends Ticker {
   _DiagramTicker(TickerCallback onTick, this._onDispose) : super(onTick);
 
-  _TickerDisposeCallback _onDispose;
+  final _TickerDisposeCallback _onDispose;
 
   @override
   void dispose() {
