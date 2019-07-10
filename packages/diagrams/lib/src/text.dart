@@ -250,7 +250,7 @@ class TextDiagramPainter extends CustomPainter {
 }
 
 // Height values comparison.
-class TextHeightComparison extends TextDiagram implements DiagramMetadata {
+class TextHeightComparison extends TextHeightDiagram implements DiagramMetadata {
   const TextHeightComparison(String name) : super(name);
 
   @override
@@ -435,6 +435,7 @@ class TextHeightDiagramStep extends DiagramStep<TextHeightDiagram> {
   @override
   Future<List<TextHeightDiagram>> get diagrams async => <TextHeightDiagram>[
         const TextHeightDiagram('text_height_diagram'),
+        const TextHeightComparison('text_height_comparison_diagram'),
       ];
 
   @override
@@ -455,7 +456,6 @@ class TextDiagramStep extends DiagramStep<TextDiagram> {
         const TextDiagram(_text),
         const TextDiagram(_textEllipsis),
         const TextDiagram(_textRich),
-        const TextHeightComparison('text_height_comparison_diagram'),
       ];
 
   @override
