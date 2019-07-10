@@ -162,7 +162,11 @@ class ColorsDiagramStep extends DiagramStep<ColorDiagram> {
         'white': Colors.white,
         'white10': Colors.white10,
         'white12': Colors.white12,
+        'white24': Colors.white24,
         'white30': Colors.white30,
+        'white38': Colors.white38,
+        'white54': Colors.white54,
+        'white60': Colors.white60,
         'white70': Colors.white70,
       }),
     ]);
