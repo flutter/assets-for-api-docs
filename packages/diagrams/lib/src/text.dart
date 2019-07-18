@@ -103,7 +103,7 @@ class TextDiagram extends StatelessWidget implements DiagramMetadata {
                 style: TextStyle(
                   fontSize: 40,
                   foreground: Paint()
-                    ..shader = ui.Gradient.linear(
+                    ..shader = const ui.Gradient.linear(
                       Offset(0, 20),
                       Offset(150, 20),
                       <Color>[
