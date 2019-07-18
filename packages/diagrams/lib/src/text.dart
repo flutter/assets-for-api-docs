@@ -63,7 +63,7 @@ class TextDiagram extends StatelessWidget implements DiagramMetadata {
         );
         break;
       case _textBorder:
-        Paint borderPaint = Paint();
+        final Paint borderPaint = Paint();
         borderPaint.style = PaintingStyle.stroke;
         borderPaint.strokeWidth = 6;
         borderPaint.color = Colors.blue[700];
