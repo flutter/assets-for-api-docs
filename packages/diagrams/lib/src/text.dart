@@ -13,6 +13,7 @@ import 'diagram_step.dart';
 const String _text = 'text';
 const String _textEllipsis = 'text_ellipsis';
 const String _textRich = 'text_rich';
+const String _textBorder = 'text_border';
 
 class TextDiagram extends StatelessWidget implements DiagramMetadata {
   const TextDiagram(this.name);
@@ -56,6 +57,35 @@ class TextDiagram extends StatelessWidget implements DiagramMetadata {
               TextSpan(
                 text: 'world',
                 style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+        );
+        break;
+      case _textBorder:
+        final Paint borderPaint = Paint();
+        borderPaint.style = PaintingStyle.stroke;
+        borderPaint.strokeWidth = 6;
+        borderPaint.color = Colors.blue[700];
+        returnWidget = ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 200),
+          child: Stack(
+            children: <Widget>[
+              Text(
+                'Greetings, planet!',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 40,
+                  foreground: borderPaint,
+                ),
+              ),
+              Text(
+                'Greetings, planet!',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 40,
+                  color: Colors.grey[300],
+                ),
               ),
             ],
           ),
@@ -456,6 +486,7 @@ class TextDiagramStep extends DiagramStep<TextDiagram> {
         const TextDiagram(_text),
         const TextDiagram(_textEllipsis),
         const TextDiagram(_textRich),
+        const TextDiagram(_textBorder),
       ];
 
   @override
