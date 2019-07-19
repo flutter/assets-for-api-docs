@@ -4,6 +4,7 @@
 
 import 'dart:async';
 import 'dart:io';
+import 'dart:ui' as ui;
 
 import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,7 @@ const String _text = 'text';
 const String _textEllipsis = 'text_ellipsis';
 const String _textRich = 'text_rich';
 const String _textBorder = 'text_border';
+const String _textGradient = 'text_gradient';
 
 class TextDiagram extends StatelessWidget implements DiagramMetadata {
   const TextDiagram(this.name);
@@ -63,28 +65,52 @@ class TextDiagram extends StatelessWidget implements DiagramMetadata {
         );
         break;
       case _textBorder:
-        final Paint borderPaint = Paint();
-        borderPaint.style = PaintingStyle.stroke;
-        borderPaint.strokeWidth = 6;
-        borderPaint.color = Colors.blue[700];
         returnWidget = ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 200),
           child: Stack(
             children: <Widget>[
+              // Stroked text as border.
               Text(
                 'Greetings, planet!',
-                textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 40,
-                  foreground: borderPaint,
+                  foreground: Paint()
+                    ..style = PaintingStyle.stroke
+                    ..strokeWidth = 6
+                    ..color = Colors.blue[700],
                 ),
               ),
+              // Solid text as fill.
               Text(
                 'Greetings, planet!',
-                textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 40,
                   color: Colors.grey[300],
+                ),
+              ),
+            ],
+          ),
+        );
+        break;
+      case _textGradient:
+        returnWidget = ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 200),
+          child: Stack(
+            children: <Widget>[
+              // Gradient text.
+              Text(
+                'Greetings, planet!',
+                style: TextStyle(
+                  fontSize: 40,
+                  foreground: Paint()
+                    ..shader = ui.Gradient.linear(
+                      const Offset(0, 20),
+                      const Offset(150, 20),
+                      <Color>[
+                        Colors.red,
+                        Colors.yellow,
+                      ],
+                    )
                 ),
               ),
             ],
@@ -487,6 +513,7 @@ class TextDiagramStep extends DiagramStep<TextDiagram> {
         const TextDiagram(_textEllipsis),
         const TextDiagram(_textRich),
         const TextDiagram(_textBorder),
+        const TextDiagram(_textGradient),
       ];
 
   @override
