@@ -42,6 +42,7 @@ export 'src/switch_list_tile.dart';
 export 'src/tabs.dart';
 export 'src/text.dart';
 export 'src/text_field.dart';
+export 'src/text_style.dart';
 export 'src/tile_mode.dart';
 export 'src/transitions.dart';
 export 'src/utils.dart';

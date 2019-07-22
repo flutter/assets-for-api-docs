@@ -16,10 +16,18 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   mockito: any
-  
+
 environment:
   sdk: ">=2.2.0 <3.0.0"
   flutter: ">=0.1.4 <2.0.0"
 
 flutter:
   uses-material-design: true
+  fonts:
+    - family: Raleway
+      fonts:
+        - asset: fonts/Raleway-Regular.ttf
+        - asset: fonts/Raleway-Medium.ttf
+          weight: 500
+        - asset: fonts/Raleway-SemiBold.ttf
+          weight: 600
