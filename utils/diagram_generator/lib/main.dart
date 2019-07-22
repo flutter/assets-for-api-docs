@@ -72,6 +72,7 @@ Future<Null> main() async {
     InkWellDiagramStep(controller),
     ListTileDiagramStep(controller),
     ListViewDiagramStep(controller),
+    MaterialAppDiagramStep(controller),
     MediaQueryDiagramStep(controller),
     RadioListTileDiagramStep(controller),
     RaisedButtonDiagramStep(controller),

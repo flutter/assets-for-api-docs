@@ -28,6 +28,7 @@ export 'src/ink_response_small.dart';
 export 'src/ink_well.dart';
 export 'src/list_tile.dart';
 export 'src/list_view.dart';
+export 'src/material_app.dart';
 export 'src/media_query.dart';
 export 'src/radio_list_tile.dart';
 export 'src/raised_button.dart';
