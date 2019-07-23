@@ -21,6 +21,7 @@ export 'src/diagram_step.dart';
 export 'src/expanded.dart';
 export 'src/flat_button.dart';
 export 'src/flow.dart';
+export 'src/grid_view.dart';
 export 'src/heroes.dart';
 export 'src/icon.dart';
 export 'src/image.dart';
