@@ -18,6 +18,7 @@ export 'src/container.dart';
 export 'src/curve.dart';
 export 'src/custom_list_item.dart';
 export 'src/diagram_step.dart';
+export 'src/dropdown_button.dart';
 export 'src/expanded.dart';
 export 'src/flat_button.dart';
 export 'src/floating_action_button.dart';

@@ -62,6 +62,7 @@ Future<Null> main() async {
     ContainerDiagramStep(controller),
     CurveDiagramStep(controller),
     CustomListItemDiagramStep(controller),
+    DropdownButtonDiagramStep(controller),
     ExpandedDiagramStep(controller),
     FlatButtonDiagramStep(controller),
     FloatingActionButtonDiagramStep(controller),
