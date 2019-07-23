@@ -64,6 +64,7 @@ Future<Null> main() async {
     CustomListItemDiagramStep(controller),
     ExpandedDiagramStep(controller),
     FlatButtonDiagramStep(controller),
+    FloatingActionButtonDiagramStep(controller),
     FlowDiagramStep(controller),
     GridViewDiagramStep(controller),
     HeroesDiagramStep(controller),
