@@ -29,8 +29,8 @@ class FloatingActionButtonDiagram extends StatelessWidget implements DiagramMeta
           appBar: AppBar(
             title: const Text('Floating Action Button Sample'),
           ),
-          body: Center(
-              child: const Text('Press the button below!')
+          body: const Center(
+              child: Text('Press the button below!')
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
@@ -46,8 +46,8 @@ class FloatingActionButtonDiagram extends StatelessWidget implements DiagramMeta
           appBar: AppBar(
             title: const Text('Floating Action Button Sample'),
           ),
-          body: Center(
-            child: const Text('Press the extended button below!'),
+          body: const Center(
+            child: Text('Press the extended button below!'),
           ),
           floatingActionButton: FloatingActionButton.extended(
             onPressed: () {
