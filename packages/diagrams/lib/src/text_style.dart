@@ -71,7 +71,7 @@ class TextStyleDiagram extends StatelessWidget implements DiagramMetadata {
       case _lineHeight:
         returnWidget = const Text(
           'Ladies and gentlemen, you coulda been anywhere in the world tonight, but you’re here with us in New York City.',
-          style: TextStyle(height: 2),
+          style: TextStyle(height: 5, fontSize: 10),
         );
         break;
       case _wavyUnderline:
