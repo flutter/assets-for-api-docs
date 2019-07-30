@@ -30,13 +30,13 @@ class GridViewDiagram extends StatelessWidget implements DiagramMetadata {
           padding: const EdgeInsets.all(20.0),
           crossAxisSpacing: 10.0,
           crossAxisCount: 2,
-          children: const <Widget>[
-            Text('He\'d have you all unravel at the'),
-            Text('Heed not the rabble'),
-            Text('Sound of screams but the'),
-            Text('Who scream'),
-            Text('Revolution is coming...'),
-            Text('Revolution, they...'),
+          children: <Widget>[
+            Container(child: const Text('He\'d have you all unravel at the'), color: Colors.teal[100]),
+            Container(child: const Text('Heed not the rabble'), color: Colors.teal[200]),
+            Container(child: const Text('Sound of screams but the'), color: Colors.teal[300]),
+            Container(child: const Text('Who scream'), color: Colors.teal[400]),
+            Container(child: const Text('Revolution is coming...'), color: Colors.teal[500]),
+            Container(child: const Text('Revolution, they...'), color: Colors.teal[600]),
           ],
         );
         break;
@@ -49,13 +49,13 @@ class GridViewDiagram extends StatelessWidget implements DiagramMetadata {
               sliver: SliverGrid.count(
                 crossAxisSpacing: 10.0,
                 crossAxisCount: 2,
-                children: const <Widget>[
-                  Text('He\'d have you all unravel at the'),
-                  Text('Heed not the rabble'),
-                  Text('Sound of screams but the'),
-                  Text('Who scream'),
-                  Text('Revolution is coming...'),
-                  Text('Revolution, they...'),
+                children: <Widget>[
+                  Container(child: const Text('He\'d have you all unravel at the'), color: Colors.lightGreen[100]),
+                  Container(child: const Text('Heed not the rabble'), color: Colors.lightGreen[200]),
+                  Container(child: const Text('Sound of screams but the'), color: Colors.lightGreen[300]),
+                  Container(child: const Text('Who scream'), color: Colors.lightGreen[400]),
+                  Container(child: const Text('Revolution is coming...'), color: Colors.lightGreen[500]),
+                  Container(child: const Text('Revolution, they...'), color: Colors.lightGreen[600]),
                 ],
               ),
             ),
