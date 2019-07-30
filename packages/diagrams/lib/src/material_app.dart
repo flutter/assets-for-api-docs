@@ -11,7 +11,6 @@ import 'package:flutter/material.dart';
 import 'diagram_step.dart';
 
 const String _basic = 'basic_material_app';
-const String _routesTable = 'routes_material_app';
 const String _theme = 'theme_material_app';
 
 class MaterialAppDiagram extends StatelessWidget implements DiagramMetadata {
@@ -32,27 +31,6 @@ class MaterialAppDiagram extends StatelessWidget implements DiagramMetadata {
               title: const Text('Home'),
             ),
           ),
-          debugShowCheckedModeBanner: false,
-        );
-        break;
-      case _routesTable:
-        returnWidget = MaterialApp(
-          routes: <String, WidgetBuilder>{
-            '/': (BuildContext context) {
-              return Scaffold(
-                appBar: AppBar(
-                  title: const Text('Home Route'),
-                ),
-              );
-            },
-            '/about': (BuildContext context) {
-              return Scaffold(
-                appBar: AppBar(
-                  title: const Text('About Route'),
-                ),
-              );
-            }
-          },
           debugShowCheckedModeBanner: false,
         );
         break;
@@ -93,7 +71,6 @@ class MaterialAppDiagramStep extends DiagramStep<MaterialAppDiagram> {
   @override
   Future<List<MaterialAppDiagram>> get diagrams async => <MaterialAppDiagram>[
         const MaterialAppDiagram(_basic),
-        const MaterialAppDiagram(_routesTable),
         const MaterialAppDiagram(_theme),
       ];
 
