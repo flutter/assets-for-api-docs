@@ -14,7 +14,6 @@ const String _bold = 'text_style_bold';
 const String _italics = 'text_style_italics';
 const String _opacityAndColor = 'text_style_opacity_and_color';
 const String _size = 'text_style_size';
-const String _lineHeight = 'text_style_line_height';
 const String _wavyUnderline = 'text_style_wavy_red_underline';
 const String _customFonts = 'text_style_custom_fonts';
 
@@ -68,12 +67,6 @@ class TextStyleDiagram extends StatelessWidget implements DiagramMetadata {
           style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 2.0),
         );
         break;
-      case _lineHeight:
-        returnWidget = const Text(
-          'Ladies and gentlemen, you coulda been anywhere in the world tonight, but you’re here with us in New York City.',
-          style: TextStyle(height: 5, fontSize: 10),
-        );
-        break;
       case _wavyUnderline:
         returnWidget = RichText(
           text: TextSpan(
@@ -90,7 +83,7 @@ class TextStyleDiagram extends StatelessWidget implements DiagramMetadata {
                 ),
               ),
               const TextSpan(
-                text: ' we got it made in the shade',
+                text: ' we got it made in the shade.',
               ),
             ],
           ),
@@ -128,7 +121,6 @@ class TextStyleDiagramStep extends DiagramStep<TextStyleDiagram> {
         const TextStyleDiagram(_italics),
         const TextStyleDiagram(_opacityAndColor),
         const TextStyleDiagram(_size),
-        const TextStyleDiagram(_lineHeight),
         const TextStyleDiagram(_wavyUnderline),
         const TextStyleDiagram(_customFonts),
       ];
