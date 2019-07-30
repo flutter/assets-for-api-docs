@@ -36,18 +36,18 @@ class FloatingActionButtonDiagram extends StatelessWidget implements DiagramMeta
             onPressed: () {
               // Add your onPressed code here!
             },
-            child: Icon(Icons.thumb_up),
-            backgroundColor: Colors.pink,
+            child: Icon(Icons.navigation),
+            backgroundColor: Colors.green,
           ),
         );
         break;
       case _labeled:
         returnWidget = Scaffold(
           appBar: AppBar(
-            title: const Text('Floating Action Button Sample'),
+            title: const Text('Floating Action Button Label'),
           ),
           body: const Center(
-            child: Text('Press the extended button below!'),
+            child: Text('Press the button with a label below!'),
           ),
           floatingActionButton: FloatingActionButton.extended(
             onPressed: () {
