@@ -11,7 +11,6 @@ import 'package:flutter/material.dart';
 import 'diagram_step.dart';
 
 const String _icon = 'icon';
-const String _icons = 'icons';
 
 class IconDiagram extends StatelessWidget implements DiagramMetadata {
   const IconDiagram(this.name);
@@ -21,33 +20,35 @@ class IconDiagram extends StatelessWidget implements DiagramMetadata {
 
   @override
   Widget build(BuildContext context) {
-    Widget returnWidget;
-
-    switch (name) {
-      case _icons:
-        returnWidget = const Icon(
-          Icons.favorite,
-          color: Colors.purple,
-          size: 32.0,
-        );
-        break;
-      case _icon:
-      default:
-      returnWidget = const Icon(
-        Icons.add,
-        color: Colors.pink,
-        size: 30.0,
-      );
-    }
-
     return ConstrainedBox(
       key: UniqueKey(),
-      constraints: BoxConstraints.tight(const Size(140.0, 140.0)),
+      constraints: BoxConstraints.tight(const Size(200.0, 100.0)),
       child: Container(
-        alignment: FractionalOffset.center,
         padding: const EdgeInsets.all(5.0),
         color: Colors.white,
-        child: returnWidget,
+        child: Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: const <Widget>[
+              Icon(
+                Icons.favorite,
+                color: Colors.pink,
+                size: 24.0,
+                semanticLabel: 'Text to announce in accessibility modes',
+              ),
+              Icon(
+                Icons.audiotrack,
+                color: Colors.green,
+                size: 30.0,
+              ),
+              Icon(
+                Icons.beach_access,
+                color: Colors.blue,
+                size: 36.0,
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -62,7 +63,6 @@ class IconDiagramStep extends DiagramStep<IconDiagram> {
   @override
   Future<List<IconDiagram>> get diagrams async => <IconDiagram>[
         const IconDiagram(_icon),
-        const IconDiagram(_icons),
       ];
 
   @override
