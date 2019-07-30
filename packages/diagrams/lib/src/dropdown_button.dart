@@ -31,6 +31,16 @@ class DropdownButtonDiagram extends StatelessWidget implements DiagramMetadata {
         child: Scaffold(
           body: Center(
             child: DropdownButton<String>(
+              icon: Icon(Icons.arrow_downward),
+              iconSize: 24,
+              elevation: 16,
+              style: TextStyle(
+                color: Colors.deepPurple
+              ),
+              underline: Container(
+                height: 2,
+                color: Colors.deepPurpleAccent,
+              ),
               value: 'One',
               onChanged: (String newValue) {},
               items: <String>['One', 'Two', 'Free', 'Four']
