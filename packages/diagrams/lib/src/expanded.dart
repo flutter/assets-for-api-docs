@@ -38,7 +38,7 @@ class ExpandedDiagram extends StatelessWidget implements DiagramMetadata {
                 ),
                 Expanded(
                   child: Container(
-                    color: Colors.yellow,
+                    color: Colors.amber,
                     child: const Center(child: Text('Expanded')),
                   ),
                 ),
