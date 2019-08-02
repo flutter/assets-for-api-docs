@@ -34,7 +34,6 @@ class IconDiagram extends StatelessWidget implements DiagramMetadata {
                 Icons.favorite,
                 color: Colors.pink,
                 size: 24.0,
-                semanticLabel: 'Text to announce in accessibility modes',
               ),
               Icon(
                 Icons.audiotrack,
