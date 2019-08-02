@@ -27,7 +27,7 @@ class FloatingActionButtonDiagram extends StatelessWidget implements DiagramMeta
       case _basic:
         returnWidget = Scaffold(
           appBar: AppBar(
-            title: const Text('Floating Action Button Sample'),
+            title: const Text('Floating Action Button'),
           ),
           body: const Center(
               child: Text('Press the button below!')
