@@ -119,7 +119,7 @@ class _CustomScrollViewDiagramState extends State<CustomScrollViewDiagram> with 
                 return Container(
                   alignment: Alignment.center,
                   color: Colors.teal[100 * (index % 9)],
-                  child: Text('grid item $index'),
+                  child: Text('Grid Item $index'),
                 );
               },
               childCount: 20,
