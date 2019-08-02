@@ -33,9 +33,7 @@ class FloatingActionButtonDiagram extends StatelessWidget implements DiagramMeta
               child: Text('Press the button below!')
           ),
           floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              // Add your onPressed code here!
-            },
+            onPressed: () {},
             child: Icon(Icons.navigation),
             backgroundColor: Colors.green,
           ),
@@ -50,9 +48,7 @@ class FloatingActionButtonDiagram extends StatelessWidget implements DiagramMeta
             child: Text('Press the button with a label below!'),
           ),
           floatingActionButton: FloatingActionButton.extended(
-            onPressed: () {
-              // Add your onPressed code here!
-            },
+            onPressed: () {},
             label: const Text('Approve'),
             icon: Icon(Icons.thumb_up),
             backgroundColor: Colors.pink,

@@ -26,9 +26,7 @@ class FlatButtonDiagram extends StatelessWidget implements DiagramMetadata {
     switch (name) {
       case _basic:
         returnWidget = FlatButton(
-          onPressed: () {
-            /*...*/
-          },
+          onPressed: () {},
           child: const Text(
             'Flat Button',
           ),
@@ -42,9 +40,7 @@ class FlatButtonDiagram extends StatelessWidget implements DiagramMetadata {
           disabledTextColor: Colors.black,
           padding: const EdgeInsets.all(8.0),
           splashColor: Colors.blueAccent,
-          onPressed: () {
-            /*...*/
-          },
+          onPressed: () {},
           child: const Text(
             'Flat Button',
             style: TextStyle(fontSize: 20.0),
