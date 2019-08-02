@@ -91,7 +91,7 @@ class TextStyleDiagram extends StatelessWidget implements DiagramMetadata {
         break;
       case _customFonts:
         returnWidget = const Text(
-          'Look, when Britain taxed our tea, we got frisky',
+          'Look, when Britain taxed our tea, we got frisky.',
           style: TextStyle(fontFamily: 'Raleway'),
         );
         break;
