@@ -43,7 +43,7 @@ class ExpandedDiagram extends StatelessWidget implements DiagramMetadata {
                   ),
                 ),
                 Container(
-                  color: Colors.green,
+                  color: Colors.blue,
                   height: 100,
                 ),
               ],
