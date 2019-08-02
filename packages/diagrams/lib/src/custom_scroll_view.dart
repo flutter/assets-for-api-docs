@@ -131,7 +131,7 @@ class _CustomScrollViewDiagramState extends State<CustomScrollViewDiagram> with 
               return Container(
                 alignment: Alignment.center,
                 color: Colors.lightBlue[100 * (index % 9)],
-                child: Text('list item $index'),
+                child: Text('List Item $index'),
               );
             },
             ),
