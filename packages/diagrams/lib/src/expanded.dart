@@ -33,7 +33,7 @@ class ExpandedDiagram extends StatelessWidget implements DiagramMetadata {
             child: Column(
               children: <Widget>[
                 Container(
-                  color: Colors.green,
+                  color: Colors.blue,
                   height: 100,
                 ),
                 Expanded(
