@@ -34,16 +34,19 @@ class ExpandedDiagram extends StatelessWidget implements DiagramMetadata {
               children: <Widget>[
                 Container(
                   color: Colors.blue,
+                  width: 100,
                   height: 100,
                 ),
                 Expanded(
                   child: Container(
+                    width: 100,
                     color: Colors.amber,
                     child: const Center(child: Text('Expanded')),
                   ),
                 ),
                 Container(
                   color: Colors.blue,
+                  width: 100,
                   height: 100,
                 ),
               ],
