@@ -67,7 +67,7 @@ class ExpandedDiagram extends StatelessWidget implements DiagramMetadata {
                   child: Container(
                     color: Colors.amber,
                     height: 100,
-                    child: const Center(child: Text('Expanded(flex: 2)')),
+                    child: const Center(child: Text('flex: 2')),
                   ),
                 ),
                 Container(
@@ -80,7 +80,7 @@ class ExpandedDiagram extends StatelessWidget implements DiagramMetadata {
                   child: Container(
                     color: Colors.amber,
                     height: 100,
-                    child: const Center(child: Text('Expanded(flex: 1)')),
+                    child: const Center(child: Text('flex: 1')),
                   ),
                 ),
               ],
