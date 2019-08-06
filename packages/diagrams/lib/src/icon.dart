@@ -10,6 +10,8 @@ import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
 
+const String _icon = 'icon';
+
 class IconDiagram extends StatelessWidget implements DiagramMetadata {
   const IconDiagram(this.name);
 
@@ -20,15 +22,31 @@ class IconDiagram extends StatelessWidget implements DiagramMetadata {
   Widget build(BuildContext context) {
     return ConstrainedBox(
       key: UniqueKey(),
-      constraints: BoxConstraints.tight(const Size(140.0, 140.0)),
+      constraints: BoxConstraints.tight(const Size(200.0, 100.0)),
       child: Container(
-        alignment: FractionalOffset.center,
         padding: const EdgeInsets.all(5.0),
         color: Colors.white,
-        child: const Icon(
-          Icons.add,
-          color: Colors.pink,
-          size: 30.0,
+        child: Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: const <Widget>[
+              Icon(
+                Icons.favorite,
+                color: Colors.pink,
+                size: 24.0,
+              ),
+              Icon(
+                Icons.audiotrack,
+                color: Colors.green,
+                size: 30.0,
+              ),
+              Icon(
+                Icons.beach_access,
+                color: Colors.blue,
+                size: 36.0,
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -43,7 +61,7 @@ class IconDiagramStep extends DiagramStep<IconDiagram> {
 
   @override
   Future<List<IconDiagram>> get diagrams async => <IconDiagram>[
-        const IconDiagram('icon'),
+        const IconDiagram(_icon),
       ];
 
   @override
