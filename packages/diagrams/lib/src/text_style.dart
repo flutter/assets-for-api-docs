@@ -71,7 +71,7 @@ class TextStyleDiagram extends StatelessWidget implements DiagramMetadata {
         returnWidget = RichText(
           text: TextSpan(
             text: 'Don\'t tax the South ',
-            style: TextStyle(color: Colors.black),
+            style: const TextStyle(color: Colors.black),
             children: <TextSpan>[
               TextSpan(
                 text: 'cuz',
