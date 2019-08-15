@@ -31,6 +31,7 @@ export 'src/future_builder.dart';
 export 'src/grid_view.dart';
 export 'src/heroes.dart';
 export 'src/icon.dart';
+export 'src/icon_button.dart';
 export 'src/image.dart';
 export 'src/implicit_animations.dart';
 export 'src/ink_response_large.dart';
