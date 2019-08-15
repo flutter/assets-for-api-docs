@@ -70,6 +70,7 @@ Future<Null> main() async {
     FloatingActionButtonDiagramStep(controller),
     FlowDiagramStep(controller),
     FormDiagramStep(controller),
+    FutureBuilderDiagramStep(controller),
     GridViewDiagramStep(controller),
     HeroesDiagramStep(controller),
     IconDiagramStep(controller),
