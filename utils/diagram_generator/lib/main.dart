@@ -54,6 +54,7 @@ Future<Null> main() async {
     AppBarDiagramStep(controller),
     BlendModeDiagramStep(controller),
     BottomNavigationBarDiagramStep(controller),
+    BoxDecorationDiagramStep(controller),
     BoxFitDiagramStep(controller),
     CardDiagramStep(controller),
     CheckboxListTileDiagramStep(controller),
