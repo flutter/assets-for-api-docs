@@ -95,6 +95,7 @@ Future<Null> main() async {
     TextFieldDiagramStep(controller),
     TextStyleDiagramStep(controller),
     TileModeDiagramStep(controller),
+    ToggleButtonsDiagramStep(controller),
     TransitionDiagramStep(controller),
   ];
 
