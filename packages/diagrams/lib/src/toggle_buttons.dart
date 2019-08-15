@@ -18,7 +18,7 @@ const String _toggleButtonsRequiredMutuallyExclusive = 'toggle_buttons_required_
 const double _kAnimationFrameRate = 60.0;
 const Map<String, List<int>> tapSteps = <String, List<int>>{
   _toggleButtonsSimple: <int>[0, 2, 0, 2],
-  _toggleButtonsRequired: <int>[0, 2, 0, 2],
+  _toggleButtonsRequired: <int>[0, 2, 0],
   _toggleButtonsMutuallyExclusive: <int>[0, 2, 2],
   _toggleButtonsRequiredMutuallyExclusive: <int>[0, 2, 2],
 };
@@ -30,7 +30,7 @@ final List<GlobalKey> _iconKeys = <GlobalKey>[
 ];
 
 class ToggleButtonsDiagram extends StatefulWidget implements DiagramMetadata {
-  const ToggleButtonsDiagram(this.name);
+  const ToggleButtonsDiagram(this.name, { Key key }) : super(key: key);
 
   @override
   final String name;
@@ -40,7 +40,7 @@ class ToggleButtonsDiagram extends StatefulWidget implements DiagramMetadata {
 }
 
 class _ToggleButtonsDiagramState extends State<ToggleButtonsDiagram> {
-  final List<bool> isSelected = <bool>[false, false, false];
+  final List<bool> isSelected = <bool>[false, false, true];
 
   @override
   Widget build(BuildContext context) {
@@ -156,10 +156,10 @@ class ToggleButtonsDiagramStep extends DiagramStep<ToggleButtonsDiagram> {
 
   @override
   Future<List<ToggleButtonsDiagram>> get diagrams async => <ToggleButtonsDiagram>[
-    const ToggleButtonsDiagram(_toggleButtonsSimple),
-    const ToggleButtonsDiagram(_toggleButtonsRequired),
-    const ToggleButtonsDiagram(_toggleButtonsMutuallyExclusive),
-    const ToggleButtonsDiagram(_toggleButtonsRequiredMutuallyExclusive),
+    ToggleButtonsDiagram(_toggleButtonsSimple, key: UniqueKey()),
+    ToggleButtonsDiagram(_toggleButtonsRequired, key: UniqueKey()),
+    ToggleButtonsDiagram(_toggleButtonsMutuallyExclusive, key: UniqueKey()),
+    ToggleButtonsDiagram(_toggleButtonsRequiredMutuallyExclusive, key: UniqueKey()),
   ];
 
   void tapIcons(DiagramController controller, Duration now) async {
@@ -170,7 +170,7 @@ class ToggleButtonsDiagramStep extends DiagramStep<ToggleButtonsDiagram> {
       target = _iconKeys[targetIcon].currentContext.findRenderObject();
       final Offset targetOffset = target.localToGlobal(target.size.center(Offset.zero));
       final TestGesture gesture = await controller.startGesture(targetOffset);
-      Future<void>.delayed(const Duration(milliseconds: 750), gesture.up);
+      Future<void>.delayed(const Duration(milliseconds: 500), gesture.up);
     }
   }
 
