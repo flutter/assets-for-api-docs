@@ -133,7 +133,7 @@ class _ToggleButtonsDiagramState extends State<ToggleButtonsDiagram> {
 
     return ConstrainedBox(
       key: UniqueKey(),
-      constraints: BoxConstraints.tight(const Size(400, 250)),
+      constraints: BoxConstraints.tight(const Size(400, 100)),
       child: Container(
         alignment: FractionalOffset.center,
         padding: const EdgeInsets.all(5.0),
