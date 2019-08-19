@@ -28,6 +28,7 @@ export 'src/floating_action_button.dart';
 export 'src/flow.dart';
 export 'src/form.dart';
 export 'src/future_builder.dart';
+export 'src/gesture_detector.dart';
 export 'src/grid_view.dart';
 export 'src/heroes.dart';
 export 'src/icon.dart';
