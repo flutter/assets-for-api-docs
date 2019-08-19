@@ -61,7 +61,7 @@ class BoxDecorationDiagramStep extends DiagramStep<BoxDecorationDiagram> {
   Future<File> generateDiagram(BoxDecorationDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
 
-    await Future<void>.delayed(Duration(seconds: 1));
+    await Future<void>.delayed(const Duration(seconds: 1));
 
     return await controller.drawDiagramToFile(new File('${diagram.name}.png'));
   }
