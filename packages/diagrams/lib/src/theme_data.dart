@@ -79,7 +79,7 @@ class ThemeDataDiagram extends StatelessWidget implements DiagramMetadata {
                           title: const Text('ThemeData Demo'),
                         ),
                         floatingActionButton: FloatingActionButton(
-                          child: Icon(Icons.add),
+                          child: const Icon(Icons.add),
                           onPressed: () {},
                           key: _fabKey,
                         ),
