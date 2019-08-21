@@ -12,15 +12,16 @@ import 'diagram_step.dart';
 
 const String _futureBuilder = 'future_builder';
 const String _futureBuilderError = 'future_builder_error';
-const Duration _futureDuration = Duration(seconds: 1);
+const Duration _futureDuration = Duration(seconds: 2);
 const Duration _pauseDuration = Duration(seconds: 1);
 final Duration _totalDuration = _futureDuration + _pauseDuration;
 
 class FutureBuilderDiagram extends StatefulWidget implements DiagramMetadata {
-  const FutureBuilderDiagram(this.name);
+  const FutureBuilderDiagram(this.name, {this.size = 60});
 
   @override
   final String name;
+  final double size;
 
   @override
   _FutureBuilderDiagramState createState() => _FutureBuilderDiagramState();
@@ -50,26 +51,57 @@ class _FutureBuilderDiagramState extends State<FutureBuilderDiagram> {
   Widget build(BuildContext context) {
     return ConstrainedBox(
       key: UniqueKey(),
-      constraints: BoxConstraints.tight(const Size(200, 120)),
+      constraints: BoxConstraints.tight(const Size(200, 150)),
       child: Container(
         alignment: FractionalOffset.center,
         color: Colors.white,
         child: FutureBuilder<String>(
           future: _calculation,
           builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-            switch (snapshot.connectionState) {
-              case ConnectionState.none:
-                return const Text('Press button to start.');
-              case ConnectionState.active:
-              case ConnectionState.waiting:
-                return const Text('Awaiting result...');
-              case ConnectionState.done:
-                if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                }
-                return Text('Result: ${snapshot.data}');
+            List<Widget> children;
+
+            if (snapshot.hasData) {
+              children = <Widget>[
+                Icon(
+                  Icons.check_circle_outline,
+                  color: Colors.green,
+                  size: widget.size,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 16),
+                  child: Text('Result: ${snapshot.data}'),
+                )
+              ];
+            } else if (snapshot.hasError) {
+              children = <Widget>[
+                Icon(
+                  Icons.error_outline,
+                  color: Colors.red,
+                  size: widget.size,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 16),
+                  child: Text('Error: ${snapshot.error}'),
+                )
+              ];
+            } else {
+              children = <Widget>[
+                SizedBox(
+                  child: const CircularProgressIndicator(),
+                  width: widget.size,
+                  height: widget.size,
+                ),
+                const Padding(
+                  padding: EdgeInsets.only(top: 16),
+                  child: Text('Awaiting result...'),
+                )
+              ];
             }
-            return null;
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: children,
+            );
           },
         ),
       ),
