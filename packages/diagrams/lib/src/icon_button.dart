@@ -64,7 +64,6 @@ class IconButtonDiagram extends StatelessWidget implements DiagramMetadata {
           ),
         );
     }
-
     return null;
   }
 }

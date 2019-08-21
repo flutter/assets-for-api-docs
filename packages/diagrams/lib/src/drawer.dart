@@ -124,8 +124,7 @@ class DrawerDiagramStep extends DiagramStep<DrawerDiagram> {
     await Future<void>.delayed(_pauseDuration);
 
     final RenderBox target = _menuKey.currentContext.findRenderObject();
-    final Offset targetOffset =
-        target.localToGlobal(target.size.center(Offset.zero));
+    final Offset targetOffset = target.localToGlobal(target.size.center(Offset.zero));
     final TestGesture gesture = await controller.startGesture(targetOffset);
     await gesture.up();
 

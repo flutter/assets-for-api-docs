@@ -67,10 +67,8 @@ class _FutureBuilderDiagramState extends State<FutureBuilderDiagram> {
                 if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
                 }
-
                 return Text('Result: ${snapshot.data}');
             }
-
             return null;
           },
         ),
