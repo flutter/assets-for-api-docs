@@ -33,21 +33,31 @@ class _GestureDetectorDiagramState extends State<GestureDetectorDiagram> {
   Widget build(BuildContext context) {
     return ConstrainedBox(
       key: UniqueKey(),
-      constraints: BoxConstraints.tight(const Size(200, 120)),
+      constraints: BoxConstraints.tight(const Size(200, 150)),
       child: Container(
         alignment: FractionalOffset.center,
         color: Colors.white,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text('Lights are ${_lights ? 'on' : 'off'}'),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Icon(
+                Icons.lightbulb_outline,
+                color: _lights ? Colors.yellow.shade600 : Colors.black,
+                size: 60,
+              ),
+            ),
             GestureDetector(
               key: _gestureDetectorKey,
               onTap: () {
-                setState(() { _lights = true; });
+                setState(() {
+                  _lights = true;
+                });
               },
               child: Container(
-                color: Colors.yellow,
+                color: Colors.yellow.shade600,
+                padding: const EdgeInsets.all(8),
                 child: const Text('TURN LIGHTS ON'),
               ),
             ),
