@@ -23,8 +23,6 @@ environment:
 
 flutter:
   uses-material-design: true
-  assets:
-    - assets/owl-2.jpg
   fonts:
     - family: Raleway
       fonts:

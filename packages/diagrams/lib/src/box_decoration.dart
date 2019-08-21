@@ -31,13 +31,14 @@ class BoxDecorationDiagram extends StatelessWidget implements DiagramMetadata {
           decoration: BoxDecoration(
             color: const Color(0xff7c94b6),
             image: DecorationImage(
-              image: const AssetImage('assets/owl-2.jpg'),
+              image: const NetworkImage('https://flutter.github.io/assets-for-api-docs/assets/widgets/owl-2.jpg'),
               fit: BoxFit.cover,
             ),
             border: Border.all(
               color: Colors.black,
-              width: 8.0,
+              width: 8,
             ),
+            borderRadius: BorderRadius.circular(12),
           ),
         ),
       ),
