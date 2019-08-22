@@ -7,7 +7,7 @@ dependencies:
   diagram_capture:
     path: ../diagram_capture
   path_provider: any
-  archive: 2.0.3
+  archive: ^2.0.10
   process: 3.0.5
 
 dev_dependencies:
