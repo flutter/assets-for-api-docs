@@ -9,6 +9,7 @@ import 'dart:ui';
 import 'package:args/args.dart';
 import 'package:diagram_capture/diagram_capture.dart';
 import 'package:diagrams/diagrams.dart';
+import 'package:flutter/widgets.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 
@@ -27,6 +28,7 @@ Future<Directory> prepareOutputDirectory() async {
 }
 
 Future<Null> main() async {
+  DiagramFlutterBinding.ensureInitialized();
   final List<String> arguments = window.defaultRouteName.length > 5
       ? Uri.decodeComponent(window.defaultRouteName.substring(5)).split(' ')
       : <String>[];
@@ -93,6 +95,7 @@ Future<Null> main() async {
     RowDiagramStep(controller),
     ScaffoldDiagramStep(controller),
     SliverAppBarDiagramStep(controller),
+    SliverFillRemainingDiagramStep(controller),
     StackDiagramStep(controller),
     StrokeCapDiagramStep(controller),
     StrokeJoinDiagramStep(controller),

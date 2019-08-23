@@ -103,7 +103,7 @@ class _DiagramWidgetController extends WidgetController implements TickerProvide
   _DiagramWidgetController(WidgetsBinding binding) : super(binding);
 
   @override
-  _DiagramFlutterBinding get binding => super.binding;
+  DiagramFlutterBinding get binding => super.binding;
 
   @override
   Future<Null> pump([
@@ -146,7 +146,7 @@ class _DiagramTicker extends Ticker {
 
 // Provides a binding different from the regular Flutter binding so that
 // diagrams can control their timeline and physical device size.
-class _DiagramFlutterBinding extends BindingBase
+class DiagramFlutterBinding extends BindingBase
     with
         GestureBinding,
         SemanticsBinding,
@@ -163,13 +163,12 @@ class _DiagramFlutterBinding extends BindingBase
 
   _DiagramWidgetController _controller;
 
-  /// The current [_DiagramFlutterBinding], if one has been created.
-  static _DiagramFlutterBinding get instance {
-    _instance ??= new _DiagramFlutterBinding();
-    return _instance;
+  /// The current [DiagramFlutterBinding], if one has been created.
+  static DiagramFlutterBinding get instance {
+    return ensureInitialized();
   }
 
-  static _DiagramFlutterBinding _instance;
+  static DiagramFlutterBinding _instance;
 
   @override
   void handleBeginFrame(Duration rawTimeStamp) {
@@ -251,6 +250,12 @@ class _DiagramFlutterBinding extends BindingBase
     handleDrawFrame();
     return new Future<Null>.value();
   }
+  
+  /// TODO Doc
+  static DiagramFlutterBinding ensureInitialized() {
+    _instance ??= DiagramFlutterBinding();
+    return _instance;
+  }
 }
 
 /// A generator used by [DiagramController] for generating filenames for frames
@@ -314,7 +319,7 @@ class DiagramController {
 
   TickerProvider get vsync => _binding.vsync;
 
-  _DiagramFlutterBinding get _binding => _DiagramFlutterBinding.instance;
+  DiagramFlutterBinding get _binding => DiagramFlutterBinding.instance;
 
   /// Start a gesture.  The returned [TestGesture] can be used to provide
   /// further interaction. It may be necessary to call [advanceTime] with
