@@ -27,6 +27,7 @@ Future<Directory> prepareOutputDirectory() async {
 }
 
 Future<Null> main() async {
+  DiagramFlutterBinding.ensureInitialized();
   final List<String> arguments = window.defaultRouteName.length > 5
       ? Uri.decodeComponent(window.defaultRouteName.substring(5)).split(' ')
       : <String>[];
