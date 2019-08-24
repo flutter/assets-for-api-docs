@@ -144,8 +144,8 @@ class _DiagramTicker extends Ticker {
   }
 }
 
-// Provides a binding different from the regular Flutter binding so that
-// diagrams can control their timeline and physical device size.
+/// Provides a binding different from the regular Flutter binding so that
+/// diagrams can control their timeline and physical device size.
 class DiagramFlutterBinding extends BindingBase
     with
         GestureBinding,
