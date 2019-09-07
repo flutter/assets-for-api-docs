@@ -110,6 +110,7 @@ Future<Null> main() async {
     ToggleButtonsDiagramStep(controller),
     TransitionDiagramStep(controller),
     TweensDiagramStep(controller),
+    TweenSequenceDiagramStep(controller),
   ];
 
   for (DiagramStep<DiagramMetadata> step in steps) {

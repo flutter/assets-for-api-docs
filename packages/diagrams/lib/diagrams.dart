@@ -62,5 +62,6 @@ export 'src/theme_data.dart';
 export 'src/tile_mode.dart';
 export 'src/toggle_buttons.dart';
 export 'src/transitions.dart';
+export 'src/tween_sequence.dart';
 export 'src/tweens.dart';
 export 'src/utils.dart';
