@@ -151,7 +151,7 @@ class AnimationStatusValueDiagramStep
   final String category = 'animation';
 
   @override
-  Future<List<AnimationStatusValueDiagram>> get diagrams async => [
+  Future<List<AnimationStatusValueDiagram>> get diagrams async => <AnimationStatusValueDiagram>[
         const AnimationStatusValueDiagram(),
       ];
 

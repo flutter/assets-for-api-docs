@@ -109,6 +109,7 @@ Future<Null> main() async {
     ThemeDataDiagramStep(controller),
     ToggleButtonsDiagramStep(controller),
     TransitionDiagramStep(controller),
+    TweensDiagramStep(controller),
   ];
 
   for (DiagramStep<DiagramMetadata> step in steps) {
