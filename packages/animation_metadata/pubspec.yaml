@@ -5,7 +5,7 @@ author: Chromium Authors
 homepage: http://www.flutter.dev
 
 dependencies:
-  path: ^1.6.2
+  path: ^1.6.4
 
 environment:
   sdk: ">=2.0.0-dev.61.0 <3.0.0"
