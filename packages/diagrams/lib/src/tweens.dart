@@ -82,7 +82,7 @@ class TweensDiagramState extends State<TweensDiagram>
                       Center(
                         child: Text(
                           _controller.value.toStringAsFixed(2),
-                          style: TextStyle(fontSize: 26),
+                          style: const TextStyle(fontSize: 26),
                         ),
                       ),
                       Center(
@@ -91,7 +91,7 @@ class TweensDiagramState extends State<TweensDiagram>
                             begin: 45,
                             end: 65,
                           ).evaluate(_controller).toString(),
-                          style: TextStyle(fontSize: 26),
+                          style: const TextStyle(fontSize: 26),
                         ),
                       ),
                       Center(
@@ -100,7 +100,7 @@ class TweensDiagramState extends State<TweensDiagram>
                             begin: 100.0,
                             end: 200.0,
                           ).evaluate(_controller).toStringAsFixed(1),
-                          style: TextStyle(fontSize: 26),
+                          style: const TextStyle(fontSize: 26),
                         ),
                       ),
                       Center(
@@ -115,30 +115,30 @@ class TweensDiagramState extends State<TweensDiagram>
                       ),
                     ],
                   ),
-                  TableRow(
+                  const TableRow(
                     children: <Widget>[
                       Center(
-                        child: const Padding(
+                        child: Padding(
                           padding: EdgeInsets.all(5),
                           child: Text('Animation.value'),
                         ),
                       ),
                       Center(
-                        child: const Padding(
+                        child: Padding(
                           padding: EdgeInsets.all(5),
                           child:
                               Text('IntTween(\n  begin: 45,\n  end: 65,\n);'),
                         ),
                       ),
                       Center(
-                        child: const Padding(
+                        child: Padding(
                           padding: EdgeInsets.all(5),
                           child: Text(
                               'Tween<double>(\n  begin: 100.0,\n  end: 200.0,\n);'),
                         ),
                       ),
                       Center(
-                        child: const Padding(
+                        child: Padding(
                           padding: EdgeInsets.all(5),
                           child: Text(
                               'ColorTween(\n  begin: Colors.red,\n  end: Colors.green,\n);'),

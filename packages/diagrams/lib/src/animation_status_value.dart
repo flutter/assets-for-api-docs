@@ -90,13 +90,13 @@ class AnimationStatusValueDiagramState
                     Center(
                       child: Text(
                         _status,
-                        style: TextStyle(fontSize: 26),
+                        style: const TextStyle(fontSize: 26),
                       ),
                     ),
                     Center(
                       child: Text(
                         _controller.value.toStringAsFixed(2),
-                        style: TextStyle(fontSize: 26),
+                        style: const TextStyle(fontSize: 26),
                       ),
                     ),
                     Center(
@@ -111,22 +111,22 @@ class AnimationStatusValueDiagramState
                     ),
                   ],
                 ),
-                TableRow(
+                const TableRow(
                   children: <Widget>[
                     Center(
-                      child: const Padding(
+                      child: Padding(
                         padding: EdgeInsets.all(5),
                         child: Text('Animation.status'),
                       ),
                     ),
                     Center(
-                      child: const Padding(
+                      child: Padding(
                         padding: EdgeInsets.all(5),
                         child: Text('Animation.value'),
                       ),
                     ),
                     Center(
-                      child: const Padding(
+                      child: Padding(
                         padding: EdgeInsets.all(5),
                         child: Text('as Opacity'),
                       ),
@@ -151,8 +151,8 @@ class AnimationStatusValueDiagramStep
   final String category = 'animation';
 
   @override
-  Future<List<AnimationStatusValueDiagram>> get diagrams async => <AnimationStatusValueDiagram>[
-        const AnimationStatusValueDiagram(),
+  Future<List<AnimationStatusValueDiagram>> get diagrams async => const <AnimationStatusValueDiagram>[
+        AnimationStatusValueDiagram(),
       ];
 
   @override
