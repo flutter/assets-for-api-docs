@@ -144,8 +144,8 @@ class _DiagramTicker extends Ticker {
   }
 }
 
-// Provides a binding different from the regular Flutter binding so that
-// diagrams can control their timeline and physical device size.
+/// Provides a binding different from the regular Flutter binding so that
+/// diagrams can control their timeline and physical device size.
 class DiagramFlutterBinding extends BindingBase
     with
         GestureBinding,
@@ -164,9 +164,7 @@ class DiagramFlutterBinding extends BindingBase
   _DiagramWidgetController _controller;
 
   /// The current [DiagramFlutterBinding], if one has been created.
-  static DiagramFlutterBinding get instance {
-    return ensureInitialized();
-  }
+  static DiagramFlutterBinding get instance => ensureInitialized();
 
   static DiagramFlutterBinding _instance;
 
@@ -250,8 +248,7 @@ class DiagramFlutterBinding extends BindingBase
     handleDrawFrame();
     return new Future<Null>.value();
   }
-  
-  /// TODO Doc
+
   static DiagramFlutterBinding ensureInitialized() {
     _instance ??= DiagramFlutterBinding();
     return _instance;
