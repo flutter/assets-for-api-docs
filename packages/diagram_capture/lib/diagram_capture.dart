@@ -249,6 +249,8 @@ class DiagramFlutterBinding extends BindingBase
     return new Future<Null>.value();
   }
 
+  /// Ensures the binding has been initialized before accessing the default
+  /// binary messenger.
   static DiagramFlutterBinding ensureInitialized() {
     _instance ??= DiagramFlutterBinding();
     return _instance;

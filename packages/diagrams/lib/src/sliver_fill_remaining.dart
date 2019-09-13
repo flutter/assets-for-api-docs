@@ -13,37 +13,30 @@ import 'package:flutter_test/flutter_test.dart';
 import 'diagram_step.dart';
 import 'fake_drag_scroll_activity.dart';
 
-final Duration _kTotalDuration = _kScrollUpDuration + _kScrollPauseDuration;
-//    + _kScrollDownDurationPartOne
-//    + _kScrollPauseDuration
-//    + _kScrollDownDurationPartTwo
-//    + _kScrollPauseDuration;
-const Duration _kScrollUpDuration = Duration(seconds: 1, milliseconds: 500);
-//const Duration _kScrollDownDurationPartOne = Duration(milliseconds: 800);
-//const Duration _kScrollDownDurationPartTwo = Duration(seconds: 1);
-const Duration _kScrollPauseDuration = Duration(milliseconds: 900);
+final Duration _kTotalDuration = _kScrollPauseDuration + _kScrollUpDuration + _kScrollPauseDuration;
+const Duration _kScrollUpDuration = Duration(seconds: 1);
+const Duration _kScrollPauseDuration = Duration(seconds: 1);
 
 const double _kCurveAnimationFrameRate = 60.0;
-//const String _customScrollView = 'custom_scroll_view';
 
 class SliverFillRemainingDiagram extends StatefulWidget implements DiagramMetadata {
-  const SliverFillRemainingDiagram(this.sampleNumber);
+  const SliverFillRemainingDiagram(this.subName);
 
-  final int sampleNumber;
-
-  @override
-  String get name => 'sliver_fill_remaining_' + sampleNumber.toString();
+  final String subName;
 
   @override
-  State<StatefulWidget> createState() => _SliverFillRemainingDiagramState(sampleNumber);
+  String get name => 'sliver_fill_remaining_' + subName;
+
+  @override
+  State<StatefulWidget> createState() => _SliverFillRemainingDiagramState(subName);
 
 }
 
 class _SliverFillRemainingDiagramState extends State<SliverFillRemainingDiagram> with TickerProviderStateMixin<SliverFillRemainingDiagram> {
-  _SliverFillRemainingDiagramState(this.sampleNumber);
+  _SliverFillRemainingDiagramState(this.subName);
 
   final ScrollController _scrollController = ScrollController();
-  final int sampleNumber;
+  final String subName;
 
   @override
   void initState() {
@@ -98,9 +91,11 @@ class _SliverFillRemainingDiagramState extends State<SliverFillRemainingDiagram>
   Widget build(BuildContext context) {
 
     List<Widget> slivers;
+    print('***** $subName *****');
 
-    switch(sampleNumber) {
-      case 1:
+    switch(subName) {
+      case 'sizes_child':
+        print('************************ SIZESCHILD ******************');
         slivers = <Widget>[
           SliverToBoxAdapter(
             child: Container(
@@ -121,7 +116,8 @@ class _SliverFillRemainingDiagramState extends State<SliverFillRemainingDiagram>
           ),
         ];
         break;
-      case 2:
+      case 'defers_to_child':
+        print('************************ DEFERSTOCHILD ******************');
         slivers = <Widget>[
           SliverFixedExtentList(
             itemExtent: 130.0,
@@ -146,7 +142,8 @@ class _SliverFillRemainingDiagramState extends State<SliverFillRemainingDiagram>
           ),
         ];
         break;
-      case 3:
+      case 'scrolled_beyond':
+        print('************************ SCROLLEDBEYOND ******************');
         slivers = <Widget>[
           SliverFixedExtentList(
             itemExtent: 150.0,
@@ -174,7 +171,8 @@ class _SliverFillRemainingDiagramState extends State<SliverFillRemainingDiagram>
           ),
         ];
         break;
-      case 4:
+      case 'fill_overscroll':
+        print('************************ FILLOVERSCROLL ******************');
         slivers = <Widget>[
           SliverToBoxAdapter(
             child: Container(
@@ -230,10 +228,10 @@ class SliverFillRemainingDiagramStep extends DiagramStep<SliverFillRemainingDiag
 
   @override
   Future<List<SliverFillRemainingDiagram>> get diagrams async => <SliverFillRemainingDiagram>[
-    const SliverFillRemainingDiagram(1),
-    const SliverFillRemainingDiagram(2),
-    const SliverFillRemainingDiagram(3),
-    const SliverFillRemainingDiagram(4),
+    const SliverFillRemainingDiagram('sizes_child'),
+    const SliverFillRemainingDiagram('defers_to_child'),
+    const SliverFillRemainingDiagram('scrolled_beyond'),
+    const SliverFillRemainingDiagram('fill_overscroll'),
   ];
 
   @override
