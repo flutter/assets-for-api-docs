@@ -52,7 +52,7 @@ Future<Null> main() async {
   // Add the diagram steps here.
   final List<DiagramStep<DiagramMetadata>> steps =
       <DiagramStep<DiagramMetadata>>[
-//    AlignDiagramStep(controller),
+    AlignDiagramStep(controller),
 //    AnimationStatusValueDiagramStep(controller),
 //    AppBarDiagramStep(controller),
 //    BlendModeDiagramStep(controller),
@@ -96,7 +96,7 @@ Future<Null> main() async {
 //    RowDiagramStep(controller),
 //    ScaffoldDiagramStep(controller),
 //    SliverAppBarDiagramStep(controller),
-    SliverFillRemainingDiagramStep(controller),
+//    SliverFillRemainingDiagramStep(controller),
 //    StackDiagramStep(controller),
 //    StrokeCapDiagramStep(controller),
 //    StrokeJoinDiagramStep(controller),
