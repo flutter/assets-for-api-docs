@@ -28,15 +28,14 @@ class SliverFillRemainingDiagram extends StatefulWidget implements DiagramMetada
   String get name => 'sliver_fill_remaining_' + subName;
 
   @override
-  State<StatefulWidget> createState() => _SliverFillRemainingDiagramState(subName);
+  State<StatefulWidget> createState() => _SliverFillRemainingDiagramState();
 
 }
 
 class _SliverFillRemainingDiagramState extends State<SliverFillRemainingDiagram> with TickerProviderStateMixin<SliverFillRemainingDiagram> {
-  _SliverFillRemainingDiagramState(this.subName);
+  _SliverFillRemainingDiagramState();
 
   final ScrollController _scrollController = ScrollController();
-  final String subName;
 
   @override
   void initState() {
@@ -58,19 +57,10 @@ class _SliverFillRemainingDiagramState extends State<SliverFillRemainingDiagram>
   Future<void> _play() async {
     await Future<void>.delayed(_kScrollPauseDuration);
     await _animate(
-      to: 650.0,
+      to: 500.0,
       duration: _kScrollUpDuration,
     );
     await Future<void>.delayed(_kScrollPauseDuration);
-//    await _animate(
-//      to: 500.0,
-//      duration: _kScrollDownDurationPartOne,
-//    );
-//    await Future<void>.delayed(_kScrollPauseDuration);
-//    await _animate(
-//      to: 0.0,
-//      duration: _kScrollDownDurationPartTwo,
-//    );
   }
 
   Future<void> _animate({double to, Duration duration}) {
@@ -91,11 +81,9 @@ class _SliverFillRemainingDiagramState extends State<SliverFillRemainingDiagram>
   Widget build(BuildContext context) {
 
     List<Widget> slivers;
-    print('***** $subName *****');
 
-    switch(subName) {
+    switch(widget.subName) {
       case 'sizes_child':
-        print('************************ SIZESCHILD ******************');
         slivers = <Widget>[
           SliverToBoxAdapter(
             child: Container(
@@ -117,17 +105,16 @@ class _SliverFillRemainingDiagramState extends State<SliverFillRemainingDiagram>
         ];
         break;
       case 'defers_to_child':
-        print('************************ DEFERSTOCHILD ******************');
         slivers = <Widget>[
           SliverFixedExtentList(
-            itemExtent: 130.0,
+            itemExtent: 100.0,
             delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
                 return Container(
                   color: index % 2 == 0 ? Colors.amber[200] : Colors.blue[200],
                 );
               },
-              childCount: 5,
+              childCount: 3,
             ),
           ),
           SliverFillRemaining(
@@ -143,17 +130,16 @@ class _SliverFillRemainingDiagramState extends State<SliverFillRemainingDiagram>
         ];
         break;
       case 'scrolled_beyond':
-        print('************************ SCROLLEDBEYOND ******************');
         slivers = <Widget>[
           SliverFixedExtentList(
-            itemExtent: 150.0,
+            itemExtent: 130.0,
             delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
                 return Container(
                   color: index % 2 == 0 ? Colors.indigo[200] : Colors.orange[200],
                 );
               },
-              childCount: 7,
+              childCount: 5,
             ),
           ),
           SliverFillRemaining(
@@ -172,7 +158,6 @@ class _SliverFillRemainingDiagramState extends State<SliverFillRemainingDiagram>
         ];
         break;
       case 'fill_overscroll':
-        print('************************ FILLOVERSCROLL ******************');
         slivers = <Widget>[
           SliverToBoxAdapter(
             child: Container(
@@ -212,6 +197,9 @@ class _SliverFillRemainingDiagramState extends State<SliverFillRemainingDiagram>
       child: Scaffold(
         appBar: AppBar(title: const Text('SliverFillRemaining')),
         body: CustomScrollView(
+          physics: widget.subName == 'fill_overscroll' ?
+            const BouncingScrollPhysics() :
+            const ClampingScrollPhysics(),
           controller: _scrollController,
           slivers: slivers,
         ),
