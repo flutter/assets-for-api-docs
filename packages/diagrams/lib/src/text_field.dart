@@ -25,10 +25,10 @@ class TextFieldDiagram extends StatelessWidget implements DiagramMetadata {
         alignment: FractionalOffset.center,
         padding: const EdgeInsets.all(5.0),
         color: Colors.white,
-        child: TextField(
+        child: const TextField(
           obscureText: true,
           decoration: InputDecoration(
-            border: const OutlineInputBorder(),
+            border: OutlineInputBorder(),
             labelText: 'Password',
           ),
         ),
