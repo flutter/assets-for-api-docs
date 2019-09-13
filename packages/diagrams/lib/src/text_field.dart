@@ -28,7 +28,7 @@ class TextFieldDiagram extends StatelessWidget implements DiagramMetadata {
         child: TextField(
           obscureText: true,
           decoration: InputDecoration(
-            border: OutlineInputBorder(),
+            border: const OutlineInputBorder(),
             labelText: 'Password',
           ),
         ),

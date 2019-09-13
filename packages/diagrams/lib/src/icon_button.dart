@@ -52,7 +52,7 @@ class IconButtonDiagram extends StatelessWidget implements DiagramMetadata {
               child: Ink(
                 decoration: ShapeDecoration(
                   color: Colors.lightBlue,
-                  shape: CircleBorder(),
+                  shape: const CircleBorder(),
                 ),
                 child: IconButton(
                   icon: Icon(Icons.android),

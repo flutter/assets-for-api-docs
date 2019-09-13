@@ -31,7 +31,7 @@ class FormDiagram extends StatelessWidget implements DiagramMetadata {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 TextFormField(
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     hintText: 'Enter your email',
                   ),
                 ),
