@@ -13,19 +13,19 @@ import 'package:flutter_test/flutter_test.dart';
 import 'diagram_step.dart';
 import 'fake_drag_scroll_activity.dart';
 
-final Duration _kTotalDuration = _kScrollPauseDuration + _kScrollUpDuration + _kScrollPauseDuration;
 const Duration _kScrollUpDuration = Duration(seconds: 1);
 const Duration _kScrollPauseDuration = Duration(seconds: 1);
+final Duration _kTotalDuration = _kScrollPauseDuration + _kScrollUpDuration + _kScrollPauseDuration;
 
 const double _kCurveAnimationFrameRate = 60.0;
 
 class SliverFillRemainingDiagram extends StatefulWidget implements DiagramMetadata {
-  const SliverFillRemainingDiagram(this.subName);
+  const SliverFillRemainingDiagram(this.sampleName);
 
-  final String subName;
+  final String sampleName;
 
   @override
-  String get name => 'sliver_fill_remaining_' + subName;
+  String get name => 'sliver_fill_remaining_' + sampleName;
 
   @override
   State<StatefulWidget> createState() => _SliverFillRemainingDiagramState();
@@ -79,10 +79,9 @@ class _SliverFillRemainingDiagramState extends State<SliverFillRemainingDiagram>
 
   @override
   Widget build(BuildContext context) {
-
     List<Widget> slivers;
 
-    switch(widget.subName) {
+    switch(widget.sampleName) {
       case 'sizes_child':
         slivers = <Widget>[
           SliverToBoxAdapter(
@@ -197,7 +196,7 @@ class _SliverFillRemainingDiagramState extends State<SliverFillRemainingDiagram>
       child: Scaffold(
         appBar: AppBar(title: const Text('SliverFillRemaining')),
         body: CustomScrollView(
-          physics: widget.subName == 'fill_overscroll' ?
+          physics: widget.sampleName == 'fill_overscroll' ?
             const BouncingScrollPhysics() :
             const ClampingScrollPhysics(),
           controller: _scrollController,
