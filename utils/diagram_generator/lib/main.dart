@@ -52,6 +52,7 @@ Future<Null> main() async {
   final List<DiagramStep<DiagramMetadata>> steps =
       <DiagramStep<DiagramMetadata>>[
     AlignDiagramStep(controller),
+    AnimatedBuilderDiagramStep(controller),
     AnimationStatusValueDiagramStep(controller),
     AppBarDiagramStep(controller),
     BlendModeDiagramStep(controller),
