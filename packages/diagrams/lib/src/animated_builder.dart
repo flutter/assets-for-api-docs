@@ -22,7 +22,7 @@ class AnimatedBuilderDiagram extends StatefulWidget implements DiagramMetadata {
   State<AnimatedBuilderDiagram> createState() => AnimatedBuilderDiagramState();
 
   @override
-  String get name => 'aniamted_builder';
+  String get name => 'animated_builder';
 }
 
 class AnimatedBuilderDiagramState extends State<AnimatedBuilderDiagram> with TickerProviderStateMixin<AnimatedBuilderDiagram> {
