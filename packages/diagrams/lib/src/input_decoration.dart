@@ -40,7 +40,7 @@ class InputDecorationDiagram extends StatelessWidget implements DiagramMetadata 
                   hintText: 'Hint Text',
                   helperText: 'Helper Text',
                   counterText: '0 characters',
-                  border: OutlineInputBorder(),
+                  border: const OutlineInputBorder(),
                 ),
               ),
             ),
@@ -54,7 +54,7 @@ class InputDecorationDiagram extends StatelessWidget implements DiagramMetadata 
           child: Container(
             padding: const EdgeInsets.all(8),
             color: Colors.white,
-            child: Center(
+            child: const Center(
               child: TextField(
                 decoration: InputDecoration(
                   hintText: 'Hint Text',
@@ -75,9 +75,9 @@ class InputDecorationDiagram extends StatelessWidget implements DiagramMetadata 
             child: Center(
               child: TextFormField(
                 initialValue: 'abc',
-                decoration: InputDecoration(
-                  prefix: const Text('Prefix'),
-                  suffix: const Text('Suffix'),
+                decoration: const InputDecoration(
+                  prefix: Text('Prefix'),
+                  suffix: Text('Suffix'),
                   border: OutlineInputBorder(),
                 ),
               ),
@@ -91,7 +91,7 @@ class InputDecorationDiagram extends StatelessWidget implements DiagramMetadata 
           constraints: BoxConstraints.tight(const Size(260, 120)),
           child: Container(
             color: Colors.white,
-            child: Center(
+            child: const Center(
               child: TextField(
                 decoration: InputDecoration.collapsed(
                   hintText: 'Hint Text',

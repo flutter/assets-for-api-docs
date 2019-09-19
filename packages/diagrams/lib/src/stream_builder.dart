@@ -58,7 +58,9 @@ class _StreamBuilderDiagramState extends State<StreamBuilderDiagram> {
         child: StreamBuilder<int>(
           stream: _calculation,
           builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
-            if (snapshot.hasError) return Text('Error: ${snapshot.error}');
+            if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            }
             switch (snapshot.connectionState) {
               case ConnectionState.none:
                 return const Text('Select lot');

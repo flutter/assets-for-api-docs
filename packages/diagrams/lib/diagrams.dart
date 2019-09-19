@@ -12,6 +12,7 @@ export 'src/animation_status_value.dart';
 export 'src/app_bar.dart';
 export 'src/blend_mode.dart';
 export 'src/bottom_navigation_bar.dart';
+export 'src/bottom_sheet.dart';
 export 'src/box_decoration.dart';
 export 'src/box_fit.dart';
 export 'src/card.dart';

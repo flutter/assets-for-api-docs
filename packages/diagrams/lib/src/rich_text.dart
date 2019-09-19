@@ -29,9 +29,9 @@ class RichTextDiagram extends StatelessWidget implements DiagramMetadata {
           text: TextSpan(
             text: 'Hello ',
             style: DefaultTextStyle.of(context).style,
-            children: <TextSpan>[
+            children: const <TextSpan>[
               TextSpan(text: 'bold', style: TextStyle(fontWeight: FontWeight.bold)),
-              const TextSpan(text: ' world!'),
+              TextSpan(text: ' world!'),
             ],
           ),
         ),

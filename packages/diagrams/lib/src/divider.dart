@@ -28,7 +28,7 @@ class DividerDiagram extends StatelessWidget implements DiagramMetadata {
           child: Column(
             children: <Widget>[
               Expanded(child: Container(color: Colors.amber)),
-              Divider(
+              const Divider(
                 color: Colors.black,
                 height: 20,
                 thickness: 5,

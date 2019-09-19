@@ -100,12 +100,12 @@ class SimpleDialogDiagram extends StatelessWidget implements DiagramMetadata {
     switch (result) {
       case Department.treasury:
         Scaffold.of(context).showSnackBar(
-          SnackBar(content: const Text('Treasury')),
+          const SnackBar(content: Text('Treasury')),
         );
         break;
       case Department.state:
         Scaffold.of(context).showSnackBar(
-          SnackBar(content: const Text('State')),
+          const SnackBar(content: Text('State')),
         );
         break;
     }
