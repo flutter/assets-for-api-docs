@@ -51,6 +51,7 @@ Future<Null> main() async {
   // Add the diagram steps here.
   final List<DiagramStep<DiagramMetadata>> steps =
       <DiagramStep<DiagramMetadata>>[
+    AlertDialogDiagramStep(controller),
     AlignDiagramStep(controller),
     AnimatedBuilderDiagramStep(controller),
     AnimationStatusValueDiagramStep(controller),

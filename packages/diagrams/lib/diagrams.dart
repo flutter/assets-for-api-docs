@@ -4,6 +4,7 @@
 
 library diagrams;
 
+export 'src/alert_dialog.dart';
 export 'src/align.dart';
 export 'src/animated_builder.dart';
 export 'src/animation_diagram.dart';
