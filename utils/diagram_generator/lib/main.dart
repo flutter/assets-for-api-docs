@@ -104,6 +104,7 @@ Future<Null> main() async {
     SingleChildScrollViewDiagramStep(controller),
     SliverAppBarDiagramStep(controller),
     SliverFillRemainingDiagramStep(controller),
+    StreamBuilderDiagramStep(controller),
     StackDiagramStep(controller),
     StrokeCapDiagramStep(controller),
     StrokeJoinDiagramStep(controller),

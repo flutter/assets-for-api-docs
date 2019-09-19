@@ -59,6 +59,7 @@ export 'src/single_child_scroll_view.dart';
 export 'src/sliver_app_bars.dart';
 export 'src/sliver_fill_remaining.dart';
 export 'src/stack.dart';
+export 'src/stream_builder.dart';
 export 'src/stroke_cap.dart';
 export 'src/stroke_join.dart';
 export 'src/switch_list_tile.dart';
