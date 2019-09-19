@@ -22,6 +22,7 @@ export 'src/container.dart';
 export 'src/curve.dart';
 export 'src/custom_list_item.dart';
 export 'src/custom_scroll_view.dart';
+export 'src/data_table.dart';
 export 'src/diagram_step.dart';
 export 'src/divider.dart';
 export 'src/drawer.dart';

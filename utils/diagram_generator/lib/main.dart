@@ -68,6 +68,7 @@ Future<Null> main() async {
     CurveDiagramStep(controller),
     CustomListItemDiagramStep(controller),
     CustomScrollViewDiagramStep(controller),
+    DataTableDiagramStep(controller),
     DropdownButtonDiagramStep(controller),
     DividerDiagramStep(controller),
     DrawerDiagramStep(controller),
