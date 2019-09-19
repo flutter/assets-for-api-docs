@@ -50,6 +50,7 @@ export 'src/radio_list_tile.dart';
 export 'src/raised_button.dart';
 export 'src/row.dart';
 export 'src/scaffold.dart';
+export 'src/show_date_picker.dart';
 export 'src/simple_dialog.dart';
 export 'src/single_child_scroll_view.dart';
 export 'src/sliver_app_bars.dart';

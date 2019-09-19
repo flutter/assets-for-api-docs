@@ -96,6 +96,7 @@ Future<Null> main() async {
     RaisedButtonDiagramStep(controller),
     RowDiagramStep(controller),
     ScaffoldDiagramStep(controller),
+    ShowDatePickerDiagramStep(controller),
     SimpleDialogDiagramStep(controller),
     SingleChildScrollViewDiagramStep(controller),
     SliverAppBarDiagramStep(controller),
