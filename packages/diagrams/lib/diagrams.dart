@@ -5,6 +5,7 @@
 library diagrams;
 
 export 'src/align.dart';
+export 'src/animated_builder.dart';
 export 'src/animation_diagram.dart';
 export 'src/animation_status_value.dart';
 export 'src/app_bar.dart';
