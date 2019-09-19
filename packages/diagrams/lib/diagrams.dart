@@ -50,6 +50,7 @@ export 'src/radio_list_tile.dart';
 export 'src/raised_button.dart';
 export 'src/row.dart';
 export 'src/scaffold.dart';
+export 'src/simple_dialog.dart';
 export 'src/sliver_app_bars.dart';
 export 'src/sliver_fill_remaining.dart';
 export 'src/stack.dart';
