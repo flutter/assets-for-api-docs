@@ -41,6 +41,7 @@ export 'src/implicit_animations.dart';
 export 'src/ink_response_large.dart';
 export 'src/ink_response_small.dart';
 export 'src/ink_well.dart';
+export 'src/input_decoration.dart';
 export 'src/list_tile.dart';
 export 'src/list_view.dart';
 export 'src/material_app.dart';

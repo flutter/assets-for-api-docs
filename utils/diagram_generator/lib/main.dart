@@ -87,6 +87,7 @@ Future<Null> main() async {
     InkResponseLargeDiagramStep(controller),
     InkResponseSmallDiagramStep(controller),
     InkWellDiagramStep(controller),
+    InputDecorationDiagramStep(controller),
     ListTileDiagramStep(controller),
     ListViewDiagramStep(controller),
     MaterialAppDiagramStep(controller),
