@@ -94,6 +94,7 @@ Future<Null> main() async {
     PaddingDiagramStep(controller),
     RadioListTileDiagramStep(controller),
     RaisedButtonDiagramStep(controller),
+    RichTextDiagramStep(controller),
     RowDiagramStep(controller),
     ScaffoldDiagramStep(controller),
     ShowDatePickerDiagramStep(controller),

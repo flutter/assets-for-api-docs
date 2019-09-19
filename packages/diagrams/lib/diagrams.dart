@@ -48,6 +48,7 @@ export 'src/media_query.dart';
 export 'src/padding.dart';
 export 'src/radio_list_tile.dart';
 export 'src/raised_button.dart';
+export 'src/rich_text.dart';
 export 'src/row.dart';
 export 'src/scaffold.dart';
 export 'src/show_date_picker.dart';
