@@ -121,7 +121,7 @@ class TweenSequenceDiagramState extends State<TweenSequenceDiagram>
                         style: _activeItem == 1 ? _activeStyle : null,
                       ),
                       Text(
-                        '    TweenSequenceItem(\n        tween: ConstantTween(Colors.green),\n        weight: 2,\n    ),',
+                        '    TweenSequenceItem(\n        tween: ConstantTween(Colors.green),\n        weight: 1,\n    ),',
                         style: _activeItem == 2 ? _activeStyle : null,
                       ),
                       Text(
