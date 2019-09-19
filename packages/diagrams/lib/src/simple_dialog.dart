@@ -142,17 +142,18 @@ class SimpleDialogDiagramStep extends DiagramStep<SimpleDialogDiagram> {
     );
 
     await _pause();
-    await _tap(_openDialogKey.currentContext.findRenderObject());
+    await _tap(_openDialogKey);
     await _pause();
     await _pause();
     await _pause();
-    await _tap(_treasuryKey.currentContext.findRenderObject());
+    await _tap(_treasuryKey);
     await _pause();
 
     return result;
   }
 
-  Future<void> _tap(RenderBox target) async {
+  Future<void> _tap(GlobalKey key) async {
+    final RenderBox target = key.currentContext.findRenderObject();
     final Offset targetOffset =
         target.localToGlobal(target.size.center(Offset.zero));
     final TestGesture gesture = await controller.startGesture(targetOffset);
