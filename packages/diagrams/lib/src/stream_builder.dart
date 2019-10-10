@@ -34,11 +34,14 @@ class _StreamBuilderDiagramState extends State<StreamBuilderDiagram> {
     if (widget.name == _streamBuilder) {
       _calculation = (() async* {
         await Future<void>.delayed(_pauseDuration);
+        await Future<void>.delayed(_pauseDuration);
         yield 1;
+        await Future<void>.delayed(_pauseDuration);
         await Future<void>.delayed(_pauseDuration);
       })();
     } else if (widget.name == _streamBuilderError) {
       _calculation = (() async* {
+        await Future<void>.delayed(_pauseDuration);
         await Future<void>.delayed(_pauseDuration);
         throw 'Bid Failed';
       })();
@@ -58,20 +61,82 @@ class _StreamBuilderDiagramState extends State<StreamBuilderDiagram> {
         child: StreamBuilder<int>(
           stream: _calculation,
           builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+            List<Widget> children;
+
             if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}');
+              children = <Widget>[
+                Icon(
+                  Icons.error_outline,
+                  color: Colors.red,
+                  size: widget.size,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 16),
+                  child: Text('Error: ${snapshot.error}'),
+                )
+              ];
+            } else {
+              switch (snapshot.connectionState) {
+                case ConnectionState.none:
+                  children = <Widget>[
+                    Icon(
+                      Icons.info,
+                      color: Colors.blue,
+                      size: widget.size,
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.only(top: 16),
+                      child: Text('Select a lot'),
+                    )
+                  ];
+                  break;
+                case ConnectionState.waiting:
+                  children = <Widget>[
+                    SizedBox(
+                      child: const CircularProgressIndicator(),
+                      width: widget.size,
+                      height: widget.size,
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.only(top: 16),
+                      child: Text('Awaiting bids...'),
+                    )
+                  ];
+                  break;
+                case ConnectionState.active:
+                  children = <Widget>[
+                    Icon(
+                      Icons.check_circle_outline,
+                      color: Colors.green,
+                      size: widget.size,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 16),
+                      child: Text('\$${snapshot.data}'),
+                    )
+                  ];
+                  break;
+                case ConnectionState.done:
+                  children = <Widget>[
+                    Icon(
+                      Icons.info,
+                      color: Colors.blue,
+                      size: widget.size,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 16),
+                      child: Text('\$${snapshot.data} (closed)'),
+                    )
+                  ];
+                  break;
+              }
             }
-            switch (snapshot.connectionState) {
-              case ConnectionState.none:
-                return const Text('Select lot');
-              case ConnectionState.waiting:
-                return const Text('Awaiting bids...');
-              case ConnectionState.active:
-                return Text('\$${snapshot.data}');
-              case ConnectionState.done:
-                return Text('\$${snapshot.data} (closed)');
-            }
-            return null; // unreachable
+
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: children,
+            );
           },
         ),
       ),
