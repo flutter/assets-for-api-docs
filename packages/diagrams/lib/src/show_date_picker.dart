@@ -42,9 +42,7 @@ class ShowDatePickerDiagram extends StatelessWidget implements DiagramMetadata {
               Animation<double> secondaryAnimation,
             ) {
               return Scaffold(
-                appBar: AppBar(
-                  title: const Text('showDatePicker Demo'),
-                ),
+                appBar: AppBar(title: const Text('showDatePicker Demo')),
                 body: Center(
                   child: Builder(
                     builder: (BuildContext context) {

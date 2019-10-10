@@ -33,6 +33,7 @@ class BottomSheetDiagram extends StatelessWidget implements DiagramMetadata {
       case _showBottomSheet:
         returnWidget = Scaffold(
           appBar: AppBar(
+            automaticallyImplyLeading: false,
             title: const Text('showBottomSheet Demo'),
           ),
           body: Center(
@@ -73,9 +74,7 @@ class BottomSheetDiagram extends StatelessWidget implements DiagramMetadata {
         break;
       case _showModalBottomSheet:
         returnWidget = Scaffold(
-          appBar: AppBar(
-            title: const Text('showModalBottomSheet Demo'),
-          ),
+          appBar: AppBar(title: const Text('showModalBottomSheet Demo')),
           body: Center(
             child: Builder(
               builder: (BuildContext context) {

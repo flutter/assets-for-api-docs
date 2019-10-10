@@ -82,9 +82,7 @@ class AlertDialogDiagram extends StatelessWidget implements DiagramMetadata {
           actions: <Widget>[
             FlatButton(
               child: const Text('Approve'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
+              onPressed: () => Navigator.of(context).pop(),
             ),
           ],
         );
