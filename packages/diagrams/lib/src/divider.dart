@@ -30,8 +30,8 @@ class DividerDiagram extends StatelessWidget implements DiagramMetadata {
               Expanded(
                 child: Container(
                   color: Colors.amber,
-                  child: Center(
-                    child: const Text('Above'),
+                  child: const Center(
+                    child: Text('Above'),
                   ),
                 ),
               ),
@@ -45,8 +45,8 @@ class DividerDiagram extends StatelessWidget implements DiagramMetadata {
               Expanded(
                 child: Container(
                   color: Colors.blue,
-                  child: Center(
-                    child: const Text('Below'),
+                  child: const Center(
+                    child: Text('Below'),
                   ),
                 ),
               ),
