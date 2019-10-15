@@ -8,6 +8,7 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:animation_metadata/animation_metadata.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -34,19 +35,41 @@ class _Diagram extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: new Material(
-        child: new Builder(
-          builder: (BuildContext context) {
-            return new Center(
-              child: new RepaintBoundary(
-                key: boundaryKey,
-                child: child,
-              ),
-            );
-          },
-        ),
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: Overlay(
+        initialEntries: <OverlayEntry>[
+          OverlayEntry(
+            builder: (BuildContext context) {
+              return Localizations(
+                locale: const Locale('en', 'US'),
+                delegates: <LocalizationsDelegate<dynamic>>[
+                  DefaultWidgetsLocalizations.delegate,
+                  DefaultMaterialLocalizations.delegate,
+                  DefaultCupertinoLocalizations.delegate,
+                ],
+                child: Theme(
+                  data: ThemeData(),
+                  child: MediaQuery(
+                    data: MediaQueryData.fromWindow(WidgetsBinding.instance.window),
+                    child: new Material(
+                      child: new Builder(
+                        builder: (BuildContext context) {
+                          return new Center(
+                            child: new RepaintBoundary(
+                              key: boundaryKey,
+                              child: child,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            }
+          )
+        ],
       ),
     );
   }
