@@ -23,11 +23,6 @@ final GlobalKey _openDialogKey = GlobalKey();
 final GlobalKey _treasuryKey = GlobalKey();
 final GlobalKey _stateKey = GlobalKey();
 
-// Note: In order for this diagram to be captured successfully, you need to
-// temporarily alter the Flutter source code when updating to use
-// `rootNavigator: false` inside the `showGeneralDialog` function provided by
-// Flutter. This allows the diagram capture tool to use the correct nested
-// Navigator embedded in the build method below.
 class SimpleDialogDiagram extends StatelessWidget implements DiagramMetadata {
   const SimpleDialogDiagram(this.name);
 
@@ -73,6 +68,7 @@ class SimpleDialogDiagram extends StatelessWidget implements DiagramMetadata {
 
   Future<void> _askedToLead(BuildContext context) async {
     final Department result = await showDialog<Department>(
+      navigator: Navigator.of(context),
       context: context,
       builder: (BuildContext context) {
         return SimpleDialog(

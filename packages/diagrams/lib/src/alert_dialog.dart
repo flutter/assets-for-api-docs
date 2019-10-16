@@ -16,11 +16,6 @@ const Duration _openDuration = Duration(milliseconds: 300);
 final Duration _totalDuration = _pauseDuration + _openDuration + _pauseDuration;
 final GlobalKey _openDialogKey = GlobalKey();
 
-// Note: In order for this diagram to be captured successfully, you need to
-// temporarily alter the Flutter source code when updating to use
-// `rootNavigator: false` inside the `showGeneralDialog` function provided by
-// Flutter. This allows the diagram capture tool to use the correct nested
-// Navigator embedded in the build method below.
 class AlertDialogDiagram extends StatelessWidget implements DiagramMetadata {
   const AlertDialogDiagram(this.name);
 
@@ -66,6 +61,7 @@ class AlertDialogDiagram extends StatelessWidget implements DiagramMetadata {
 
   Future<void> _neverSatisfied(BuildContext context) async {
     return showDialog<void>(
+      navigator: Navigator.of(context),
       context: context,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {

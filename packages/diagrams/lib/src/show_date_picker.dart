@@ -51,6 +51,7 @@ class ShowDatePickerDiagram extends StatelessWidget implements DiagramMetadata {
                         child: const Text('showDatePicker'),
                         onPressed: () {
                           showDatePicker(
+                            navigator: Navigator.of(context),
                             context: context,
                             initialDate: DateTime.now(),
                             firstDate: DateTime(2018),
