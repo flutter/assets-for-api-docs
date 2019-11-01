@@ -16,11 +16,6 @@ const Duration _openDuration = Duration(milliseconds: 300);
 final Duration _totalDuration = _pauseDuration + _pauseDuration + _openDuration + _pauseDuration;
 final GlobalKey _buttonKey = GlobalKey();
 
-// Note: In order for this diagram to be captured successfully, you need to
-// temporarily alter the Flutter source code when updating to use
-// `rootNavigator: false` inside the `showGeneralDialog` function provided by
-// Flutter. This allows the diagram capture tool to use the correct nested
-// Navigator embedded in the build method below.
 class ShowDatePickerDiagram extends StatelessWidget implements DiagramMetadata {
   const ShowDatePickerDiagram(this.name);
 
@@ -51,8 +46,8 @@ class ShowDatePickerDiagram extends StatelessWidget implements DiagramMetadata {
                         child: const Text('showDatePicker'),
                         onPressed: () {
                           showDatePicker(
-                            navigator: Navigator.of(context),
                             context: context,
+                            useRootNavigator: false,
                             initialDate: DateTime.now(),
                             firstDate: DateTime(2018),
                             lastDate: DateTime(2030),

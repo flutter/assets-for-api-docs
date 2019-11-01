@@ -61,8 +61,8 @@ class AlertDialogDiagram extends StatelessWidget implements DiagramMetadata {
 
   Future<void> _neverSatisfied(BuildContext context) async {
     return showDialog<void>(
-      navigator: Navigator.of(context),
       context: context,
+      useRootNavigator: false,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(

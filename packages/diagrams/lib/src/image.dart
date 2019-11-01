@@ -37,7 +37,7 @@ class DiagramImage extends ImageProvider<DiagramImage> implements ui.Codec, ui.F
   }
 
   @override
-  ImageStreamCompleter load(DiagramImage key) {
+  ImageStreamCompleter load(DiagramImage key, DecoderCallback decode) {
     return MultiFrameImageStreamCompleter(
       codec: _loadAsync(),
       chunkEvents: chunkEvents.stream,

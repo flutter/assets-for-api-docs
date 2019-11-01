@@ -68,8 +68,8 @@ class SimpleDialogDiagram extends StatelessWidget implements DiagramMetadata {
 
   Future<void> _askedToLead(BuildContext context) async {
     final Department result = await showDialog<Department>(
-      navigator: Navigator.of(context),
       context: context,
+      useRootNavigator: false,
       builder: (BuildContext context) {
         return SimpleDialog(
           title: const Text('Select assignment'),
