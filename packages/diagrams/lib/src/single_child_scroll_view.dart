@@ -29,75 +29,85 @@ class SingleChildScrollViewDiagramState extends State<SingleChildScrollViewDiagr
     Widget returnWidget;
     switch (widget.name) {
       case _scrollViewFixedHeight:
-        returnWidget = LayoutBuilder(
-          builder: (BuildContext context, BoxConstraints viewportConstraints) {
-            return SingleChildScrollView(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  minHeight: viewportConstraints.maxHeight,
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: <Widget>[
-                    Container(
-                      // A fixed-height child.
-                      color: Colors.yellow,
-                      height: 120.0,
-                    ),
-                    Container(
-                      // Another fixed-height child.
-                      color: Colors.green,
-                      height: 120.0,
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        );
-        break;
-      case _scrollViewExpanded:
-        returnWidget = LayoutBuilder(
-          builder: (BuildContext context, BoxConstraints viewportConstraints) {
-            return SingleChildScrollView(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  minHeight: viewportConstraints.maxHeight,
-                ),
-                child: IntrinsicHeight(
+        returnWidget = Scaffold(
+          appBar: AppBar(
+            title: const Text('Expanding content'),
+          ),
+          body: LayoutBuilder(
+            builder: (BuildContext context, BoxConstraints viewportConstraints) {
+              return SingleChildScrollView(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: viewportConstraints.maxHeight,
+                  ),
                   child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: <Widget>[
                       Container(
                         // A fixed-height child.
-                        color: Colors.amber,
+                        color: Colors.yellow,
                         height: 120.0,
+                        child: const Center(child: Text('Fixed-height content')),
                       ),
-                      Expanded(
-                        // A flexible child that will grow to fit the viewport but
-                        // still be at least as big as necessary to fit its contents.
-                        child: Container(
-                          color: Colors.blue,
-                          height: 120.0,
-                        ),
+                      Container(
+                        // Another fixed-height child.
+                        color: Colors.green,
+                        height: 120.0,
+                        child: const Center(child: Text('Fixed-height content')),
                       ),
                     ],
                   ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
+        );
+        break;
+      case _scrollViewExpanded:
+        returnWidget = Scaffold(
+          appBar: AppBar(
+            title: const Text('Center fixed-height content'),
+          ),
+          body: LayoutBuilder(
+            builder: (BuildContext context, BoxConstraints viewportConstraints) {
+              return SingleChildScrollView(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: viewportConstraints.maxHeight,
+                  ),
+                  child: IntrinsicHeight(
+                    child: Column(
+                      children: <Widget>[
+                        Container(
+                          // A fixed-height child.
+                          color: Colors.amber,
+                          height: 120.0,
+                          child: const Center(child: Text('Fixed-height content')),
+                        ),
+                        Expanded(
+                          // A flexible child that will grow to fit the viewport but
+                          // still be at least as big as necessary to fit its contents.
+                          child: Container(
+                            color: Colors.blue,
+                            height: 120.0,
+                            child: const Center(child:Text('Expanded content')),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
         );
         break;
     }
     return ConstrainedBox(
       key: UniqueKey(),
       constraints: BoxConstraints.tight(const Size(300.0, 533.33)),
-      child: Container(
-        padding: const EdgeInsets.all(5.0),
-        color: Colors.white,
-        child: returnWidget,
-      ),
+      child: returnWidget,
     );
   }
 }
