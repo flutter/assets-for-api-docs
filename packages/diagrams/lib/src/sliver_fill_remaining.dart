@@ -57,7 +57,7 @@ class _SliverFillRemainingDiagramState extends State<SliverFillRemainingDiagram>
   Future<void> _play() async {
     await Future<void>.delayed(_kScrollPauseDuration);
     await _animate(
-      to: 500.0,
+      to: 400.0,
       duration: _kScrollUpDuration,
     );
     await Future<void>.delayed(_kScrollPauseDuration);
@@ -70,7 +70,7 @@ class _SliverFillRemainingDiagramState extends State<SliverFillRemainingDiagram>
       from: _scrollController.offset,
       to: to,
       duration: duration,
-      curve: Curves.easeInOut,
+      curve: Curves.easeIn,
       vsync: this,
     );
     _scrollController.position.beginActivity(activity);
@@ -196,9 +196,7 @@ class _SliverFillRemainingDiagramState extends State<SliverFillRemainingDiagram>
       child: Scaffold(
         appBar: AppBar(title: const Text('SliverFillRemaining')),
         body: CustomScrollView(
-          physics: widget.sampleName == 'fill_overscroll' ?
-            const BouncingScrollPhysics() :
-            const ClampingScrollPhysics(),
+          physics: const BouncingScrollPhysics(),
           controller: _scrollController,
           slivers: slivers,
         ),
