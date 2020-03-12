@@ -472,7 +472,7 @@ class CurveDiagramStep extends DiagramStep<CurveDiagram> {
       const CurveDiagram(name: 'threshold', caption: 'Threshold(0.75)', curve: Threshold(0.75)),
       const CurveDiagram(name: 'linear_to_ease_out', caption: 'Curves.linearToEaseOut', curve: Curves.linearToEaseOut),
       const CurveDiagram(name: 'ease_in_to_linear', caption: 'Curves.easeInToLinear', curve: Curves.easeInToLinear),
-      const CurveDiagram(name: 'fast_linear_to_slow_ease_out', caption: 'Curves.fastLinearToSlowEaseOut', curve: Curves.fastLinearToSlowEaseIn),
+      const CurveDiagram(name: 'fast_linear_to_slow_ease_in', caption: 'Curves.fastLinearToSlowEaseIn', curve: Curves.fastLinearToSlowEaseIn),
     ]);
   }
 
