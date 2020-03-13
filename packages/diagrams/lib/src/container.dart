@@ -47,7 +47,7 @@ class ContainerDiagram extends StatelessWidget implements DiagramMetadata {
               child: Text('Hello World',
                   style: Theme.of(context)
                       .textTheme
-                      .display1
+                      .headline4
                       .copyWith(color: Colors.white)),
               transform: Matrix4.rotationZ(0.1),
             ),

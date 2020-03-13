@@ -253,7 +253,7 @@ class TranslateSampleTile extends StatelessWidget {
         new Text(
           name,
           textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.body2.copyWith(
+          style: Theme.of(context).textTheme.bodyText1.copyWith(
                 color: Colors.black,
                 fontSize: 12.0,
               ),
