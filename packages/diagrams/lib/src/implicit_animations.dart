@@ -121,7 +121,7 @@ class AnimatedDefaultTextStyleDiagram extends ImplicitAnimationDiagram<Alignment
 
   @override
   Widget buildImplicitAnimation(BuildContext context, bool selected) {
-    final TextStyle selectedStyle = Theme.of(context).textTheme.display1.copyWith(
+    final TextStyle selectedStyle = Theme.of(context).textTheme.headline4.copyWith(
           color: Colors.red,
           fontSize: 60.0,
           fontWeight: FontWeight.w100,
