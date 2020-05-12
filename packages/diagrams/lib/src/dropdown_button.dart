@@ -31,10 +31,10 @@ class DropdownButtonDiagram extends StatelessWidget implements DiagramMetadata {
         child: Scaffold(
           body: Center(
             child: DropdownButton<String>(
-              icon: Icon(Icons.arrow_downward),
+              icon: const Icon(Icons.arrow_downward),
               iconSize: 24,
               elevation: 16,
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.deepPurple
               ),
               underline: Container(

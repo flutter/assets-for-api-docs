@@ -41,7 +41,7 @@ class LinkedLabelRadio extends StatelessWidget {
           RichText(
             text: TextSpan(
               text: label,
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.blueAccent,
                 decoration: TextDecoration.underline,
               ),

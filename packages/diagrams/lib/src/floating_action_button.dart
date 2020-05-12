@@ -34,7 +34,7 @@ class FloatingActionButtonDiagram extends StatelessWidget implements DiagramMeta
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () {},
-            child: Icon(Icons.navigation),
+            child: const Icon(Icons.navigation),
             backgroundColor: Colors.green,
           ),
         );
@@ -50,7 +50,7 @@ class FloatingActionButtonDiagram extends StatelessWidget implements DiagramMeta
           floatingActionButton: FloatingActionButton.extended(
             onPressed: () {},
             label: const Text('Approve'),
-            icon: Icon(Icons.thumb_up),
+            icon: const Icon(Icons.thumb_up),
             backgroundColor: Colors.pink,
           ),
         );

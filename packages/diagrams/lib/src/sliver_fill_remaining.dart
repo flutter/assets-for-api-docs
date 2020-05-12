@@ -144,8 +144,8 @@ class _SliverFillRemainingDiagramState extends State<SliverFillRemainingDiagram>
           SliverFillRemaining(
             hasScrollBody: false,
             child: Container(
-              child: Padding(
-                padding: const EdgeInsets.all(50.0),
+              child: const Padding(
+                padding: EdgeInsets.all(50.0),
                 child: Icon(
                   Icons.pan_tool,
                   size: 60,

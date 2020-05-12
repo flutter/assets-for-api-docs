@@ -69,9 +69,9 @@ class TextStyleDiagram extends StatelessWidget implements DiagramMetadata {
         break;
       case _wavyUnderline:
         returnWidget = RichText(
-          text: TextSpan(
+          text: const TextSpan(
             text: 'Don\'t tax the South ',
-            style: const TextStyle(color: Colors.black),
+            style: TextStyle(color: Colors.black),
             children: <TextSpan>[
               TextSpan(
                 text: 'cuz',
@@ -82,7 +82,7 @@ class TextStyleDiagram extends StatelessWidget implements DiagramMetadata {
                   decorationStyle: TextDecorationStyle.wavy,
                 ),
               ),
-              const TextSpan(
+              TextSpan(
                 text: ' we got it made in the shade.',
               ),
             ],
