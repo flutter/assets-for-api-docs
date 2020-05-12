@@ -32,7 +32,7 @@ class IconButtonDiagram extends StatelessWidget implements DiagramMetadata {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   IconButton(
-                    icon: Icon(Icons.volume_up),
+                    icon: const Icon(Icons.volume_up),
                     tooltip: 'Increase volume by 10',
                     onPressed: () {},
                   ),
@@ -50,12 +50,12 @@ class IconButtonDiagram extends StatelessWidget implements DiagramMetadata {
             color: Colors.white,
             child: Center(
               child: Ink(
-                decoration: ShapeDecoration(
+                decoration: const ShapeDecoration(
                   color: Colors.lightBlue,
-                  shape: const CircleBorder(),
+                  shape: CircleBorder(),
                 ),
                 child: IconButton(
-                  icon: Icon(Icons.android),
+                  icon: const Icon(Icons.android),
                   color: Colors.white,
                   onPressed: () {},
                 ),

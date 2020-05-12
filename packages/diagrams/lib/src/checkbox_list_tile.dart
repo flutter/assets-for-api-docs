@@ -33,7 +33,7 @@ class LinkedLabelCheckbox extends StatelessWidget {
             child: RichText(
               text: TextSpan(
                 text: label,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.blueAccent,
                   decoration: TextDecoration.underline,
                 ),

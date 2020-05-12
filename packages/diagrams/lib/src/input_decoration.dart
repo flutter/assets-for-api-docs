@@ -33,14 +33,14 @@ class InputDecorationDiagram extends StatelessWidget implements DiagramMetadata 
           child: Container(
             padding: const EdgeInsets.all(8),
             color: Colors.white,
-            child: Center(
+            child: const Center(
               child: TextField(
                 decoration: InputDecoration(
                   icon: Icon(Icons.send),
                   hintText: 'Hint Text',
                   helperText: 'Helper Text',
                   counterText: '0 characters',
-                  border: const OutlineInputBorder(),
+                  border: OutlineInputBorder(),
                 ),
               ),
             ),
