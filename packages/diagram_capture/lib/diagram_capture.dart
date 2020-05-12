@@ -150,8 +150,8 @@ class DiagramFlutterBinding extends BindingBase
     with
         GestureBinding,
         SemanticsBinding,
-        ServicesBinding,
         SchedulerBinding,
+        ServicesBinding,
         PaintingBinding,
         RendererBinding,
         WidgetsBinding {
