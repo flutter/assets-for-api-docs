@@ -174,7 +174,7 @@ void main() {
         final Map<String, dynamic> metadata = json.decode(metadataFile.readAsStringSync()) as Map<String, dynamic>;
         final String baseDir = path.dirname(metadataFile.absolute.path);
         final List<File> frameFiles = metadata['frame_files']
-            .map<File>((String name) => File(path.normalize(path.join(baseDir, name)))).toList() as List<File>;
+            .map<File>((dynamic name) => File(path.normalize(path.join(baseDir, name as String)))).toList() as List<File>;
         metadata['frame_files'] = frameFiles;
         return metadata;
       }

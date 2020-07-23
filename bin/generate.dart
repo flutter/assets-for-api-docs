@@ -2,7 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart = 2.8
 import 'dart:async';
 import 'dart:io';
 
@@ -14,6 +13,7 @@ import 'package:platform/platform.dart' as platform_pkg;
 import 'package:process/process.dart';
 
 final String repoRoot = path.dirname(path.fromUri(Platform.script));
+const platform_pkg.Platform defaultPlatform = platform_pkg.LocalPlatform();
 
 /// Exception class for when a process fails to run, so we can catch
 /// it and provide something more readable than a stack trace.
@@ -46,7 +46,7 @@ class ProcessRunner {
   ProcessRunner({
     ProcessManager processManager,
     this.defaultWorkingDirectory,
-    this.platform = const platform_pkg.LocalPlatform(),
+    this.platform = defaultPlatform,
   }) : processManager = processManager ?? const LocalProcessManager() {
     environment = Map<String, String>.from(platform.environment);
   }
@@ -71,7 +71,8 @@ class ProcessRunner {
   ///
   /// Set `failOk` if [runProcess] should not throw an exception when the
   /// command completes with a a non-zero exit code.
-  Future<List<int>> runProcess(List<String> commandLine, {
+  Future<List<int>> runProcess(
+    List<String> commandLine, {
     Directory workingDirectory,
     bool printOutput = true,
     bool failOk = false,
@@ -109,7 +110,7 @@ class ProcessRunner {
         }, onDone: () async => stdinComplete.complete());
       }
       process.stdout.listen(
-            (List<int> event) {
+        (List<int> event) {
           output.addAll(event);
           if (printOutput) {
             stdout.add(event);
@@ -119,7 +120,7 @@ class ProcessRunner {
       );
       if (printOutput) {
         process.stderr.listen(
-              (List<int> event) {
+          (List<int> event) {
             stderr.add(event);
           },
           onDone: () async => stderrComplete.complete(),
@@ -139,8 +140,8 @@ class ProcessRunner {
 
     final int exitCode = await allComplete();
     if (exitCode != 0 && !failOk) {
-      final String message = 'Running "${commandLine.join(' ')}" in ${workingDirectory
-          .path} failed';
+      final String message =
+          'Running "${commandLine.join(' ')}" in ${workingDirectory.path} failed';
       throw ProcessRunnerException(
         message,
         ProcessResult(0, exitCode, null, 'returned $exitCode'),
@@ -151,7 +152,8 @@ class ProcessRunner {
 }
 
 class WorkerJob {
-  WorkerJob(this.args, {
+  WorkerJob(
+    this.args, {
     this.workingDirectory,
     bool printOutput,
   }) : printOutput = printOutput ?? false;
@@ -191,9 +193,8 @@ class ProcessPool {
 
   void _printReport() {
     final int totalJobs = completedJobs.length + inProgressJobs.length + pendingJobs.length;
-    final String percent = totalJobs == 0 ? '100' : ((100 * completedJobs.length) ~/ totalJobs)
-        .toString()
-        .padLeft(3);
+    final String percent =
+        totalJobs == 0 ? '100' : ((100 * completedJobs.length) ~/ totalJobs).toString().padLeft(3);
     final String completed = completedJobs.length.toString().padLeft(3);
     final String total = totalJobs.toString().padRight(3);
     final String inProgress = inProgressJobs.length.toString().padLeft(2);
@@ -264,8 +265,7 @@ class DiagramGenerator {
     ProcessRunner processRunner,
     this.temporaryDirectory,
     this.cleanup = true,
-  })
-      : device = device ?? '',
+  })  : device = device ?? '',
         processRunner = processRunner ?? ProcessRunner() {
     temporaryDirectory ??= Directory.systemTemp.createTempSync('api_generate_');
     print('Dart path: $generatorMain');
@@ -291,7 +291,7 @@ class DiagramGenerator {
   );
 
   /// The class that the app runs as.
-  static const String appClass = 'io.flutter.api.diagramgenerator';
+  static const String appClass = 'dev.flutter.diagram_generator';
 
   /// The path to the top of the repo.
   static String get projectDir {
@@ -338,50 +338,59 @@ class DiagramGenerator {
       filters.add('--name');
       filters.add(path.basenameWithoutExtension(name));
     }
+    if (device == 'linux') {
+      filters.add('--outputDir');
+      filters.add(temporaryDirectory.absolute.path);
+    }
     final List<String> filterArgs = filters.isNotEmpty
         ? <String>['--route', 'args:${Uri.encodeComponent(filters.join(' '))}']
         : <String>[];
-    final List<String> deviceArgs = device == null || device.isEmpty ? <String>[] : <String>[
-      '-d',
-      device
-    ];
+    final List<String> deviceArgs =
+        device == null || device.isEmpty ? <String>[] : <String>['-d', device];
     final List<String> args = <String>[flutterCommand, 'run'] + filterArgs + deviceArgs;
     await processRunner.runProcess(args, workingDirectory: Directory(generatorDir));
   }
 
   Future<List<File>> _transferImages() async {
-    print('Collecting images from device.');
-    final List<String> args = <
-    String
-    >[
-    adbCommand,
-    if (device.isNotEmpty) '-s',
-    if (device.isNotEmpty) device,
-    'exec-out',
-    'run-as',
-    appClass,
-    'tar',
-    'c',
-    '-C',
-    'app_flutter/diagrams',
-    '.',
-    ];
-    final List<int> tarData = await processRunner.runProcess(
-    args,
-    workingDirectory: temporaryDirectory,
-    printOutput: false,
-    );
     final List<File> files = <File>[];
-    for (final ArchiveFile file in TarDecoder().decodeBytes(tarData)) {
-    if (file.isFile) {
-    files.add(File(file.name));
-    File(path.join(temporaryDirectory.absolute.path, file.name))
-    ..createSync(recursive: true)
-    ..writeAsBytesSync(file.content as List<int>);
+    if (device != 'linux') {
+      print('Collecting images from device.');
+      final List<String> args = <String>[
+        adbCommand,
+        if (device.isNotEmpty) '-s',
+        if (device.isNotEmpty) device,
+        'exec-out',
+        'run-as',
+        appClass,
+        'tar',
+        'c',
+        '-C',
+        'app_flutter/diagrams',
+        '.',
+      ];
+      final List<int> tarData = await processRunner.runProcess(
+        args,
+        workingDirectory: temporaryDirectory,
+        printOutput: false,
+      );
+      for (final ArchiveFile file in TarDecoder().decodeBytes(tarData)) {
+        if (file.isFile) {
+          files.add(File(file.name));
+          File(path.join(temporaryDirectory.absolute.path, file.name))
+            ..createSync(recursive: true)
+            ..writeAsBytesSync(file.content as List<int>);
+        }
+      }
+    } else {
+      temporaryDirectory
+          .list(recursive: true, followLinks: false)
+          .listen((FileSystemEntity entity) {
+        if (entity is File) {
+          files.add(File(path.relative(entity.path, from: temporaryDirectory.path)));
+        }
+      });
     }
-    }
-    return
-    files;
+    return files;
   }
 
   Stream<List<int>> _concatInputs(List<File> files) async* {
@@ -520,13 +529,15 @@ Future<void> main(List<String> arguments) async {
   parser.addFlag('help', help: 'Print help.');
   parser.addFlag('keep-tmp', help: "Don't cleanup after a run (don't remove temporary directory).");
   parser.addOption('tmpdir', help: 'Specify a temporary directory to use (implies --keep-tmp)');
-  parser.addOption('device', help: 'Specify a device to use for generating the diagrams',
-      defaultsTo: 'linux');
-  parser.addMultiOption('category', help: 'Specify the categories of diagrams that should be '
-      'generated. The category is the name of the subdirectory of the assets/ directory in which '
-      'the images will be placed, as determined by the DiagramStep.category property.');
-  parser.addMultiOption('name', help: 'Specify the name of diagrams that should be generated. The '
-      'name is the basename of the output file and may be specified with or without the suffix.');
+  parser.addOption('device',
+      help: 'Specify a device to use for generating the diagrams', defaultsTo: 'linux');
+  parser.addMultiOption('category',
+      help: 'Specify the categories of diagrams that should be '
+          'generated. The category is the name of the subdirectory of the assets/ directory in which '
+          'the images will be placed, as determined by the DiagramStep.category property.');
+  parser.addMultiOption('name',
+      help: 'Specify the name of diagrams that should be generated. The '
+          'name is the basename of the output file and may be specified with or without the suffix.');
   final ArgResults flags = parser.parse(arguments);
 
   if (flags['help'] as bool) {

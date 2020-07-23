@@ -25,8 +25,8 @@ class AnimationMetadata {
     final Map<String, dynamic> metadata = json.decode(metadataFile.readAsStringSync()) as Map<String, dynamic>;
     final String baseDir = path.dirname(metadataFile.absolute.path);
     final List<File> frameFiles = metadata[_frameFilesKey].map<File>(
-          (String name) {
-        return File(path.normalize(path.join(baseDir, name)));
+          (dynamic name) {
+        return File(path.normalize(path.join(baseDir, name as String)));
       },
     ).toList() as List<File>;
     final Duration duration = Duration(milliseconds: metadata[_durationMsKey] as int);

@@ -9,16 +9,24 @@ import 'dart:ui';
 import 'package:args/args.dart';
 import 'package:diagram_capture/diagram_capture.dart';
 import 'package:diagrams/diagrams.dart';
+import 'package:platform/platform.dart' as platform_pkg;
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 
-Future<Directory> prepareOutputDirectory() async {
-  final Directory directory = Directory(
-    path.join(
-      (await getApplicationDocumentsDirectory()).absolute.path,
-      'diagrams',
-    ),
-  );
+const platform_pkg.Platform platform = platform_pkg.LocalPlatform();
+
+Future<Directory> prepareOutputDirectory(String outputDir) async {
+  Directory directory;
+  if (platform.isAndroid) {
+      directory = Directory(
+        outputDir ?? path.join(
+          (await getApplicationDocumentsDirectory()).absolute.path,
+          'diagrams',
+        ),
+      );
+  } else {
+    directory = Directory(outputDir);
+  }
   if (directory.existsSync()) {
     directory.deleteSync(recursive: true);
   }
@@ -34,13 +42,14 @@ Future<void> main() async {
   final ArgParser parser = ArgParser();
   parser.addMultiOption('category');
   parser.addMultiOption('name');
+  parser.addOption('outputDir');
   final ArgResults flags = parser.parse(arguments);
 
-  final List<String> categories = flags['category'] as List<String>;
+  final List<String> categories = platform.isAndroid ? flags['category'] as List<String> : <String>['painting'];
   final List<String> names = flags['name'] as List<String>;
 
   final DateTime start = DateTime.now();
-  final Directory outputDirectory = await prepareOutputDirectory();
+  final Directory outputDirectory = await prepareOutputDirectory(platform.isAndroid ? null : '/tmp/diagrams');
 
   final DiagramController controller = DiagramController(
     outputDirectory: outputDirectory,
