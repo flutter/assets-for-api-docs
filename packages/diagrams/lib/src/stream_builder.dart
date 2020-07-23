@@ -44,7 +44,7 @@ class _StreamBuilderDiagramState extends State<StreamBuilderDiagram> {
         await Future<void>.delayed(_pauseDuration);
         await Future<void>.delayed(_pauseDuration);
         throw 'Bid Failed';
-      })();
+      })() as Stream<int>;
     }
 
     super.initState();

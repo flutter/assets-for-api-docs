@@ -47,7 +47,7 @@ class AnimationStatusValueDiagramState
       _controller.forward();
     });
     _controller
-      ..addStatusListener((AnimationStatus status) {
+      .addStatusListener((AnimationStatus status) {
         switch (status) {
           case AnimationStatus.dismissed:
             _status = 'dismissed';

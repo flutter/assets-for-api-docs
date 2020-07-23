@@ -13,8 +13,8 @@ import 'package:flutter/material.dart' hide Image;
 
 import 'diagram_step.dart';
 
-Completer<Null> touch;
-final GlobalKey key = new GlobalKey();
+Completer<void> touch;
+final GlobalKey key = GlobalKey();
 
 const ImageProvider destinationImageProvider = ExactAssetImage('assets/blend_mode_destination.jpeg', package: 'diagrams');
 const ImageProvider sourceImageProvider = ExactAssetImage('assets/blend_mode_source.png', package: 'diagrams');
@@ -24,7 +24,7 @@ Image destinationImage, sourceImage, gridImage;
 int pageIndex = 0;
 
 Future<Image> getImage(ImageProvider provider) {
-  final Completer<Image> completer = new Completer<Image>();
+  final Completer<Image> completer = Completer<Image>();
   final ImageStream stream = provider.resolve(const ImageConfiguration());
   ImageStreamListener listener;
   listener = ImageStreamListener(
@@ -52,30 +52,30 @@ class BlendModeDiagram extends StatelessWidget implements DiagramMetadata {
 
   @override
   Widget build(BuildContext context) {
-    return new ConstrainedBox(
-      key: new UniqueKey(),
-      constraints: new BoxConstraints.tight(const Size.square(400.0)),
-      child: new DecoratedBox(
-        decoration: new ShapeDecoration(
-          shape: new Border.all(width: 1.0, color: Colors.white) + new Border.all(width: 1.0, color: Colors.black),
+    return ConstrainedBox(
+      key: UniqueKey(),
+      constraints: BoxConstraints.tight(const Size.square(400.0)),
+      child: DecoratedBox(
+        decoration: ShapeDecoration(
+          shape: Border.all(width: 1.0, color: Colors.white) + Border.all(width: 1.0, color: Colors.black),
           image: const DecorationImage(
             image: gridImageProvider,
             repeat: ImageRepeat.repeat,
           ),
         ),
-        child: new AspectRatio(
+        child: AspectRatio(
           aspectRatio: 1.0,
-          child: new CustomPaint(
+          child: CustomPaint(
             key: key,
-            painter: new BlendModePainter(mode),
-            child: new Stack(
+            painter: BlendModePainter(mode),
+            child: Stack(
               children: <Widget>[
-                new Align(
+                Align(
                   alignment: Alignment.topLeft,
-                  child: new Container(
+                  child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 1.0, vertical: 3.0),
                     color: Colors.white,
-                    child: new Text(
+                    child: Text(
                       '$mode',
                       style: const TextStyle(
                         inherit: false,
@@ -87,9 +87,9 @@ class BlendModeDiagram extends StatelessWidget implements DiagramMetadata {
                     ),
                   ),
                 ),
-                new Align(
+                Align(
                   alignment: Alignment.bottomCenter,
-                  child: new Container(
+                  child: Container(
                     margin: const EdgeInsets.all(1.0),
                     padding: const EdgeInsets.symmetric(horizontal: 1.0, vertical: 1.0),
                     color: Colors.white,
@@ -105,11 +105,11 @@ class BlendModeDiagram extends StatelessWidget implements DiagramMetadata {
                     ),
                   ),
                 ),
-                new RotatedBox(
+                RotatedBox(
                   quarterTurns: 3,
-                  child: new Align(
+                  child: Align(
                     alignment: Alignment.bottomCenter,
-                    child: new Container(
+                    child: Container(
                       margin: const EdgeInsets.all(1.0),
                       padding: const EdgeInsets.symmetric(horizontal: 1.0, vertical: 1.0),
                       color: Colors.white,
@@ -144,10 +144,10 @@ class BlendModePainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     assert(size.shortestSide == size.longestSide);
     final Rect bounds = (Offset.zero & size).deflate(size.shortestSide * 0.025);
-    canvas.saveLayer(bounds, new Paint()..blendMode = BlendMode.srcOver);
+    canvas.saveLayer(bounds, Paint()..blendMode = BlendMode.srcOver);
     assert(size.shortestSide == size.longestSide);
     paintTestImage(canvas, bounds, destinationImage);
-    canvas.saveLayer(bounds, new Paint()..blendMode = mode);
+    canvas.saveLayer(bounds, Paint()..blendMode = mode);
     canvas.translate(0.0, size.height);
     canvas.rotate(-pi / 2.0);
     paintTestImage(canvas, bounds, sourceImage);
@@ -212,23 +212,23 @@ class BlendModePainter extends CustomPainter {
   void paintTestImage(Canvas canvas, Rect bounds, Image image) {
     final double barWidth = bounds.height / (bars.length * 3.0);
     double top = bounds.top + barWidth * 2.0;
-    for (Color color in bars) {
-      drawBar(canvas, new Rect.fromLTWH(bounds.left, top, bounds.width, barWidth), new Paint()..color = color);
+    for (final Color color in bars) {
+      drawBar(canvas, Rect.fromLTWH(bounds.left, top, bounds.width, barWidth), Paint()..color = color);
       top += barWidth;
     }
-    for (List<Color> colors in gradients) {
-      final Rect rect = new Rect.fromLTWH(bounds.left, top, bounds.width, barWidth);
+    for (final List<Color> colors in gradients) {
+      final Rect rect = Rect.fromLTWH(bounds.left, top, bounds.width, barWidth);
       top += barWidth;
-      drawBar(canvas, rect, new Paint()..shader = new LinearGradient(colors: colors).createShader(rect));
+      drawBar(canvas, rect, Paint()..shader = LinearGradient(colors: colors).createShader(rect));
     }
     top += barWidth * 2.0;
-    final Rect rect = new Rect.fromLTRB(bounds.left, top, bounds.right, bounds.bottom);
+    final Rect rect = Rect.fromLTRB(bounds.left, top, bounds.right, bounds.bottom);
     paintImage(canvas: canvas, rect: rect, image: image, fit: BoxFit.fill);
   }
 
   void drawBar(Canvas canvas, Rect rect, Paint paint) {
     canvas.drawRRect(
-      new RRect.fromRectXY(rect, rect.shortestSide / 3.0, rect.shortestSide / 3.0),
+      RRect.fromRectXY(rect, rect.shortestSide / 3.0, rect.shortestSide / 3.0),
       paint,
     );
   }
@@ -254,8 +254,8 @@ class BlendModeDiagramStep extends DiagramStep<BlendModeDiagram> {
       gridImage ??= await getImage(gridImageProvider);
 
       _diagrams = <BlendModeDiagram>[];
-      for (BlendMode mode in BlendMode.values) {
-        _diagrams.add(new BlendModeDiagram(mode));
+      for (final BlendMode mode in BlendMode.values) {
+        _diagrams.add(BlendModeDiagram(mode));
       }
     }
     return _diagrams;
@@ -264,6 +264,6 @@ class BlendModeDiagramStep extends DiagramStep<BlendModeDiagram> {
   @override
   Future<File> generateDiagram(BlendModeDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawDiagramToFile(new File('${diagram.name}.png'));
+    return await controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }

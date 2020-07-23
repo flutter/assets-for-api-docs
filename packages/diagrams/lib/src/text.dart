@@ -122,10 +122,10 @@ class TextDiagram extends StatelessWidget implements DiagramMetadata {
         break;
     }
 
-    return new ConstrainedBox(
-      key: new UniqueKey(),
-      constraints: new BoxConstraints.tight(const Size(240.0, 140.0)),
-      child: new Container(
+    return ConstrainedBox(
+      key: UniqueKey(),
+      constraints: BoxConstraints.tight(const Size(240.0, 140.0)),
+      child: Container(
         alignment: FractionalOffset.center,
         padding: const EdgeInsets.all(5.0),
         color: Colors.white,
@@ -300,7 +300,7 @@ class TextDiagramPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) {
-    final TextDiagramPainter diagramPainter = oldDelegate;
+    final TextDiagramPainter diagramPainter = oldDelegate as TextDiagramPainter;
     return textPainter != diagramPainter.textPainter;
   }
 }
@@ -313,7 +313,7 @@ class TextHeightComparison extends TextHeightDiagram implements DiagramMetadata 
   Widget build(BuildContext context) {
 
     double totalHeight = 70.0 + 10;
-    for (double h in <double>[1, 1, 1.15, 2, 3]) {
+    for (final double h in <double>[1, 1, 1.15, 2, 3]) {
       totalHeight += 70 * h + 30;
     }
 
@@ -477,7 +477,7 @@ class TextHeightComparisonPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) {
-    final TextHeightComparisonPainter diagramPainter = oldDelegate;
+    final TextHeightComparisonPainter diagramPainter = oldDelegate as TextHeightComparisonPainter;
     return text != diagramPainter.text || height != diagramPainter.height;
   }
 }
@@ -497,7 +497,7 @@ class TextHeightDiagramStep extends DiagramStep<TextHeightDiagram> {
   @override
   Future<File> generateDiagram(TextHeightDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawDiagramToFile(new File('${diagram.name}.png'));
+    return await controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }
 
@@ -519,6 +519,6 @@ class TextDiagramStep extends DiagramStep<TextDiagram> {
   @override
   Future<File> generateDiagram(TextDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawDiagramToFile(new File('${diagram.name}.png'));
+    return await controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }

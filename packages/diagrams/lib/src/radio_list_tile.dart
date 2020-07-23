@@ -238,6 +238,6 @@ class RadioListTileDiagramStep extends DiagramStep<RadioListTileDiagram> {
   @override
   Future<File> generateDiagram(RadioListTileDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawDiagramToFile(new File('${diagram.name}.png'));
+    return await controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }

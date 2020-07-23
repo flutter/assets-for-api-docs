@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'animation_diagram.dart';
 import 'diagram_step.dart';
 
+@immutable
 class DiagramImage extends ImageProvider<DiagramImage> implements ui.Codec, ui.FrameInfo {
   DiagramImage(
     this.image, {
@@ -95,7 +96,8 @@ class DiagramImage extends ImageProvider<DiagramImage> implements ui.Codec, ui.F
   bool operator ==(dynamic other) {
     if (other.runtimeType != runtimeType)
       return false;
-    final DiagramImage typedOther = other;
+    // ignore: test_types_in_equals
+    final DiagramImage typedOther = other as DiagramImage;
     return image == typedOther.image
         && scale == typedOther.scale;
   }

@@ -17,46 +17,46 @@ class MediaQueryDiagram extends StatefulWidget implements DiagramMetadata {
   final String name;
 
   @override
-  _DiagramState createState() => new _DiagramState();
+  _DiagramState createState() => _DiagramState();
 }
 
 class _DiagramState extends State<MediaQueryDiagram> {
 
   @override
   Widget build(BuildContext context) {
-    return new ConstrainedBox(
-      key: new UniqueKey(),
-      constraints: new BoxConstraints.tight(const Size(
+    return ConstrainedBox(
+      key: UniqueKey(),
+      constraints: BoxConstraints.tight(const Size(
         500.0,
         300.0,
       )),
-      child: new Theme(
-        data: new ThemeData(
+      child: Theme(
+        data: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        child: new Material(
+        child: Material(
           color: const Color(0xFFFFFFFF),
-          child: new MediaQuery(
+          child: MediaQuery(
             data: const MediaQueryData(
               padding: EdgeInsets.all(0.0),
             ),
             child: Center(
-              child: new Stack(
+              child: Stack(
                 alignment: Alignment.topCenter,
                 children: <Widget>[
-                  new Container(
+                  Container(
                     width: 350.0,
                     height: 250.0,
                     color: Colors.black,
                   ),
-                  new Container(
+                  Container(
                     width: 342.0,
                     height: 246.0,
                     color: Colors.red,
                   ),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 130.0),
-                    child: new Container(
+                    child: Container(
                       width: 342.0,
                       height: 246.0,
                       color: Colors.amber,
@@ -64,7 +64,7 @@ class _DiagramState extends State<MediaQueryDiagram> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 200.0),
-                    child: new Container(
+                    child: Container(
                       width: 342.0,
                       height: 246.0,
                       color: Colors.white,
@@ -72,7 +72,7 @@ class _DiagramState extends State<MediaQueryDiagram> {
                   ),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(0.0, 170, 240.0, 0.0),
-                    child: new Container(
+                    child: Container(
                       width: 6.0,
                       height: 80.0,
                       color: Colors.black45,
@@ -102,7 +102,7 @@ class _DiagramState extends State<MediaQueryDiagram> {
                   ),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(240.0, 100.0, 0.0, .0),
-                    child: new Container(
+                    child: Container(
                       width: 6.0,
                       height: 150.0,
                       color: Colors.black45,
@@ -137,6 +137,6 @@ class MediaQueryDiagramStep extends DiagramStep<MediaQueryDiagram> {
   @override
   Future<File> generateDiagram(MediaQueryDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawDiagramToFile(new File('${diagram.name}.png'));
+    return await controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }

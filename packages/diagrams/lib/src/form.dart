@@ -66,6 +66,6 @@ class FormDiagramStep extends DiagramStep<FormDiagram> {
   @override
   Future<File> generateDiagram(FormDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawDiagramToFile(new File('${diagram.name}.png'));
+    return await controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }

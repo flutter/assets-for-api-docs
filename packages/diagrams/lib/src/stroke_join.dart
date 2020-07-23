@@ -39,13 +39,13 @@ class StrokeJoinDescription extends CustomPainter {
   final TextPainter _miterLimitPainter;
 
   Widget get widget {
-    return new ConstrainedBox(
+    return ConstrainedBox(
       constraints: const BoxConstraints(maxWidth: 130.0),
-      child: new AspectRatio(
+      child: AspectRatio(
         aspectRatio: 1.0,
-        child: new Padding(
+        child: Padding(
           padding: const EdgeInsets.all(3.0),
-          child: new CustomPaint(
+          child: CustomPaint(
             painter: this,
           ),
         ),
@@ -53,12 +53,12 @@ class StrokeJoinDescription extends CustomPainter {
     );
   }
 
-  static TextPainter _createLabelPainter(String label, {FontStyle style: FontStyle.normal}) {
-    final TextPainter result = new TextPainter(
+  static TextPainter _createLabelPainter(String label, {FontStyle style = FontStyle.normal}) {
+    final TextPainter result = TextPainter(
       textDirection: TextDirection.ltr,
-      text: new TextSpan(
+      text: TextSpan(
         text: label,
-        style: new TextStyle(
+        style: TextStyle(
           color: Colors.black,
           fontStyle: style,
           fontSize: _kFontSize,
@@ -72,29 +72,29 @@ class StrokeJoinDescription extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     assert(size != Size.zero);
-    final Offset center = new Offset(size.width / 2.0, size.height / 2.0);
-    final Offset start = new Offset(0.0, center.dy);
-    final Offset middle = new Offset(size.width / 2.0, center.dy);
+    final Offset center = Offset(size.width / 2.0, size.height / 2.0);
+    final Offset start = Offset(0.0, center.dy);
+    final Offset middle = Offset(size.width / 2.0, center.dy);
     final double radians = angle * math.pi / 180.0;
-    final Offset end = new Offset(
+    final Offset end = Offset(
           0.5 * size.height * math.cos(radians),
           0.5 * size.height * math.sin(radians),
         ) +
         center;
-    final Offset shortEnd = new Offset(
+    final Offset shortEnd = Offset(
           20.0 * math.cos(radians),
           20.0 * math.sin(radians),
         ) +
         center;
 
-    final Paint linePaint = new Paint()
+    final Paint linePaint = Paint()
       ..color = Colors.grey
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.butt
       ..strokeJoin = join
       ..strokeMiterLimit = strokeMiterLimit
       ..strokeWidth = 20.0;
-    final Paint centerPaint = new Paint()
+    final Paint centerPaint = Paint()
       ..color = Colors.deepPurpleAccent
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.butt
@@ -102,21 +102,21 @@ class StrokeJoinDescription extends CustomPainter {
       ..strokeMiterLimit = strokeMiterLimit
       ..strokeWidth = 20.0;
 
-    Path line = new Path() // Line
+    Path line = Path() // Line
       ..moveTo(start.dx, start.dy)
       ..lineTo(middle.dx, middle.dy)
       ..lineTo(end.dx, end.dy);
     canvas.drawPath(line, linePaint);
-    line = new Path() // Center area, to highlight the part with the join.
+    line = Path() // Center area, to highlight the part with the join.
       ..moveTo(start.dx + center.dy - 20.0, start.dy)
       ..lineTo(middle.dx, middle.dy)
       ..lineTo(shortEnd.dx, shortEnd.dy);
     canvas.drawPath(line, centerPaint);
     _anglePainter.paint(canvas, const Offset(3.0, 3.0));
-    _miterLimitPainter.paint(canvas, new Offset(3.0, 6.0 + _anglePainter.height));
+    _miterLimitPainter.paint(canvas, Offset(3.0, 6.0 + _anglePainter.height));
     _joinPainter.paint(
       canvas,
-      new Offset(
+      Offset(
         padding.left,
         size.height - (padding.bottom + _joinPainter.height),
       ),
@@ -132,11 +132,11 @@ class StrokeJoinDescription extends CustomPainter {
 class StrokeJoinDiagram extends StatefulWidget implements DiagramMetadata {
   const StrokeJoinDiagram({
     this.name,
-    this.duration: _kAnimationDuration,
-    this.startAngle: 0.0,
-    this.endAngle: 360.0,
-    this.join: StrokeJoin.miter,
-    this.strokeMiterLimit: 4.0,
+    this.duration = _kAnimationDuration,
+    this.startAngle = 0.0,
+    this.endAngle = 360.0,
+    this.join = StrokeJoin.miter,
+    this.strokeMiterLimit = 4.0,
   });
 
   @override
@@ -148,7 +148,7 @@ class StrokeJoinDiagram extends StatefulWidget implements DiagramMetadata {
   final double strokeMiterLimit;
 
   @override
-  StrokeJoinPainterState createState() => new StrokeJoinPainterState();
+  StrokeJoinPainterState createState() => StrokeJoinPainterState();
 }
 
 class StrokeJoinPainterState extends State<StrokeJoinDiagram> //
@@ -166,7 +166,7 @@ class StrokeJoinPainterState extends State<StrokeJoinDiagram> //
   @override
   void initState() {
     super.initState();
-    controller = new AnimationController(
+    controller = AnimationController(
       duration: widget.duration,
       vsync: this,
       lowerBound: widget.startAngle,
@@ -185,18 +185,18 @@ class StrokeJoinPainterState extends State<StrokeJoinDiagram> //
 
   @override
   Widget build(BuildContext context) {
-    final StrokeJoinDescription description = new StrokeJoinDescription(
+    final StrokeJoinDescription description = StrokeJoinDescription(
       angle: controller.value,
       join: widget.join,
       strokeMiterLimit: widget.strokeMiterLimit,
     );
 
-    return new ConstrainedBox(
-      constraints: new BoxConstraints.tight(const Size(300.0, 300.0)),
-      child: new Container(
+    return ConstrainedBox(
+      constraints: BoxConstraints.tight(const Size(300.0, 300.0)),
+      child: Container(
         padding: const EdgeInsets.all(18.0),
         color: Colors.white,
-        child: new CustomPaint(painter: description),
+        child: CustomPaint(painter: description),
       ),
     );
   }

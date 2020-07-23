@@ -162,12 +162,12 @@ class ToggleButtonsDiagramStep extends DiagramStep<ToggleButtonsDiagram> {
     ToggleButtonsDiagram(_toggleButtonsRequiredMutuallyExclusive, key: UniqueKey()),
   ];
 
-  void tapIcons(DiagramController controller, Duration now) async {
+  Future<void> tapIcons(DiagramController controller, Duration now) async {
     RenderBox target;
     if (now.inMilliseconds % 2000 == 0) {
       final int targetIcon = tapSteps[_testName][_stepCount];
       _stepCount += 1;
-      target = _iconKeys[targetIcon].currentContext.findRenderObject();
+      target = _iconKeys[targetIcon].currentContext.findRenderObject() as RenderBox;
       final Offset targetOffset = target.localToGlobal(target.size.center(Offset.zero));
       final TestGesture gesture = await controller.startGesture(targetOffset);
       Future<void>.delayed(const Duration(milliseconds: 500), gesture.up);

@@ -12,43 +12,43 @@ import 'package:flutter_test/flutter_test.dart';
 import 'diagram_step.dart';
 import 'utils.dart';
 
-final GlobalKey _splashKey = new GlobalKey();
+final GlobalKey _splashKey = GlobalKey();
 
 class InkResponseSmallDiagram extends StatelessWidget implements DiagramMetadata {
   InkResponseSmallDiagram({Key key}) : super(key: key);
 
-  final GlobalKey canvasKey = new GlobalKey();
-  final GlobalKey childKey = new GlobalKey();
-  final GlobalKey heroKey = new GlobalKey();
+  final GlobalKey canvasKey = GlobalKey();
+  final GlobalKey childKey = GlobalKey();
+  final GlobalKey heroKey = GlobalKey();
 
   @override
   String get name => 'ink_response_small';
 
   @override
   Widget build(BuildContext context) {
-    return new ConstrainedBox(
-      key: new UniqueKey(),
-      constraints: new BoxConstraints.tight(const Size(280.0, 180.0)),
-      child: new Theme(
-        data: new ThemeData(
+    return ConstrainedBox(
+      key: UniqueKey(),
+      constraints: BoxConstraints.tight(const Size(280.0, 180.0)),
+      child: Theme(
+        data: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        child: new Material(
+        child: Material(
           color: const Color(0xFFFFFFFF),
-          child: new Stack(
+          child: Stack(
             children: <Widget>[
-              new Center(
-                child: new Container(
+              Center(
+                child: Container(
                   key: heroKey,
                   width: 150.0,
                   height: 100.0,
                   alignment: FractionalOffset.center,
-                  child: new Container(
+                  child: Container(
                     height: 45.0,
                     width: 100.0,
-                    child: new InkResponse(
+                    child: InkResponse(
                       onTap: () {},
-                      child: new Hole(
+                      child: Hole(
                         color: Colors.blue,
                         key: childKey,
                       ),
@@ -56,20 +56,20 @@ class InkResponseSmallDiagram extends StatelessWidget implements DiagramMetadata
                   ),
                 ),
               ),
-              new Center(
-                child: new Container(
+              Center(
+                child: Container(
                   key: _splashKey,
                   width: 90.0,
                   height: 20.0,
                 ),
               ),
-              new Positioned.fill(
-                child: new LabelPainterWidget(
+              Positioned.fill(
+                child: LabelPainterWidget(
                   key: canvasKey,
                   labels: <Label>[
-                    new Label(childKey, 'child', const FractionalOffset(0.1, 0.85)),
-                    new Label(_splashKey, 'splash', const FractionalOffset(0.8, 0.6)),
-                    new Label(heroKey, 'highlight', const FractionalOffset(0.45, 0.25)),
+                    Label(childKey, 'child', const FractionalOffset(0.1, 0.85)),
+                    Label(_splashKey, 'splash', const FractionalOffset(0.8, 0.6)),
+                    Label(heroKey, 'highlight', const FractionalOffset(0.45, 0.25)),
                   ],
                   heroKey: heroKey,
                 ),
@@ -84,7 +84,7 @@ class InkResponseSmallDiagram extends StatelessWidget implements DiagramMetadata
 
 class InkResponseSmallDiagramStep extends DiagramStep<InkResponseSmallDiagram> {
   InkResponseSmallDiagramStep(DiagramController controller) : super(controller) {
-    _diagrams.add(new InkResponseSmallDiagram());
+    _diagrams.add(InkResponseSmallDiagram());
   }
 
   final List<InkResponseSmallDiagram> _diagrams = <InkResponseSmallDiagram>[];
@@ -99,11 +99,11 @@ class InkResponseSmallDiagramStep extends DiagramStep<InkResponseSmallDiagram> {
   Future<File> generateDiagram(InkResponseSmallDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
     controller.advanceTime(Duration.zero);
-    final RenderBox target = _splashKey.currentContext.findRenderObject();
+    final RenderBox target = _splashKey.currentContext.findRenderObject() as RenderBox;
     final Offset targetOffset = target.localToGlobal(target.size.bottomRight(Offset.zero));
     final TestGesture gesture = await controller.startGesture(targetOffset);
     final File result = await controller.drawDiagramToFile(
-      new File('${diagram.name}.png'),
+      File('${diagram.name}.png'),
       timestamp: const Duration(milliseconds: 550),
     );
     await gesture.up();

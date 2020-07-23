@@ -97,7 +97,7 @@ class ShowDatePickerDiagramStep extends DiagramStep<ShowDatePickerDiagram> {
     );
 
     await _pause();
-    await _tap(_buttonKey.currentContext.findRenderObject());
+    await _tap(_buttonKey.currentContext.findRenderObject() as RenderBox);
     await _pause();
 
     return result;
