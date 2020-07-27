@@ -327,7 +327,7 @@ class DiagramGenerator {
 
   Future<void> generateDiagrams(List<String> categories, List<String> names) async {
     final DateTime startTime = DateTime.now();
-    if (!await _findIdForDeviceName(device)) {
+    if (!await _findIdForDeviceName()) {
       stderr.writeln('Unable to find device ID for device $device. Are you sure it is attached?');
       return;
     }
@@ -364,7 +364,7 @@ class DiagramGenerator {
     await processRunner.runProcess(args, workingDirectory: Directory(generatorDir));
   }
 
-  Future<bool> _findIdForDeviceName(String name) async {
+  Future<bool> _findIdForDeviceName() async {
     final List<int> rawJson = await processRunner.runProcess(
       <String>[
         flutterCommand,
@@ -377,8 +377,8 @@ class DiagramGenerator {
 
     final List<dynamic> devices = jsonDecode(utf8.decode(rawJson)) as List<dynamic>;
     for (final Map<String, dynamic> entry in devices.cast<Map<String, dynamic>>()) {
-      if ((entry['name'] as String).toLowerCase().startsWith(name.toLowerCase()) ||
-          (entry['id'] as String) == name) {
+      if ((entry['name'] as String).toLowerCase().startsWith(device.toLowerCase()) ||
+          (entry['id'] as String) == device) {
         deviceId = entry['id'] as String;
         deviceTargetPlatform = (entry['targetPlatform'] as String).toLowerCase();
         return true;
@@ -460,7 +460,7 @@ class DiagramGenerator {
           '-tune', 'animation', // Optimize the encoder for cell animation.
           '-preset', 'veryslow', // Use the slowest (best quality) compression preset.
           // Almost lossless quality (can't use lossless '0' because Safari
-          // doesn't support it)
+          // doesn't support it).
           '-crf', '1',
           '-c:v', 'libx264', // encode to mp4 H.264
           '-y', // overwrite output
