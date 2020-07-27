@@ -415,36 +415,21 @@ class DiagramGenerator {
       await processRunner.runProcess(
         <String>[
           ffmpegCommand,
-          '-loglevel',
-          'fatal',
-          // Only print fatal errors.
-          '-framerate',
-          metadata.frameRate.toStringAsFixed(2),
-          '-i',
-          '-',
-          // read in the concatenated frame files from stdin.
+          '-loglevel', 'fatal', // Only print fatal errors.
+          '-framerate', metadata.frameRate.toStringAsFixed(2),
+          '-i', '-', // read in the concatenated frame files from stdin.
           // Yes, specify the -framerate flag twice: once for input, once for output.
-          '-framerate',
-          metadata.frameRate.toStringAsFixed(2),
-          '-tune',
-          'animation',
-          // Optimize the encoder for cell animation.
-          '-preset',
-          'veryslow',
-          // Use the slowest (best quality) compression preset.
-          '-crf',
-          '1',
-          // almost lossless quality (can't use lossless '0' because Safari doesn't support it)
-          '-c:v',
-          'libx264',
-          // encode to mp4 H.264
-          '-y',
-          // overwrite output
-          '-vf',
-          'format=yuv420p',
-          // video format set to YUV420 color space for compatibility.
-          destination.path,
-          // output movie.
+          '-framerate', metadata.frameRate.toStringAsFixed(2),
+          '-tune', 'animation', // Optimize the encoder for cell animation.
+          '-preset', 'veryslow', // Use the slowest (best quality) compression preset.
+          // Almost lossless quality (can't use lossless '0' because Safari doesn't
+          // support it)
+          '-crf', '1',
+          '-c:v', 'libx264', // encode to mp4 H.264
+          '-y', // overwrite output
+          // Video format set to YUV420 color space for compatibility.
+          '-vf', 'format=yuv420p',
+          destination.path, // output movie.
         ],
         workingDirectory: temporaryDirectory,
         stdin: _concatInputs(metadata.frameFiles),
