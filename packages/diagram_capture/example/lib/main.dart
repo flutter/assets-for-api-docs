@@ -13,18 +13,18 @@ import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 
 class MyDiagram extends StatefulWidget {
-  const MyDiagram({this.size: 1.0});
+  const MyDiagram({this.size = 1.0});
 
   final double size;
 
   @override
-  _MyDiagramState createState() => new _MyDiagramState();
+  _MyDiagramState createState() => _MyDiagramState();
 }
 
 class _MyDiagramState extends State<MyDiagram> {
   @override
   Widget build(BuildContext context) {
-    return new AnimatedContainer(
+    return AnimatedContainer(
       duration: const Duration(seconds: 1),
       width: widget.size,
       height: widget.size,
@@ -38,15 +38,15 @@ class _MyDiagramState extends State<MyDiagram> {
   }
 }
 
-Future<Null> main() async {
-  final Directory directory = new Directory(
+Future<void> main() async {
+  final Directory directory = Directory(
     path.join((await getApplicationDocumentsDirectory()).absolute.path, 'output'),
   );
   if (directory.existsSync()) {
     directory.deleteSync(recursive: true);
   }
   directory.createSync(recursive: true);
-  final DiagramController controller = new DiagramController(
+  final DiagramController controller = DiagramController(
     builder: (BuildContext context) => const MyDiagram(),
     outputDirectory: directory,
     pixelRatio: 3.0,
@@ -64,5 +64,5 @@ Future<Null> main() async {
   );
 
   controller.builder = (BuildContext context) => const Text('Done');
-  await controller.drawDiagramToFile(new File('done.png'));
+  await controller.drawDiagramToFile(File('done.png'));
 }

@@ -8,5 +8,5 @@ dependencies:
   path: ^1.6.4
 
 environment:
-  sdk: ">=2.0.0-dev.61.0 <3.0.0"
+  sdk: ">=2.8.0 <3.0.0"
 

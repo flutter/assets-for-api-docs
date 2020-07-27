@@ -98,14 +98,14 @@ class TabsDiagramStep extends DiagramStep<TabsDiagram> {
     const TabsDiagram('tabs'),
   ];
 
-  void tapTabs(DiagramController controller, Duration now) async {
+  Future<void> tapTabs(DiagramController controller, Duration now) async {
     RenderBox target;
     switch(now.inMilliseconds) {
       case 0:
-        target = _tabKeys[1].currentContext.findRenderObject();
+        target = _tabKeys[1].currentContext.findRenderObject() as RenderBox;
         break;
       case 2300:
-        target = _tabKeys[0].currentContext.findRenderObject();
+        target = _tabKeys[0].currentContext.findRenderObject() as RenderBox;
         break;
       default:
         return;

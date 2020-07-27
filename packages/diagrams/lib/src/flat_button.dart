@@ -51,7 +51,7 @@ class FlatButtonDiagram extends StatelessWidget implements DiagramMetadata {
 
     return ConstrainedBox(
       key: UniqueKey(),
-      constraints: new BoxConstraints.tight(const Size(300.0, 120.0)),
+      constraints: BoxConstraints.tight(const Size(300.0, 120.0)),
       child: Container(
         padding: const EdgeInsets.all(5.0),
         color: Colors.white,
@@ -76,6 +76,6 @@ class FlatButtonDiagramStep extends DiagramStep<FlatButtonDiagram> {
   @override
   Future<File> generateDiagram(FlatButtonDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawDiagramToFile(new File('${diagram.name}.png'));
+    return await controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }

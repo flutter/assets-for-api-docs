@@ -64,6 +64,6 @@ class BoxDecorationDiagramStep extends DiagramStep<BoxDecorationDiagram> {
 
     await Future<void>.delayed(const Duration(seconds: 1));
 
-    return await controller.drawDiagramToFile(new File('${diagram.name}.png'));
+    return await controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }

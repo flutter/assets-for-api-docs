@@ -33,9 +33,9 @@ abstract class DiagramStep<T extends DiagramMetadata> {
   /// If `onlyGenerate` is supplied, then only generate diagrams which match one
   /// of the given file basename. Only matches the basename with no suffix, not
   /// the path.
-  Future<List<File>> generateDiagrams({List<String> onlyGenerate: const <String>[]}) async {
+  Future<List<File>> generateDiagrams({List<String> onlyGenerate = const <String>[]}) async {
     final List<File> files = <File>[];
-    for (T diagram in await diagrams) {
+    for (final T diagram in await diagrams) {
       if (onlyGenerate.isNotEmpty && !onlyGenerate.contains(diagram.name)) {
         continue;
       }

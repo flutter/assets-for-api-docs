@@ -9,16 +9,24 @@ import 'dart:ui';
 import 'package:args/args.dart';
 import 'package:diagram_capture/diagram_capture.dart';
 import 'package:diagrams/diagrams.dart';
+import 'package:platform/platform.dart' as platform_pkg;
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 
-Future<Directory> prepareOutputDirectory() async {
-  final Directory directory = new Directory(
-    path.join(
-      (await getApplicationDocumentsDirectory()).absolute.path,
-      'diagrams',
-    ),
-  );
+const platform_pkg.Platform platform = platform_pkg.LocalPlatform();
+
+Future<Directory> prepareOutputDirectory(String outputDir) async {
+  Directory directory;
+  if (platform.isAndroid) {
+      directory = Directory(
+        outputDir ?? path.join(
+          (await getApplicationDocumentsDirectory()).absolute.path,
+          'diagrams',
+        ),
+      );
+  } else {
+    directory = Directory(outputDir);
+  }
   if (directory.existsSync()) {
     directory.deleteSync(recursive: true);
   }
@@ -26,23 +34,24 @@ Future<Directory> prepareOutputDirectory() async {
   return directory;
 }
 
-Future<Null> main() async {
+Future<void> main() async {
   DiagramFlutterBinding.ensureInitialized();
   final List<String> arguments = window.defaultRouteName.length > 5
       ? Uri.decodeComponent(window.defaultRouteName.substring(5)).split(' ')
       : <String>[];
-  final ArgParser parser = new ArgParser();
+  final ArgParser parser = ArgParser();
   parser.addMultiOption('category');
   parser.addMultiOption('name');
+  parser.addOption('outputDir');
   final ArgResults flags = parser.parse(arguments);
 
-  final List<String> categories = flags['category'];
-  final List<String> names = flags['name'];
+  final List<String> categories = platform.isAndroid ? flags['category'] as List<String> : <String>['painting'];
+  final List<String> names = flags['name'] as List<String>;
 
-  final DateTime start = new DateTime.now();
-  final Directory outputDirectory = await prepareOutputDirectory();
+  final DateTime start = DateTime.now();
+  final Directory outputDirectory = await prepareOutputDirectory(platform.isAndroid ? null : '/tmp/diagrams');
 
-  final DiagramController controller = new DiagramController(
+  final DiagramController controller = DiagramController(
     outputDirectory: outputDirectory,
     screenDimensions: const Size(1000.0, 1000.0),
     pixelRatio: 1.0,
@@ -125,22 +134,22 @@ Future<Null> main() async {
     TweenSequenceDiagramStep(controller),
   ];
 
-  for (DiagramStep<DiagramMetadata> step in steps) {
+  for (final DiagramStep<DiagramMetadata> step in steps) {
     if (categories.isNotEmpty && !categories.contains(step.category)) {
       continue;
     }
     final Directory stepOutputDirectory =
-        new Directory(path.join(outputDirectory.absolute.path, step.category));
+        Directory(path.join(outputDirectory.absolute.path, step.category));
     stepOutputDirectory.createSync(recursive: true);
     controller.outputDirectory = stepOutputDirectory;
     controller.pixelRatio = 1.0;
     print('Working on step ${step.runtimeType}');
     final List<File> files = await step.generateDiagrams(onlyGenerate: names);
-    for (File file in files) {
+    for (final File file in files) {
       print('Created file ${file.path}');
     }
   }
-  final DateTime end = new DateTime.now();
+  final DateTime end = DateTime.now();
   final Duration elapsed = end.difference(start);
   const Duration minExecutionTime = Duration(seconds: 10);
   print('Total elapsed time: $elapsed');
@@ -148,7 +157,7 @@ Future<Null> main() async {
     // If the app runs for less time than this, then it will throw an exception
     // when we exit because flutter run start trying to sync files to the device
     // after the process exits, and fails.
-    await new Future<Null>.delayed(minExecutionTime - elapsed);
+    await Future<void>.delayed(minExecutionTime - elapsed);
   }
   // Have to actually exit the app, otherwise flutter run won't ever exit,
   // and the generation script won't continue.

@@ -21,56 +21,56 @@ class BoxFitDiagram extends StatelessWidget implements DiagramMetadata {
 
   @override
   Widget build(BuildContext context) {
-    final Widget inner = new Container(
-      decoration: new BoxDecoration(
-        border: new Border.all(width: 2.0, color: Colors.blue[300]),
+    final Widget inner = Container(
+      decoration: BoxDecoration(
+        border: Border.all(width: 2.0, color: Colors.blue[300]),
         color: Colors.blue[100],
       ),
-      child: new FittedBox(
+      child: FittedBox(
         fit: fit,
-        child: new Container(
+        child: Container(
           width: 5.0 * 12.0,
           height: 5.0 * 12.0,
-          decoration: new BoxDecoration(
-            border: new Border.all(width: 2.0, color: Colors.teal[700]),
+          decoration: BoxDecoration(
+            border: Border.all(width: 2.0, color: Colors.teal[700]),
             color: Colors.teal[600],
           ),
-          child: new GridPaper(
+          child: GridPaper(
             color: Colors.teal[400],
             divisions: 1,
             interval: 18.5,
             subdivisions: 1,
-            child: new Center(
-              child: new Text('${fit.toString().split(".").join("\n")}'),
+            child: Center(
+              child: Text(fit.toString().split('.').join('\n')),
             ),
           ),
         ),
       ),
     );
-    return new Container(
-      key: new UniqueKey(),
+    return Container(
+      key: UniqueKey(),
       width: 300.0,
       height: 90.0,
-      child: new Row(
-        key: new GlobalObjectKey(fit),
+      child: Row(
+        key: GlobalObjectKey(fit),
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          new Expanded(
+          Expanded(
             flex: 180,
-            child: new Center(
-              child: new AspectRatio(
+            child: Center(
+              child: AspectRatio(
                 aspectRatio: 2.5,
                 child: inner,
               ),
             ),
           ),
           const SizedBox(width: 10.0),
-          new Expanded(
+          Expanded(
             flex: 80,
             child: inner,
           ),
           const SizedBox(width: 10.0),
-          new Expanded(
+          Expanded(
             flex: 200,
             child: inner,
           ),
@@ -82,8 +82,8 @@ class BoxFitDiagram extends StatelessWidget implements DiagramMetadata {
 
 class BoxFitDiagramStep extends DiagramStep<BoxFitDiagram> {
   BoxFitDiagramStep(DiagramController controller) : super(controller) {
-    for (BoxFit fit in BoxFit.values) {
-      _diagrams.add(new BoxFitDiagram(fit));
+    for (final BoxFit fit in BoxFit.values) {
+      _diagrams.add(BoxFitDiagram(fit));
     }
   }
 
@@ -98,6 +98,6 @@ class BoxFitDiagramStep extends DiagramStep<BoxFitDiagram> {
   @override
   Future<File> generateDiagram(BoxFitDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawDiagramToFile(new File('${diagram.name}.png'));
+    return await controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }

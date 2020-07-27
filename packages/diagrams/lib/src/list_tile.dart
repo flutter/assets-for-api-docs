@@ -91,6 +91,6 @@ class ListTileDiagramStep extends DiagramStep<ListTileDiagram> {
   @override
   Future<File> generateDiagram(ListTileDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawDiagramToFile(new File('${diagram.name}.png'));
+    return await controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }

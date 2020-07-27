@@ -29,7 +29,7 @@ const double _kCurveAnimationFrameRate = 60.0;
 
 class SliverAppBarDiagram extends StatefulWidget implements DiagramMetadata {
 
-  const SliverAppBarDiagram({this.pinned: false, this.floating: false, this.snap: false, this.repeatAnimation: false});
+  const SliverAppBarDiagram({this.pinned = false, this.floating = false, this.snap = false, this.repeatAnimation = false});
 
   final bool pinned;
   final bool floating;
@@ -98,7 +98,7 @@ class SliverAppBarDiagramState extends State<SliverAppBarDiagram> with TickerPro
   }
 
   Future<void> _animate({double to, Duration duration}) {
-    final ScrollPositionWithSingleContext position = _scrollController.position;
+    final ScrollPositionWithSingleContext position = _scrollController.position as ScrollPositionWithSingleContext;
     final FakeDragScrollActivity activity = FakeDragScrollActivity(
       position,
       from: _scrollController.offset,
@@ -148,11 +148,11 @@ class SliverAppBarDiagramState extends State<SliverAppBarDiagram> with TickerPro
 
 class SliverAppBarDiagramStep extends DiagramStep<SliverAppBarDiagram> {
   SliverAppBarDiagramStep(DiagramController controller) : super(controller) {
-    for (bool pinned in <bool>[false, true]) {
-      for (bool floating in <bool>[false, true]) {
+    for (final bool pinned in <bool>[false, true]) {
+      for (final bool floating in <bool>[false, true]) {
         // snap is only a legal option if floating is true.
-        for (bool snap in floating ? <bool>[false, true] : <bool>[false]) {
-          _diagrams.add(new SliverAppBarDiagram(
+        for (final bool snap in floating ? <bool>[false, true] : <bool>[false]) {
+          _diagrams.add(SliverAppBarDiagram(
             pinned: pinned,
             floating: floating,
             snap: snap,

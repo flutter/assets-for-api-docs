@@ -18,16 +18,16 @@ class CardDiagram extends StatelessWidget implements DiagramMetadata {
 
   @override
   Widget build(BuildContext context) {
-    return new ConstrainedBox(
-      key: new UniqueKey(),
-      constraints: new BoxConstraints.tight(const Size(400.0, 154.0)),
-      child: new Container(
+    return ConstrainedBox(
+      key: UniqueKey(),
+      constraints: BoxConstraints.tight(const Size(400.0, 154.0)),
+      child: Container(
         alignment: FractionalOffset.center,
         padding: const EdgeInsets.all(5.0),
         color: Colors.white,
-        child: new Card(
+        child: Card(
           key: key,
-          child: new Column(
+          child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               const ListTile(
@@ -35,13 +35,13 @@ class CardDiagram extends StatelessWidget implements DiagramMetadata {
                 title: Text('The Enchanted Nightingale'),
                 subtitle: Text('Music by Julie Gable. Lyrics by Sidney Stein.'),
               ),
-              new ButtonBar(
+              ButtonBar(
                 children: <Widget>[
-                  new FlatButton(
+                  FlatButton(
                     child: const Text('BUY TICKETS'),
                     onPressed: () {},
                   ),
-                  new FlatButton(
+                  FlatButton(
                     child: const Text('LISTEN'),
                     onPressed: () {},
                   ),
@@ -67,6 +67,6 @@ class CardDiagramStep extends DiagramStep<CardDiagram> {
   @override
   Future<File> generateDiagram(CardDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawDiagramToFile(new File('${diagram.name}.png'));
+    return await controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }

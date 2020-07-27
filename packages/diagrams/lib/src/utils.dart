@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 class Hole extends StatelessWidget {
   const Hole({
     Key key,
-    this.color: const Color(0xFFFFFFFF),
+    this.color = const Color(0xFFFFFFFF),
     this.child,
   }) : super(key: key);
 
@@ -20,11 +20,11 @@ class Hole extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new AspectRatio(
+    return AspectRatio(
       aspectRatio: 1.0,
-      child: new Padding(
+      child: Padding(
         padding: const EdgeInsets.all(4.0),
-        child: new Placeholder(
+        child: Placeholder(
           strokeWidth: 2.0,
           color: color,
         ),
@@ -54,13 +54,13 @@ class LabelPainterWidget extends StatelessWidget {
   })  : assert(key != null),
         assert(labels != null),
         assert(heroKey != null),
-        painter = new LabelPainter(labels: labels, heroKey: heroKey, canvasKey: key),
+        painter = LabelPainter(labels: labels, heroKey: heroKey, canvasKey: key),
         super(key: key);
 
   final LabelPainter painter;
 
   @override
-  Widget build(BuildContext context) => new CustomPaint(painter: painter);
+  Widget build(BuildContext context) => CustomPaint(painter: painter);
 }
 
 /// The custom painter that [LabelPainterWidget] uses to paint the list of
@@ -72,10 +72,10 @@ class LabelPainter extends CustomPainter {
     this.canvasKey,
   }) {
     _painters = <Label, TextPainter>{};
-    for (Label label in labels) {
-      final TextPainter painter = new TextPainter(
+    for (final Label label in labels) {
+      final TextPainter painter = TextPainter(
         textDirection: TextDirection.ltr,
-        text: new TextSpan(text: label.text, style: _labelTextStyle),
+        text: TextSpan(text: label.text, style: _labelTextStyle),
       );
       painter.layout();
       _painters[label] = painter;
@@ -94,16 +94,16 @@ class LabelPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final RenderBox hero = heroKey.currentContext.findRenderObject();
-    final RenderBox diagram = canvasKey.currentContext.findRenderObject();
-    final Paint dotPaint = new Paint();
-    final Paint linePaint = new Paint()..strokeWidth = 2.0;
+    final RenderBox hero = heroKey.currentContext.findRenderObject() as RenderBox;
+    final RenderBox diagram = canvasKey.currentContext.findRenderObject() as RenderBox;
+    final Paint dotPaint = Paint();
+    final Paint linePaint = Paint()..strokeWidth = 2.0;
     final Offset heroTopLeft = diagram.globalToLocal(hero.localToGlobal(Offset.zero));
-    for (Label label in labels) {
-      final RenderBox box = label.key.currentContext.findRenderObject();
+    for (final Label label in labels) {
+      final RenderBox box = label.key.currentContext.findRenderObject() as RenderBox;
       final Offset anchor = diagram.globalToLocal(box.localToGlobal(label.anchor.alongSize(box.size)));
       final Offset anchorOnHero = anchor - heroTopLeft;
-      final FractionalOffset relativeAnchor = new FractionalOffset.fromOffsetAndSize(anchorOnHero, hero.size);
+      final FractionalOffset relativeAnchor = FractionalOffset.fromOffsetAndSize(anchorOnHero, hero.size);
       final double distanceToTop = anchorOnHero.dy;
       final double distanceToBottom = hero.size.height - anchorOnHero.dy;
       final double distanceToLeft = anchorOnHero.dx;
@@ -112,20 +112,20 @@ class LabelPainter extends CustomPainter {
       Offset textPosition = Offset.zero;
       final TextPainter painter = _painters[label];
       if (distanceToTop <= distanceToLeft && distanceToTop <= distanceToRight && distanceToTop <= distanceToBottom) {
-        labelPosition = new Offset(anchor.dx + (relativeAnchor.dx - 0.5) * margin, heroTopLeft.dy - margin);
-        textPosition = new Offset(labelPosition.dx - painter.width / 2.0, labelPosition.dy - painter.height);
+        labelPosition = Offset(anchor.dx + (relativeAnchor.dx - 0.5) * margin, heroTopLeft.dy - margin);
+        textPosition = Offset(labelPosition.dx - painter.width / 2.0, labelPosition.dy - painter.height);
       } else if (distanceToBottom < distanceToLeft && distanceToBottom < distanceToRight && distanceToTop > distanceToBottom) {
-        labelPosition = new Offset(anchor.dx, heroTopLeft.dy + hero.size.height + margin);
-        textPosition = new Offset(labelPosition.dx - painter.width / 2.0, labelPosition.dy);
+        labelPosition = Offset(anchor.dx, heroTopLeft.dy + hero.size.height + margin);
+        textPosition = Offset(labelPosition.dx - painter.width / 2.0, labelPosition.dy);
       } else if (distanceToLeft < distanceToRight) {
-        labelPosition = new Offset(heroTopLeft.dx - margin, anchor.dy);
-        textPosition = new Offset(labelPosition.dx - painter.width - 2.0, labelPosition.dy - painter.height / 2.0);
+        labelPosition = Offset(heroTopLeft.dx - margin, anchor.dy);
+        textPosition = Offset(labelPosition.dx - painter.width - 2.0, labelPosition.dy - painter.height / 2.0);
       } else if (distanceToLeft > distanceToRight) {
-        labelPosition = new Offset(heroTopLeft.dx + hero.size.width + margin, anchor.dy);
-        textPosition = new Offset(labelPosition.dx, labelPosition.dy - painter.height / 2.0);
+        labelPosition = Offset(heroTopLeft.dx + hero.size.width + margin, anchor.dy);
+        textPosition = Offset(labelPosition.dx, labelPosition.dy - painter.height / 2.0);
       } else {
-        labelPosition = new Offset(anchor.dx, heroTopLeft.dy - margin * 2.0);
-        textPosition = new Offset(anchor.dx - painter.width / 2.0, anchor.dy - margin - painter.height);
+        labelPosition = Offset(anchor.dx, heroTopLeft.dy - margin * 2.0);
+        textPosition = Offset(anchor.dx - painter.width / 2.0, anchor.dy - margin - painter.height);
       }
       canvas.drawCircle(anchor, 4.0, dotPaint);
       canvas.drawLine(anchor, labelPosition, linePaint);

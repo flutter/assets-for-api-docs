@@ -173,7 +173,7 @@ class BottomSheetDiagramStep extends DiagramStep<BottomSheetDiagram> {
   }
 
   Future<void> _tap(GlobalKey key) async {
-    final RenderBox target = key.currentContext.findRenderObject();
+    final RenderBox target = key.currentContext.findRenderObject() as RenderBox;
     final Offset targetOffset =
         target.localToGlobal(target.size.center(Offset.zero));
     final TestGesture gesture = await controller.startGesture(targetOffset);

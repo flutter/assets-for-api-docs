@@ -12,64 +12,64 @@ import 'package:flutter_test/flutter_test.dart';
 import 'diagram_step.dart';
 import 'utils.dart';
 
-final GlobalKey _splashKey = new GlobalKey();
+final GlobalKey _splashKey = GlobalKey();
 
 class InkWellDiagram extends StatelessWidget implements DiagramMetadata {
   InkWellDiagram({Key key}) : super(key: key);
 
-  final GlobalKey canvasKey = new GlobalKey();
-  final GlobalKey childKey = new GlobalKey();
-  final GlobalKey heroKey = new GlobalKey();
+  final GlobalKey canvasKey = GlobalKey();
+  final GlobalKey childKey = GlobalKey();
+  final GlobalKey heroKey = GlobalKey();
 
   @override
   String get name => 'ink_well';
 
   @override
   Widget build(BuildContext context) {
-    return new ConstrainedBox(
-      key: new UniqueKey(),
-      constraints: new BoxConstraints.tight(const Size(280.0, 180.0)),
-      child: new Theme(
-        data: new ThemeData(
+    return ConstrainedBox(
+      key: UniqueKey(),
+      constraints: BoxConstraints.tight(const Size(280.0, 180.0)),
+      child: Theme(
+        data: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        child: new Material(
+        child: Material(
           color: const Color(0xFFFFFFFF),
-          child: new Stack(
+          child: Stack(
             children: <Widget>[
-              new Center(
-                child: new Container(
+              Center(
+                child: Container(
                   width: 150.0,
                   height: 100.0,
-                  child: new InkWell(
+                  child: InkWell(
                     key: heroKey,
                     onTap: () {},
-                    child: new Hole(
+                    child: Hole(
                       color: Colors.blue,
                       key: childKey,
                     ),
                   ),
                 ),
               ),
-              new Center(
-                child: new Container(
+              Center(
+                child: Container(
                   width: 120.0,
                   height: 80.0,
                   alignment: FractionalOffset.bottomRight,
-                  child: new Container(
+                  child: Container(
                     key: _splashKey,
                     width: 20.0,
                     height: 25.0,
                   ),
                 ),
               ),
-              new Positioned.fill(
-                child: new LabelPainterWidget(
+              Positioned.fill(
+                child: LabelPainterWidget(
                   key: canvasKey,
                   labels: <Label>[
-                    new Label(childKey, 'child', const FractionalOffset(0.2, 0.8)),
-                    new Label(_splashKey, 'splash', const FractionalOffset(0.0, 0.0)),
-                    new Label(heroKey, 'highlight', const FractionalOffset(0.3, 0.2)),
+                    Label(childKey, 'child', const FractionalOffset(0.2, 0.8)),
+                    Label(_splashKey, 'splash', const FractionalOffset(0.0, 0.0)),
+                    Label(heroKey, 'highlight', const FractionalOffset(0.3, 0.2)),
                   ],
                   heroKey: heroKey,
                 ),
@@ -84,7 +84,7 @@ class InkWellDiagram extends StatelessWidget implements DiagramMetadata {
 
 class InkWellDiagramStep extends DiagramStep<InkWellDiagram> {
   InkWellDiagramStep(DiagramController controller) : super(controller) {
-    _diagrams.add(new InkWellDiagram());
+    _diagrams.add(InkWellDiagram());
   }
 
   final List<InkWellDiagram> _diagrams = <InkWellDiagram>[];
@@ -100,11 +100,11 @@ class InkWellDiagramStep extends DiagramStep<InkWellDiagram> {
     controller.builder = (BuildContext context) => diagram;
 
     controller.advanceTime(Duration.zero);
-    final RenderBox target = _splashKey.currentContext.findRenderObject();
+    final RenderBox target = _splashKey.currentContext.findRenderObject() as RenderBox;
     final Offset targetOffset = target.localToGlobal(target.size.bottomRight(Offset.zero));
     final TestGesture gesture = await controller.startGesture(targetOffset);
     final File result = await controller.drawDiagramToFile(
-      new File('${diagram.name}.png'),
+      File('${diagram.name}.png'),
       timestamp: const Duration(milliseconds: 550),
     );
     gesture.up();

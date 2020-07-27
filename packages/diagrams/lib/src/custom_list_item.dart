@@ -122,7 +122,7 @@ class _ArticleDescription extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
-                '$title',
+                title,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
@@ -131,7 +131,7 @@ class _ArticleDescription extends StatelessWidget {
               ),
               const Padding(padding: EdgeInsets.only(bottom: 2.0)),
               Text(
-                '$subtitle',
+                subtitle,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
@@ -149,7 +149,7 @@ class _ArticleDescription extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               Text(
-                '$author',
+                author,
                 style: const TextStyle(
                   fontSize: 12.0,
                   color: Colors.black87,
@@ -324,7 +324,7 @@ class CustomListItemDiagramStep extends DiagramStep<CustomListItemDiagram> {
   Future<File> generateDiagram(CustomListItemDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
     return await controller.drawDiagramToFile(
-      new File('${diagram.name}.png'),
+      File('${diagram.name}.png'),
     );
   }
 }

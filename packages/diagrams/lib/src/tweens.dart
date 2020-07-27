@@ -43,7 +43,7 @@ class TweensDiagramState extends State<TweensDiagram>
       _controller.forward();
     });
     _controller
-      ..addStatusListener((AnimationStatus status) {
+      .addStatusListener((AnimationStatus status) {
         switch (status) {
           case AnimationStatus.dismissed:
           case AnimationStatus.forward:

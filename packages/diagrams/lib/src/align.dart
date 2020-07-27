@@ -67,10 +67,10 @@ class AlignDiagram extends StatelessWidget implements DiagramMetadata {
         containerChild = const Text('Error');
         break;
     }
-    return new ConstrainedBox(
-      key: new UniqueKey(),
-      constraints: new BoxConstraints.tight(const Size(250.0, 250.0)),
-      child: new Container(
+    return ConstrainedBox(
+      key: UniqueKey(),
+      constraints: BoxConstraints.tight(const Size(250.0, 250.0)),
+      child: Container(
         alignment: FractionalOffset.center,
         color: Colors.white,
         child: Column(
@@ -109,6 +109,6 @@ class AlignDiagramStep extends DiagramStep<AlignDiagram> {
   @override
   Future<File> generateDiagram(AlignDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawDiagramToFile(new File('${diagram.name}.png'));
+    return await controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }
