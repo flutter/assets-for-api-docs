@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:archive/archive.dart';
@@ -193,8 +194,9 @@ class ProcessPool {
 
   void _printReport() {
     final int totalJobs = completedJobs.length + inProgressJobs.length + pendingJobs.length;
-    final String percent =
-        totalJobs == 0 ? '100' : ((100 * completedJobs.length) ~/ totalJobs).toString().padLeft(3);
+    final String percent = totalJobs == 0
+        ? '100'
+        : ((100 * completedJobs.length) ~/ totalJobs).toString().padLeft(3);
     final String completed = completedJobs.length.toString().padLeft(3);
     final String total = totalJobs.toString().padRight(3);
     final String inProgress = inProgressJobs.length.toString().padLeft(2);
@@ -316,8 +318,20 @@ class DiagramGenerator {
   /// into.
   Directory temporaryDirectory;
 
+  /// The device ID to use when transferring results from Android.
+  String deviceId = '';
+
+  /// The targetPlatform from the `flutter devices` output of the device we're
+  /// targeting.
+  String deviceTargetPlatform = '';
+
   Future<void> generateDiagrams(List<String> categories, List<String> names) async {
     final DateTime startTime = DateTime.now();
+    if (!await _findIdForDeviceName()) {
+      stderr.writeln('Unable to find device ID for device $device. Are you sure it is attached?');
+      return;
+    }
+
     await _createScreenshots(categories, names);
     final List<File> outputFiles = await _combineAnimations(await _transferImages());
     await _optimizeImages(outputFiles);
@@ -338,27 +352,49 @@ class DiagramGenerator {
       filters.add('--name');
       filters.add(path.basenameWithoutExtension(name));
     }
-    if (device == 'linux') {
+    if (deviceId == 'linux') {
       filters.add('--outputDir');
       filters.add(temporaryDirectory.absolute.path);
     }
     final List<String> filterArgs = filters.isNotEmpty
         ? <String>['--route', 'args:${Uri.encodeComponent(filters.join(' '))}']
         : <String>[];
-    final List<String> deviceArgs =
-        device == null || device.isEmpty ? <String>[] : <String>['-d', device];
+    final List<String> deviceArgs = <String>['-d', deviceId];
     final List<String> args = <String>[flutterCommand, 'run'] + filterArgs + deviceArgs;
     await processRunner.runProcess(args, workingDirectory: Directory(generatorDir));
   }
 
+  Future<bool> _findIdForDeviceName() async {
+    final List<int> rawJson = await processRunner.runProcess(
+      <String>[
+        flutterCommand,
+        'devices',
+        '--machine',
+      ],
+      workingDirectory: temporaryDirectory,
+      printOutput: false,
+    );
+
+    final List<dynamic> devices = jsonDecode(utf8.decode(rawJson)) as List<dynamic>;
+    for (final Map<String, dynamic> entry in devices.cast<Map<String, dynamic>>()) {
+      if ((entry['name'] as String).toLowerCase().startsWith(device.toLowerCase()) ||
+          (entry['id'] as String) == device) {
+        deviceId = entry['id'] as String;
+        deviceTargetPlatform = (entry['targetPlatform'] as String).toLowerCase();
+        return true;
+      }
+    }
+    return false;
+  }
+
   Future<List<File>> _transferImages() async {
     final List<File> files = <File>[];
-    if (device != 'linux') {
+    if (deviceTargetPlatform.startsWith('android')) {
       print('Collecting images from device.');
       final List<String> args = <String>[
         adbCommand,
-        if (device.isNotEmpty) '-s',
-        if (device.isNotEmpty) device,
+        '-s',
+        deviceId,
         'exec-out',
         'run-as',
         appClass,
@@ -418,12 +454,13 @@ class DiagramGenerator {
           '-loglevel', 'fatal', // Only print fatal errors.
           '-framerate', metadata.frameRate.toStringAsFixed(2),
           '-i', '-', // read in the concatenated frame files from stdin.
-          // Yes, specify the -framerate flag twice: once for input, once for output.
+          // Yes, specify the -framerate flag twice: once for input, once for
+          // output.
           '-framerate', metadata.frameRate.toStringAsFixed(2),
           '-tune', 'animation', // Optimize the encoder for cell animation.
           '-preset', 'veryslow', // Use the slowest (best quality) compression preset.
-          // Almost lossless quality (can't use lossless '0' because Safari doesn't
-          // support it)
+          // Almost lossless quality (can't use lossless '0' because Safari
+          // doesn't support it).
           '-crf', '1',
           '-c:v', 'libx264', // encode to mp4 H.264
           '-y', // overwrite output
@@ -513,14 +550,17 @@ Future<void> main(List<String> arguments) async {
   final ArgParser parser = ArgParser();
   parser.addFlag('help', help: 'Print help.');
   parser.addFlag('keep-tmp', help: "Don't cleanup after a run (don't remove temporary directory).");
-  parser.addOption('tmpdir', help: 'Specify a temporary directory to use (implies --keep-tmp)');
-  parser.addOption('device',
-      help: 'Specify a device to use for generating the diagrams', defaultsTo: 'linux');
+  parser.addOption('tmpdir',
+      abbr: 't', help: 'Specify a temporary directory to use (implies --keep-tmp)');
+  parser.addOption('device-id',
+      abbr: 'd', help: 'Specify a device to use for generating the diagrams', defaultsTo: 'linux');
   parser.addMultiOption('category',
+      abbr: 'c',
       help: 'Specify the categories of diagrams that should be '
           'generated. The category is the name of the subdirectory of the assets/ directory in which '
           'the images will be placed, as determined by the DiagramStep.category property.');
   parser.addMultiOption('name',
+      abbr: 'n',
       help: 'Specify the name of diagrams that should be generated. The '
           'name is the basename of the output file and may be specified with or without the suffix.');
   final ArgResults flags = parser.parse(arguments);
@@ -540,7 +580,7 @@ Future<void> main(List<String> arguments) async {
   }
 
   DiagramGenerator(
-    device: flags['device'] as String,
+    device: flags['device-id'] as String,
     temporaryDirectory: temporaryDirectory,
     cleanup: !keepTemporaryDirectory,
   ).generateDiagrams(flags['category'] as List<String>, flags['name'] as List<String>);

@@ -45,8 +45,8 @@ Future<void> main() async {
   parser.addOption('outputDir');
   final ArgResults flags = parser.parse(arguments);
 
-  final List<String> categories = platform.isAndroid ? flags['category'] as List<String> : <String>['painting'];
-  final List<String> names = flags['name'] as List<String>;
+  final List<String> categories = flags['category'] as List<String> ?? <String>[];
+  final List<String> names = flags['name'] as List<String> ?? <String>[];
 
   final DateTime start = DateTime.now();
   final Directory outputDirectory = await prepareOutputDirectory(platform.isAndroid ? null : '/tmp/diagrams');
