@@ -81,7 +81,8 @@ class ProcessRunner {
   }) async {
     workingDirectory ??= defaultWorkingDirectory ?? Directory.current;
     if (printOutput) {
-      stderr.write('Running "${commandLine.join(' ')}" in ${workingDirectory.path}.\n');
+      stderr.write(
+          'Running "${commandLine.join(' ')}" in ${workingDirectory.path}.\n');
     }
     final List<int> output = <int>[];
     final Completer<void> stdoutComplete = Completer<void>();
@@ -130,11 +131,13 @@ class ProcessRunner {
         stderrComplete.complete();
       }
     } on ProcessException catch (e) {
-      final String message = 'Running "${commandLine.join(' ')}" in ${workingDirectory.path} '
+      final String message =
+          'Running "${commandLine.join(' ')}" in ${workingDirectory.path} '
           'failed with:\n${e.toString()}';
       throw ProcessRunnerException(message);
     } on ArgumentError catch (e) {
-      final String message = 'Running "${commandLine.join(' ')}" in ${workingDirectory.path} '
+      final String message =
+          'Running "${commandLine.join(' ')}" in ${workingDirectory.path} '
           'failed with:\n${e.toString()}';
       throw ProcessRunnerException(message);
     }
@@ -157,6 +160,7 @@ class WorkerJob {
     this.args, {
     this.workingDirectory,
     bool printOutput,
+    this.stdin,
   }) : printOutput = printOutput ?? false;
 
   /// The arguments for the process, including the command name as args[0].
@@ -167,6 +171,9 @@ class WorkerJob {
 
   /// Whether or not this command should print it's stdout when it runs.
   final bool printOutput;
+
+  /// If set, the stream to read the stdin input from for this job.
+  Stream<List<int>> stdin;
 
   @override
   String toString() {
@@ -188,12 +195,14 @@ class ProcessPool {
   int numWorkers;
   List<WorkerJob> pendingJobs = <WorkerJob>[];
   List<WorkerJob> failedJobs = <WorkerJob>[];
-  Map<WorkerJob, Future<List<int>>> inProgressJobs = <WorkerJob, Future<List<int>>>{};
+  Map<WorkerJob, Future<List<int>>> inProgressJobs =
+      <WorkerJob, Future<List<int>>>{};
   Map<WorkerJob, List<int>> completedJobs = <WorkerJob, List<int>>{};
   Completer<Map<WorkerJob, List<int>>> completer;
 
   void _printReport() {
-    final int totalJobs = completedJobs.length + inProgressJobs.length + pendingJobs.length;
+    final int totalJobs =
+        completedJobs.length + inProgressJobs.length + pendingJobs.length;
     final String percent = totalJobs == 0
         ? '100'
         : ((100 * completedJobs.length) ~/ totalJobs).toString().padLeft(3);
@@ -213,6 +222,7 @@ class ProcessPool {
         job.args,
         workingDirectory: job.workingDirectory,
         printOutput: job.printOutput,
+        stdin: job.stdin,
       );
     } catch (e) {
       failedJobs.add(job);
@@ -297,7 +307,8 @@ class DiagramGenerator {
 
   /// The path to the top of the repo.
   static String get projectDir {
-    return path.dirname(path.dirname(path.absolute(path.fromUri(Platform.script))));
+    return path
+        .dirname(path.dirname(path.absolute(path.fromUri(Platform.script))));
   }
 
   /// The output asset directory for all the categories.
@@ -325,23 +336,30 @@ class DiagramGenerator {
   /// targeting.
   String deviceTargetPlatform = '';
 
-  Future<void> generateDiagrams(List<String> categories, List<String> names) async {
+  Future<void> generateDiagrams(
+      List<String> categories, List<String> names) async {
     final DateTime startTime = DateTime.now();
     if (!await _findIdForDeviceName()) {
-      stderr.writeln('Unable to find device ID for device $device. Are you sure it is attached?');
+      stderr.writeln(
+          'Unable to find device ID for device $device. Are you sure it is attached?');
       return;
     }
 
-    await _createScreenshots(categories, names);
-    final List<File> outputFiles = await _combineAnimations(await _transferImages());
+    //await _createScreenshots(categories, names);
+    final List<File> transferred = await _transferImages();
+    print('Transferred: $transferred');
+    final List<File> outputFiles = await _combineAnimations(transferred);
+    print('Combined: $outputFiles');
     await _optimizeImages(outputFiles);
     if (cleanup) {
       await temporaryDirectory.delete(recursive: true);
     }
-    print('Elapsed time for diagram generation: ${DateTime.now().difference(startTime)}');
+    print(
+        'Elapsed time for diagram generation: ${DateTime.now().difference(startTime)}');
   }
 
-  Future<void> _createScreenshots(List<String> categories, List<String> names) async {
+  Future<void> _createScreenshots(
+      List<String> categories, List<String> names) async {
     print('Creating images.');
     final List<String> filters = <String>[];
     for (final String category in categories) {
@@ -360,8 +378,10 @@ class DiagramGenerator {
         ? <String>['--route', 'args:${Uri.encodeComponent(filters.join(' '))}']
         : <String>[];
     final List<String> deviceArgs = <String>['-d', deviceId];
-    final List<String> args = <String>[flutterCommand, 'run'] + filterArgs + deviceArgs;
-    await processRunner.runProcess(args, workingDirectory: Directory(generatorDir));
+    final List<String> args =
+        <String>[flutterCommand, 'run'] + filterArgs + deviceArgs;
+    await processRunner.runProcess(args,
+        workingDirectory: Directory(generatorDir));
   }
 
   Future<bool> _findIdForDeviceName() async {
@@ -375,12 +395,17 @@ class DiagramGenerator {
       printOutput: false,
     );
 
-    final List<dynamic> devices = jsonDecode(utf8.decode(rawJson)) as List<dynamic>;
-    for (final Map<String, dynamic> entry in devices.cast<Map<String, dynamic>>()) {
-      if ((entry['name'] as String).toLowerCase().startsWith(device.toLowerCase()) ||
+    final List<dynamic> devices =
+        jsonDecode(utf8.decode(rawJson)) as List<dynamic>;
+    for (final Map<String, dynamic> entry
+        in devices.cast<Map<String, dynamic>>()) {
+      if ((entry['name'] as String)
+              .toLowerCase()
+              .startsWith(device.toLowerCase()) ||
           (entry['id'] as String) == device) {
         deviceId = entry['id'] as String;
-        deviceTargetPlatform = (entry['targetPlatform'] as String).toLowerCase();
+        deviceTargetPlatform =
+            (entry['targetPlatform'] as String).toLowerCase();
         return true;
       }
     }
@@ -418,14 +443,18 @@ class DiagramGenerator {
         }
       }
     } else {
-      temporaryDirectory
-          .list(recursive: true, followLinks: false)
-          .listen((FileSystemEntity entity) {
+      print('Looking in $temporaryDirectory');
+      await for (final FileSystemEntity entity
+          in temporaryDirectory.list(recursive: true, followLinks: false)) {
         if (entity is File) {
-          files.add(File(path.relative(entity.path, from: temporaryDirectory.path)));
+          stdout.write('.');
+          final String relativePath =
+              path.relative(entity.path, from: temporaryDirectory.path);
+          files.add(File(relativePath));
         }
-      });
+      }
     }
+    print('\nFound ${files.length} files.');
     return files;
   }
 
@@ -438,9 +467,11 @@ class DiagramGenerator {
     }
   }
 
-  Future<List<File>> _buildMoviesFromMetadata(List<AnimationMetadata> metadataList) async {
+  Future<List<File>> _buildMoviesFromMetadata(
+      List<AnimationMetadata> metadataList) async {
     final Directory destDir = Directory(assetDir);
     final List<File> outputs = <File>[];
+    final List<WorkerJob> jobs = <WorkerJob>[];
     for (final AnimationMetadata metadata in metadataList) {
       final String prefix = '${metadata.category}/${metadata.name}';
       final File destination = File(path.join(destDir.path, '$prefix.mp4'));
@@ -448,7 +479,7 @@ class DiagramGenerator {
         destination.deleteSync();
       }
       print('Converting ${metadata.name} animation to mp4.');
-      await processRunner.runProcess(
+      jobs.add(WorkerJob(
         <String>[
           ffmpegCommand,
           '-loglevel', 'fatal', // Only print fatal errors.
@@ -458,7 +489,8 @@ class DiagramGenerator {
           // output.
           '-framerate', metadata.frameRate.toStringAsFixed(2),
           '-tune', 'animation', // Optimize the encoder for cell animation.
-          '-preset', 'veryslow', // Use the slowest (best quality) compression preset.
+          '-preset',
+          'veryslow', // Use the slowest (best quality) compression preset.
           // Almost lossless quality (can't use lossless '0' because Safari
           // doesn't support it).
           '-crf', '1',
@@ -471,9 +503,11 @@ class DiagramGenerator {
         workingDirectory: temporaryDirectory,
         stdin: _concatInputs(metadata.frameFiles),
         printOutput: true,
-      );
+      ));
       outputs.add(destination);
     }
+    final ProcessPool pool = ProcessPool();
+    await pool.startWorkers(jobs);
     return outputs;
   }
 
@@ -493,10 +527,12 @@ class DiagramGenerator {
           ),
         );
       }
-      final AnimationMetadata metadata = AnimationMetadata.fromFile(metadataFile);
+      final AnimationMetadata metadata =
+          AnimationMetadata.fromFile(metadataFile);
       metadataList.add(metadata);
       animationFiles.add(metadata.metadataFile.absolute.path);
-      animationFiles.addAll(metadata.frameFiles.map((File file) => file.absolute.path));
+      animationFiles
+          .addAll(metadata.frameFiles.map((File file) => file.absolute.path));
     }
     final List<File> staticFiles = inputFiles.where((File input) {
       if (!input.isAbsolute) {
@@ -510,7 +546,8 @@ class DiagramGenerator {
       }
       return !animationFiles.contains(input.absolute.path);
     }).toList();
-    final List<File> convertedFiles = await _buildMoviesFromMetadata(metadataList);
+    final List<File> convertedFiles =
+        await _buildMoviesFromMetadata(metadataList);
     return staticFiles..addAll(convertedFiles);
   }
 
@@ -549,11 +586,15 @@ class DiagramGenerator {
 Future<void> main(List<String> arguments) async {
   final ArgParser parser = ArgParser();
   parser.addFlag('help', help: 'Print help.');
-  parser.addFlag('keep-tmp', help: "Don't cleanup after a run (don't remove temporary directory).");
+  parser.addFlag('keep-tmp',
+      help: "Don't cleanup after a run (don't remove temporary directory).");
   parser.addOption('tmpdir',
-      abbr: 't', help: 'Specify a temporary directory to use (implies --keep-tmp)');
+      abbr: 't',
+      help: 'Specify a temporary directory to use (implies --keep-tmp)');
   parser.addOption('device-id',
-      abbr: 'd', help: 'Specify a device to use for generating the diagrams', defaultsTo: 'linux');
+      abbr: 'd',
+      help: 'Specify a device to use for generating the diagrams',
+      defaultsTo: 'linux');
   parser.addMultiOption('category',
       abbr: 'c',
       help: 'Specify the categories of diagrams that should be '
@@ -583,5 +624,6 @@ Future<void> main(List<String> arguments) async {
     device: flags['device-id'] as String,
     temporaryDirectory: temporaryDirectory,
     cleanup: !keepTemporaryDirectory,
-  ).generateDiagrams(flags['category'] as List<String>, flags['name'] as List<String>);
+  ).generateDiagrams(
+      flags['category'] as List<String>, flags['name'] as List<String>);
 }
