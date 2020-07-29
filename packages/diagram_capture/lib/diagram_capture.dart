@@ -34,13 +34,13 @@ class _Diagram extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: new Material(
-        child: new Builder(
+      home: Material(
+        child: Builder(
           builder: (BuildContext context) {
-            return new Center(
-              child: new RepaintBoundary(
+            return Center(
+              child: RepaintBoundary(
                 key: boundaryKey,
                 child: child,
               ),
@@ -60,8 +60,7 @@ const Size _kDefaultDiagramViewportSize = Size(1280.0, 1024.0);
 // captured image pixels.
 class _DiagramViewConfiguration extends ViewConfiguration {
   _DiagramViewConfiguration({
-    double pixelRatio: 1.0,
-    Size size: _kDefaultDiagramViewportSize,
+    Size size = _kDefaultDiagramViewportSize,
   })  : _paintMatrix = _getMatrix(size, ui.window.devicePixelRatio),
         super(size: size);
 
@@ -81,10 +80,10 @@ class _DiagramViewConfiguration extends ViewConfiguration {
       shiftX = 0.0;
       shiftY = (actualHeight - desiredHeight * scale) / 2.0;
     }
-    final Matrix4 matrix = new Matrix4.compose(
-        new Vector3(shiftX, shiftY, 0.0), // translation
-        new Quaternion.identity(), // rotation
-        new Vector3(scale, scale, 1.0) // scale
+    final Matrix4 matrix = Matrix4.compose(
+        Vector3(shiftX, shiftY, 0.0), // translation
+        Quaternion.identity(), // rotation
+        Vector3(scale, scale, 1.0) // scale
         );
     return matrix;
   }
@@ -103,10 +102,10 @@ class _DiagramWidgetController extends WidgetController implements TickerProvide
   _DiagramWidgetController(WidgetsBinding binding) : super(binding);
 
   @override
-  DiagramFlutterBinding get binding => super.binding;
+  DiagramFlutterBinding get binding => super.binding as DiagramFlutterBinding;
 
   @override
-  Future<Null> pump([
+  Future<void> pump([
     Duration duration
   ]) {
     return TestAsyncUtils.guard(() => binding.pump(duration: duration));
@@ -126,6 +125,11 @@ class _DiagramWidgetController extends WidgetController implements TickerProvide
     assert(_tickers != null);
     assert(_tickers.contains(ticker));
     _tickers.remove(ticker);
+  }
+
+  @override
+  Future<List<Duration>> handlePointerEventRecord(List<PointerEventRecord> records) async {
+    return const <Duration>[];
   }
 }
 
@@ -158,7 +162,7 @@ class DiagramFlutterBinding extends BindingBase
   @override
   void initInstances() {
     super.initInstances();
-    _controller = new _DiagramWidgetController(this);
+    _controller = _DiagramWidgetController(this);
   }
 
   _DiagramWidgetController _controller;
@@ -175,7 +179,7 @@ class DiagramFlutterBinding extends BindingBase
   }
 
   Duration _timestamp = Duration.zero;
-  final GlobalKey _boundaryKey = new GlobalKey();
+  final GlobalKey _boundaryKey = GlobalKey();
 
   /// Determines the ratio between physical units and logical units.
   ///
@@ -210,43 +214,42 @@ class DiagramFlutterBinding extends BindingBase
 
   @override
   ViewConfiguration createViewConfiguration() {
-    return new _DiagramViewConfiguration(
-      pixelRatio: pixelRatio,
+    return _DiagramViewConfiguration(
       size: screenDimensions,
     );
   }
 
   /// Captures an image of the [RepaintBoundary] with the given key.
   Future<ui.Image> takeSnapshot() {
-    final RenderRepaintBoundary object = _boundaryKey.currentContext.findRenderObject();
+    final RenderRepaintBoundary object = _boundaryKey.currentContext.findRenderObject() as RenderRepaintBoundary;
     return object.toImage(pixelRatio: pixelRatio);
   }
 
   /// Updates the current diagram with the given builder as the child of the
-  /// root widget, and generates a new frame.
+  /// root widget, and generates a frame.
   void updateDiagram(
     WidgetBuilder builder, {
-    Duration duration: Duration.zero,
+    Duration duration = Duration.zero,
   }) {
-    final Widget rootWidget = new _Diagram(
+    final Widget rootWidget = _Diagram(
       boundaryKey: _boundaryKey,
-      child: new Builder(builder: builder),
+      child: Builder(builder: builder),
     );
     attachRootWidget(rootWidget);
     pump();
   }
 
-  /// Advances time by the given duration, and generates a new frame.
+  /// Advances time by the given duration, and generates a frame.
   ///
   /// The [duration] must not be null, or less than [Duration.zero].
-  Future<Null>  pump({Duration duration: Duration.zero}) {
+  Future<void>  pump({Duration duration = Duration.zero}) {
     assert(duration != null);
     assert(duration >= Duration.zero);
     _timestamp += duration;
 
     handleBeginFrame(_timestamp);
     handleDrawFrame();
-    return new Future<Null>.value();
+    return Future<void>.value();
   }
 
   /// Ensures the binding has been initialized before accessing the default
@@ -275,11 +278,11 @@ class DiagramController {
   DiagramController({
     WidgetBuilder builder,
     this.outputDirectory,
-    double pixelRatio: 1.0,
-    Size screenDimensions: _kDefaultDiagramViewportSize,
+    double pixelRatio,
+    Size screenDimensions = _kDefaultDiagramViewportSize,
   }) {
     outputDirectory ??= Directory.current;
-    _binding.pixelRatio = pixelRatio;
+    _binding.pixelRatio = pixelRatio ?? ui.window.devicePixelRatio;
     _binding.screenDimensions = screenDimensions;
     this.builder = builder;
   }
@@ -289,7 +292,7 @@ class DiagramController {
   /// If the [builder] is changed, then the widget it builds will be used for
   /// subsequent frames drawn of the diagram.
   ///
-  /// Defaults to the `initialBuilder` given to [new DiagramController].
+  /// Defaults to the `initialBuilder` given to [DiagramController].
   WidgetBuilder get builder => _builder;
   WidgetBuilder _builder;
   set builder(WidgetBuilder builder) {
@@ -342,7 +345,7 @@ class DiagramController {
   /// [builder] in logical coordinates, multiplied by the [pixelRatio].
   ///
   /// Time will be advanced to [timestamp] before taking the snapshot.
-  Future<ui.Image> drawDiagramToImage({Duration timestamp: Duration.zero}) {
+  Future<ui.Image> drawDiagramToImage({Duration timestamp = Duration.zero}) {
     advanceTime(timestamp);
     return _binding.takeSnapshot();
   }
@@ -356,13 +359,13 @@ class DiagramController {
   /// snapshot.
   Future<File> drawDiagramToFile(
     File outputFile, {
-    Duration timestamp: Duration.zero,
-    ui.ImageByteFormat format: ui.ImageByteFormat.png,
+    Duration timestamp = Duration.zero,
+    ui.ImageByteFormat format = ui.ImageByteFormat.png,
   }) async {
     assert(outputFile != null);
     if (!outputFile.isAbsolute && outputDirectory != null) {
       // If output path is relative, make it relative to the output directory.
-      outputFile = new File(path.join(outputDirectory.absolute.path, outputFile.path));
+      outputFile = File(path.join(outputDirectory.absolute.path, outputFile.path));
     }
     assert(outputFile.path.endsWith('.png'));
     final ui.Image captured = await drawDiagramToImage(timestamp: timestamp);
@@ -389,7 +392,7 @@ class DiagramController {
   /// less than or equal to the time between [start] and [end]. All durations
   /// must be greater than [Duration.zero].
   Future<List<ui.Image>> drawAnimatedDiagramToImages({
-    Duration start: Duration.zero,
+    Duration start = Duration.zero,
     @required Duration end,
     @required Duration frameDuration,
   }) async {
@@ -442,10 +445,10 @@ class DiagramController {
   /// than [Duration.zero]. The [start] parameter must be greater than or equal
   /// to [Duration.zero]. The [frameRate] must be greater than zero.
   Future<File> drawAnimatedDiagramToFiles({
-    Duration start: Duration.zero,
+    Duration start = Duration.zero,
     @required Duration end,
     @required double frameRate,
-    ui.ImageByteFormat format: ui.ImageByteFormat.png,
+    ui.ImageByteFormat format = ui.ImageByteFormat.png,
     @required String name,
     String category,
     Map<Duration, DiagramKeyframe> keyframes,
@@ -461,7 +464,7 @@ class DiagramController {
     assert(start >= Duration.zero);
 
     Duration now = start;
-    final Duration frameDuration = new Duration(microseconds: (1e6 / frameRate).round());
+    final Duration frameDuration = Duration(microseconds: (1e6 / frameRate).round());
     int index = 0;
     final List<File> outputFiles = <File>[];
     List<Duration> keys;
@@ -471,7 +474,7 @@ class DiagramController {
     }
     // Add an half-frame to account for possible rounding error: we want
     // to make sure to get the last frame.
-    while (now <= (end + new Duration(microseconds: frameDuration.inMicroseconds ~/ 2))) {
+    while (now <= (end + Duration(microseconds: frameDuration.inMicroseconds ~/ 2))) {
       // If we've arrived at the next keyframe, then call the keyframe
       // function to execute the next event.
       if (keys != null && keys.isNotEmpty) {
@@ -495,8 +498,8 @@ class DiagramController {
       now += frameDuration;
       ++index;
     }
-    final File metadataFile = new File(path.join(outputDirectory.absolute.path, '$name.json'));
-    final AnimationMetadata metadata = new AnimationMetadata.fromData(
+    final File metadataFile = File(path.join(outputDirectory.absolute.path, '$name.json'));
+    final AnimationMetadata metadata = AnimationMetadata.fromData(
       name: name,
       category: category,
       duration: end - start,
@@ -520,7 +523,7 @@ class DiagramController {
   }
 
   File _getFrameFilename(Duration timestamp, int index, String name) {
-    return new File(
+    return File(
       path.join(
         outputDirectory.absolute.path,
         '${name}_${index.toString().padLeft(5, '0')}.png',

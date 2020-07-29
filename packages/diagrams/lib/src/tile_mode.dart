@@ -43,7 +43,7 @@ class TileModeDiagram extends StatelessWidget implements DiagramMetadata {
     Gradient gradient;
     switch (gradientMode) {
       case GradientMode.linear:
-        gradient = new LinearGradient(
+        gradient = LinearGradient(
           begin: const FractionalOffset(0.4, 0.5),
           end: const FractionalOffset(0.6, 0.5),
           colors: const <Color>[Color(0xFF0000FF), Color(0xFF00FF00)],
@@ -52,7 +52,7 @@ class TileModeDiagram extends StatelessWidget implements DiagramMetadata {
         );
         break;
       case GradientMode.radial:
-        gradient = new RadialGradient(
+        gradient = RadialGradient(
           center: FractionalOffset.center,
           radius: 0.2,
           colors: const <Color>[Color(0xFF0000FF), Color(0xFF00FF00)],
@@ -61,7 +61,7 @@ class TileModeDiagram extends StatelessWidget implements DiagramMetadata {
         );
         break;
       case GradientMode.sweep:
-        gradient = new SweepGradient(
+        gradient = SweepGradient(
           center: FractionalOffset.center,
           startAngle: 0.0,
           endAngle: math.pi / 2,
@@ -71,7 +71,7 @@ class TileModeDiagram extends StatelessWidget implements DiagramMetadata {
         );
         break;
       case GradientMode.radialWithFocal:
-        gradient = new RadialGradient(
+        gradient = RadialGradient(
           center: FractionalOffset.center,
           focal: const FractionalOffset(0.5, 0.42),
           radius: 0.2,
@@ -86,29 +86,29 @@ class TileModeDiagram extends StatelessWidget implements DiagramMetadata {
 
   @override
   Widget build(BuildContext context) {
-    return new ConstrainedBox(
-      key: new UniqueKey(),
+    return ConstrainedBox(
+      key: UniqueKey(),
       constraints: const BoxConstraints.tightFor(width: width, height: height),
       child: DefaultTextStyle.merge(
         style: const TextStyle(
           fontSize: 10.0,
           color: Color(0xFF000000),
         ),
-        child: new Directionality(
+        child: Directionality(
           textDirection: TextDirection.ltr,
-          child: new Center(
-            child: new Container(
+          child: Center(
+            child: Container(
               margin: const EdgeInsets.all(spacing),
               width: width,
-              decoration: new BoxDecoration(
-                border: new Border.all(width: borderSize),
+              decoration: BoxDecoration(
+                border: Border.all(width: borderSize),
                 color: const Color(0xFFFFFFFF),
               ),
-              child: new Column(
+              child: Column(
                 children: <Widget>[
-                  new Expanded(
-                    child: new Container(
-                      decoration: new BoxDecoration(
+                  Expanded(
+                    child: Container(
+                      decoration: BoxDecoration(
                         gradient: _buildGradient(),
                         border: const Border(
                           bottom: BorderSide(width: 1.0),
@@ -116,13 +116,13 @@ class TileModeDiagram extends StatelessWidget implements DiagramMetadata {
                       ),
                     ),
                   ),
-                  new Container(height: 3.0),
-                  new Text(
+                  Container(height: 3.0),
+                  Text(
                     '$gradientModeName Gradient',
                     textAlign: TextAlign.center,
                   ),
-                  new Text('$tileMode', textAlign: TextAlign.center),
-                  new Container(height: 3.0),
+                  Text('$tileMode', textAlign: TextAlign.center),
+                  Container(height: 3.0),
                 ],
               ),
             ),
@@ -135,9 +135,9 @@ class TileModeDiagram extends StatelessWidget implements DiagramMetadata {
 
 class TileModeDiagramStep extends DiagramStep<TileModeDiagram> {
   TileModeDiagramStep(DiagramController controller) : super(controller) {
-    for (TileMode mode in TileMode.values) {
-      for (GradientMode gradient in GradientMode.values) {
-        _diagrams.add(new TileModeDiagram(gradient, mode));
+    for (final TileMode mode in TileMode.values) {
+      for (final GradientMode gradient in GradientMode.values) {
+        _diagrams.add(TileModeDiagram(gradient, mode));
       }
     }
   }
@@ -153,6 +153,6 @@ class TileModeDiagramStep extends DiagramStep<TileModeDiagram> {
   @override
   Future<File> generateDiagram(TileModeDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawDiagramToFile(new File('${diagram.name}.png'));
+    return await controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }

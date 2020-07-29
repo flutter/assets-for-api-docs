@@ -12,7 +12,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'animation_diagram.dart';
 import 'diagram_step.dart';
 
-final GlobalKey _transitionKey = new GlobalKey();
+final GlobalKey _transitionKey = GlobalKey();
 
 const Duration _kOverallAnimationDuration = Duration(seconds: 6);
 const Duration _kAnimationDuration = Duration(seconds: 2);
@@ -46,13 +46,13 @@ class ImplicitAnimationDiagramStep extends DiagramStep<ImplicitAnimationDiagram<
 
     final Map<Duration, DiagramKeyframe> keyframes = <Duration, DiagramKeyframe>{
       Duration.zero: (Duration now) async {
-        final RenderBox target = _transitionKey.currentContext.findRenderObject();
+        final RenderBox target = _transitionKey.currentContext.findRenderObject() as RenderBox;
         final Offset targetOffset = target.localToGlobal(target.size.center(Offset.zero));
         final TestGesture gesture = await controller.startGesture(targetOffset);
         await gesture.up();
       },
       const Duration(seconds: 3): (Duration now) async {
-        final RenderBox target = _transitionKey.currentContext.findRenderObject();
+        final RenderBox target = _transitionKey.currentContext.findRenderObject() as RenderBox;
         final Offset targetOffset = target.localToGlobal(target.size.center(Offset.zero));
         final TestGesture gesture = await controller.startGesture(targetOffset);
         await gesture.up();
@@ -78,8 +78,8 @@ class AnimatedAlignDiagram extends ImplicitAnimationDiagram<AlignmentGeometry> {
 
   @override
   Widget buildImplicitAnimation(BuildContext context, bool selected) {
-    return new Center(
-      child: new AnimatedAlign(
+    return Center(
+      child: AnimatedAlign(
         alignment: selected ? Alignment.center : AlignmentDirectional.bottomStart,
         duration: _kAnimationDuration,
         curve: curve,
@@ -98,8 +98,8 @@ class AnimatedContainerDiagram extends ImplicitAnimationDiagram<AlignmentGeometr
 
   @override
   Widget buildImplicitAnimation(BuildContext context, bool selected) {
-    return new Center(
-      child: new AnimatedContainer(
+    return Center(
+      child: AnimatedContainer(
         width: selected ? 200.0 : 100.0,
         height: selected ? 100.0 : 200.0,
         color: selected ? Colors.red : Colors.blue,
@@ -132,8 +132,8 @@ class AnimatedDefaultTextStyleDiagram extends ImplicitAnimationDiagram<Alignment
       fontWeight: FontWeight.w900,
     );
 
-    return new Center(
-      child: new AnimatedDefaultTextStyle(
+    return Center(
+      child: AnimatedDefaultTextStyle(
         style: selected ? selectedStyle : unselectedStyle,
         duration: _kAnimationDuration,
         textAlign: TextAlign.center,
@@ -153,8 +153,8 @@ class AnimatedOpacityDiagram extends ImplicitAnimationDiagram<AlignmentGeometry>
 
   @override
   Widget buildImplicitAnimation(BuildContext context, bool selected) {
-    return new Center(
-      child: new AnimatedOpacity(
+    return Center(
+      child: AnimatedOpacity(
         opacity: selected ? 1.0 : 0.1,
         duration: _kAnimationDuration,
         curve: curve,
@@ -173,13 +173,13 @@ class AnimatedPaddingDiagram extends ImplicitAnimationDiagram<AlignmentGeometry>
 
   @override
   Widget buildImplicitAnimation(BuildContext context, bool selected) {
-    return new Center(
-      child: new AnimatedPadding(
+    return Center(
+      child: AnimatedPadding(
         padding: selected ? const EdgeInsets.symmetric(vertical: 80.0) : const EdgeInsets.symmetric(horizontal: 80.0),
         duration: _kAnimationDuration,
         curve: curve,
         key: _transitionKey,
-        child: new Container(color: Colors.blue),
+        child: Container(color: Colors.blue),
       ),
     );
   }
@@ -202,11 +202,11 @@ class AnimatedPhysicalModelDiagram extends ImplicitAnimationDiagram<AlignmentGeo
     );
     const BorderRadius unselectedBorder = BorderRadius.all(unselectedRadius);
     return Center(
-      child: new Container(
+      child: Container(
         alignment: Alignment.center,
         width: 150.0,
         height: 150.0,
-        child: new AnimatedPhysicalModel(
+        child: AnimatedPhysicalModel(
           color: Colors.blue,
           elevation: selected ? 20.0 : 0.0,
           shadowColor: Colors.grey,
@@ -215,7 +215,7 @@ class AnimatedPhysicalModelDiagram extends ImplicitAnimationDiagram<AlignmentGeo
           duration: _kAnimationDuration,
           curve: curve,
           key: _transitionKey,
-          child: new Container(color: Colors.blue),
+          child: Container(color: Colors.blue),
         ),
       ),
     );
@@ -230,11 +230,11 @@ class AnimatedPositionedDiagram extends ImplicitAnimationDiagram<AlignmentGeomet
 
   @override
   Widget buildImplicitAnimation(BuildContext context, bool selected) {
-    return new Center(
-      child: new Stack(
+    return Center(
+      child: Stack(
         children: <Widget>[
-          new Container(width: 250.0, height: 250.0),
-          new AnimatedPositioned(
+          Container(width: 250.0, height: 250.0),
+          AnimatedPositioned(
             key: _transitionKey,
             width: selected ? 150.0 : 50.0,
             height: selected ? 50.0 : 150.0,
@@ -261,13 +261,13 @@ class AnimatedPositionedDirectionalDiagram extends ImplicitAnimationDiagram<Alig
 
   @override
   Widget buildImplicitAnimation(BuildContext context, bool selected) {
-    return new Center(
-      child: new Stack(
+    return Center(
+      child: Stack(
         children: <Widget>[
-          new Container(width: 250.0, height: 250.0),
-          new Directionality(
+          Container(width: 250.0, height: 250.0),
+          Directionality(
             textDirection: TextDirection.rtl,
-            child: new AnimatedPositionedDirectional(
+            child: AnimatedPositionedDirectional(
               key: _transitionKey,
               width: selected ? 150.0 : 50.0,
               height: selected ? 50.0 : 150.0,
@@ -304,8 +304,8 @@ class AnimatedThemeDiagram extends ImplicitAnimationDiagram<AlignmentGeometry> {
       chipTheme: selectedChipTheme,
     );
 
-    return new Center(
-      child: new AnimatedTheme(
+    return Center(
+      child: AnimatedTheme(
         data: selected ? selectedTheme : unselectedTheme,
         duration: _kAnimationDuration,
         curve: curve,

@@ -127,6 +127,6 @@ class SingleChildScrollViewDiagramStep extends DiagramStep<SingleChildScrollView
   @override
   Future<File> generateDiagram(SingleChildScrollViewDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawDiagramToFile(new File('${diagram.name}.png'));
+    return await controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }

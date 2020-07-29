@@ -25,7 +25,7 @@ class IconButtonDiagram extends StatelessWidget implements DiagramMetadata {
       case _iconButton:
         return ConstrainedBox(
           key: UniqueKey(),
-          constraints: new BoxConstraints.tight(const Size(120, 120)),
+          constraints: BoxConstraints.tight(const Size(120, 120)),
           child: Scaffold(
             body: Center(
               child: Column(
@@ -83,6 +83,6 @@ class IconButtonDiagramStep extends DiagramStep<IconButtonDiagram> {
   @override
   Future<File> generateDiagram(IconButtonDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawDiagramToFile(new File('${diagram.name}.png'));
+    return await controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }

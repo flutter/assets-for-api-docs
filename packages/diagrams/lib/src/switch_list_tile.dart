@@ -193,6 +193,6 @@ class SwitchListTileDiagramStep extends DiagramStep<SwitchListTileDiagram> {
   @override
   Future<File> generateDiagram(SwitchListTileDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawDiagramToFile(new File('${diagram.name}.png'));
+    return await controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }

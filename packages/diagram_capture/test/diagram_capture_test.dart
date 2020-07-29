@@ -14,24 +14,24 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:image/image.dart' as image;
 
 Widget buildStaticDiagram(BuildContext context) {
-  return new Container(
-    constraints: new BoxConstraints.tight(const Size(100.0, 50.0)),
+  return Container(
+    constraints: BoxConstraints.tight(const Size(100.0, 50.0)),
     child: const Text('Diagram'),
   );
 }
 
 File filenameGenerator() {
-  return new File('test_name');
+  return File('test_name');
 }
 
 class TestAnimatedDiagram extends StatelessWidget {
-  const TestAnimatedDiagram({Key key, this.size: 1.0}) : super(key: key);
+  const TestAnimatedDiagram({Key key, this.size = 1.0}) : super(key: key);
 
   final double size;
 
   @override
   Widget build(BuildContext context) {
-    return new AnimatedContainer(
+    return AnimatedContainer(
       duration: const Duration(seconds: 1),
       width: size,
       height: size,
@@ -55,7 +55,7 @@ class _TestTappableDiagramState extends State<TestTappableDiagram> {
 
   @override
   Widget build(BuildContext context) {
-    return new RaisedButton(
+    return RaisedButton(
       color: on ? Colors.red : Colors.blue,
       onPressed: () {
         setState(() {
@@ -79,7 +79,7 @@ void main() {
     });
 
     test('can create an image from a static widget', () async {
-      final DiagramController controller = new DiagramController(
+      final DiagramController controller = DiagramController(
         builder: buildStaticDiagram,
         outputDirectory: outputDir,
         pixelRatio: 1.0,
@@ -94,7 +94,7 @@ void main() {
     });
 
     test('allows a null builder', () async {
-      final DiagramController controller = new DiagramController(
+      final DiagramController controller = DiagramController(
         builder: null,
         outputDirectory: outputDir,
         pixelRatio: 1.0,
@@ -109,14 +109,14 @@ void main() {
     });
 
     test('can write an image from static widget to a file', () async {
-      final DiagramController controller = new DiagramController(
+      final DiagramController controller = DiagramController(
         builder: buildStaticDiagram,
         outputDirectory: outputDir,
         pixelRatio: 1.0,
         screenDimensions: const Size(100.0, 100.0),
       );
 
-      final File outputFile = new File('test.png');
+      final File outputFile = File('test.png');
       final File actualOutputFile = await controller.drawDiagramToFile(outputFile);
       expect(actualOutputFile.existsSync(), isTrue);
       final List<int> imageContents = actualOutputFile.readAsBytesSync();
@@ -128,39 +128,38 @@ void main() {
     });
 
     test('can create images from an animated widget', () async {
-      final UniqueKey key = new UniqueKey();
-      final DiagramController controller = new DiagramController(
-        builder: (BuildContext context) => new TestAnimatedDiagram(key: key, size: 1.0),
+      final UniqueKey key = UniqueKey();
+      final DiagramController controller = DiagramController(
+        builder: (BuildContext context) => TestAnimatedDiagram(key: key, size: 1.0),
         outputDirectory: outputDir,
         pixelRatio: 1.0,
         screenDimensions: const Size(100.0, 100.0),
       );
 
-      controller.builder = (BuildContext context) => new TestAnimatedDiagram(key: key, size: 50.0);
+      controller.builder = (BuildContext context) => TestAnimatedDiagram(key: key, size: 50.0);
       final List<ui.Image> outputImages = await controller.drawAnimatedDiagramToImages(
         end: const Duration(milliseconds: 1200),
         frameDuration: const Duration(milliseconds: 200),
       );
       expect(outputImages.length, equals(7));
       final List<int> expectedSizes = <int>[1, 11, 21, 31, 41, 50, 50];
-      int count = 0;
-      for (ui.Image capturedImage in outputImages) {
-        expect(capturedImage.width, equals(expectedSizes[count]));
-        expect(capturedImage.height, equals(expectedSizes[count]));
-        ++count;
+      for (int i = 0; i < outputImages.length; i++) {
+        final ui.Image capturedImage = outputImages[i];
+        expect(capturedImage.width, equals(expectedSizes[i]));
+        expect(capturedImage.height, equals(expectedSizes[i]));
       }
     });
 
     test('can write images from an animated widget to files', () async {
-      final UniqueKey key = new UniqueKey();
-      final DiagramController controller = new DiagramController(
-        builder: (BuildContext context) => new TestAnimatedDiagram(key: key, size: 1.0),
+      final UniqueKey key = UniqueKey();
+      final DiagramController controller = DiagramController(
+        builder: (BuildContext context) => TestAnimatedDiagram(key: key, size: 1.0),
         outputDirectory: outputDir,
         pixelRatio: 1.0,
         screenDimensions: const Size(100.0, 100.0),
       );
 
-      controller.builder = (BuildContext context) => new TestAnimatedDiagram(key: key, size: 50.0);
+      controller.builder = (BuildContext context) => TestAnimatedDiagram(key: key, size: 50.0);
       final File outputFile = await controller.drawAnimatedDiagramToFiles(
         end: const Duration(milliseconds: 1200),
         frameRate: 5.0,
@@ -172,19 +171,19 @@ void main() {
       expect(outputFile.lengthSync(), greaterThan(0));
 
       Map<String, dynamic> _loadMetadata(File metadataFile) {
-        final Map<String, dynamic> metadata = json.decode(metadataFile.readAsStringSync());
+        final Map<String, dynamic> metadata = json.decode(metadataFile.readAsStringSync()) as Map<String, dynamic>;
         final String baseDir = path.dirname(metadataFile.absolute.path);
         final List<File> frameFiles = metadata['frame_files']
-            .map<File>((dynamic name) => new File(path.normalize(path.join(baseDir, name)))).toList();
+            .map<File>((dynamic name) => File(path.normalize(path.join(baseDir, name as String)))).toList() as List<File>;
         metadata['frame_files'] = frameFiles;
         return metadata;
       }
       final Map<String, dynamic> metadata = _loadMetadata(outputFile);
-      final List<File> frames = metadata['frame_files'];
+      final List<File> frames = metadata['frame_files'] as List<File>;
       expect(frames.length, equals(7));
       expect(frames[0].path, endsWith('test_name_00000.png'));
       final List<int> expectedSizes = <int>[1, 11, 21, 31, 41, 50, 50];
-      for (File file in frames) {
+      for (final File file in frames) {
         expect(file.existsSync(), isTrue);
         expect(file.lengthSync(), greaterThan(0));
         final List<int> imageContents = file.readAsBytesSync();
@@ -196,14 +195,14 @@ void main() {
     });
 
     test('can create images larger than the logical screen size', () async {
-      final DiagramController controller = new DiagramController(
+      final DiagramController controller = DiagramController(
         builder: buildStaticDiagram,
         outputDirectory: outputDir,
         pixelRatio: 3.0,
         screenDimensions: const Size(100.0, 100.0),
       );
 
-      final File outputFile = new File('test.png');
+      final File outputFile = File('test.png');
       final File actualOutputFile = await controller.drawDiagramToFile(outputFile);
       expect(actualOutputFile.existsSync(), isTrue);
       final List<int> imageContents = actualOutputFile.readAsBytesSync();
@@ -215,14 +214,14 @@ void main() {
     });
 
     test('can inject gestures', () async {
-      final DiagramController controller = new DiagramController(
-        builder: (BuildContext context) => new TestTappableDiagram(),
+      final DiagramController controller = DiagramController(
+        builder: (BuildContext context) => TestTappableDiagram(),
         outputDirectory: outputDir,
         pixelRatio: 1.0,
         screenDimensions: const Size(100.0, 100.0),
       );
 
-      final File outputFile = new File('test.png');
+      final File outputFile = File('test.png');
       File actualOutputFile = await controller.drawDiagramToFile(outputFile);
       List<int> imageContents = actualOutputFile.readAsBytesSync();
       image.Image decodedImage = image.decodePng(imageContents);

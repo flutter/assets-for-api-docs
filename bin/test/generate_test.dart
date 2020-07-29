@@ -19,10 +19,10 @@ void main() {
     FakeProcessManager processManager;
 
     setUp(() {
-      processManager = new FakeProcessManager();
+      processManager = FakeProcessManager();
       temporaryDirectory = Directory.systemTemp.createTempSync();
-      generator = new DiagramGenerator(
-        processRunner: new ProcessRunner(processManager: processManager),
+      generator = DiagramGenerator(
+        processRunner: ProcessRunner(processManager: processManager),
         temporaryDirectory: temporaryDirectory,
         cleanup: false,
       );

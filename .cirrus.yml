@@ -10,8 +10,10 @@ task:
 
   git_fetch_script: git fetch origin
   setup_script: |
-    # Clone Flutter master repo
-    git clone https://github.com/flutter/flutter.git "$FLUTTER_DIR"
+    # Clone Flutter repo, pinned to the dev branch.
+    git clone --branch dev https://github.com/flutter/flutter.git "$FLUTTER_DIR"
+    
+    echo "Synced to revision: $(cd "$FLUTTER_DIR" && git rev-parse HEAD)"
 
     # disable analytics on the bots and download Flutter dependencies
     "$FLUTTER_DIR/bin/flutter" config --no-analytics

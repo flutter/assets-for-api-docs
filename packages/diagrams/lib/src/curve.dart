@@ -37,14 +37,14 @@ class CurveDescription extends CustomPainter {
 
   static TextPainter _createLabelPainter(
     String label, {
-    FontStyle style: FontStyle.normal,
-    Color color: Colors.black45,
+    FontStyle style = FontStyle.normal,
+    Color color = Colors.black45,
   }) {
-    final TextPainter result = new TextPainter(
+    final TextPainter result = TextPainter(
       textDirection: TextDirection.ltr,
-      text: new TextSpan(
+      text: TextSpan(
         text: label,
-        style: new TextStyle(
+        style: TextStyle(
           color: color,
           fontStyle: style,
           fontSize: _kFontSize,
@@ -55,38 +55,38 @@ class CurveDescription extends CustomPainter {
     return result;
   }
 
-  static final Paint _axisPaint = new Paint()
+  static final Paint _axisPaint = Paint()
     ..color = Colors.black45
     ..style = PaintingStyle.stroke
     ..strokeWidth = 2.0;
 
-  static final Paint _positionPaint = new Paint()
+  static final Paint _positionPaint = Paint()
     ..color = Colors.black45
     ..style = PaintingStyle.stroke
     ..strokeWidth = 0.0;
 
-  static final Paint _dashPaint = new Paint()
+  static final Paint _dashPaint = Paint()
     ..color = Colors.black45
     ..style = PaintingStyle.stroke
     ..strokeWidth = 0.0;
 
-  static final Paint _graphPaint = new Paint()
+  static final Paint _graphPaint = Paint()
     ..color = Colors.blue.shade900
     ..style = PaintingStyle.stroke
     ..strokeCap = StrokeCap.round
     ..strokeWidth = 4.0;
 
-  static final Paint _graphProgressPaint = new Paint()
+  static final Paint _graphProgressPaint = Paint()
     ..color = Colors.black26
     ..style = PaintingStyle.stroke
     ..strokeCap = StrokeCap.round
     ..strokeWidth = 4.0;
 
-  static final Paint _valueMarkerPaint = new Paint()
+  static final Paint _valueMarkerPaint = Paint()
     ..color = const Color(0xffA02020)
     ..style = PaintingStyle.fill;
 
-  static final Paint _positionCirclePaint = new Paint()
+  static final Paint _positionCirclePaint = Paint()
     ..color = Colors.blue.shade900
     ..style = PaintingStyle.fill;
 
@@ -100,25 +100,25 @@ class CurveDescription extends CustomPainter {
     final double verticalHeadroom = size.height * 0.2;
     final double markerWidth = unit * 3.0;
 
-    final Rect area = new Rect.fromLTRB(
+    final Rect area = Rect.fromLTRB(
       leftMargin,
       verticalHeadroom,
       size.width - rightMargin,
       size.height - verticalHeadroom,
     );
-    final Path axes = new Path()
+    final Path axes = Path()
       ..moveTo(area.left - unit, area.top) // vertical axis 1.0 tick
       ..lineTo(area.left, area.top) // vertical axis
       ..lineTo(area.left, area.bottom) // origin
       ..lineTo(area.right, area.bottom) // horizontal axis
       ..lineTo(area.right, area.bottom + unit); // horizontal axis 1.0 tick
     canvas.drawPath(axes, _axisPaint);
-    final Path dashLine = new Path();
+    final Path dashLine = Path();
     final double delta = 8.0 / area.width;
     assert(delta > 0.0);
     for (double t = 0.0; t < 1.0; t += delta) {
-      final Offset point1 = new FractionalOffset(t, 0.0).withinRect(area);
-      final Offset point2 = new FractionalOffset(t + delta / 2.0, 0.0).withinRect(area);
+      final Offset point1 = FractionalOffset(t, 0.0).withinRect(area);
+      final Offset point2 = FractionalOffset(t + delta / 2.0, 0.0).withinRect(area);
       dashLine
         ..moveTo(point1.dx, point1.dy)
         ..lineTo(point2.dx, point2.dy);
@@ -127,19 +127,19 @@ class CurveDescription extends CustomPainter {
 
     _one.paint(
       canvas,
-      new Offset(area.left - leftMargin + (_zero.width - _one.width), area.top - _one.height / 2.0),
+      Offset(area.left - leftMargin + (_zero.width - _one.width), area.top - _one.height / 2.0),
     );
-    _one.paint(canvas, new Offset(area.right - _one.width / 2.0, area.bottom + bottomMargin + unit));
-    _x.paint(canvas, new Offset(area.left + _x.width, area.top));
-    _t.paint(canvas, new Offset(area.right - _t.width, area.bottom - _t.height - unit / 2.0));
+    _one.paint(canvas, Offset(area.right - _one.width / 2.0, area.bottom + bottomMargin + unit));
+    _x.paint(canvas, Offset(area.left + _x.width, area.top));
+    _t.paint(canvas, Offset(area.right - _t.width, area.bottom - _t.height - unit / 2.0));
     _caption.paint(
       canvas,
-      new Offset(
+      Offset(
         leftMargin + (area.width - _caption.width) / 2.0,
         size.height - (verticalHeadroom + _caption.height) / 2.0,
       ),
     );
-    final Offset activePoint = new FractionalOffset(
+    final Offset activePoint = FractionalOffset(
       position,
       1.0 - curve.transform(position),
     ).withinRect(area);
@@ -147,11 +147,11 @@ class CurveDescription extends CustomPainter {
     // initial paused state to not include the position indicators. They just
     // add clutter before the animation is started.
     if (position != 0.0) {
-      final Path positionLine = new Path()
+      final Path positionLine = Path()
         ..moveTo(activePoint.dx, area.bottom)
         ..lineTo(activePoint.dx, area.top); // vertical pointer from base
       canvas.drawPath(positionLine, _positionPaint);
-      final Path valueMarker = new Path()
+      final Path valueMarker = Path()
         ..moveTo(area.right + unit, activePoint.dy)
         ..lineTo(area.right + unit * 2.0, activePoint.dy - unit)
         ..lineTo(area.right + unit * 2.0 + markerWidth, activePoint.dy - unit)
@@ -160,25 +160,25 @@ class CurveDescription extends CustomPainter {
         ..lineTo(area.right + unit, activePoint.dy);
       canvas.drawPath(valueMarker, _valueMarkerPaint);
     }
-    final Path graph = new Path()..moveTo(area.left, area.bottom);
+    final Path graph = Path()..moveTo(area.left, area.bottom);
     final double stepSize = 1.0 / (area.width * ui.window.devicePixelRatio);
     for (double t = 0.0; t <= (position == 0.0 ? 1.0 : position); t += stepSize) {
-      final Offset point = new FractionalOffset(t, 1.0 - curve.transform(t)).withinRect(area);
+      final Offset point = FractionalOffset(t, 1.0 - curve.transform(t)).withinRect(area);
       graph.lineTo(point.dx, point.dy);
     }
     canvas.drawPath(graph, _graphPaint);
     if (position != 0.0) {
-      final Offset startPoint = new FractionalOffset(
+      final Offset startPoint = FractionalOffset(
         position,
         1.0 - curve.transform(position),
       ).withinRect(area);
-      final Path graphProgress = new Path()..moveTo(startPoint.dx, startPoint.dy);
+      final Path graphProgress = Path()..moveTo(startPoint.dx, startPoint.dy);
       for (double t = position; t <= 1.0; t += stepSize) {
-        final Offset point = new FractionalOffset(t, 1.0 - curve.transform(t)).withinRect(area);
+        final Offset point = FractionalOffset(t, 1.0 - curve.transform(t)).withinRect(area);
         graphProgress.lineTo(point.dx, point.dy);
       }
       canvas.drawPath(graphProgress, _graphProgressPaint);
-      canvas.drawCircle(new Offset(activePoint.dx, activePoint.dy), 4.0, _positionCirclePaint);
+      canvas.drawCircle(Offset(activePoint.dx, activePoint.dy), 4.0, _positionCirclePaint);
     }
   }
 
@@ -204,8 +204,8 @@ class TranslateSampleTile extends StatelessWidget {
   final String name;
 
   Widget mutate({Widget child}) {
-    return new Transform.translate(
-      offset: new Offset(0.0, 13.0 - animation.value * 26.0),
+    return Transform.translate(
+      offset: Offset(0.0, 13.0 - animation.value * 26.0),
       child: child,
     );
   }
@@ -223,20 +223,20 @@ class TranslateSampleTile extends StatelessWidget {
           padding: const EdgeInsets.all(6.0),
           child: ClipRRect(
             borderRadius: outerRadius,
-            child: new Container(
+            child: Container(
               width: containerSize,
               height: containerSize,
               alignment: Alignment.center,
               padding: const EdgeInsets.all(4.0),
-              decoration: new BoxDecoration(
+              decoration: BoxDecoration(
                 borderRadius: outerRadius,
-                border: new Border.all(
+                border: Border.all(
                   color: Colors.black45,
                   width: 1.0,
                 ),
               ),
               child: mutate(
-                child: new Container(
+                child: Container(
                   decoration: const BoxDecoration(
                     color: Colors.green,
                     borderRadius: BorderRadius.all(
@@ -250,7 +250,7 @@ class TranslateSampleTile extends StatelessWidget {
             ),
           ),
         ),
-        new Text(
+        Text(
           name,
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.bodyText1.copyWith(
@@ -274,7 +274,7 @@ class RotateSampleTile extends TranslateSampleTile {
 
   @override
   Widget mutate({Widget child}) {
-    return new Transform.rotate(
+    return Transform.rotate(
       angle: animation.value * math.pi / 2.0,
       alignment: Alignment.center,
       child: child,
@@ -293,7 +293,7 @@ class ScaleSampleTile extends TranslateSampleTile {
 
   @override
   Widget mutate({Widget child}) {
-    return new Transform.scale(
+    return Transform.scale(
       scale: math.max(animation.value, 0.0),
       child: child,
     );
@@ -311,7 +311,7 @@ class OpacitySampleTile extends TranslateSampleTile {
 
   @override
   Widget mutate({Widget child}) {
-    return new Opacity(opacity: animation.value.clamp(0.0, 1.0), child: child);
+    return Opacity(opacity: animation.value.clamp(0.0, 1.0) as double, child: child);
   }
 }
 
@@ -331,7 +331,7 @@ class CurveDiagram extends StatefulWidget implements DiagramMetadata {
 
   @override
   CurveDiagramState createState() {
-    return new CurveDiagramState();
+    return CurveDiagramState();
   }
 }
 
@@ -343,14 +343,14 @@ class CurveDiagramState extends State<CurveDiagram> with TickerProviderStateMixi
   void didUpdateWidget(CurveDiagram oldWidget) {
     super.didUpdateWidget(oldWidget);
     controller.value = 0.0;
-    animation = new CurvedAnimation(curve: widget.curve, parent: controller);
+    animation = CurvedAnimation(curve: widget.curve, parent: controller);
     controller.forward();
   }
 
   @override
   void initState() {
     super.initState();
-    controller = new AnimationController(
+    controller = AnimationController(
       duration: widget.duration,
       vsync: this,
       lowerBound: 0.0,
@@ -358,7 +358,7 @@ class CurveDiagramState extends State<CurveDiagram> with TickerProviderStateMixi
     )..addListener(() {
         setState(() {});
       });
-    animation = new CurvedAnimation(curve: widget.curve, parent: controller);
+    animation = CurvedAnimation(curve: widget.curve, parent: controller);
     controller.forward();
   }
 
@@ -370,27 +370,27 @@ class CurveDiagramState extends State<CurveDiagram> with TickerProviderStateMixi
 
   @override
   Widget build(BuildContext context) {
-    final CurveDescription description = new CurveDescription(
+    final CurveDescription description = CurveDescription(
       widget.caption,
       widget.curve,
       controller.value,
     );
-    return new Container(
+    return Container(
       padding: const EdgeInsets.all(7.0),
       color: Colors.white,
       child: ConstrainedBox(
-        constraints: new BoxConstraints.tight(const Size(450.0, 178.0)),
+        constraints: BoxConstraints.tight(const Size(450.0, 178.0)),
         child: Row(
           children: <Widget>[
             ConstrainedBox(
-              constraints: new BoxConstraints.tight(const Size(300.0, 178.0)),
-              key: new UniqueKey(),
-              child: new CustomPaint(
+              constraints: BoxConstraints.tight(const Size(300.0, 178.0)),
+              key: UniqueKey(),
+              child: CustomPaint(
                 painter: description,
               ),
             ),
             Container(
-              constraints: new BoxConstraints.tight(const Size(150.0, 178.0)),
+              constraints: BoxConstraints.tight(const Size(150.0, 178.0)),
               alignment: Alignment.center,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -401,8 +401,8 @@ class CurveDiagramState extends State<CurveDiagram> with TickerProviderStateMixi
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      new TranslateSampleTile(animation: animation, name: 'translation'),
-                      new RotateSampleTile(animation: animation, name: 'rotation'),
+                      TranslateSampleTile(animation: animation, name: 'translation'),
+                      RotateSampleTile(animation: animation, name: 'rotation'),
                     ],
                   ),
                   Row(
@@ -410,8 +410,8 @@ class CurveDiagramState extends State<CurveDiagram> with TickerProviderStateMixi
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      new ScaleSampleTile(animation: animation, name: 'scale'),
-                      new OpacitySampleTile(animation: animation, name: 'opacity'),
+                      ScaleSampleTile(animation: animation, name: 'scale'),
+                      OpacitySampleTile(animation: animation, name: 'opacity'),
                     ],
                   ),
                 ],
@@ -464,7 +464,7 @@ class CurveDiagramStep extends DiagramStep<CurveDiagram> {
       const CurveDiagram(name: 'elastic_out', caption: 'Curves.elasticOut', curve: Curves.elasticOut),
       const CurveDiagram(name: 'fast_out_slow_in', caption: 'Curves.fastOutSlowIn', curve: Curves.fastOutSlowIn),
       const CurveDiagram(name: 'slow_middle', caption: 'Curves.slowMiddle', curve: Curves.slowMiddle),
-      new CurveDiagram(name: 'flipped', caption: 'Curves.bounceIn.flipped', curve: Curves.bounceIn.flipped),
+      CurveDiagram(name: 'flipped', caption: 'Curves.bounceIn.flipped', curve: Curves.bounceIn.flipped),
       const CurveDiagram(name: 'flipped_curve', caption: 'FlippedCurve(Curves.bounceIn)', curve: FlippedCurve(Curves.bounceIn)),
       const CurveDiagram(name: 'interval', caption: 'Interval(0.25, 0.75)', curve: Interval(0.25, 0.75)),
       const CurveDiagram(name: 'linear', caption: 'Curves.linear', curve: Curves.linear),

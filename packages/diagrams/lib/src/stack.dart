@@ -78,10 +78,10 @@ class StackDiagram extends StatelessWidget implements DiagramMetadata {
         returnWidget = const Text('Error');
         break;
     }
-    return new ConstrainedBox(
-      key: new UniqueKey(),
-      constraints: new BoxConstraints.tight(const Size(400.0, 250.0)),
-      child: new Container(
+    return ConstrainedBox(
+      key: UniqueKey(),
+      constraints: BoxConstraints.tight(const Size(400.0, 250.0)),
+      child: Container(
           alignment: FractionalOffset.center,
           padding: const EdgeInsets.all(5.0),
           color: Colors.white,
@@ -106,6 +106,6 @@ class StackDiagramStep extends DiagramStep<StackDiagram> {
   @override
   Future<File> generateDiagram(StackDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawDiagramToFile(new File('${diagram.name}.png'));
+    return await controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }

@@ -12,7 +12,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'diagram_step.dart';
 
-final List<GlobalKey> keys = List<GlobalKey>.generate(5, (int index) => new GlobalKey());
+final List<GlobalKey> keys = List<GlobalKey>.generate(5, (int index) => GlobalKey());
 final Duration _kTotalDuration = _kPauseDuration * 5;
 const Duration _kPauseDuration = Duration(seconds: 1);
 const double _kAnimationFrameRate = 60.0;
@@ -83,9 +83,9 @@ class FlowDiagramState extends State<FlowDiagram> with SingleTickerProviderState
 
   @override
   Widget build(BuildContext context) {
-    return new ConstrainedBox(
-      constraints: new BoxConstraints.tight(const Size(450.0, 100.0)),
-      child: new Container(
+    return ConstrainedBox(
+      constraints: BoxConstraints.tight(const Size(450.0, 100.0)),
+      child: Container(
         alignment: FractionalOffset.center,
         padding: const EdgeInsets.only(left: 10.0),
         color: Colors.white,
@@ -128,23 +128,23 @@ class FlowMenuDelegate extends FlowDelegate {
 class FlowDiagramStep extends DiagramStep<FlowDiagram> {
   FlowDiagramStep(DiagramController controller) : super(controller);
 
-  void tapFlowMenuItem(DiagramController controller, Duration now) async {
+  Future<void> tapFlowMenuItem(DiagramController controller, Duration now) async {
     RenderBox target;
     switch (now.inMilliseconds) {
       case 1000:
-        target = keys[4].currentContext.findRenderObject();
+        target = keys[4].currentContext.findRenderObject() as RenderBox;
         break;
       case 2000:
-        target = keys[0].currentContext.findRenderObject();
+        target = keys[0].currentContext.findRenderObject() as RenderBox;
         break;
       case 3100:
-        target = keys[4].currentContext.findRenderObject();
+        target = keys[4].currentContext.findRenderObject() as RenderBox;
         break;
       case 4100:
-        target = keys[3].currentContext.findRenderObject();
+        target = keys[3].currentContext.findRenderObject() as RenderBox;
         break;
       default:
-        target = keys[4].currentContext.findRenderObject();
+        target = keys[4].currentContext.findRenderObject() as RenderBox;
         return;
     }
     final Offset targetOffset = target.localToGlobal(target.size.center(Offset.zero));

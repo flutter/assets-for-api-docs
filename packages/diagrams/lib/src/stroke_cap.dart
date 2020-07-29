@@ -25,13 +25,13 @@ class StrokeCapDescription extends CustomPainter {
   final TextPainter _capPainter;
 
   Widget get widget {
-    return new ConstrainedBox(
+    return ConstrainedBox(
       constraints: const BoxConstraints(maxWidth: 130.0),
-      child: new AspectRatio(
+      child: AspectRatio(
         aspectRatio: 1.0,
-        child: new Padding(
+        child: Padding(
           padding: const EdgeInsets.all(3.0),
-          child: new CustomPaint(
+          child: CustomPaint(
             painter: this,
           ),
         ),
@@ -39,12 +39,12 @@ class StrokeCapDescription extends CustomPainter {
     );
   }
 
-  static TextPainter _createLabelPainter(String label, {FontStyle style: FontStyle.normal}) {
-    final TextPainter result = new TextPainter(
+  static TextPainter _createLabelPainter(String label, {FontStyle style = FontStyle.normal}) {
+    final TextPainter result = TextPainter(
       textDirection: TextDirection.ltr,
-      text: new TextSpan(
+      text: TextSpan(
         text: label,
-        style: new TextStyle(
+        style: TextStyle(
           color: Colors.black,
           fontStyle: style,
           fontSize: _kFontSize,
@@ -58,41 +58,41 @@ class StrokeCapDescription extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     assert(size != Size.zero);
-    final Offset center = new Offset(size.width / 2.0, (size.height - _capPainter.height - padding.vertical) / 2.0);
-    final Offset start = new Offset(0.0, center.dy);
-    final Offset middle = new Offset(size.width / 2.0, center.dy);
+    final Offset center = Offset(size.width / 2.0, (size.height - _capPainter.height - padding.vertical) / 2.0);
+    final Offset start = Offset(0.0, center.dy);
+    final Offset middle = Offset(size.width / 2.0, center.dy);
 
-    final Paint startPaint = new Paint()
+    final Paint startPaint = Paint()
       ..color = Colors.grey
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.square
       ..strokeWidth = 20.0;
-    final Paint linePaint = new Paint()
+    final Paint linePaint = Paint()
       ..color = Colors.grey
       ..style = PaintingStyle.stroke
       ..strokeCap = cap
       ..strokeWidth = 20.0;
-    final Paint endPaint = new Paint()
+    final Paint endPaint = Paint()
       ..color = Colors.deepPurpleAccent
       ..style = PaintingStyle.stroke
       ..strokeCap = cap
       ..strokeWidth = 20.0;
 
-    Path line = new Path() // Line
+    Path line = Path() // Line
       ..moveTo(start.dx, start.dy)
       ..lineTo(middle.dx, middle.dy);
     canvas.drawPath(line, linePaint);
-    line = new Path() // Start point, so that it doesn't show the starting end cap.
+    line = Path() // Start point, so that it doesn't show the starting end cap.
       ..moveTo(start.dx, start.dy)
       ..lineTo(start.dx, start.dy);
     canvas.drawPath(line, startPaint);
-    line = new Path() // End point, a different color to highlight the cap.
+    line = Path() // End point, a different color to highlight the cap.
       ..moveTo(middle.dx, middle.dy)
       ..lineTo(middle.dx, middle.dy);
     canvas.drawPath(line, endPaint);
     _capPainter.paint(
       canvas,
-      new Offset(
+      Offset(
         padding.left,
         size.height - (padding.bottom + 3.0 + _capPainter.height),
       ),
@@ -106,7 +106,7 @@ class StrokeCapDescription extends CustomPainter {
 }
 
 class StrokeCapDiagram extends StatelessWidget implements DiagramMetadata {
-  const StrokeCapDiagram({this.name, this.cap: StrokeCap.round});
+  const StrokeCapDiagram({this.name, this.cap = StrokeCap.round});
 
   @override
   final String name;
@@ -114,17 +114,17 @@ class StrokeCapDiagram extends StatelessWidget implements DiagramMetadata {
 
   @override
   Widget build(BuildContext context) {
-    final StrokeCapDescription description = new StrokeCapDescription(
+    final StrokeCapDescription description = StrokeCapDescription(
       cap: cap,
     );
 
-    return new ConstrainedBox(
-      key: new UniqueKey(),
-      constraints: new BoxConstraints.tight(const Size(150.0, 100.0)),
-      child: new Container(
+    return ConstrainedBox(
+      key: UniqueKey(),
+      constraints: BoxConstraints.tight(const Size(150.0, 100.0)),
+      child: Container(
         padding: const EdgeInsets.all(18.0),
         color: Colors.white,
-        child: new CustomPaint(painter: description),
+        child: CustomPaint(painter: description),
       ),
     );
   }
@@ -159,6 +159,6 @@ class StrokeCapDiagramStep extends DiagramStep<StrokeCapDiagram> {
   @override
   Future<File> generateDiagram(StrokeCapDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawDiagramToFile(new File('${diagram.name}.png'));
+    return await controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }

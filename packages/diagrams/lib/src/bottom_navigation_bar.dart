@@ -16,10 +16,10 @@ class BottomNavigationBarDiagram extends StatelessWidget implements DiagramMetad
 
   @override
   Widget build(BuildContext context) {
-    return new ConstrainedBox(
-      key: new UniqueKey(),
-      constraints: new BoxConstraints.tight(const Size(350, 600)),
-      child: new Container(
+    return ConstrainedBox(
+      key: UniqueKey(),
+      constraints: BoxConstraints.tight(const Size(350, 600)),
+      child: Container(
         alignment: FractionalOffset.center,
         //padding: const EdgeInsets.all(5.0),
         color: Colors.white,
@@ -72,6 +72,6 @@ class BottomNavigationBarDiagramStep extends DiagramStep<BottomNavigationBarDiag
   @override
   Future<File> generateDiagram(BottomNavigationBarDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawDiagramToFile(new File('${diagram.name}.png'));
+    return await controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }

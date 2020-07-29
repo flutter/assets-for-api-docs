@@ -18,65 +18,65 @@ class AppBarDiagram extends StatefulWidget implements DiagramMetadata {
   final String name;
 
   @override
-  _DiagramState createState() => new _DiagramState();
+  _DiagramState createState() => _DiagramState();
 }
 
 class _DiagramState extends State<AppBarDiagram> {
-  final GlobalKey leading = new GlobalKey();
-  final GlobalKey actions = new GlobalKey();
-  final GlobalKey title = new GlobalKey();
-  final GlobalKey flexibleSpace = new GlobalKey();
-  final GlobalKey bottom = new GlobalKey();
-  final GlobalKey heroKey = new GlobalKey();
-  final GlobalKey canvasKey = new GlobalKey();
+  final GlobalKey leading = GlobalKey();
+  final GlobalKey actions = GlobalKey();
+  final GlobalKey title = GlobalKey();
+  final GlobalKey flexibleSpace = GlobalKey();
+  final GlobalKey bottom = GlobalKey();
+  final GlobalKey heroKey = GlobalKey();
+  final GlobalKey canvasKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
-    return new ConstrainedBox(
-      key: new UniqueKey(),
-      constraints: new BoxConstraints.tight(const Size(
+    return ConstrainedBox(
+      key: UniqueKey(),
+      constraints: BoxConstraints.tight(const Size(
         540.0,
         260.0,
       )),
-      child: new Theme(
-        data: new ThemeData(
+      child: Theme(
+        data: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        child: new Material(
+        child: Material(
           color: const Color(0xFFFFFFFF),
-          child: new MediaQuery(
+          child: MediaQuery(
             data: const MediaQueryData(
               padding: EdgeInsets.all(0.0),
             ),
-            child: new Stack(
+            child: Stack(
               children: <Widget>[
-                new Center(
-                  child: new Container(
+                Center(
+                  child: Container(
                     width: 300.0,
                     height: kToolbarHeight * 2.0 + 50.0,
-                    child: new AppBar(
+                    child: AppBar(
                       key: heroKey,
-                      leading: new Hole(key: leading),
-                      title: new Text('Abc', key: title),
+                      leading: Hole(key: leading),
+                      title: Text('Abc', key: title),
                       actions: <Widget>[
                         const Hole(),
                         const Hole(),
-                        new Hole(key: actions),
+                        Hole(key: actions),
                       ],
-                      flexibleSpace: new DecoratedBox(
+                      flexibleSpace: DecoratedBox(
                         key: flexibleSpace,
-                        decoration: new BoxDecoration(
-                          gradient: new LinearGradient(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
                             begin: const FractionalOffset(0.50, 0.0),
                             end: const FractionalOffset(0.48, 1.0),
                             colors: <Color>[Colors.blue.shade500, Colors.blue.shade800],
                           ),
                         ),
                       ),
-                      bottom: new PreferredSize(
+                      bottom: PreferredSize(
                         key: bottom,
                         preferredSize: const Size(0.0, kToolbarHeight),
-                        child: new Container(
+                        child: Container(
                           height: 50.0,
                           padding: const EdgeInsets.all(4.0),
                           child: const Placeholder(
@@ -88,15 +88,15 @@ class _DiagramState extends State<AppBarDiagram> {
                     ),
                   ),
                 ),
-                new Positioned.fill(
-                  child: new LabelPainterWidget(
+                Positioned.fill(
+                  child: LabelPainterWidget(
                     key: canvasKey,
                     labels: <Label>[
-                      new Label(leading, 'leading', const FractionalOffset(0.5, 0.25)),
-                      new Label(actions, 'actions', const FractionalOffset(0.25, 0.5)),
-                      new Label(title, 'title', const FractionalOffset(0.5, 0.5)),
-                      new Label(flexibleSpace, 'flexibleSpace', const FractionalOffset(0.2, 0.5)),
-                      new Label(bottom, 'bottom', const FractionalOffset(0.5, 0.75)),
+                      Label(leading, 'leading', const FractionalOffset(0.5, 0.25)),
+                      Label(actions, 'actions', const FractionalOffset(0.25, 0.5)),
+                      Label(title, 'title', const FractionalOffset(0.5, 0.5)),
+                      Label(flexibleSpace, 'flexibleSpace', const FractionalOffset(0.2, 0.5)),
+                      Label(bottom, 'bottom', const FractionalOffset(0.5, 0.75)),
                     ],
                     heroKey: heroKey,
                   ),
@@ -122,6 +122,6 @@ class AppBarDiagramStep extends DiagramStep<AppBarDiagram> {
   @override
   Future<File> generateDiagram(AppBarDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawDiagramToFile(new File('${diagram.name}.png'));
+    return await controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }

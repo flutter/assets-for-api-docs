@@ -64,7 +64,7 @@ class _SliverFillRemainingDiagramState extends State<SliverFillRemainingDiagram>
   }
 
   Future<void> _animate({double to, Duration duration}) {
-    final ScrollPositionWithSingleContext position = _scrollController.position;
+    final ScrollPositionWithSingleContext position = _scrollController.position as ScrollPositionWithSingleContext;
     final FakeDragScrollActivity activity = FakeDragScrollActivity(
       position,
       from: _scrollController.offset,
