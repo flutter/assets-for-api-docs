@@ -9,257 +9,10 @@ import 'dart:io';
 import 'package:archive/archive.dart';
 import 'package:args/args.dart';
 import 'package:animation_metadata/animation_metadata.dart';
+import 'package:process_runner/process_runner.dart';
 import 'package:path/path.dart' as path;
-import 'package:platform/platform.dart' as platform_pkg;
-import 'package:process/process.dart';
 
 final String repoRoot = path.dirname(path.fromUri(Platform.script));
-const platform_pkg.Platform defaultPlatform = platform_pkg.LocalPlatform();
-
-/// Exception class for when a process fails to run, so we can catch
-/// it and provide something more readable than a stack trace.
-class ProcessRunnerException implements Exception {
-  ProcessRunnerException(this.message, [this.result]);
-
-  final String message;
-  final ProcessResult result;
-
-  int get exitCode => result?.exitCode ?? -1;
-
-  @override
-  String toString() {
-    String output = runtimeType.toString();
-    if (message != null) {
-      output += ': $message';
-    }
-    final String stderr = (result?.stderr ?? '') as String;
-    if (stderr.isNotEmpty) {
-      output += ':\n$stderr';
-    }
-    return output;
-  }
-}
-
-/// A helper class for classes that want to run a process, optionally have the
-/// stderr and stdout reported as the process runs, and capture the stdout
-/// properly without dropping any.
-class ProcessRunner {
-  ProcessRunner({
-    ProcessManager processManager,
-    this.defaultWorkingDirectory,
-    this.platform = defaultPlatform,
-  }) : processManager = processManager ?? const LocalProcessManager() {
-    environment = Map<String, String>.from(platform.environment);
-  }
-
-  /// The platform to use for a starting environment.
-  final platform_pkg.Platform platform;
-
-  /// Set the [processManager] in order to inject a test instance to perform
-  /// testing.
-  final ProcessManager processManager;
-
-  /// Sets the default directory used when `workingDirectory` is not specified
-  /// to [runProcess].
-  final Directory defaultWorkingDirectory;
-
-  /// The environment to run processes with.
-  Map<String, String> environment;
-
-  /// Run the command and arguments in `commandLine` as a sub-process from
-  /// `workingDirectory` if set, or the [defaultWorkingDirectory] if not. Uses
-  /// [Directory.current] if [defaultWorkingDirectory] is not set.
-  ///
-  /// Set `failOk` if [runProcess] should not throw an exception when the
-  /// command completes with a a non-zero exit code.
-  Future<List<int>> runProcess(
-    List<String> commandLine, {
-    Directory workingDirectory,
-    bool printOutput = true,
-    bool failOk = false,
-    Stream<List<int>> stdin,
-  }) async {
-    workingDirectory ??= defaultWorkingDirectory ?? Directory.current;
-    if (printOutput) {
-      stderr.write('Running "${commandLine.join(' ')}" in ${workingDirectory.path}.\n');
-    }
-    final List<int> output = <int>[];
-    final Completer<void> stdoutComplete = Completer<void>();
-    final Completer<void> stderrComplete = Completer<void>();
-    final Completer<void> stdinComplete = Completer<void>();
-
-    Process process;
-    Future<int> allComplete() async {
-      if (stdin != null) {
-        await stdinComplete.future;
-        await process.stdin.close();
-      }
-      await stderrComplete.future;
-      await stdoutComplete.future;
-      return process.exitCode;
-    }
-
-    try {
-      process = await processManager.start(
-        commandLine,
-        workingDirectory: workingDirectory.absolute.path,
-        environment: environment,
-      );
-      if (stdin != null) {
-        stdin.listen((List<int> data) {
-          process.stdin.add(data);
-        }, onDone: () async => stdinComplete.complete());
-      }
-      process.stdout.listen(
-        (List<int> event) {
-          output.addAll(event);
-          if (printOutput) {
-            stdout.add(event);
-          }
-        },
-        onDone: () async => stdoutComplete.complete(),
-      );
-      if (printOutput) {
-        process.stderr.listen(
-          (List<int> event) {
-            stderr.add(event);
-          },
-          onDone: () async => stderrComplete.complete(),
-        );
-      } else {
-        stderrComplete.complete();
-      }
-    } on ProcessException catch (e) {
-      final String message = 'Running "${commandLine.join(' ')}" in ${workingDirectory.path} '
-          'failed with:\n${e.toString()}';
-      throw ProcessRunnerException(message);
-    } on ArgumentError catch (e) {
-      final String message = 'Running "${commandLine.join(' ')}" in ${workingDirectory.path} '
-          'failed with:\n${e.toString()}';
-      throw ProcessRunnerException(message);
-    }
-
-    final int exitCode = await allComplete();
-    if (exitCode != 0 && !failOk) {
-      final String message =
-          'Running "${commandLine.join(' ')}" in ${workingDirectory.path} failed';
-      throw ProcessRunnerException(
-        message,
-        ProcessResult(0, exitCode, null, 'returned $exitCode'),
-      );
-    }
-    return output;
-  }
-}
-
-class WorkerJob {
-  WorkerJob(
-    this.args, {
-    this.workingDirectory,
-    bool printOutput,
-    this.stdin,
-  }) : printOutput = printOutput ?? false;
-
-  /// The arguments for the process, including the command name as args[0].
-  final List<String> args;
-
-  /// The working directory that the command should be executed in.
-  final Directory workingDirectory;
-
-  /// Whether or not this command should print it's stdout when it runs.
-  final bool printOutput;
-
-  /// If set, the stream to read the stdin input from for this job.
-  Stream<List<int>> stdin;
-
-  @override
-  String toString() {
-    return args.join(' ');
-  }
-}
-
-/// A pool of worker processes that will keep [numWorkers] busy until all of the
-/// (presumably single-threaded) processes are finished.
-class ProcessPool {
-  ProcessPool({this.numWorkers, this.processManager}) {
-    numWorkers ??= Platform.numberOfProcessors;
-    processManager ??= const LocalProcessManager();
-    processRunner ??= ProcessRunner(processManager: processManager);
-  }
-
-  ProcessManager processManager;
-  ProcessRunner processRunner;
-  int numWorkers;
-  List<WorkerJob> pendingJobs = <WorkerJob>[];
-  List<WorkerJob> failedJobs = <WorkerJob>[];
-  Map<WorkerJob, Future<List<int>>> inProgressJobs = <WorkerJob, Future<List<int>>>{};
-  Map<WorkerJob, List<int>> completedJobs = <WorkerJob, List<int>>{};
-  Completer<Map<WorkerJob, List<int>>> completer;
-
-  void _printReport() {
-    final int totalJobs = completedJobs.length + inProgressJobs.length + pendingJobs.length;
-    final String percent =
-        totalJobs == 0 ? '100' : ((100 * completedJobs.length) ~/ totalJobs).toString().padLeft(3);
-    final String completed = completedJobs.length.toString().padLeft(3);
-    final String total = totalJobs.toString().padRight(3);
-    final String inProgress = inProgressJobs.length.toString().padLeft(2);
-    final String pending = pendingJobs.length.toString().padLeft(3);
-    stdout.write(
-        'Jobs: $percent% done, $completed/$total completed, $inProgress in progress, $pending pending.  \r');
-  }
-
-  Future<List<int>> _scheduleJob(WorkerJob job) async {
-    final Completer<List<int>> jobDone = Completer<List<int>>();
-    List<int> output;
-    try {
-      completedJobs[job] = await processRunner.runProcess(
-        job.args,
-        workingDirectory: job.workingDirectory,
-        printOutput: job.printOutput,
-        stdin: job.stdin,
-      );
-    } catch (e) {
-      failedJobs.add(job);
-      print('\nJob $job failed: $e');
-    } finally {
-      inProgressJobs.remove(job);
-      if (pendingJobs.isNotEmpty) {
-        final WorkerJob newJob = pendingJobs.removeAt(0);
-        inProgressJobs[newJob] = _scheduleJob(newJob);
-      } else {
-        if (inProgressJobs.isEmpty) {
-          completer.complete(completedJobs);
-        }
-      }
-      jobDone.complete(output);
-      _printReport();
-    }
-    return jobDone.future;
-  }
-
-  Future<Map<WorkerJob, List<int>>> startWorkers(List<WorkerJob> jobs) async {
-    assert(inProgressJobs.isEmpty);
-    assert(failedJobs.isEmpty);
-    assert(completedJobs.isEmpty);
-    if (jobs == null || jobs.isEmpty) {
-      return <WorkerJob, List<int>>{};
-    }
-    completer = Completer<Map<WorkerJob, List<int>>>();
-    pendingJobs = jobs;
-    for (int i = 0; i < numWorkers; ++i) {
-      if (pendingJobs.isEmpty) {
-        break;
-      }
-      final WorkerJob job = pendingJobs.removeAt(0);
-      inProgressJobs[job] = _scheduleJob(job);
-    }
-    return completer.future.then((Map<WorkerJob, List<int>> result) {
-      stdout.write('\n');
-      stdout.flush();
-      return result;
-    });
-  }
-}
 
 /// Generates diagrams from dart programs for use in the online documentation.
 ///
@@ -272,8 +25,12 @@ class DiagramGenerator {
     this.temporaryDirectory,
     this.cleanup = true,
   })  : device = device ?? '',
-        processRunner = processRunner ?? ProcessRunner() {
-    temporaryDirectory ??= Directory.systemTemp.createTempSync('api_generate_');
+        processRunner = processRunner ?? ProcessRunner(printOutputDefault: true) {
+    // Since we can't pass command line args yet on linux, just generate them in
+    // a known location.
+    temporaryDirectory ??= device == 'linux'
+        ? Directory('/tmp/diagrams')
+        : Directory.systemTemp.createTempSync('api_generate_');
     print('Dart path: $generatorMain');
     print('Temp directory: ${temporaryDirectory.path}');
   }
@@ -356,10 +113,6 @@ class DiagramGenerator {
       filters.add('--name');
       filters.add(path.basenameWithoutExtension(name));
     }
-    if (deviceId == 'linux') {
-      filters.add('--outputDir');
-      filters.add(temporaryDirectory.absolute.path);
-    }
     final List<String> filterArgs = filters.isNotEmpty
         ? <String>['--route', 'args:${Uri.encodeComponent(filters.join(' '))}']
         : <String>[];
@@ -369,7 +122,7 @@ class DiagramGenerator {
   }
 
   Future<bool> _findIdForDeviceName() async {
-    final List<int> rawJson = await processRunner.runProcess(
+    final ProcessRunnerResult result = await processRunner.runProcess(
       <String>[
         flutterCommand,
         'devices',
@@ -379,7 +132,7 @@ class DiagramGenerator {
       printOutput: false,
     );
 
-    final List<dynamic> devices = jsonDecode(utf8.decode(rawJson)) as List<dynamic>;
+    final List<dynamic> devices = jsonDecode(result.stdout) as List<dynamic>;
     for (final Map<String, dynamic> entry in devices.cast<Map<String, dynamic>>()) {
       if ((entry['name'] as String).toLowerCase().startsWith(device.toLowerCase()) ||
           (entry['id'] as String) == device) {
@@ -408,12 +161,12 @@ class DiagramGenerator {
         'app_flutter/diagrams',
         '.',
       ];
-      final List<int> tarData = await processRunner.runProcess(
+      final ProcessRunnerResult tarData = await processRunner.runProcess(
         args,
         workingDirectory: temporaryDirectory,
         printOutput: false,
       );
-      for (final ArchiveFile file in TarDecoder().decodeBytes(tarData)) {
+      for (final ArchiveFile file in TarDecoder().decodeBytes(tarData.stdoutRaw)) {
         if (file.isFile) {
           files.add(File(file.name));
           File(path.join(temporaryDirectory.absolute.path, file.name))
@@ -474,20 +227,22 @@ class DiagramGenerator {
           destination.path, // output movie.
         ],
         workingDirectory: temporaryDirectory,
-        stdin: _concatInputs(metadata.frameFiles),
+        stdinRaw: _concatInputs(metadata.frameFiles),
         printOutput: true,
       ));
       outputs.add(destination);
     }
     final ProcessPool pool = ProcessPool();
-    await pool.startWorkers(jobs);
+    await pool.runToCompletion(jobs);
     return outputs;
   }
 
   Future<List<File>> _combineAnimations(List<File> inputFiles) async {
+    print('Input files: $inputFiles');
     final List<File> metadataFiles = inputFiles.where((File input) {
       return input.path.endsWith('.json');
     }).toList();
+    print('Metadata: $metadataFiles');
     // Collect all the animation frames that are in the metadata files so that
     // we can eliminate them from the other files that were transferred.
     final Set<String> animationFiles = <String>{};
@@ -544,11 +299,12 @@ class DiagramGenerator {
           destination.path,
         ],
         workingDirectory: temporaryDirectory,
+        name: 'optipng ${destination.path}',
       ));
     }
     if (jobs.isNotEmpty) {
       final ProcessPool pool = ProcessPool();
-      await pool.startWorkers(jobs);
+      await for (final WorkerJob _ in pool.startWorkers(jobs)) {}
     }
   }
 }
@@ -578,16 +334,30 @@ Future<void> main(List<String> arguments) async {
     exit(0);
   }
 
+  final String deviceId = flags['device-id'] as String;
   bool keepTemporaryDirectory = flags['keep-tmp'] as bool;
+  String tmpDirFlag = (flags['tmpdir'] as String) ?? '';
+  if (tmpDirFlag.isEmpty && deviceId == 'linux') {
+    // On linux, we can't pass command line arguments to a Flutter app, so we
+    // just use a well-known location for the output.
+    tmpDirFlag = '/tmp/diagrams';
+    // And we nuke it to make sure that we're not left with cruft.
+    try {
+      Directory(tmpDirFlag).deleteSync(recursive: true);
+    } on FileSystemException {
+      // Do nothing if we can't delete it.
+    }
+  }
+
   Directory temporaryDirectory;
-  if (flags['tmpdir'] != null && (flags['tmpdir'] as String).isNotEmpty) {
-    temporaryDirectory = Directory(flags['tmpdir'] as String);
+  if (tmpDirFlag.isNotEmpty) {
+    temporaryDirectory = Directory(tmpDirFlag);
     temporaryDirectory.createSync(recursive: true);
     keepTemporaryDirectory = true;
   }
 
   DiagramGenerator(
-    device: flags['device-id'] as String,
+    device: deviceId,
     temporaryDirectory: temporaryDirectory,
     cleanup: !keepTemporaryDirectory,
   ).generateDiagrams(flags['category'] as List<String>, flags['name'] as List<String>);
