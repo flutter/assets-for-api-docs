@@ -97,14 +97,14 @@ class ThemeDataDiagram extends StatelessWidget implements DiagramMetadata {
                         heroKey: _heroKey,
                         labels: <Label>[
                           Label(
+                            _appBarKey,
+                            ' primaryColor',
+                            const FractionalOffset(0.9, 0.6),
+                          ),
+                          Label(
                             _bodyKey,
                             ' body1',
                             const FractionalOffset(1.1, 0.5),
-                          ),
-                          Label(
-                            _appBarKey,
-                            ' primaryColor',
-                            const FractionalOffset(0.9, 0.5),
                           ),
                           Label(
                             _fabKey,

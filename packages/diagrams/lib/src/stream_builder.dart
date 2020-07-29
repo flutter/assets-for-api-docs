@@ -11,7 +11,6 @@ import 'package:flutter/material.dart';
 import 'diagram_step.dart';
 
 const String _streamBuilder = 'stream_builder';
-const String _streamBuilderError = 'stream_builder_error';
 const Duration _pauseDuration = Duration(seconds: 1);
 final Duration _totalDuration = _pauseDuration * 4;
 
@@ -31,21 +30,13 @@ class _StreamBuilderDiagramState extends State<StreamBuilderDiagram> {
 
   @override
   void initState() {
-    if (widget.name == _streamBuilder) {
-      _calculation = (() async* {
-        await Future<void>.delayed(_pauseDuration);
-        await Future<void>.delayed(_pauseDuration);
-        yield 1;
-        await Future<void>.delayed(_pauseDuration);
-        await Future<void>.delayed(_pauseDuration);
-      })();
-    } else if (widget.name == _streamBuilderError) {
-      _calculation = (() async* {
-        await Future<void>.delayed(_pauseDuration);
-        await Future<void>.delayed(_pauseDuration);
-        throw 'Bid Failed';
-      })() as Stream<int>;
-    }
+    _calculation = (() async* {
+      await Future<void>.delayed(_pauseDuration);
+      await Future<void>.delayed(_pauseDuration);
+      yield 1;
+      await Future<void>.delayed(_pauseDuration);
+      await Future<void>.delayed(_pauseDuration);
+    })();
 
     super.initState();
   }
@@ -154,7 +145,6 @@ class StreamBuilderDiagramStep extends DiagramStep<StreamBuilderDiagram> {
   Future<List<StreamBuilderDiagram>> get diagrams async =>
       <StreamBuilderDiagram>[
         const StreamBuilderDiagram(_streamBuilder),
-        const StreamBuilderDiagram(_streamBuilderError),
       ];
 
   @override
