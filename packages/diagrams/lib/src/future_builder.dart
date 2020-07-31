@@ -11,7 +11,6 @@ import 'package:flutter/material.dart';
 import 'diagram_step.dart';
 
 const String _futureBuilder = 'future_builder';
-const String _futureBuilderError = 'future_builder_error';
 const Duration _futureDuration = Duration(seconds: 2);
 const Duration _pauseDuration = Duration(seconds: 1);
 final Duration _totalDuration = _futureDuration + _pauseDuration;
@@ -32,17 +31,10 @@ class _FutureBuilderDiagramState extends State<FutureBuilderDiagram> {
 
   @override
   void initState() {
-    if (widget.name == _futureBuilder) {
-      _calculation = Future<String>.delayed(
-        _futureDuration,
-        () => 'Data Loaded',
-      );
-    } else if (widget.name == _futureBuilderError) {
-      _calculation = () async {
-        await Future<void>.delayed(_futureDuration);
-        throw 'Loading failed';
-      }();
-    }
+    _calculation = Future<String>.delayed(
+      _futureDuration,
+      () => 'Data Loaded',
+    );
 
     super.initState();
   }
@@ -119,7 +111,6 @@ class FutureBuilderDiagramStep extends DiagramStep<FutureBuilderDiagram> {
   Future<List<FutureBuilderDiagram>> get diagrams async =>
       <FutureBuilderDiagram>[
         const FutureBuilderDiagram(_futureBuilder),
-        const FutureBuilderDiagram(_futureBuilderError),
       ];
 
   @override
