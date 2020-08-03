@@ -20,12 +20,10 @@ final Duration _kTotalDuration = _kScrollPauseDuration + _kScrollUpDuration + _k
 const double _kCurveAnimationFrameRate = 60.0;
 
 class SliverFillRemainingDiagram extends StatefulWidget implements DiagramMetadata {
-  const SliverFillRemainingDiagram(this.sampleName);
-
-  final String sampleName;
+  const SliverFillRemainingDiagram();
 
   @override
-  String get name => 'sliver_fill_remaining_' + sampleName;
+  String get name => 'sliver_fill_remaining_fill_overscroll';
 
   @override
   State<StatefulWidget> createState() => _SliverFillRemainingDiagramState();
@@ -81,113 +79,31 @@ class _SliverFillRemainingDiagramState extends State<SliverFillRemainingDiagram>
   Widget build(BuildContext context) {
     List<Widget> slivers;
 
-    switch(widget.sampleName) {
-      case 'sizes_child':
-        slivers = <Widget>[
-          SliverToBoxAdapter(
-            child: Container(
-              color: Colors.amber[300],
-              height: 150.0,
-            ),
-          ),
-          SliverFillRemaining(
-            hasScrollBody: false,
-            child: Container(
-              color: Colors.blue[100],
-              child: Icon(
-                Icons.sentiment_very_satisfied,
-                size: 75,
-                color: Colors.blue[900],
+    slivers = <Widget>[
+      SliverToBoxAdapter(
+        child: Container(
+          color: Colors.tealAccent[700],
+          height: 150.0,
+        ),
+      ),
+      SliverFillRemaining(
+        hasScrollBody: false,
+        fillOverscroll: true,
+        child: Container(
+          color: Colors.teal[100],
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: RaisedButton(
+                onPressed: () {},
+                child: const Text('Bottom Pinned Button!'),
               ),
             ),
           ),
-        ];
-        break;
-      case 'defers_to_child':
-        slivers = <Widget>[
-          SliverFixedExtentList(
-            itemExtent: 100.0,
-            delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
-                return Container(
-                  color: index % 2 == 0 ? Colors.amber[200] : Colors.blue[200],
-                );
-              },
-              childCount: 3,
-            ),
-          ),
-          SliverFillRemaining(
-            hasScrollBody: false,
-            child: Container(
-              color: Colors.orange[300],
-              child: const Padding(
-                padding: EdgeInsets.all(50.0),
-                child: FlutterLogo(size: 100),
-              ),
-            ),
-          ),
-        ];
-        break;
-      case 'scrolled_beyond':
-        slivers = <Widget>[
-          SliverFixedExtentList(
-            itemExtent: 130.0,
-            delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
-                return Container(
-                  color: index % 2 == 0 ? Colors.indigo[200] : Colors.orange[200],
-                );
-              },
-              childCount: 5,
-            ),
-          ),
-          SliverFillRemaining(
-            hasScrollBody: false,
-            child: Container(
-              child: const Padding(
-                padding: EdgeInsets.all(50.0),
-                child: Icon(
-                  Icons.pan_tool,
-                  size: 60,
-                  color: Colors.blueGrey,
-                ),
-              ),
-            ),
-          ),
-        ];
-        break;
-      case 'fill_overscroll':
-        slivers = <Widget>[
-          SliverToBoxAdapter(
-            child: Container(
-              color: Colors.tealAccent[700],
-              height: 150.0,
-            ),
-          ),
-          SliverFillRemaining(
-            hasScrollBody: false,
-            fillOverscroll: true,
-            child: Container(
-              color: Colors.teal[100],
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: RaisedButton(
-                    onPressed: () {},
-                    child: const Text('Bottom Pinned Button!'),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ];
-        break;
-      default:
-        slivers = <Widget>[
-          const SliverToBoxAdapter(child: Text('Error')),
-        ];
-    }
+        ),
+      ),
+    ];
 
     return Container(
       color: Colors.white,
@@ -213,10 +129,7 @@ class SliverFillRemainingDiagramStep extends DiagramStep<SliverFillRemainingDiag
 
   @override
   Future<List<SliverFillRemainingDiagram>> get diagrams async => <SliverFillRemainingDiagram>[
-    const SliverFillRemainingDiagram('sizes_child'),
-    const SliverFillRemainingDiagram('defers_to_child'),
-    const SliverFillRemainingDiagram('scrolled_beyond'),
-    const SliverFillRemainingDiagram('fill_overscroll'),
+    const SliverFillRemainingDiagram(),
   ];
 
   @override
