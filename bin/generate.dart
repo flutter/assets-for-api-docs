@@ -157,6 +157,7 @@ class WorkerJob {
     this.args, {
     this.workingDirectory,
     bool printOutput,
+    this.stdin,
   }) : printOutput = printOutput ?? false;
 
   /// The arguments for the process, including the command name as args[0].
@@ -167,6 +168,9 @@ class WorkerJob {
 
   /// Whether or not this command should print it's stdout when it runs.
   final bool printOutput;
+
+  /// If set, the stream to read the stdin input from for this job.
+  Stream<List<int>> stdin;
 
   @override
   String toString() {
@@ -194,9 +198,8 @@ class ProcessPool {
 
   void _printReport() {
     final int totalJobs = completedJobs.length + inProgressJobs.length + pendingJobs.length;
-    final String percent = totalJobs == 0
-        ? '100'
-        : ((100 * completedJobs.length) ~/ totalJobs).toString().padLeft(3);
+    final String percent =
+        totalJobs == 0 ? '100' : ((100 * completedJobs.length) ~/ totalJobs).toString().padLeft(3);
     final String completed = completedJobs.length.toString().padLeft(3);
     final String total = totalJobs.toString().padRight(3);
     final String inProgress = inProgressJobs.length.toString().padLeft(2);
@@ -213,6 +216,7 @@ class ProcessPool {
         job.args,
         workingDirectory: job.workingDirectory,
         printOutput: job.printOutput,
+        stdin: job.stdin,
       );
     } catch (e) {
       failedJobs.add(job);
@@ -418,13 +422,13 @@ class DiagramGenerator {
         }
       }
     } else {
-      temporaryDirectory
-          .list(recursive: true, followLinks: false)
-          .listen((FileSystemEntity entity) {
+      await for (final FileSystemEntity entity
+          in temporaryDirectory.list(recursive: true, followLinks: false)) {
         if (entity is File) {
-          files.add(File(path.relative(entity.path, from: temporaryDirectory.path)));
+          final String relativePath = path.relative(entity.path, from: temporaryDirectory.path);
+          files.add(File(relativePath));
         }
-      });
+      }
     }
     return files;
   }
@@ -441,6 +445,7 @@ class DiagramGenerator {
   Future<List<File>> _buildMoviesFromMetadata(List<AnimationMetadata> metadataList) async {
     final Directory destDir = Directory(assetDir);
     final List<File> outputs = <File>[];
+    final List<WorkerJob> jobs = <WorkerJob>[];
     for (final AnimationMetadata metadata in metadataList) {
       final String prefix = '${metadata.category}/${metadata.name}';
       final File destination = File(path.join(destDir.path, '$prefix.mp4'));
@@ -448,7 +453,7 @@ class DiagramGenerator {
         destination.deleteSync();
       }
       print('Converting ${metadata.name} animation to mp4.');
-      await processRunner.runProcess(
+      jobs.add(WorkerJob(
         <String>[
           ffmpegCommand,
           '-loglevel', 'fatal', // Only print fatal errors.
@@ -471,9 +476,11 @@ class DiagramGenerator {
         workingDirectory: temporaryDirectory,
         stdin: _concatInputs(metadata.frameFiles),
         printOutput: true,
-      );
+      ));
       outputs.add(destination);
     }
+    final ProcessPool pool = ProcessPool();
+    await pool.startWorkers(jobs);
     return outputs;
   }
 
