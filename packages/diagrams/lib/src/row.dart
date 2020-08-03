@@ -13,6 +13,7 @@ import 'diagram_step.dart';
 const String _row = 'row';
 const String _rowError = 'row_error';
 const String _rowFixed = 'row_fixed';
+const String _rowtextDirection = 'row_textDirection';
 
 class RowDiagram extends StatelessWidget implements DiagramMetadata {
   const RowDiagram(this.name);
@@ -72,6 +73,20 @@ class RowDiagram extends StatelessWidget implements DiagramMetadata {
           ],
         );
         break;
+      case _rowtextDirection:
+        returnWidget = Row(
+          textDirection: TextDirection.rtl,
+          children: const <Widget>[
+            FlutterLogo(),
+            Expanded(
+              child: Text(
+                'Flutter\'s hot reload helps you quickly and easily experiment, build UIs, add features, and fix bug faster. Experience sub-second reload times, without losing state, on emulators, simulators, and hardware for iOS and Android.',
+              ),
+            ),
+            Icon(Icons.sentiment_very_satisfied),
+          ],
+        );
+        break;
       default:
         returnWidget = const Text('Error');
         break;
@@ -100,6 +115,7 @@ class RowDiagramStep extends DiagramStep<RowDiagram> {
         const RowDiagram(_row),
         const RowDiagram(_rowError),
         const RowDiagram(_rowFixed),
+        const RowDiagram(_rowtextDirection),
       ];
 
   @override
