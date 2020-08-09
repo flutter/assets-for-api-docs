@@ -131,6 +131,35 @@ class _DiagramWidgetController extends WidgetController implements TickerProvide
   Future<List<Duration>> handlePointerEventRecord(List<PointerEventRecord> records) async {
     return const <Duration>[];
   }
+
+  @override
+  Future<int> pumpAndSettle([
+    Duration duration = const Duration(milliseconds: 100),
+    EnginePhase phase = EnginePhase.sendSemanticsUpdate,
+  ]) {
+    assert(duration != null);
+    assert(duration > Duration.zero);
+    assert(() {
+      final WidgetsBinding binding = this.binding;
+      if (binding is LiveTestWidgetsFlutterBinding &&
+          binding.framePolicy == LiveTestWidgetsFlutterBindingFramePolicy.benchmark) {
+        throw
+          'When using LiveTestWidgetsFlutterBindingFramePolicy.benchmark, '
+          'hasScheduledFrame is never set to true. This means that pumpAndSettle() '
+          'cannot be used, because it has no way to know if the application has '
+          'stopped registering new frames.';
+      }
+      return true;
+    }());
+    return TestAsyncUtils.guard<int>(() async {
+      int count = 0;
+      do {
+        await binding.pump(duration: duration);
+        count += 1;
+      } while (binding.hasScheduledFrame);
+      return count;
+    });
+  }
 }
 
 typedef _TickerDisposeCallback = void Function(_DiagramTicker ticker);
