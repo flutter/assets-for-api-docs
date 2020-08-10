@@ -3,7 +3,7 @@ description: Generator script for building API doc assets.
 
 dependencies:
   archive: ^2.0.10
-  process_runner: ^2.0.3
+  process_runner: ^2.0.4
   animation_metadata:
     path: ../packages/animation_metadata
 
