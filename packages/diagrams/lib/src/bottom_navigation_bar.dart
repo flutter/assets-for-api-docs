@@ -37,15 +37,15 @@ class BottomNavigationBarDiagram extends StatelessWidget implements DiagramMetad
             items: const <BottomNavigationBarItem>[
               BottomNavigationBarItem(
                 icon: Icon(Icons.home),
-                title: Text('Home'),
+                label: 'Home',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.business),
-                title: Text('Business'),
+                label: 'Business',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.school),
-                title: Text('School'),
+                label: 'School',
               ),
             ],
             currentIndex: 0,

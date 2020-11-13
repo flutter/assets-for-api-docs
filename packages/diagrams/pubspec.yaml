@@ -2,12 +2,12 @@ name: diagrams
 description: Main app for building API doc assets.
 
 dependencies:
-  flutter:
-    sdk: flutter
+  archive: ^2.0.10
   diagram_capture:
     path: ../diagram_capture
+  flutter:
+    sdk: flutter
   path_provider: any
-  archive: ^2.0.10
   process: 3.0.12
 
 dev_dependencies:

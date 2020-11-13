@@ -2,15 +2,15 @@ name: generator
 description: Generator script for building API doc assets.
 
 dependencies:
-  archive: ^2.0.10
-  process_runner: ^2.0.4
   animation_metadata:
     path: ../packages/animation_metadata
+  archive: ^2.0.10
+  process_runner: ^2.0.4
 
 dev_dependencies:
+  front_end: ^0.1.13
   mockito: any
   test: ^1.5.3
-  front_end: ^0.1.13
 
 environment:
   sdk: ">=2.8.0 <3.0.0"
