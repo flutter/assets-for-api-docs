@@ -39,7 +39,7 @@ class TextFormFieldDiagram extends StatelessWidget implements DiagramMetadata {
         break;
       case _textFormFieldError:
         returnWidget = TextFormField(
-          autovalidate: true,
+          autovalidateMode: AutovalidateMode.always,
           initialValue: 'bad@input',
           decoration: const InputDecoration(
             icon: Icon(Icons.person),

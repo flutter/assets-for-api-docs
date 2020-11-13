@@ -2,10 +2,10 @@ name: simple
 description: A simple example of how to use the diagram_capture library.
 
 dependencies:
-  flutter:
-    sdk: flutter
   diagram_capture:
     path: ..
+  flutter:
+    sdk: flutter
   path_provider: any
 
 dev_dependencies:

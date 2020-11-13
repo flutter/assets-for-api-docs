@@ -2,14 +2,14 @@ name: diagram_generator
 description: Main app for building API doc assets.
 
 dependencies:
-  flutter:
-    sdk: flutter
+  archive: ^2.0.10
   diagram_capture:
     path: ../../packages/diagram_capture
   diagrams:
     path: ../../packages/diagrams
+  flutter:
+    sdk: flutter
   path_provider: ^0.4.1
-  archive: ^2.0.10
   process: 3.0.12
 
 dev_dependencies:
