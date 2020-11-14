@@ -29,6 +29,7 @@ export 'src/dropdown_button.dart';
 export 'src/expanded.dart';
 export 'src/flat_button.dart';
 export 'src/floating_action_button.dart';
+export 'src/floating_action_button_location.dart';
 export 'src/form.dart';
 export 'src/gesture_detector.dart';
 export 'src/grid_view.dart';

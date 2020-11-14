@@ -83,6 +83,7 @@ Future<void> main() async {
     ExpandedDiagramStep(controller),
     FlatButtonDiagramStep(controller),
     FloatingActionButtonDiagramStep(controller),
+    FloatingActionButtonLocationDiagramStep(controller),
     FormDiagramStep(controller),
     GestureDetectorDiagramStep(controller),
     GridViewDiagramStep(controller),
