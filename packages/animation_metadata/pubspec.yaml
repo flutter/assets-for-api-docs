@@ -1,6 +1,5 @@
 name: animation_metadata
 description: A package that just defines how metadata for an animation is held.
-
 author: Chromium Authors
 homepage: http://www.flutter.dev
 
