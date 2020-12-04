@@ -15,17 +15,17 @@ import 'package:path_provider/path_provider.dart';
 
 const platform_pkg.Platform platform = platform_pkg.LocalPlatform();
 
-Future<Directory> prepareOutputDirectory(String outputDir) async {
+Future<Directory> prepareOutputDirectory() async {
   Directory directory;
-  if (platform.isAndroid) {
+  if (!platform.isAndroid) {
+    directory = Directory('/tmp/diagrams');
+  } else {
       directory = Directory(
-        outputDir ?? path.join(
+        path.join(
           (await getApplicationDocumentsDirectory()).absolute.path,
           'diagrams',
         ),
       );
-  } else {
-    directory = Directory(outputDir);
   }
   if (directory.existsSync()) {
     directory.deleteSync(recursive: true);
@@ -36,8 +36,9 @@ Future<Directory> prepareOutputDirectory(String outputDir) async {
 
 Future<void> main() async {
   DiagramFlutterBinding.ensureInitialized();
-  final List<String> arguments = window.defaultRouteName.length > 5
-      ? Uri.decodeComponent(window.defaultRouteName.substring(5)).split(' ')
+  const String stringArgs = String.fromEnvironment('args');
+  final List<String> arguments =  stringArgs != ''
+      ? Uri.decodeComponent(stringArgs).split(' ')
       : <String>[];
   final ArgParser parser = ArgParser();
   parser.addMultiOption('category');
@@ -48,8 +49,10 @@ Future<void> main() async {
   final List<String> categories = flags['category'] as List<String> ?? <String>[];
   final List<String> names = flags['name'] as List<String> ?? <String>[];
 
+  print('Filtered categories: $categories. Filtered names: $names');
+
   final DateTime start = DateTime.now();
-  final Directory outputDirectory = await prepareOutputDirectory(platform.isAndroid ? null : '/tmp/diagrams');
+  final Directory outputDirectory = await prepareOutputDirectory();
 
   final DiagramController controller = DiagramController(
     outputDirectory: outputDirectory,
@@ -130,6 +133,7 @@ Future<void> main() async {
 
   for (final DiagramStep<DiagramMetadata> step in steps) {
     if (categories.isNotEmpty && !categories.contains(step.category)) {
+      print('Skipping ${step.runtimeType}');
       continue;
     }
     final Directory stepOutputDirectory =
