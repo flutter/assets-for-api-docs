@@ -277,13 +277,16 @@ class DiagramGenerator {
   }
 
   Future<void> _optimizeImages(List<File> files) async {
-    final Directory destDir = Directory(assetDir);
     final List<WorkerJob> jobs = <WorkerJob>[];
     for (final File imagePath in files) {
       if (!imagePath.path.endsWith('.png')) {
         continue;
       }
-      final File destination = File(path.join(destDir.path, imagePath.path));
+      final File destination = File(path.join(Directory(assetDir).path, imagePath.path));
+      final Directory destDir = destination.parent;
+      if (!destDir.existsSync()) {
+        destDir.createSync(recursive: true);
+      }
       if (destination.existsSync()) {
         destination.deleteSync();
       }
