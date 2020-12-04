@@ -20,29 +20,35 @@ material library would go in the `assets/material/` directory and be at
 All asset files should be under the `assets` directory in an appropriate
 subdirectory.
 
-## Creating images
-
-Images must be code-generated, see the `packages/diagrams/lib/src/` directory.
-
 ## Generation
 
-See the [`generate.dart`](./bin/generate.dart) script. It will
-regenerate almost all of existing assets using the Flutter version you
-have installed.
+Images must be code-generated.
 
-Typically, you plug in an Android phone and run:
+To create new images, see the [`packages/diagrams/lib/src/`](./packages/diagrams/lib/src/) directory.
 
+The [`generate.dart`](./bin/generate.dart) script regenerates almost all of existing assets
+using the Flutter version you have installed. A small wrapper [`bin/generate.sh`](./bin/generate.sh)
+is provided as a convenience.
+
+You may with to limit image generation to certain categories and/or names. For example:
 ```sh
-PATH=~/dev/flutter/bin/cache/dart-sdk/bin:~/Android/Sdk/platform-tools:$PATH bin/generate.sh
+# Filter by category
+bin/generate.sh -c cupertino,material
+# Filter by name
+bin/generate.sh -n basic_material_app,blend_mode
 ```
 
-You may wish to add the `--category` argument to focus just on the
-images you need updating.
+You may also specify a different device to use for generating diagrams. For example:
+```sh
+bin/generate.sh -d "iphone"
+```
+
+`bin/generate.sh -h` lists available arguments.
 
 ### Prerequisites
 
-In order for the `generate.dart` script to work, it needs several supporting
-apps.
+The `generate.dart` script only works on macOS and Linux, because of the supporting apps it needs to
+run.
 
 To optimize PNG files, it needs `optipng`, which is available for macOS via Homebrew, and Linux via
 apt-get.
@@ -50,17 +56,11 @@ apt-get.
 To convert animations into mp4 files, it needs `ffmpeg`, available for macOS via Homebrew and Linux
 via apt-get.
 
-The generator currently only supports running on an Android runtime. An Android
-device or emulator must be running before invoking the `generate.dart` script.
+`flutter`, `dart` (and when using an Android device, `adb') commands need to be available
+in a directory in the `PATH` environment variable. (e.g. PATH=~/<path_to_flutter>/flutter/bin/cache/dart-sdk/bin:~/Android/Sdk/platform-tools:$PATH)
 
-The Android `adb` command, the `flutter` command, and the `dart`
-command need to both be available and in a directory in the `PATH`
-environment variable. For `adb`, be sure it is the same one that is
-running as a server (which is often started by your IDE, so use the
-same `adb` the IDE is running).
-
-The `generate.dart` script only works on macOS and Linux, because of the supporting apps it needs to
-run.
+When using an Android device, be sure that the  `adb` command is the same as the one running
+as a server (which is often started by your IDE, so use the same `adb` the IDE is running).
 
 ## Optimization
 
