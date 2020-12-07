@@ -37,7 +37,7 @@ Future<Directory> prepareOutputDirectory() async {
 Future<void> main() async {
   DiagramFlutterBinding.ensureInitialized();
   const String stringArgs = String.fromEnvironment('args');
-  final List<String> arguments =  stringArgs != ''
+  final List<String> arguments = stringArgs != ''
       ? Uri.decodeComponent(stringArgs).split(' ')
       : <String>[];
   final ArgParser parser = ArgParser();

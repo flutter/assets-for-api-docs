@@ -30,7 +30,7 @@ The [`generate.dart`](./bin/generate.dart) script regenerates almost all of exis
 using the Flutter version you have installed. A small wrapper [`bin/generate.sh`](./bin/generate.sh)
 is provided as a convenience.
 
-You may with to limit image generation to certain categories and/or names. For example:
+To limit image generation to certain categories and/or names, run:
 ```sh
 # Filter by category
 bin/generate.sh -c cupertino,material
@@ -38,7 +38,7 @@ bin/generate.sh -c cupertino,material
 bin/generate.sh -n basic_material_app,blend_mode
 ```
 
-You may also specify a different device to use for generating diagrams. For example:
+To specify a different device to use for generating diagrams, run:
 ```sh
 bin/generate.sh -d "iphone"
 ```
@@ -56,7 +56,7 @@ apt-get.
 To convert animations into mp4 files, it needs `ffmpeg`, available for macOS via Homebrew and Linux
 via apt-get.
 
-`flutter`, `dart` (and when using an Android device, `adb') commands need to be available
+`flutter`, `dart` (and when using an Android device, `adb`) commands need to be available
 in a directory in the `PATH` environment variable. (e.g. PATH=~/<path_to_flutter>/flutter/bin/cache/dart-sdk/bin:~/Android/Sdk/platform-tools:$PATH)
 
 When using an Android device, be sure that the  `adb` command is the same as the one running
