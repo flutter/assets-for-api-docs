@@ -31,18 +31,12 @@ class DiagramGenerator {
   DiagramGenerator({
     this.device = '',
     ProcessRunner? processRunner,
-    Directory? temporaryDirectory,
+    required this.temporaryDirectory,
     this.cleanup = true,
-  })  : processRunner =
-            processRunner ?? ProcessRunner(printOutputDefault: true),
-        // Since we don't pass command line args yet on linux, just generate them in
-        // a known location.
-        temporaryDirectory = temporaryDirectory ??
-            (device == 'linux'
-                ? Directory('/tmp/diagrams')
-                : Directory.systemTemp.createTempSync('flutter_diagrams.')) {
+  }) : processRunner =
+            processRunner ?? ProcessRunner(printOutputDefault: true) {
     print('Dart path: $generatorMain');
-    print('Temp directory: ${this.temporaryDirectory.path}');
+    print('Temp directory: ${temporaryDirectory.path}');
   }
 
   static const String flutterCommand = 'flutter';
@@ -118,7 +112,8 @@ class DiagramGenerator {
         await temporaryDirectory.delete(recursive: true);
       }
     }
-    print('Elapsed time for diagram generation: ${DateTime.now().difference(startTime)}');
+    print(
+        'Elapsed time for diagram generation: ${DateTime.now().difference(startTime)}');
   }
 
   Future<void> _createScreenshots(List<String> categories, List<String> names) async {
@@ -132,17 +127,52 @@ class DiagramGenerator {
       filters.add('--name');
       filters.add(path.basenameWithoutExtension(name));
     }
-    final List<String> filterArgs = filters.isNotEmpty
-        ? <String>['--route', 'args:${Uri.encodeComponent(filters.join(' '))}']
-        : <String>[];
+    if (deviceTargetPlatform.startsWith('android')) {
+      filters.add('--platform');
+      filters.add('android');
+    } else if (deviceTargetPlatform.startsWith('ios')) {
+      filters.add('--platform');
+      filters.add('ios');
+    } else if (deviceTargetPlatform.startsWith('darwin')) {
+      filters.add('--platform');
+      filters.add('macos');
+    } else if (deviceTargetPlatform.startsWith('linux')) {
+      filters.add('--platform');
+      filters.add('linux');
+    } else if (deviceTargetPlatform.startsWith('windows')) {
+      filters.add('--platform');
+      filters.add('windows');
+    } else if (deviceTargetPlatform.startsWith('fuchsia')) {
+      filters.add('--platform');
+      filters.add('fuchsia');
+    } else {
+      throw GeneratorException('Unsupported target platform $deviceTargetPlatform for device $deviceId');
+    }
+    filters.add('--output-dir');
+    filters.add(temporaryDirectory.absolute.path);
+    late final List<String> filterArgs;
+    if (deviceTargetPlatform.startsWith('android')) {
+      filterArgs = filters.isNotEmpty
+          ? <String>[
+              '--route',
+              'args:${Uri.encodeComponent(filters.join(' '))}'
+            ]
+          : <String>[];
+    } else {
+      filterArgs = <String>[];
+      for (final String arg in filters) {
+        filterArgs.add('--dart-entrypoint-args');
+        filterArgs.add(arg);
+      }
+    }
     final List<String> deviceArgs = <String>['-d', deviceId];
     final List<String> args = <String>[
           flutterCommand,
           'run',
           '--no-sound-null-safety'
         ] +
-        filterArgs +
-        deviceArgs;
+        deviceArgs +
+        filterArgs;
     await processRunner.runProcess(
       args,
       workingDirectory: Directory(generatorDir),
@@ -267,13 +297,14 @@ class DiagramGenerator {
   }
 
   Future<List<File>> _combineAnimations(List<File> inputFiles) async {
-    print('Processing ${inputFiles.length} files...');
     final List<File> errorFiles = inputFiles
       .where((File input) => path.basename(input.path) == 'error.log')
       .toList();
 
     if (errorFiles.length != 1)
-      throw GeneratorException('Subprocess did not complete cleanly!');
+      throw GeneratorException('Subprocess did not complete cleanly!: $errorFiles');
+
+    print('Processing ${inputFiles.length - 1} files...');
 
     final String errorsFileName = path.join(temporaryDirectory.absolute.path, errorFiles.single.path);
     final String errors = await File(errorsFileName).readAsString();
@@ -376,23 +407,87 @@ bool _hasJobFailed(WorkerJob job) {
   return false;
 }
 
+Future<Map<String, Map<String, String>>> listAvailableDevices() async {
+  final ProcessRunnerResult result = await ProcessRunner().runProcess(
+    <String>['flutter', 'devices', '--machine'],
+    printOutput: false,
+  );
+
+  final Map<String, Map<String, String>> devices =
+      <String, Map<String, String>>{};
+  final List<dynamic> devicesJson = jsonDecode(result.stdout) as List<dynamic>;
+  for (final Map<String, dynamic> entry
+      in devicesJson.cast<Map<String, dynamic>>()) {
+    devices[(entry['name'] as String).toLowerCase()] = <String, String>{
+      'id': entry['id'] as String,
+      'targetPlatform': entry['targetPlatform'] as String
+    };
+  }
+  return devices;
+}
+
+String getDeviceList(Map<String, Map<String, String>> devices) {
+  final List<String> output = <String>[];
+  for (final String key in devices.keys) {
+    final String id = devices[key]!['id']!;
+    final String platform = devices[key]!['targetPlatform']!;
+    output.add('$key : $id ${id != platform ? ' ($platform)' : ''}');
+  }
+  return output.join('\n');
+}
+
+// This will default to macOS on macOS, linux on linux, and the first attached
+// Android device on Windows.
+String getDefaultDevice(Map<String, Map<String, String>> devices) {
+  if (devices.isEmpty) {
+    return '';
+  }
+  final String platform = Platform.operatingSystem.toLowerCase();
+  if (devices.keys.contains(platform)) {
+    if (platform != 'windows') {
+      // We don't yet support Windows as a device, since the process requires
+      // some Unix tools still (ffmpeg, optipng, etc.).
+      return devices[platform]!['id']!;
+    }
+  }
+  for (final String key in devices.keys) {
+    if (devices[key]!['targetPlatform']!.startsWith('android')) {
+      // If we're not on a supported platform, return the first Android device
+      // found, if any.
+      return devices[key]!['id']!;
+    }
+  }
+  return '';
+}
+
 Future<void> main(List<String> arguments) async {
+  final Map<String, Map<String, String>> devices = await listAvailableDevices();
+
   final ArgParser parser = ArgParser();
   parser.addFlag('help', help: 'Print help.');
-  parser.addFlag('keep-tmp', help: "Don't cleanup after a run (don't remove temporary directory).");
+  parser.addFlag('keep-tmp',
+      help: "Don't cleanup after a run (don't remove temporary directory).");
   parser.addOption('tmpdir',
-      abbr: 't', help: 'Specify a temporary directory to use (implies --keep-tmp)');
+      abbr: 't',
+      help: 'Specify a temporary directory to use (implies --keep-tmp)');
   parser.addOption('device-id',
-      abbr: 'd', help: 'Specify a device to use for generating the diagrams', defaultsTo: 'linux');
+      abbr: 'd',
+      help: 'Specify a device ID to use for generating the diagrams. Defaults '
+          'to the host platform that the script is run on, if that platform is '
+          'supported, or an attached device if not. Default on this machine is '
+          '${getDefaultDevice(devices)}. Available devices are:\n${getDeviceList(devices)}\n',
+      defaultsTo: getDefaultDevice(devices));
   parser.addMultiOption('category',
       abbr: 'c',
-      help: 'Specify the categories of diagrams that should be '
-          'generated. The category is the name of the subdirectory of the assets/ directory in which '
-          'the images will be placed, as determined by the DiagramStep.category property.');
+      help: 'Specify the categories of diagrams that should be generated. The '
+          'category is the name of the subdirectory of the assets/ directory '
+          'into which the images will be placed, as determined by the '
+          'DiagramStep.category property.');
   parser.addMultiOption('name',
       abbr: 'n',
       help: 'Specify the name of diagrams that should be generated. The '
-          'name is the basename of the output file and may be specified with or without the suffix.');
+          'name is the basename of the output file and may be specified with '
+          'or without the suffix.');
   final ArgResults flags = parser.parse(arguments);
 
   if (flags['help'] as bool) {
@@ -403,30 +498,25 @@ Future<void> main(List<String> arguments) async {
 
   final String deviceId = flags['device-id'] as String? ?? '';
   bool keepTemporaryDirectory = flags['keep-tmp'] as bool? ?? false;
-  String tmpDirFlag = flags['tmpdir'] as String? ?? '';
-  if (tmpDirFlag.isEmpty && deviceId == 'linux') {
-    // On linux, we can't pass command line arguments to a Flutter app, so we
-    // just use a well-known location for the output.
-    tmpDirFlag = '/tmp/diagrams';
-    // And we nuke it to make sure that we're not left with cruft.
-    try {
-      Directory(tmpDirFlag).deleteSync(recursive: true);
-    } on FileSystemException {
-      // Do nothing if we can't delete it.
-    }
+  late Directory temporaryDirectory;
+  if (flags.wasParsed('tmpdir')) {
+    final String tmpDirFlag = flags['tmpdir'] as String;
+    keepTemporaryDirectory = true;
+    temporaryDirectory = Directory(tmpDirFlag);
+  } else {
+    temporaryDirectory = Directory.systemTemp.createTempSync('api_generate_');
   }
-
-  assert(tmpDirFlag.isNotEmpty);
-  final Directory temporaryDirectory = Directory(tmpDirFlag);
   temporaryDirectory.createSync(recursive: true);
-  keepTemporaryDirectory = true;
 
   try {
     await DiagramGenerator(
       device: deviceId,
       temporaryDirectory: temporaryDirectory,
       cleanup: !keepTemporaryDirectory,
-    ).generateDiagrams(flags['category'] as List<String>, flags['name'] as List<String>);
+    ).generateDiagrams(
+      flags['category'] as List<String>,
+      flags['name'] as List<String>,
+    );
   } on GeneratorException catch (error) {
     stderr
       ..writeln('Aborting diagram generator.')

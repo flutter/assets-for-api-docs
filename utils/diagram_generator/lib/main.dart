@@ -37,15 +37,21 @@ Future<Directory> prepareOutputDirectory(String? outputDir) async {
   return directory;
 }
 
-Future<void> main() async {
+Future<void> main(List<String> args) async {
   DiagramFlutterBinding.ensureInitialized();
-  final List<String> arguments = window.defaultRouteName.length > 5
-      ? Uri.decodeComponent(window.defaultRouteName.substring(5)).split(' ')
-      : <String>[];
+  late final List<String> arguments;
+  if (platform.isAndroid) {
+     arguments = window.defaultRouteName.length > 5
+        ? Uri.decodeComponent(window.defaultRouteName.substring(5)).split(' ')
+        : <String>[];
+  } else {
+    arguments = args;
+  }
   final ArgParser parser = ArgParser();
   parser.addMultiOption('category');
+  parser.addMultiOption('platform');
   parser.addMultiOption('name');
-  parser.addOption('outputDir');
+  parser.addOption('output-dir', defaultsTo: '/tmp/diagrams');
   final ArgResults flags = parser.parse(arguments);
 
   final StringBuffer errorLog = StringBuffer();
@@ -61,11 +67,16 @@ Future<void> main() async {
 
   final List<String> categories = flags['category'] as List<String>;
   final List<String> names = flags['name'] as List<String>;
+  final Set<DiagramPlatform> platforms = (flags['platform'] as List<String>).map<DiagramPlatform>((String platformStr) {
+    assert(diagramStepPlatformNames.containsKey(platformStr), 'Invalid platform $platformStr');
+    return diagramStepPlatformNames[platformStr]!;
+  }).toSet();
+
 
   print('Filters:\n  categories: $categories\n  names: $names');
 
   final DateTime start = DateTime.now();
-  final Directory outputDirectory = await prepareOutputDirectory(platform.isAndroid ? null : '/tmp/diagrams');
+  final Directory outputDirectory = await prepareOutputDirectory(platform.isAndroid ? null : flags['output-dir'] as String?);
 
   final DiagramController controller = DiagramController(
     outputDirectory: outputDirectory,
@@ -173,7 +184,8 @@ Future<void> main() async {
         controller.outputDirectory = stepOutputDirectory;
         controller.pixelRatio = 1.0;
         print('Working on step ${step.runtimeType}');
-        await step.generateDiagrams(onlyGenerate: names);
+
+        await step.generateDiagrams(onlyGenerate: names, platforms: platforms);
       }
       done.complete();
     });
