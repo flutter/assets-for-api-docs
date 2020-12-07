@@ -40,7 +40,7 @@ class TabsDiagramState extends State<TabsDiagram> with SingleTickerProviderState
     Tab(key: _tabKeys[1], text: 'RIGHT'),
   ];
 
-  TabController _tabController;
+  late TabController _tabController;
 
   @override
   void initState() {
@@ -70,7 +70,7 @@ class TabsDiagramState extends State<TabsDiagram> with SingleTickerProviderState
           body: TabBarView(
             controller: _tabController,
             children: myTabs.map((Tab tab) {
-              final String label = tab.text.toLowerCase();
+              final String label = tab.text!.toLowerCase();
               return Center(
                 child: Text(
                   'This is the $label tab',
@@ -102,10 +102,10 @@ class TabsDiagramStep extends DiagramStep<TabsDiagram> {
     RenderBox target;
     switch(now.inMilliseconds) {
       case 0:
-        target = _tabKeys[1].currentContext.findRenderObject() as RenderBox;
+        target = _tabKeys[1].currentContext!.findRenderObject() as RenderBox;
         break;
       case 2300:
-        target = _tabKeys[0].currentContext.findRenderObject() as RenderBox;
+        target = _tabKeys[0].currentContext!.findRenderObject() as RenderBox;
         break;
       default:
         return;

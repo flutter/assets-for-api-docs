@@ -23,7 +23,7 @@ class InputDecorationDiagram extends StatelessWidget implements DiagramMetadata 
 
   @override
   Widget build(BuildContext context) {
-    Widget returnWidget;
+    late Widget returnWidget;
 
     switch (name) {
       case _inputDecoration:

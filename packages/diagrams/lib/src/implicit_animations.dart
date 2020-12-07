@@ -46,13 +46,13 @@ class ImplicitAnimationDiagramStep extends DiagramStep<ImplicitAnimationDiagram<
 
     final Map<Duration, DiagramKeyframe> keyframes = <Duration, DiagramKeyframe>{
       Duration.zero: (Duration now) async {
-        final RenderBox target = _transitionKey.currentContext.findRenderObject() as RenderBox;
+        final RenderBox target = _transitionKey.currentContext!.findRenderObject() as RenderBox;
         final Offset targetOffset = target.localToGlobal(target.size.center(Offset.zero));
         final TestGesture gesture = await controller.startGesture(targetOffset);
         await gesture.up();
       },
       const Duration(seconds: 3): (Duration now) async {
-        final RenderBox target = _transitionKey.currentContext.findRenderObject() as RenderBox;
+        final RenderBox target = _transitionKey.currentContext!.findRenderObject() as RenderBox;
         final Offset targetOffset = target.localToGlobal(target.size.center(Offset.zero));
         final TestGesture gesture = await controller.startGesture(targetOffset);
         await gesture.up();
@@ -71,7 +71,7 @@ class ImplicitAnimationDiagramStep extends DiagramStep<ImplicitAnimationDiagram<
 }
 
 class AnimatedAlignDiagram extends ImplicitAnimationDiagram<AlignmentGeometry> {
-  const AnimatedAlignDiagram({Key key}) : super(key: key);
+  const AnimatedAlignDiagram({Key? key}) : super(key: key);
 
   @override
   Curve get curve => Curves.fastOutSlowIn;
@@ -91,7 +91,7 @@ class AnimatedAlignDiagram extends ImplicitAnimationDiagram<AlignmentGeometry> {
 }
 
 class AnimatedContainerDiagram extends ImplicitAnimationDiagram<AlignmentGeometry> {
-  const AnimatedContainerDiagram({Key key}) : super(key: key);
+  const AnimatedContainerDiagram({Key? key}) : super(key: key);
 
   @override
   Curve get curve => Curves.fastOutSlowIn;
@@ -114,14 +114,14 @@ class AnimatedContainerDiagram extends ImplicitAnimationDiagram<AlignmentGeometr
 }
 
 class AnimatedDefaultTextStyleDiagram extends ImplicitAnimationDiagram<AlignmentGeometry> {
-  const AnimatedDefaultTextStyleDiagram({Key key}) : super(key: key);
+  const AnimatedDefaultTextStyleDiagram({Key? key}) : super(key: key);
 
   @override
   Curve get curve => Curves.elasticInOut;
 
   @override
   Widget buildImplicitAnimation(BuildContext context, bool selected) {
-    final TextStyle selectedStyle = Theme.of(context).textTheme.headline4.copyWith(
+    final TextStyle selectedStyle = Theme.of(context).textTheme.headline4!.copyWith(
           color: Colors.red,
           fontSize: 60.0,
           fontWeight: FontWeight.w100,
@@ -146,7 +146,7 @@ class AnimatedDefaultTextStyleDiagram extends ImplicitAnimationDiagram<Alignment
 }
 
 class AnimatedOpacityDiagram extends ImplicitAnimationDiagram<AlignmentGeometry> {
-  const AnimatedOpacityDiagram({Key key}) : super(key: key);
+  const AnimatedOpacityDiagram({Key? key}) : super(key: key);
 
   @override
   Curve get curve => Curves.fastOutSlowIn;
@@ -166,7 +166,7 @@ class AnimatedOpacityDiagram extends ImplicitAnimationDiagram<AlignmentGeometry>
 }
 
 class AnimatedPaddingDiagram extends ImplicitAnimationDiagram<AlignmentGeometry> {
-  const AnimatedPaddingDiagram({Key key}) : super(key: key);
+  const AnimatedPaddingDiagram({Key? key}) : super(key: key);
 
   @override
   Curve get curve => Curves.fastOutSlowIn;
@@ -186,7 +186,7 @@ class AnimatedPaddingDiagram extends ImplicitAnimationDiagram<AlignmentGeometry>
 }
 
 class AnimatedPhysicalModelDiagram extends ImplicitAnimationDiagram<AlignmentGeometry> {
-  const AnimatedPhysicalModelDiagram({Key key}) : super(key: key);
+  const AnimatedPhysicalModelDiagram({Key? key}) : super(key: key);
 
   @override
   Curve get curve => Curves.fastOutSlowIn;
@@ -223,7 +223,7 @@ class AnimatedPhysicalModelDiagram extends ImplicitAnimationDiagram<AlignmentGeo
 }
 
 class AnimatedPositionedDiagram extends ImplicitAnimationDiagram<AlignmentGeometry> {
-  const AnimatedPositionedDiagram({Key key}) : super(key: key);
+  const AnimatedPositionedDiagram({Key? key}) : super(key: key);
 
   @override
   Curve get curve => Curves.fastOutSlowIn;
@@ -254,7 +254,7 @@ class AnimatedPositionedDiagram extends ImplicitAnimationDiagram<AlignmentGeomet
 }
 
 class AnimatedPositionedDirectionalDiagram extends ImplicitAnimationDiagram<AlignmentGeometry> {
-  const AnimatedPositionedDirectionalDiagram({Key key}) : super(key: key);
+  const AnimatedPositionedDirectionalDiagram({Key? key}) : super(key: key);
 
   @override
   Curve get curve => Curves.fastOutSlowIn;
@@ -289,7 +289,7 @@ class AnimatedPositionedDirectionalDiagram extends ImplicitAnimationDiagram<Alig
 }
 
 class AnimatedThemeDiagram extends ImplicitAnimationDiagram<AlignmentGeometry> {
-  const AnimatedThemeDiagram({Key key}) : super(key: key);
+  const AnimatedThemeDiagram({Key? key}) : super(key: key);
 
   @override
   Curve get curve => Curves.elasticInOut;
@@ -320,7 +320,7 @@ class AnimatedThemeDiagram extends ImplicitAnimationDiagram<AlignmentGeometry> {
 }
 
 class WindowPaddingDiagram extends ImplicitAnimationDiagram<AlignmentGeometry> {
-  const WindowPaddingDiagram({Key key}) : super(key: key);
+  const WindowPaddingDiagram({Key? key}) : super(key: key);
 
   @override
   Curve get curve => Curves.fastOutSlowIn;

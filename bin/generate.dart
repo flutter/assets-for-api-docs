@@ -20,19 +20,20 @@ final String repoRoot = path.dirname(path.fromUri(Platform.script));
 /// before moving the images into place for updating.
 class DiagramGenerator {
   DiagramGenerator({
-    String device,
-    ProcessRunner processRunner,
-    this.temporaryDirectory,
+    this.device = '',
+    ProcessRunner? processRunner,
+    Directory? temporaryDirectory,
     this.cleanup = true,
-  })  : device = device ?? '',
-        processRunner = processRunner ?? ProcessRunner(printOutputDefault: true) {
-    // Since we can't pass command line args yet on linux, just generate them in
-    // a known location.
-    temporaryDirectory ??= device == 'linux'
-        ? Directory('/tmp/diagrams')
-        : Directory.systemTemp.createTempSync('api_generate_');
+  })  : processRunner =
+            processRunner ?? ProcessRunner(printOutputDefault: true),
+        // Since we don't pass command line args yet on linux, just generate them in
+        // a known location.
+        temporaryDirectory = temporaryDirectory ??
+            (device == 'linux'
+                ? Directory('/tmp/diagrams')
+                : Directory.systemTemp.createTempSync('api_generate_')) {
     print('Dart path: $generatorMain');
-    print('Temp directory: ${temporaryDirectory.path}');
+    print('Temp directory: ${this.temporaryDirectory.path}');
   }
 
   static const String flutterCommand = 'flutter';
@@ -58,7 +59,14 @@ class DiagramGenerator {
 
   /// The path to the top of the repo.
   static String get projectDir {
-    return path.dirname(path.dirname(path.absolute(path.fromUri(Platform.script))));
+    if (Platform.script.isScheme('file')) {
+      return path
+          .dirname(path.dirname(path.absolute(path.fromUri(Platform.script))));
+    } else {
+      // Tests can sometimes have data URIs, so we just return the current
+      // directory for those.
+      return Directory.current.absolute.path;
+    }
   }
 
   /// The output asset directory for all the categories.
@@ -86,23 +94,28 @@ class DiagramGenerator {
   /// targeting.
   String deviceTargetPlatform = '';
 
-  Future<void> generateDiagrams(List<String> categories, List<String> names) async {
+  Future<void> generateDiagrams(
+      List<String> categories, List<String> names) async {
     final DateTime startTime = DateTime.now();
     if (!await _findIdForDeviceName()) {
-      stderr.writeln('Unable to find device ID for device $device. Are you sure it is attached?');
+      stderr.writeln(
+          'Unable to find device ID for device $device. Are you sure it is attached?');
       return;
     }
 
     await _createScreenshots(categories, names);
-    final List<File> outputFiles = await _combineAnimations(await _transferImages());
+    final List<File> outputFiles =
+        await _combineAnimations(await _transferImages());
     await _optimizeImages(outputFiles);
     if (cleanup) {
       await temporaryDirectory.delete(recursive: true);
     }
-    print('Elapsed time for diagram generation: ${DateTime.now().difference(startTime)}');
+    print(
+        'Elapsed time for diagram generation: ${DateTime.now().difference(startTime)}');
   }
 
-  Future<void> _createScreenshots(List<String> categories, List<String> names) async {
+  Future<void> _createScreenshots(
+      List<String> categories, List<String> names) async {
     print('Creating images.');
     final List<String> filters = <String>[];
     for (final String category in categories) {
@@ -117,8 +130,16 @@ class DiagramGenerator {
         ? <String>['--route', 'args:${Uri.encodeComponent(filters.join(' '))}']
         : <String>[];
     final List<String> deviceArgs = <String>['-d', deviceId];
-    final List<String> args = <String>[flutterCommand, 'run'] + filterArgs + deviceArgs;
-    await processRunner.runProcess(args, workingDirectory: Directory(generatorDir));
+    final List<String> args = <String>[
+          flutterCommand,
+          'run',
+          '--no-sound-null-safety'
+        ] +
+        filterArgs +
+        deviceArgs;
+    print('Running ${args.join(' ')}');
+    await processRunner.runProcess(args,
+        workingDirectory: Directory(generatorDir));
   }
 
   Future<bool> _findIdForDeviceName() async {
@@ -133,11 +154,15 @@ class DiagramGenerator {
     );
 
     final List<dynamic> devices = jsonDecode(result.stdout) as List<dynamic>;
-    for (final Map<String, dynamic> entry in devices.cast<Map<String, dynamic>>()) {
-      if ((entry['name'] as String).toLowerCase().startsWith(device.toLowerCase()) ||
+    for (final Map<String, dynamic> entry
+        in devices.cast<Map<String, dynamic>>()) {
+      if ((entry['name'] as String)
+              .toLowerCase()
+              .startsWith(device.toLowerCase()) ||
           (entry['id'] as String) == device) {
         deviceId = entry['id'] as String;
-        deviceTargetPlatform = (entry['targetPlatform'] as String).toLowerCase();
+        deviceTargetPlatform =
+            (entry['targetPlatform'] as String).toLowerCase();
         return true;
       }
     }
@@ -166,7 +191,8 @@ class DiagramGenerator {
         workingDirectory: temporaryDirectory,
         printOutput: false,
       );
-      for (final ArchiveFile file in TarDecoder().decodeBytes(tarData.stdoutRaw)) {
+      for (final ArchiveFile file
+          in TarDecoder().decodeBytes(tarData.stdoutRaw)) {
         if (file.isFile) {
           files.add(File(file.name));
           File(path.join(temporaryDirectory.absolute.path, file.name))
@@ -178,7 +204,8 @@ class DiagramGenerator {
       await for (final FileSystemEntity entity
           in temporaryDirectory.list(recursive: true, followLinks: false)) {
         if (entity is File) {
-          final String relativePath = path.relative(entity.path, from: temporaryDirectory.path);
+          final String relativePath =
+              path.relative(entity.path, from: temporaryDirectory.path);
           files.add(File(relativePath));
         }
       }
@@ -195,7 +222,8 @@ class DiagramGenerator {
     }
   }
 
-  Future<List<File>> _buildMoviesFromMetadata(List<AnimationMetadata> metadataList) async {
+  Future<List<File>> _buildMoviesFromMetadata(
+      List<AnimationMetadata> metadataList) async {
     final Directory destDir = Directory(assetDir);
     final List<File> outputs = <File>[];
     final List<WorkerJob> jobs = <WorkerJob>[];
@@ -216,7 +244,8 @@ class DiagramGenerator {
           // output.
           '-framerate', metadata.frameRate.toStringAsFixed(2),
           '-tune', 'animation', // Optimize the encoder for cell animation.
-          '-preset', 'veryslow', // Use the slowest (best quality) compression preset.
+          '-preset',
+          'veryslow', // Use the slowest (best quality) compression preset.
           // Almost lossless quality (can't use lossless '0' because Safari
           // doesn't support it).
           '-crf', '1',
@@ -255,10 +284,12 @@ class DiagramGenerator {
           ),
         );
       }
-      final AnimationMetadata metadata = AnimationMetadata.fromFile(metadataFile);
+      final AnimationMetadata metadata =
+          AnimationMetadata.fromFile(metadataFile);
       metadataList.add(metadata);
       animationFiles.add(metadata.metadataFile.absolute.path);
-      animationFiles.addAll(metadata.frameFiles.map((File file) => file.absolute.path));
+      animationFiles
+          .addAll(metadata.frameFiles.map((File file) => file.absolute.path));
     }
     final List<File> staticFiles = inputFiles.where((File input) {
       if (!input.isAbsolute) {
@@ -272,7 +303,8 @@ class DiagramGenerator {
       }
       return !animationFiles.contains(input.absolute.path);
     }).toList();
-    final List<File> convertedFiles = await _buildMoviesFromMetadata(metadataList);
+    final List<File> convertedFiles =
+        await _buildMoviesFromMetadata(metadataList);
     return staticFiles..addAll(convertedFiles);
   }
 
@@ -315,11 +347,15 @@ class DiagramGenerator {
 Future<void> main(List<String> arguments) async {
   final ArgParser parser = ArgParser();
   parser.addFlag('help', help: 'Print help.');
-  parser.addFlag('keep-tmp', help: "Don't cleanup after a run (don't remove temporary directory).");
+  parser.addFlag('keep-tmp',
+      help: "Don't cleanup after a run (don't remove temporary directory).");
   parser.addOption('tmpdir',
-      abbr: 't', help: 'Specify a temporary directory to use (implies --keep-tmp)');
+      abbr: 't',
+      help: 'Specify a temporary directory to use (implies --keep-tmp)');
   parser.addOption('device-id',
-      abbr: 'd', help: 'Specify a device to use for generating the diagrams', defaultsTo: 'linux');
+      abbr: 'd',
+      help: 'Specify a device to use for generating the diagrams',
+      defaultsTo: 'linux');
   parser.addMultiOption('category',
       abbr: 'c',
       help: 'Specify the categories of diagrams that should be '
@@ -337,9 +373,9 @@ Future<void> main(List<String> arguments) async {
     exit(0);
   }
 
-  final String deviceId = flags['device-id'] as String;
-  bool keepTemporaryDirectory = flags['keep-tmp'] as bool;
-  String tmpDirFlag = (flags['tmpdir'] as String) ?? '';
+  final String deviceId = flags['device-id'] as String? ?? '';
+  bool keepTemporaryDirectory = flags['keep-tmp'] as bool? ?? false;
+  String tmpDirFlag = flags['tmpdir'] as String? ?? '';
   if (tmpDirFlag.isEmpty && deviceId == 'linux') {
     // On linux, we can't pass command line arguments to a Flutter app, so we
     // just use a well-known location for the output.
@@ -352,16 +388,15 @@ Future<void> main(List<String> arguments) async {
     }
   }
 
-  Directory temporaryDirectory;
-  if (tmpDirFlag.isNotEmpty) {
-    temporaryDirectory = Directory(tmpDirFlag);
-    temporaryDirectory.createSync(recursive: true);
-    keepTemporaryDirectory = true;
-  }
+  assert(tmpDirFlag.isNotEmpty);
+  final Directory temporaryDirectory = Directory(tmpDirFlag);
+  temporaryDirectory.createSync(recursive: true);
+  keepTemporaryDirectory = true;
 
   DiagramGenerator(
     device: deviceId,
     temporaryDirectory: temporaryDirectory,
     cleanup: !keepTemporaryDirectory,
-  ).generateDiagrams(flags['category'] as List<String>, flags['name'] as List<String>);
+  ).generateDiagrams(
+      flags['category'] as List<String>, flags['name'] as List<String>);
 }

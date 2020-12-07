@@ -13,10 +13,10 @@ import 'diagram_step.dart';
 
 class _VideoDescription extends StatelessWidget {
   const _VideoDescription({
-    Key key,
-    this.title,
-    this.user,
-    this.viewCount,
+    Key? key,
+    required this.title,
+    required this.user,
+    required this.viewCount,
   }) : super(key: key);
 
   final String title;
@@ -56,10 +56,10 @@ class _VideoDescription extends StatelessWidget {
 /// A sample list item that looks similar to a YouTube related video item.
 class CustomListItem extends StatelessWidget {
   const CustomListItem({
-    this.thumbnail,
-    this.title,
-    this.user,
-    this.viewCount,
+    required this.thumbnail,
+    required this.title,
+    required this.user,
+    required this.viewCount,
   });
 
   final Widget thumbnail;
@@ -98,12 +98,12 @@ class CustomListItem extends StatelessWidget {
 
 class _ArticleDescription extends StatelessWidget {
   const _ArticleDescription({
-    Key key,
-    this.title,
-    this.subtitle,
-    this.author,
-    this.publishDate,
-    this.readDuration,
+    Key? key,
+    required this.title,
+    required this.subtitle,
+    required this.author,
+    required this.publishDate,
+    required this.readDuration,
   }) : super(key: key);
 
   final String title;
@@ -174,13 +174,13 @@ class _ArticleDescription extends StatelessWidget {
 /// A sample article list item with multi-line [title] and [subtitle]s.
 class CustomListItemTwo extends StatelessWidget {
   const CustomListItemTwo({
-    Key key,
-    this.thumbnail,
-    this.title,
-    this.subtitle,
-    this.author,
-    this.publishDate,
-    this.readDuration,
+    Key? key,
+    required this.thumbnail,
+    required this.title,
+    required this.subtitle,
+    required this.author,
+    required this.publishDate,
+    required this.readDuration,
   }) : super(key: key);
 
   final Widget thumbnail;
@@ -262,7 +262,6 @@ class CustomListItemDiagram extends StatelessWidget implements DiagramMetadata {
             ),
           ),
         );
-        break;
       case 'custom_list_item_b':
        return ConstrainedBox(
           key: UniqueKey(),
@@ -300,10 +299,8 @@ class CustomListItemDiagram extends StatelessWidget implements DiagramMetadata {
             ),
           ),
        );
-        break;
       default:
         return const Text('Error');
-        break;
     }
   }
 }

@@ -32,7 +32,7 @@ class TweensDiagram extends StatefulWidget implements DiagramMetadata {
 
 class TweensDiagramState extends State<TweensDiagram>
     with TickerProviderStateMixin<TweensDiagram> {
-  AnimationController _controller;
+  late AnimationController _controller;
 
   @override
   void initState() {
@@ -67,7 +67,7 @@ class TweensDiagramState extends State<TweensDiagram>
       child: Center(
         child: AnimatedBuilder(
           animation: _controller,
-          builder: (BuildContext context, Widget _) {
+          builder: (BuildContext context, Widget? _) {
             return Center(
               child: Table(
                 columnWidths: const <int, TableColumnWidth>{

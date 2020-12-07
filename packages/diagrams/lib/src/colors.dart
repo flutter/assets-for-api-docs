@@ -31,10 +31,10 @@ class ColorSwatchDiagram extends ColorDiagram {
   Widget build(BuildContext context) {
     final List<Widget> items = <Widget>[];
     for (final int key in keys) {
-      final Color textColor = ThemeData.estimateBrightnessForColor(swatch[key]) == Brightness.light ? Colors.black : Colors.white;
+      final Color textColor = ThemeData.estimateBrightnessForColor(swatch[key]!) == Brightness.light ? Colors.black : Colors.white;
       TextStyle style = TextStyle(color: textColor, fontSize: _kFontSize);
       String label;
-      if (swatch[key].value == swatch.value) {
+      if (swatch[key]!.value == swatch.value) {
         label = name;
         style = style.copyWith(fontWeight: FontWeight.w800);
       } else {
@@ -47,7 +47,7 @@ class ColorSwatchDiagram extends ColorDiagram {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Text(label, style: style),
-            Text('0x${swatch[key].value.toRadixString(16).toUpperCase()}', style: style),
+            Text('0x${swatch[key]!.value.toRadixString(16).toUpperCase()}', style: style),
           ],
         ),
       ));
@@ -78,7 +78,7 @@ class ColorListDiagram extends ColorDiagram {
   Widget build(BuildContext context) {
     final List<Widget> items = <Widget>[];
     for (final String key in colors.keys) {
-      final Color textColor = colors[key];
+      final Color textColor = colors[key]!;
       final TextStyle style = TextStyle(color: textColor, fontSize: _kFontSize);
       items.add(Container(
         padding: const EdgeInsets.all(_kPadding),

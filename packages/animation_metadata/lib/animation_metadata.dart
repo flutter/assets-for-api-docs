@@ -13,10 +13,10 @@ class AnimationMetadata {
   AnimationMetadata.fromData({
     this.name,
     this.category,
-    this.duration,
-    this.frameRate,
-    this.frameFiles,
-    this.metadataFile,
+    required this.duration,
+    required this.frameRate,
+    required this.frameFiles,
+    required this.metadataFile,
   });
 
   factory AnimationMetadata.fromFile(File metadataFile) {
@@ -64,11 +64,11 @@ class AnimationMetadata {
 
   /// The category that this diagram is part of. This determines the output
   /// directory that it ends up in.
-  final String category;
+  final String? category;
 
   /// The base name of the diagram. This is the basis for the filenames that
   /// the diagram uses.
-  final String name;
+  final String? name;
 
   /// The frame rate, in frames per second, of the animation.
   final double frameRate;

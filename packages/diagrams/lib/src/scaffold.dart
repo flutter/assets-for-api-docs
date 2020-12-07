@@ -15,7 +15,7 @@ const String _scaffoldBackgroundColor = 'scaffold_background_color';
 const String _scaffoldBottomAppBar = 'scaffold_bottom_app_bar';
 
 class ScaffoldDiagram extends StatefulWidget implements DiagramMetadata {
-  const ScaffoldDiagram({Key key, this.name}) : super(key: key);
+  const ScaffoldDiagram({Key? key, required this.name}) : super(key: key);
 
   @override
   final String name;
@@ -29,7 +29,7 @@ class ScaffoldDiagramState extends State<ScaffoldDiagram> {
 
   @override
   Widget build(BuildContext context) {
-    Widget returnWidget;
+    late Widget returnWidget;
     switch (widget.name) {
       case _scaffold:
         returnWidget = Scaffold(

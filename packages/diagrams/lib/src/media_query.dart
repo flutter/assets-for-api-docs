@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'diagram_step.dart';
 
 class MediaQueryDiagram extends StatefulWidget implements DiagramMetadata {
-  const MediaQueryDiagram({Key key, @required this.name}) : super(key: key);
+  const MediaQueryDiagram({Key? key, required this.name}) : super(key: key);
 
   @override
   final String name;

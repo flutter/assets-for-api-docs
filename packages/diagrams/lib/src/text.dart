@@ -77,7 +77,7 @@ class TextDiagram extends StatelessWidget implements DiagramMetadata {
                   foreground: Paint()
                     ..style = PaintingStyle.stroke
                     ..strokeWidth = 6
-                    ..color = Colors.blue[700],
+                    ..color = Colors.blue[700]!,
                 ),
               ),
               // Solid text as fill.
@@ -203,7 +203,7 @@ class TextDiagramPainter extends CustomPainter {
       paint,
     );
 
-    paint.color = Colors.blue[900];
+    paint.color = Colors.blue[900]!;
     // Top
     canvas.drawLine(
       baseOffset,
@@ -219,7 +219,7 @@ class TextDiagramPainter extends CustomPainter {
     );
 
     paint.strokeWidth = 2;
-    paint.color = Colors.red[900];
+    paint.color = Colors.red[900]!;
     // emTop
     canvas.drawLine(
       baseOffset + Offset(0, emTop),
@@ -244,7 +244,7 @@ class TextDiagramPainter extends CustomPainter {
     path.lineTo(baseOffset.dx + width + 10, baseOffset.dy + emBottom);
     canvas.drawPath(path, paint);
 
-    paint.color = Colors.blue[900];
+    paint.color = Colors.blue[900]!;
     path = Path();
     path.moveTo(baseOffset.dx - 10, baseOffset.dy + top);
     path.lineTo(baseOffset.dx - 25, baseOffset.dy + top);
@@ -266,7 +266,7 @@ class TextDiagramPainter extends CustomPainter {
     label.layout();
     label.paint(canvas, baseOffset + Offset(-25.0 - 80, (top + bottom) / 2 - 16));
 
-    paint.color = Colors.red[900];
+    paint.color = Colors.red[900]!;
     label = TextPainter(
       text: const TextSpan(
         text: 'Font Size\n(EM-square)',
@@ -365,7 +365,7 @@ class TextHeightComparisonPainter extends CustomPainter {
   const TextHeightComparisonPainter(this.text, this.height, this.index);
 
   final String text;
-  final double height;
+  final double? height;
   final int index;
 
   static const int largeIndex = 99;
@@ -409,7 +409,7 @@ class TextHeightComparisonPainter extends CustomPainter {
 
     textPainter.paint(canvas, baseOffset);
 
-    paint.color = Colors.red[900];
+    paint.color = Colors.red[900]!;
     // Top
     canvas.drawLine(
       baseOffset,
@@ -436,7 +436,7 @@ class TextHeightComparisonPainter extends CustomPainter {
     paint.strokeWidth = 2;
     paint.style = PaintingStyle.stroke;
 
-    paint.color = Colors.blue[900];
+    paint.color = Colors.blue[900]!;
     final Path path = Path();
     path.moveTo(baseOffset.dx - 10, baseOffset.dy + top);
     path.lineTo(baseOffset.dx - 25, baseOffset.dy + top);

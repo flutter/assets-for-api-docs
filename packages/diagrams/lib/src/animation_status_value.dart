@@ -35,7 +35,7 @@ class AnimationStatusValueDiagram extends StatefulWidget
 class AnimationStatusValueDiagramState
     extends State<AnimationStatusValueDiagram>
     with TickerProviderStateMixin<AnimationStatusValueDiagram> {
-  AnimationController _controller;
+  late AnimationController _controller;
   String _status = 'dismissed';
 
   @override
@@ -77,7 +77,7 @@ class AnimationStatusValueDiagramState
       child: Center(
         child: AnimatedBuilder(
           animation: _controller,
-          builder: (BuildContext context, Widget _) {
+          builder: (BuildContext context, Widget? _) {
             return Table(
               columnWidths: const <int, TableColumnWidth>{
                 0: FixedColumnWidth(180),

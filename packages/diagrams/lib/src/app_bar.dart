@@ -12,7 +12,7 @@ import 'diagram_step.dart';
 import 'utils.dart';
 
 class AppBarDiagram extends StatefulWidget implements DiagramMetadata {
-  const AppBarDiagram({Key key, @required this.name}) : super(key: key);
+  const AppBarDiagram({Key? key, required this.name}) : super(key: key);
 
   @override
   final String name;

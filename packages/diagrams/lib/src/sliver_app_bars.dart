@@ -62,7 +62,7 @@ class SliverAppBarDiagramState extends State<SliverAppBarDiagram> with TickerPro
   @override
   void initState() {
     super.initState();
-    SchedulerBinding.instance.scheduleFrameCallback((Duration _) {
+    SchedulerBinding.instance!.scheduleFrameCallback((Duration _) {
       _play();
     });
   }
@@ -71,7 +71,7 @@ class SliverAppBarDiagramState extends State<SliverAppBarDiagram> with TickerPro
   void didUpdateWidget(SliverAppBarDiagram oldWidget) {
     super.didUpdateWidget(oldWidget);
     _scrollController.jumpTo(0.0);
-    SchedulerBinding.instance.scheduleFrameCallback((Duration _) {
+    SchedulerBinding.instance!.scheduleFrameCallback((Duration _) {
       _play();
     });
   }
@@ -97,7 +97,7 @@ class SliverAppBarDiagramState extends State<SliverAppBarDiagram> with TickerPro
     }
   }
 
-  Future<void> _animate({double to, Duration duration}) {
+  Future<void> _animate({required double to, required Duration duration}) {
     final ScrollPositionWithSingleContext position = _scrollController.position as ScrollPositionWithSingleContext;
     final FakeDragScrollActivity activity = FakeDragScrollActivity(
       position,

@@ -23,7 +23,7 @@ class BoxFitDiagram extends StatelessWidget implements DiagramMetadata {
   Widget build(BuildContext context) {
     final Widget inner = Container(
       decoration: BoxDecoration(
-        border: Border.all(width: 2.0, color: Colors.blue[300]),
+        border: Border.all(width: 2.0, color: Colors.blue[300]!),
         color: Colors.blue[100],
       ),
       child: FittedBox(
@@ -32,11 +32,11 @@ class BoxFitDiagram extends StatelessWidget implements DiagramMetadata {
           width: 5.0 * 12.0,
           height: 5.0 * 12.0,
           decoration: BoxDecoration(
-            border: Border.all(width: 2.0, color: Colors.teal[700]),
+            border: Border.all(width: 2.0, color: Colors.teal[700]!),
             color: Colors.teal[600],
           ),
           child: GridPaper(
-            color: Colors.teal[400],
+            color: Colors.teal[400]!,
             divisions: 1,
             interval: 18.5,
             subdivisions: 1,

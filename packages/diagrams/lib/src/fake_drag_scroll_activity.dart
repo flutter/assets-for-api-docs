@@ -17,32 +17,27 @@ import 'package:flutter/widgets.dart';
 /// to trigger all scroll-related effects in [SliverAppBar]s.
 class FakeDragScrollActivity extends ScrollActivity {
   FakeDragScrollActivity(
-      ScrollActivityDelegate delegate, {
-        @required double from,
-        @required double to,
-        @required Duration duration,
-        @required Curve curve,
-        @required TickerProvider vsync,
-      }) : assert(from != null),
-        assert(to != null),
-        assert(duration != null),
-        assert(duration > Duration.zero),
-        assert(curve != null),
+    ScrollActivityDelegate delegate, {
+    required double from,
+    required double to,
+    required Duration duration,
+    required Curve curve,
+    required TickerProvider vsync,
+  })   : _completer = Completer<void>(),
+        _controller = AnimationController.unbounded(
+          value: from,
+          debugLabel: '$FakeDragScrollActivity',
+          vsync: vsync,
+        ),
+        _lastValue = from,
         super(delegate) {
-    _lastValue = from;
-    _completer = Completer<void>();
-    _controller = AnimationController.unbounded(
-      value: from,
-      debugLabel: '$runtimeType',
-      vsync: vsync,
-    )
+    _controller
       ..addListener(_tick)
-      ..animateTo(to, duration: duration, curve: curve)
-          .whenComplete(_end);
+      ..animateTo(to, duration: duration, curve: curve).whenComplete(_end);
   }
 
-  Completer<void> _completer;
-  AnimationController _controller;
+  final Completer<void> _completer;
+  final AnimationController _controller;
 
   Future<void> get done => _completer.future;
 
@@ -57,12 +52,18 @@ class FakeDragScrollActivity extends ScrollActivity {
   }
 
   void _end() {
-    delegate?.goBallistic(velocity);
+    delegate.goBallistic(velocity);
   }
 
   @override
-  void dispatchOverscrollNotification(ScrollMetrics metrics, BuildContext context, double overscroll) {
-    OverscrollNotification(metrics: metrics, context: context, overscroll: overscroll, velocity: velocity).dispatch(context);
+  void dispatchOverscrollNotification(
+      ScrollMetrics metrics, BuildContext context, double overscroll) {
+    OverscrollNotification(
+            metrics: metrics,
+            context: context,
+            overscroll: overscroll,
+            velocity: velocity)
+        .dispatch(context);
   }
 
   @override

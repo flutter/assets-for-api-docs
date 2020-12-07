@@ -13,26 +13,25 @@ import 'package:flutter/material.dart' hide Image;
 
 import 'diagram_step.dart';
 
-Completer<void> touch;
 final GlobalKey key = GlobalKey();
 
 const ImageProvider destinationImageProvider = ExactAssetImage('assets/blend_mode_destination.jpeg', package: 'diagrams');
 const ImageProvider sourceImageProvider = ExactAssetImage('assets/blend_mode_source.png', package: 'diagrams');
 const ImageProvider gridImageProvider = ExactAssetImage('assets/blend_mode_grid.png', package: 'diagrams');
 
-Image destinationImage, sourceImage, gridImage;
+Image? destinationImage, sourceImage, gridImage;
 int pageIndex = 0;
 
 Future<Image> getImage(ImageProvider provider) {
   final Completer<Image> completer = Completer<Image>();
   final ImageStream stream = provider.resolve(const ImageConfiguration());
-  ImageStreamListener listener;
+  late final ImageStreamListener listener;
   listener = ImageStreamListener(
     (ImageInfo image, bool sync) {
       completer.complete(image.image);
       stream.removeListener(listener);
     },
-    onError: (dynamic error, StackTrace stack) {
+    onError: (Object error, StackTrace? stack) {
       print(error);
       throw error;
     },
@@ -146,11 +145,11 @@ class BlendModePainter extends CustomPainter {
     final Rect bounds = (Offset.zero & size).deflate(size.shortestSide * 0.025);
     canvas.saveLayer(bounds, Paint()..blendMode = BlendMode.srcOver);
     assert(size.shortestSide == size.longestSide);
-    paintTestImage(canvas, bounds, destinationImage);
+    paintTestImage(canvas, bounds, destinationImage!);
     canvas.saveLayer(bounds, Paint()..blendMode = mode);
     canvas.translate(0.0, size.height);
     canvas.rotate(-pi / 2.0);
-    paintTestImage(canvas, bounds, sourceImage);
+    paintTestImage(canvas, bounds, sourceImage!);
     canvas.restore();
     canvas.restore();
   }
@@ -245,7 +244,7 @@ class BlendModeDiagramStep extends DiagramStep<BlendModeDiagram> {
   @override
   final String category = 'dart-ui';
 
-  List<BlendModeDiagram> _diagrams;
+  List<BlendModeDiagram>? _diagrams;
   @override
   Future<List<BlendModeDiagram>> get diagrams async {
     if (_diagrams == null) {
@@ -255,10 +254,10 @@ class BlendModeDiagramStep extends DiagramStep<BlendModeDiagram> {
 
       _diagrams = <BlendModeDiagram>[];
       for (final BlendMode mode in BlendMode.values) {
-        _diagrams.add(BlendModeDiagram(mode));
+        _diagrams!.add(BlendModeDiagram(mode));
       }
     }
-    return _diagrams;
+    return _diagrams!;
   }
 
   @override

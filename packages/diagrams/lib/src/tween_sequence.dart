@@ -32,7 +32,7 @@ class TweenSequenceDiagram extends StatefulWidget implements DiagramMetadata {
 
 class TweenSequenceDiagramState extends State<TweenSequenceDiagram>
     with TickerProviderStateMixin<TweenSequenceDiagram> {
-  AnimationController _controller;
+  late AnimationController _controller;
   int _activeItem = 0;
 
   @override
@@ -75,7 +75,7 @@ class TweenSequenceDiagramState extends State<TweenSequenceDiagram>
   final Animatable<Color> _tweenSequence =
       TweenSequence<Color>(<TweenSequenceItem<Color>>[
     TweenSequenceItem<Color>(
-      tween: ColorTween(begin: Colors.yellow, end: Colors.green),
+      tween: ColorTween(begin: Colors.yellow, end: Colors.green) as Animatable<Color>,
       weight: 2,
     ),
     TweenSequenceItem<Color>(
@@ -83,7 +83,7 @@ class TweenSequenceDiagramState extends State<TweenSequenceDiagram>
       weight: 1,
     ),
     TweenSequenceItem<Color>(
-      tween: ColorTween(begin: Colors.green, end: Colors.red),
+      tween: ColorTween(begin: Colors.green, end: Colors.red) as Animatable<Color>,
       weight: 2,
     ),
   ]);
@@ -99,7 +99,7 @@ class TweenSequenceDiagramState extends State<TweenSequenceDiagram>
       child: Center(
         child: AnimatedBuilder(
           animation: _controller,
-          builder: (BuildContext context, Widget _) {
+          builder: (BuildContext context, Widget? _) {
             return Center(
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,

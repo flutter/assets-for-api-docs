@@ -1,4 +1,4 @@
-// Copyright 2018 The Chromium Authors. All rights reserved.
+// Copyright 2020 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -7,8 +7,16 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:process/process.dart';
-import 'package:mockito/mockito.dart';
-import 'package:test/test.dart';
+import 'package:test/test.dart' hide TypeMatcher, isInstanceOf;
+
+class FakeInvocationRecord {
+  FakeInvocationRecord(this.invocation, [this.workingDirectory]);
+  final List<String> invocation;
+  final String? workingDirectory;
+
+  @override
+  String toString() => invocation.join(' ');
+}
 
 /// A mock that can be used to fake a process manager that runs commands
 /// and returns results.
@@ -17,125 +25,164 @@ import 'package:test/test.dart';
 /// each command line (with arguments).
 ///
 /// Call [verifyCalls] to verify that each desired call occurred.
-class FakeProcessManager extends Mock implements ProcessManager {
-  FakeProcessManager({this.stdinResults}) {
-    _setupMock();
-  }
+class FakeProcessManager implements ProcessManager {
+  FakeProcessManager(this.stdinResults, {this.commandsThrow = false});
 
   /// The callback that will be called each time stdin input is supplied to
   /// a call.
   final StringReceivedCallback stdinResults;
 
+  /// Set to true if all commands run with this process manager should throw an
+  /// exception.
+  final bool commandsThrow;
+
   /// The list of results that will be sent back, organized by the command line
   /// that will produce them. Each command line has a list of returned stdout
   /// output that will be returned on each successive call.
-  Map<String, List<ProcessResult>> _fakeResults = <String, List<ProcessResult>>{};
-  Map<String, List<ProcessResult>> get fakeResults => _fakeResults;
-  set fakeResults(Map<String, List<ProcessResult>> value) {
-    _fakeResults = <String, List<ProcessResult>>{};
-    for (final String key in value.keys) {
-      _fakeResults[key] = <ProcessResult>[ ...value[key] ?? <ProcessResult>[ProcessResult(0, 0, '', '')] ]
-        ;
+  Map<FakeInvocationRecord, List<ProcessResult>> _fakeResults =
+  <FakeInvocationRecord, List<ProcessResult>>{};
+  Map<FakeInvocationRecord, List<ProcessResult>> get fakeResults => _fakeResults;
+  set fakeResults(Map<FakeInvocationRecord, List<ProcessResult>> value) {
+    _fakeResults = <FakeInvocationRecord, List<ProcessResult>>{};
+    for (final FakeInvocationRecord key in value.keys) {
+      _fakeResults[key] = (value[key] ?? <ProcessResult>[ProcessResult(0, 0, '', '')]).toList();
     }
   }
 
   /// The list of invocations that occurred, in the order they occurred.
-  List<Invocation> invocations = <Invocation>[];
+  List<FakeInvocationRecord> invocations = <FakeInvocationRecord>[];
 
-  /// Verify that the given command lines were called, in the given order, and that the
-  /// parameters were in the same order.
-  void verifyCalls(List<String> calls) {
+  /// Verify that the given command lines were called, in the given order, and
+  /// that the parameters were in the same order.
+  void verifyCalls(Iterable<FakeInvocationRecord> calls) {
     int index = 0;
-    for (final String call in calls) {
-      expect(call.split(' '), orderedEquals(invocations[index].positionalArguments[0] as Iterable<dynamic>));
+    expect(invocations.length, equals(calls.length));
+    for (final FakeInvocationRecord call in calls) {
+      expect(call.invocation, orderedEquals(invocations[index].invocation));
+      expect(call.workingDirectory, equals(invocations[index].workingDirectory), reason: 'Wrong working directory for ${call.invocation}');
       index++;
     }
-    expect(invocations.length, equals(calls.length));
   }
 
-  ProcessResult _popResult(List<String> command) {
-    final String key = command.join(' ');
+  ProcessResult _popResult(FakeInvocationRecord command) {
     expect(fakeResults, isNotEmpty);
-    expect(fakeResults, contains(key));
-    expect(fakeResults[key], isNotEmpty);
-    return fakeResults[key].removeAt(0);
+    List<ProcessResult>? foundResult;
+    late FakeInvocationRecord foundCommand;
+    for (final FakeInvocationRecord fakeCommand in fakeResults.keys) {
+      if (fakeCommand.invocation.length != command.invocation.length) {
+        continue;
+      }
+      bool listsIdentical = true;
+      for (int i = 0; i < fakeCommand.invocation.length; ++i) {
+        if (fakeCommand.invocation[i] != command.invocation[i]) {
+          listsIdentical = false;
+          break;
+        }
+      }
+      if (listsIdentical) {
+        foundResult = fakeResults[fakeCommand]!;
+        foundCommand = fakeCommand;
+        break;
+      }
+    }
+    expect(foundResult, isNotNull, reason: '$command not found in expected results: ${fakeResults.keys}');
+    return fakeResults[foundCommand]?.removeAt(0) ?? ProcessResult(0, 0, '', '');
   }
 
-  FakeProcess _popProcess(List<String> command) =>
-      FakeProcess(_popResult(command), stdinResults: stdinResults);
+  FakeProcess _popProcess(FakeInvocationRecord command) =>
+      FakeProcess(_popResult(command), stdinResults);
 
-  Future<Process> _nextProcess(Invocation invocation) async {
-    invocations.add(invocation);
-    return Future<Process>.value(_popProcess(invocation.positionalArguments[0] as List<String>));
+  Future<Process> _nextProcess(List<String> invocation, String? workingDirectory) async {
+    final FakeInvocationRecord record = FakeInvocationRecord(invocation, workingDirectory);
+    invocations.add(record);
+    return Future<Process>.value(_popProcess(record));
   }
 
-  ProcessResult _nextResultSync(Invocation invocation) {
-    invocations.add(invocation);
-    return _popResult(invocation.positionalArguments[0] as List<String>);
+  ProcessResult _nextResultSync(List<String> invocation, String? workingDirectory) {
+    final FakeInvocationRecord record = FakeInvocationRecord(invocation, workingDirectory);
+    invocations.add(record);
+    return _popResult(record);
   }
 
-  Future<ProcessResult> _nextResult(Invocation invocation) async {
-    invocations.add(invocation);
-    return Future<ProcessResult>.value(_popResult(invocation.positionalArguments[0] as List<String>));
+  Future<ProcessResult> _nextResult(List<String> invocation, String? workingDirectory) async {
+    final FakeInvocationRecord record = FakeInvocationRecord(invocation, workingDirectory);
+    invocations.add(record);
+    return Future<ProcessResult>.value(_popResult(record));
   }
 
-  void _setupMock() {
-    // Note that not all possible types of invocations are covered here, just the ones
-    // expected to be called.
-    when(start(
-      captureAny,
-      environment: captureAnyNamed('environment'),
-      workingDirectory: captureAnyNamed('workingDirectory'),
-      includeParentEnvironment: captureAnyNamed('includeParentEnvironment'),
-      runInShell: captureAnyNamed('runInShell'),
-      mode: captureAnyNamed('mode'),
-    )).thenAnswer(_nextProcess);
+  @override
+  bool canRun(dynamic executable, {String? workingDirectory}) {
+    return true;
+  }
 
-    when(run(
-      captureAny,
-      environment: captureAnyNamed('environment'),
-      workingDirectory: captureAnyNamed('workingDirectory'),
-      includeParentEnvironment: captureAnyNamed('includeParentEnvironment'),
-      runInShell: captureAnyNamed('runInShell'),
-      stdoutEncoding: captureAnyNamed('stdoutEncoding'),
-      stderrEncoding: captureAnyNamed('stderrEncoding'),
-    )).thenAnswer(_nextResult);
+  @override
+  bool killPid(int pid, [ProcessSignal signal = ProcessSignal.sigterm]) {
+    return true;
+  }
 
-    when(runSync(
-      captureAny,
-      environment: captureAnyNamed('environment'),
-      workingDirectory: captureAnyNamed('workingDirectory'),
-      includeParentEnvironment: captureAnyNamed('includeParentEnvironment'),
-      runInShell: captureAnyNamed('runInShell'),
-      stdoutEncoding: captureAnyNamed('stdoutEncoding'),
-      stderrEncoding: captureAnyNamed('stderrEncoding'),
-    )).thenAnswer(_nextResultSync);
+  @override
+  Future<ProcessResult> run(
+      List<dynamic> command, {
+        String? workingDirectory,
+        Map<String, String>? environment,
+        bool includeParentEnvironment = true,
+        bool runInShell = false,
+        Encoding stdoutEncoding = systemEncoding,
+        Encoding stderrEncoding = systemEncoding,
+      }) {
+    if (commandsThrow) {
+      throw const ProcessException('failed_executable', <String>[]);
+    }
+    return _nextResult(command as List<String>, workingDirectory);
+  }
 
-    when(killPid(captureAny, captureAny)).thenReturn(true);
+  @override
+  ProcessResult runSync(
+      List<dynamic> command, {
+        String? workingDirectory,
+        Map<String, String>? environment,
+        bool includeParentEnvironment = true,
+        bool runInShell = false,
+        Encoding stdoutEncoding = systemEncoding,
+        Encoding stderrEncoding = systemEncoding,
+      }) {
+    if (commandsThrow) {
+      throw const ProcessException('failed_executable', <String>[]);
+    }
+    return _nextResultSync(command as List<String>, workingDirectory);
+  }
 
-    when(canRun(captureAny, workingDirectory: captureAnyNamed('workingDirectory')))
-        .thenReturn(true);
+  @override
+  Future<Process> start(
+      List<dynamic> command, {
+        String? workingDirectory,
+        Map<String, String>? environment,
+        bool includeParentEnvironment = true,
+        bool runInShell = false,
+        ProcessStartMode mode = ProcessStartMode.normal,
+      }) {
+    if (commandsThrow) {
+      throw const ProcessException('failed_executable', <String>[]);
+    }
+    return _nextProcess(command as List<String>, workingDirectory);
   }
 }
 
-/// A fake process that can be used to interact with a process "started" by the FakeProcessManager.
-class FakeProcess extends Mock implements Process {
-  FakeProcess(ProcessResult result, {void stdinResults(String input)})
-      : stdoutStream = Stream<List<int>>.fromIterable(<List<int>>[(result.stdout as String).codeUnits]),
-        stderrStream = Stream<List<int>>.fromIterable(<List<int>>[(result.stderr as String).codeUnits]),
+typedef StdinResults = void Function(String input);
+
+/// A fake process that can be used to interact with a process "started" by the
+/// FakeProcessManager.
+class FakeProcess implements Process {
+  FakeProcess(ProcessResult result, StdinResults stdinResults)
+      : stdoutStream = Stream<List<int>>.value((result.stdout as String).codeUnits),
+        stderrStream = Stream<List<int>>.value((result.stderr as String).codeUnits),
         desiredExitCode = result.exitCode,
-        stdinSink = IOSink(StringStreamConsumer(stdinResults)) {
-    _setupMock();
-  }
+        stdinSink = IOSink(StringStreamConsumer(stdinResults));
 
   final IOSink stdinSink;
   final Stream<List<int>> stdoutStream;
   final Stream<List<int>> stderrStream;
   final int desiredExitCode;
-
-  void _setupMock() {
-    when(kill(captureAny)).thenReturn(true);
-  }
 
   @override
   Future<int> get exitCode => Future<int>.value(desiredExitCode);
@@ -151,6 +198,11 @@ class FakeProcess extends Mock implements Process {
 
   @override
   Stream<List<int>> get stdout => stdoutStream;
+
+  @override
+  bool kill([ProcessSignal signal = ProcessSignal.sigterm]) {
+    return true;
+  }
 }
 
 /// Callback used to receive stdin input when it occurs.

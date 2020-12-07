@@ -25,9 +25,9 @@ String getName(Type type) {
     uppercase,
     (Match match) {
       if (match.start != 0) {
-        return '_${match.group(1).toLowerCase()}';
+        return '_${match.group(1)!.toLowerCase()}';
       } else {
-        return match.group(1).toLowerCase();
+        return match.group(1)!.toLowerCase();
       }
     },
   );
@@ -37,7 +37,7 @@ String getName(Type type) {
 /// [FadeTransition]. See transitions.dart for more examples.
 abstract class TransitionDiagram<T> extends StatefulWidget implements DiagramMetadata {
   const TransitionDiagram({
-    Key key,
+    Key? key,
     this.decorate = true,
   }) : super(key: key);
 
@@ -62,8 +62,8 @@ abstract class TransitionDiagram<T> extends StatefulWidget implements DiagramMet
 class TransitionDiagramState<T> extends State<TransitionDiagram<T>>
     with TickerProviderStateMixin<TransitionDiagram<T>> {
   bool selected = false;
-  Animation<T> animation;
-  AnimationController _controller;
+  late Animation<T> animation;
+  late AnimationController _controller;
 
   @override
   void initState() {
@@ -82,7 +82,7 @@ class TransitionDiagramState<T> extends State<TransitionDiagram<T>>
 
   @override
   void dispose() {
-    _controller?.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -154,7 +154,7 @@ class TransitionDiagramState<T> extends State<TransitionDiagram<T>>
 }
 
 abstract class ImplicitAnimationDiagram<T> extends StatefulWidget implements DiagramMetadata {
-  const ImplicitAnimationDiagram({Key key}) : super(key: key);
+  const ImplicitAnimationDiagram({Key? key}) : super(key: key);
 
   /// The animation curve for the animation to use.
   Curve get curve;
@@ -300,7 +300,7 @@ class SparklinePainter extends CustomPainter {
 }
 
 class Sparkline extends StatelessWidget {
-  const Sparkline({Key key, this.curve, this.position}) : super(key: key);
+  const Sparkline({Key? key, required this.curve, required this.position}) : super(key: key);
 
   final Curve curve;
   final double position;
@@ -312,7 +312,7 @@ class Sparkline extends StatelessWidget {
 }
 
 class SampleWidget extends StatelessWidget {
-  const SampleWidget({Key key, this.small = false}) : super(key: key);
+  const SampleWidget({Key? key, this.small = false}) : super(key: key);
 
   final bool small;
 

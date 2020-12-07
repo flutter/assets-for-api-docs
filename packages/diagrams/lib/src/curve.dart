@@ -191,9 +191,9 @@ class CurveDescription extends CustomPainter {
 /// A sample tile that shows the effect of a curve on translation.
 class TranslateSampleTile extends StatelessWidget {
   const TranslateSampleTile({
-    Key key,
-    this.animation,
-    this.name,
+    Key? key,
+    required this.animation,
+    required this.name,
   }) : super(key: key);
 
   static const double blockHeight = 20.0;
@@ -203,7 +203,7 @@ class TranslateSampleTile extends StatelessWidget {
   final Animation<double> animation;
   final String name;
 
-  Widget mutate({Widget child}) {
+  Widget mutate({required Widget child}) {
     return Transform.translate(
       offset: Offset(0.0, 13.0 - animation.value * 26.0),
       child: child,
@@ -253,7 +253,7 @@ class TranslateSampleTile extends StatelessWidget {
         Text(
           name,
           textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.bodyText1.copyWith(
+          style: Theme.of(context).textTheme.bodyText1!.copyWith(
                 color: Colors.black,
                 fontSize: 12.0,
               ),
@@ -265,7 +265,7 @@ class TranslateSampleTile extends StatelessWidget {
 
 /// A sample tile that shows the effect of a curve on rotation.
 class RotateSampleTile extends TranslateSampleTile {
-  const RotateSampleTile({Key key, Animation<double> animation, String name})
+  const RotateSampleTile({Key? key, required Animation<double> animation, required String name})
       : super(
           key: key,
           animation: animation,
@@ -273,7 +273,7 @@ class RotateSampleTile extends TranslateSampleTile {
         );
 
   @override
-  Widget mutate({Widget child}) {
+  Widget mutate({required Widget child}) {
     return Transform.rotate(
       angle: animation.value * math.pi / 2.0,
       alignment: Alignment.center,
@@ -284,7 +284,7 @@ class RotateSampleTile extends TranslateSampleTile {
 
 /// A sample tile that shows the effect of a curve on scale.
 class ScaleSampleTile extends TranslateSampleTile {
-  const ScaleSampleTile({Key key, Animation<double> animation, String name})
+  const ScaleSampleTile({Key? key, required Animation<double> animation, required String name})
       : super(
           key: key,
           animation: animation,
@@ -292,7 +292,7 @@ class ScaleSampleTile extends TranslateSampleTile {
         );
 
   @override
-  Widget mutate({Widget child}) {
+  Widget mutate({required Widget child}) {
     return Transform.scale(
       scale: math.max(animation.value, 0.0),
       child: child,
@@ -302,7 +302,7 @@ class ScaleSampleTile extends TranslateSampleTile {
 
 /// A sample tile that shows the effect of a curve on opacity.
 class OpacitySampleTile extends TranslateSampleTile {
-  const OpacitySampleTile({Key key, Animation<double> animation, String name})
+  const OpacitySampleTile({Key? key, required Animation<double> animation, required String name})
       : super(
           key: key,
           animation: animation,
@@ -310,17 +310,17 @@ class OpacitySampleTile extends TranslateSampleTile {
         );
 
   @override
-  Widget mutate({Widget child}) {
-    return Opacity(opacity: animation.value.clamp(0.0, 1.0) as double, child: child);
+  Widget mutate({required Widget child}) {
+    return Opacity(opacity: animation.value.clamp(0.0, 1.0), child: child);
   }
 }
 
 class CurveDiagram extends StatefulWidget implements DiagramMetadata {
   const CurveDiagram({
-    String name,
-    this.caption,
+    required String name,
+    required this.caption,
     this.duration = _kCurveAnimationDuration,
-    this.curve,
+    required this.curve,
   }) : name = 'curve_$name';
 
   @override
@@ -336,8 +336,8 @@ class CurveDiagram extends StatefulWidget implements DiagramMetadata {
 }
 
 class CurveDiagramState extends State<CurveDiagram> with TickerProviderStateMixin<CurveDiagram> {
-  AnimationController controller;
-  CurvedAnimation animation;
+  late AnimationController controller;
+  late CurvedAnimation animation;
 
   @override
   void didUpdateWidget(CurveDiagram oldWidget) {

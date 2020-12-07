@@ -15,7 +15,7 @@ import 'package:path_provider/path_provider.dart';
 
 const platform_pkg.Platform platform = platform_pkg.LocalPlatform();
 
-Future<Directory> prepareOutputDirectory(String outputDir) async {
+Future<Directory> prepareOutputDirectory(String? outputDir) async {
   Directory directory;
   if (platform.isAndroid) {
       directory = Directory(
@@ -25,7 +25,7 @@ Future<Directory> prepareOutputDirectory(String outputDir) async {
         ),
       );
   } else {
-    directory = Directory(outputDir);
+    directory = Directory(outputDir!);
   }
   if (directory.existsSync()) {
     directory.deleteSync(recursive: true);
@@ -45,8 +45,8 @@ Future<void> main() async {
   parser.addOption('outputDir');
   final ArgResults flags = parser.parse(arguments);
 
-  final List<String> categories = flags['category'] as List<String> ?? <String>[];
-  final List<String> names = flags['name'] as List<String> ?? <String>[];
+  final List<String> categories = flags['category'] as List<String>;
+  final List<String> names = flags['name'] as List<String>;
 
   final DateTime start = DateTime.now();
   final Directory outputDirectory = await prepareOutputDirectory(platform.isAndroid ? null : '/tmp/diagrams');

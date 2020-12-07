@@ -17,7 +17,7 @@ import 'diagram_step.dart';
 class DiagramImage extends ImageProvider<DiagramImage> implements ui.Codec, ui.FrameInfo {
   DiagramImage(
     this.image, {
-    this.vsync,
+    required this.vsync,
     this.loadingDuration,
     this.scale = 1.0,
   });
@@ -25,7 +25,7 @@ class DiagramImage extends ImageProvider<DiagramImage> implements ui.Codec, ui.F
   @override
   final ui.Image image;
 
-  final Duration loadingDuration;
+  final Duration? loadingDuration;
   final TickerProvider vsync;
   final double scale;
   final StreamController<ImageChunkEvent> chunkEvents = StreamController<ImageChunkEvent>();
@@ -129,7 +129,7 @@ class FrameBuilderImageDiagram extends ImageDiagram {
           ),
           child: Image(
             image: image,
-            frameBuilder: (BuildContext context, Widget child, int frame, bool wasSynchronouslyLoaded) {
+            frameBuilder: (BuildContext context, Widget child, int? frame, bool wasSynchronouslyLoaded) {
               if (wasSynchronouslyLoaded) {
                 return child;
               }
@@ -164,13 +164,13 @@ class LoadingProgressImageDiagram extends ImageDiagram {
           ),
           child: Image(
             image: image,
-            loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent loadingProgress) {
+            loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
               if (loadingProgress == null) {
                 return child;
               }
               return Center(
                 child: CircularProgressIndicator(
-                  value: loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes,
+                  value: loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!,
                 ),
               );
             },

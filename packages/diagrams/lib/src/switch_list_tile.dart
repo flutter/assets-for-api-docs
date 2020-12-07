@@ -11,10 +11,10 @@ import 'diagram_step.dart';
 
 class LinkedLabelSwitch extends StatelessWidget {
   const LinkedLabelSwitch({
-    this.label,
-    this.padding,
-    this.value,
-    this.onChanged,
+    required this.label,
+    required this.padding,
+    required this.value,
+    required this.onChanged,
   });
 
   final String label;
@@ -57,11 +57,11 @@ class LinkedLabelSwitch extends StatelessWidget {
 
 class LabeledSwitch extends StatelessWidget {
   const LabeledSwitch({
-    this.label,
-    this.padding,
-    this.groupValue,
-    this.value,
-    this.onChanged,
+    required this.label,
+    required this.padding,
+    this.groupValue = false,
+    required this.value,
+    required this.onChanged,
   });
 
   final String label;
@@ -127,7 +127,6 @@ class _SwitchListTileDiagramState extends State<SwitchListTileDiagram> {
             ),
           ),
         );
-        break;
       case 'switch_list_tile_semantics':
         return ConstrainedBox(
           key: UniqueKey(),
@@ -148,7 +147,6 @@ class _SwitchListTileDiagramState extends State<SwitchListTileDiagram> {
             ),
           ),
         );
-        break;
       case 'switch_list_tile_custom':
         return ConstrainedBox(
           key: UniqueKey(),
@@ -169,10 +167,8 @@ class _SwitchListTileDiagramState extends State<SwitchListTileDiagram> {
             ),
           ),
         );
-        break;
       default:
         return const Text('Error');
-        break;
     }
   }
 }
