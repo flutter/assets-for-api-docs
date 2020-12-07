@@ -75,6 +75,7 @@ Future<void> main() async {
     ColorsDiagramStep(controller),
     ColumnDiagramStep(controller),
     ContainerDiagramStep(controller),
+    CupertinoAppDiagramStep(controller),
     CurveDiagramStep(controller),
     CustomListItemDiagramStep(controller),
     CustomScrollViewDiagramStep(controller),
