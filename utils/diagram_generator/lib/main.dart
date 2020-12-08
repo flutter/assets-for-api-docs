@@ -15,17 +15,17 @@ import 'package:path_provider/path_provider.dart';
 
 const platform_pkg.Platform platform = platform_pkg.LocalPlatform();
 
-Future<Directory> prepareOutputDirectory() async {
+Future<Directory> prepareOutputDirectory(String outputDir) async {
   Directory directory;
-  if (!platform.isAndroid) {
-    directory = Directory('/tmp/diagrams');
-  } else {
+  if (platform.isAndroid) {
       directory = Directory(
-        path.join(
+        outputDir ?? path.join(
           (await getApplicationDocumentsDirectory()).absolute.path,
           'diagrams',
         ),
       );
+  } else {
+    directory = Directory(outputDir);
   }
   if (directory.existsSync()) {
     directory.deleteSync(recursive: true);
@@ -36,9 +36,8 @@ Future<Directory> prepareOutputDirectory() async {
 
 Future<void> main() async {
   DiagramFlutterBinding.ensureInitialized();
-  const String stringArgs = String.fromEnvironment('args');
-  final List<String> arguments = stringArgs != ''
-      ? Uri.decodeComponent(stringArgs).split(' ')
+  final List<String> arguments = window.defaultRouteName.length > 5
+      ? Uri.decodeComponent(window.defaultRouteName.substring(5)).split(' ')
       : <String>[];
   final ArgParser parser = ArgParser();
   parser.addMultiOption('category');
@@ -49,10 +48,8 @@ Future<void> main() async {
   final List<String> categories = flags['category'] as List<String> ?? <String>[];
   final List<String> names = flags['name'] as List<String> ?? <String>[];
 
-  print('Filtered categories: $categories. Filtered names: $names');
-
   final DateTime start = DateTime.now();
-  final Directory outputDirectory = await prepareOutputDirectory();
+  final Directory outputDirectory = await prepareOutputDirectory(platform.isAndroid ? null : '/tmp/diagrams');
 
   final DiagramController controller = DiagramController(
     outputDirectory: outputDirectory,
@@ -133,7 +130,6 @@ Future<void> main() async {
 
   for (final DiagramStep<DiagramMetadata> step in steps) {
     if (categories.isNotEmpty && !categories.contains(step.category)) {
-      print('Skipping ${step.runtimeType}');
       continue;
     }
     final Directory stepOutputDirectory =

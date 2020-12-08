@@ -114,7 +114,7 @@ class DiagramGenerator {
       filters.add(path.basenameWithoutExtension(name));
     }
     final List<String> filterArgs = filters.isNotEmpty
-        ? <String>['--dart-define', 'args=${Uri.encodeComponent(filters.join(' '))}']
+        ? <String>['--route', 'args:${Uri.encodeComponent(filters.join(' '))}']
         : <String>[];
     final List<String> deviceArgs = <String>['-d', deviceId];
     final List<String> args = <String>[flutterCommand, 'run'] + filterArgs + deviceArgs;
@@ -314,7 +314,7 @@ class DiagramGenerator {
 
 Future<void> main(List<String> arguments) async {
   final ArgParser parser = ArgParser();
-  parser.addFlag('help', abbr: 'h', help: 'Print help.', negatable: false);
+  parser.addFlag('help', help: 'Print help.');
   parser.addFlag('keep-tmp', help: "Don't cleanup after a run (don't remove temporary directory).");
   parser.addOption('tmpdir',
       abbr: 't', help: 'Specify a temporary directory to use (implies --keep-tmp)');
@@ -340,8 +340,9 @@ Future<void> main(List<String> arguments) async {
   final String deviceId = flags['device-id'] as String;
   bool keepTemporaryDirectory = flags['keep-tmp'] as bool;
   String tmpDirFlag = (flags['tmpdir'] as String) ?? '';
-  if (tmpDirFlag.isEmpty && !deviceId.startsWith('android')) {
-    // Use use a well-known location for the output.
+  if (tmpDirFlag.isEmpty && deviceId == 'linux') {
+    // On linux, we can't pass command line arguments to a Flutter app, so we
+    // just use a well-known location for the output.
     tmpDirFlag = '/tmp/diagrams';
     // And we nuke it to make sure that we're not left with cruft.
     try {
