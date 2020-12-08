@@ -314,7 +314,7 @@ class DiagramGenerator {
 
 Future<void> main(List<String> arguments) async {
   final ArgParser parser = ArgParser();
-  parser.addFlag('help', abbr: 'h', help: 'Print help.', negatable: false);
+  parser.addFlag('help', help: 'Print help.');
   parser.addFlag('keep-tmp', help: "Don't cleanup after a run (don't remove temporary directory).");
   parser.addOption('tmpdir',
       abbr: 't', help: 'Specify a temporary directory to use (implies --keep-tmp)');
