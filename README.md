@@ -38,11 +38,6 @@ bin/generate.sh -c cupertino,material
 bin/generate.sh -n basic_material_app,blend_mode
 ```
 
-To specify a different device to use for generating diagrams, run:
-```sh
-bin/generate.sh -d "iphone"
-```
-
 `bin/generate.sh -h` lists available arguments.
 
 ### Prerequisites
