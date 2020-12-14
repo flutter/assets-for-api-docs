@@ -15,7 +15,7 @@ import 'utils.dart';
 final GlobalKey _splashKey = GlobalKey();
 
 class InkResponseSmallDiagram extends StatelessWidget implements DiagramMetadata {
-  InkResponseSmallDiagram({Key key}) : super(key: key);
+  InkResponseSmallDiagram({Key? key}) : super(key: key);
 
   final GlobalKey canvasKey = GlobalKey();
   final GlobalKey childKey = GlobalKey();
@@ -99,7 +99,7 @@ class InkResponseSmallDiagramStep extends DiagramStep<InkResponseSmallDiagram> {
   Future<File> generateDiagram(InkResponseSmallDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
     controller.advanceTime(Duration.zero);
-    final RenderBox target = _splashKey.currentContext.findRenderObject() as RenderBox;
+    final RenderBox target = _splashKey.currentContext!.findRenderObject() as RenderBox;
     final Offset targetOffset = target.localToGlobal(target.size.bottomRight(Offset.zero));
     final TestGesture gesture = await controller.startGesture(targetOffset);
     final File result = await controller.drawDiagramToFile(

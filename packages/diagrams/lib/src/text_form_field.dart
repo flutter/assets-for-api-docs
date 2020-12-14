@@ -21,7 +21,7 @@ class TextFormFieldDiagram extends StatelessWidget implements DiagramMetadata {
 
   @override
   Widget build(BuildContext context) {
-    Widget returnWidget;
+    late Widget returnWidget;
 
     switch (name) {
       case _textFormField:
@@ -31,9 +31,9 @@ class TextFormFieldDiagram extends StatelessWidget implements DiagramMetadata {
             hintText: 'What do people call you?',
             labelText: 'Name *',
           ),
-          onSaved: (String value) {},
-          validator: (String value) {
-            return value.contains('@') ? 'Do not use the @ char.' : null;
+          onSaved: (String? value) {},
+          validator: (String? value) {
+            return (value ?? '').contains('@') ? 'Do not use the @ char.' : null;
           },
         );
         break;
@@ -46,9 +46,9 @@ class TextFormFieldDiagram extends StatelessWidget implements DiagramMetadata {
             hintText: 'What do people call you?',
             labelText: 'Name *',
           ),
-          onSaved: (String value) {},
-          validator: (String value) {
-            return value.contains('@') ? 'Do not use the @ char.' : null;
+          onSaved: (String? value) {},
+          validator: (String? value) {
+            return (value ?? '').contains('@') ? 'Do not use the @ char.' : null;
           },
         );
         break;

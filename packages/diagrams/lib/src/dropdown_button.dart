@@ -42,7 +42,7 @@ class DropdownButtonDiagram extends StatelessWidget implements DiagramMetadata {
                 color: Colors.deepPurpleAccent,
               ),
               value: 'One',
-              onChanged: (String newValue) {},
+              onChanged: (String? newValue) {},
               items: <String>['One', 'Two', 'Free', 'Four']
                   .map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(

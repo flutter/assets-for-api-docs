@@ -10,7 +10,8 @@ dependencies:
   flutter:
     sdk: flutter
   path_provider: ^0.4.1
-  process: 3.0.12
+  platform: ">=3.0.0-nullsafety.4 <4.0.0"
+  process: ">=4.0.0-nullsafety.4 <5.0.0"
 
 dev_dependencies:
   flutter_test:
@@ -18,7 +19,7 @@ dev_dependencies:
   mockito: any
 
 environment:
-  sdk: ">=2.2.0 <3.0.0"
+  sdk: ">=2.12.0-0 <3.0.0"
   flutter: ">=0.1.4 <2.0.0"
 
 flutter:

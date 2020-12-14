@@ -13,11 +13,11 @@ enum SingingCharacter { lafayette, jefferson }
 
 class LinkedLabelRadio extends StatelessWidget {
   const LinkedLabelRadio({
-    this.label,
-    this.padding,
-    this.groupValue,
-    this.value,
-    this.onChanged,
+    required this.label,
+    required this.padding,
+    required this.groupValue,
+    required this.value,
+    required this.onChanged,
   });
 
   final String label;
@@ -35,7 +35,7 @@ class LinkedLabelRadio extends StatelessWidget {
           Radio<bool>(
               groupValue: groupValue,
               value: value,
-              onChanged: (bool newValue) {
+              onChanged: (bool? newValue) {
                 onChanged(newValue);
               }),
           RichText(
@@ -59,11 +59,11 @@ class LinkedLabelRadio extends StatelessWidget {
 
 class LabeledRadio extends StatelessWidget {
   const LabeledRadio({
-    this.label,
-    this.padding,
-    this.groupValue,
-    this.value,
-    this.onChanged,
+    required this.label,
+    required this.padding,
+    required this.groupValue,
+    required this.value,
+    required this.onChanged,
   });
 
   final String label;
@@ -86,7 +86,7 @@ class LabeledRadio extends StatelessWidget {
             Radio<bool>(
               groupValue: groupValue,
               value: value,
-              onChanged: (bool newValue) {
+              onChanged: (bool? newValue) {
                 onChanged(newValue);
               },
             ),
@@ -109,7 +109,7 @@ class RadioListTileDiagram extends StatefulWidget implements DiagramMetadata {
 }
 
 class _RadioListTileDiagramState extends State<RadioListTileDiagram> {
-  SingingCharacter _character = SingingCharacter.lafayette;
+  SingingCharacter? _character = SingingCharacter.lafayette;
   bool _isRadioSelected = false;
 
   @override
@@ -129,19 +129,18 @@ class _RadioListTileDiagramState extends State<RadioListTileDiagram> {
                   title: const Text('Lafayette'),
                   value: SingingCharacter.lafayette,
                   groupValue: _character,
-                  onChanged: (SingingCharacter value) { setState(() { _character = value; }); },
+                  onChanged: (SingingCharacter? value) { setState(() { _character = value; }); },
                 ),
                 RadioListTile<SingingCharacter>(
                   title: const Text('Thomas Jefferson'),
                   value: SingingCharacter.jefferson,
                   groupValue: _character,
-                  onChanged: (SingingCharacter value) { setState(() { _character = value; }); },
+                  onChanged: (SingingCharacter? value) { setState(() { _character = value; }); },
                 ),
               ],
             ),
           ),
         );
-      break;
       case 'radio_list_tile_semantics':
         return ConstrainedBox(
           key: UniqueKey(),
@@ -178,7 +177,6 @@ class _RadioListTileDiagramState extends State<RadioListTileDiagram> {
             ),
           ),
         );
-      break;
         case 'radio_list_tile_custom':
           return ConstrainedBox(
             key: UniqueKey(),
@@ -215,7 +213,6 @@ class _RadioListTileDiagramState extends State<RadioListTileDiagram> {
               ),
             ),
           );
-        break;
       default:
         return const Text('Error');
     }

@@ -15,12 +15,12 @@ const double _kFontSize = 14.0;
 class StrokeCapDescription extends CustomPainter {
   StrokeCapDescription({
     this.filename,
-    this.cap,
+    required this.cap,
   }) : _capPainter = _createLabelPainter(cap.toString());
 
   static const EdgeInsets padding = EdgeInsets.all(3.0);
 
-  final String filename;
+  final String? filename;
   final StrokeCap cap;
   final TextPainter _capPainter;
 
@@ -106,7 +106,7 @@ class StrokeCapDescription extends CustomPainter {
 }
 
 class StrokeCapDiagram extends StatelessWidget implements DiagramMetadata {
-  const StrokeCapDiagram({this.name, this.cap = StrokeCap.round});
+  const StrokeCapDiagram({required this.name, this.cap = StrokeCap.round});
 
   @override
   final String name;

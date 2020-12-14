@@ -6,7 +6,7 @@ dependencies:
     path: ..
   flutter:
     sdk: flutter
-  path_provider: any
+  path_provider: ^1.6.24
 
 dev_dependencies:
   flutter_test:
@@ -16,5 +16,5 @@ flutter:
   uses-material-design: true
 
 environment:
-  sdk: ">=2.8.0 <3.0.0"
+  sdk: ">=2.12.0-0 <3.0.0"
   flutter: ">=0.1.4 <2.0.0"

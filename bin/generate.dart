@@ -6,7 +6,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:archive/archive.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:args/args.dart';
 import 'package:animation_metadata/animation_metadata.dart';
 import 'package:process_runner/process_runner.dart';
@@ -20,19 +22,20 @@ final String repoRoot = path.dirname(path.fromUri(Platform.script));
 /// before moving the images into place for updating.
 class DiagramGenerator {
   DiagramGenerator({
-    String device,
-    ProcessRunner processRunner,
-    this.temporaryDirectory,
+    this.device = '',
+    ProcessRunner? processRunner,
+    Directory? temporaryDirectory,
     this.cleanup = true,
-  })  : device = device ?? '',
-        processRunner = processRunner ?? ProcessRunner(printOutputDefault: true) {
-    // Since we can't pass command line args yet on linux, just generate them in
-    // a known location.
-    temporaryDirectory ??= device == 'linux'
-        ? Directory('/tmp/diagrams')
-        : Directory.systemTemp.createTempSync('api_generate_');
+  })  : processRunner =
+            processRunner ?? ProcessRunner(printOutputDefault: true),
+        // Since we don't pass command line args yet on linux, just generate them in
+        // a known location.
+        temporaryDirectory = temporaryDirectory ??
+            (device == 'linux'
+                ? Directory('/tmp/diagrams')
+                : Directory.systemTemp.createTempSync('api_generate_')) {
     print('Dart path: $generatorMain');
-    print('Temp directory: ${temporaryDirectory.path}');
+    print('Temp directory: ${this.temporaryDirectory.path}');
   }
 
   static const String flutterCommand = 'flutter';
@@ -58,7 +61,14 @@ class DiagramGenerator {
 
   /// The path to the top of the repo.
   static String get projectDir {
-    return path.dirname(path.dirname(path.absolute(path.fromUri(Platform.script))));
+    if (Platform.script.isScheme('file')) {
+      return path
+          .dirname(path.dirname(path.absolute(path.fromUri(Platform.script))));
+    } else {
+      // Tests can sometimes have data URIs, so we just return the current
+      // directory for those.
+      return Directory.current.absolute.path;
+    }
   }
 
   /// The output asset directory for all the categories.
@@ -117,8 +127,15 @@ class DiagramGenerator {
         ? <String>['--route', 'args:${Uri.encodeComponent(filters.join(' '))}']
         : <String>[];
     final List<String> deviceArgs = <String>['-d', deviceId];
-    final List<String> args = <String>[flutterCommand, 'run'] + filterArgs + deviceArgs;
-    await processRunner.runProcess(args, workingDirectory: Directory(generatorDir));
+    final List<String> args = <String>[
+          flutterCommand,
+          'run',
+          '--no-sound-null-safety'
+        ] +
+        filterArgs +
+        deviceArgs;
+    await processRunner.runProcess(args,
+        workingDirectory: Directory(generatorDir));
   }
 
   Future<bool> _findIdForDeviceName() async {
@@ -337,9 +354,9 @@ Future<void> main(List<String> arguments) async {
     exit(0);
   }
 
-  final String deviceId = flags['device-id'] as String;
-  bool keepTemporaryDirectory = flags['keep-tmp'] as bool;
-  String tmpDirFlag = (flags['tmpdir'] as String) ?? '';
+  final String deviceId = flags['device-id'] as String? ?? '';
+  bool keepTemporaryDirectory = flags['keep-tmp'] as bool? ?? false;
+  String tmpDirFlag = flags['tmpdir'] as String? ?? '';
   if (tmpDirFlag.isEmpty && deviceId == 'linux') {
     // On linux, we can't pass command line arguments to a Flutter app, so we
     // just use a well-known location for the output.
@@ -352,12 +369,10 @@ Future<void> main(List<String> arguments) async {
     }
   }
 
-  Directory temporaryDirectory;
-  if (tmpDirFlag.isNotEmpty) {
-    temporaryDirectory = Directory(tmpDirFlag);
-    temporaryDirectory.createSync(recursive: true);
-    keepTemporaryDirectory = true;
-  }
+  assert(tmpDirFlag.isNotEmpty);
+  final Directory temporaryDirectory = Directory(tmpDirFlag);
+  temporaryDirectory.createSync(recursive: true);
+  keepTemporaryDirectory = true;
 
   DiagramGenerator(
     device: deviceId,

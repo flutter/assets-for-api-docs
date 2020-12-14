@@ -9,14 +9,11 @@ import 'package:flutter/material.dart';
 /// generic widget in diagrams.
 class Hole extends StatelessWidget {
   const Hole({
-    Key key,
+    Key? key,
     this.color = const Color(0xFFFFFFFF),
-    this.child,
   }) : super(key: key);
 
   final Color color;
-
-  final Widget child;
 
   @override
   Widget build(BuildContext context) {
@@ -48,13 +45,10 @@ class LabelPainterWidget extends StatelessWidget {
   ///
   /// All parameters are required and must not be null.
   LabelPainterWidget({
-    @required GlobalKey key,
-    @required List<Label> labels,
-    @required GlobalKey heroKey,
-  })  : assert(key != null),
-        assert(labels != null),
-        assert(heroKey != null),
-        painter = LabelPainter(labels: labels, heroKey: heroKey, canvasKey: key),
+    required GlobalKey key,
+    required List<Label> labels,
+    required GlobalKey heroKey,
+  })  : painter = LabelPainter(labels: labels, heroKey: heroKey, canvasKey: key),
         super(key: key);
 
   final LabelPainter painter;
@@ -67,11 +61,10 @@ class LabelPainterWidget extends StatelessWidget {
 /// labels it is given.
 class LabelPainter extends CustomPainter {
   LabelPainter({
-    this.labels,
-    this.heroKey,
-    this.canvasKey,
-  }) {
-    _painters = <Label, TextPainter>{};
+    required this.labels,
+    required this.heroKey,
+    required this.canvasKey,
+  }) : _painters = <Label, TextPainter>{} {
     for (final Label label in labels) {
       final TextPainter painter = TextPainter(
         textDirection: TextDirection.ltr,
@@ -86,7 +79,7 @@ class LabelPainter extends CustomPainter {
   final GlobalKey heroKey;
   final GlobalKey canvasKey;
 
-  Map<Label, TextPainter> _painters;
+  final Map<Label, TextPainter> _painters;
 
   static const TextStyle _labelTextStyle = TextStyle(color: Color(0xFF000000));
 
@@ -94,13 +87,13 @@ class LabelPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final RenderBox hero = heroKey.currentContext.findRenderObject() as RenderBox;
-    final RenderBox diagram = canvasKey.currentContext.findRenderObject() as RenderBox;
+    final RenderBox hero = heroKey.currentContext!.findRenderObject() as RenderBox;
+    final RenderBox diagram = canvasKey.currentContext!.findRenderObject() as RenderBox;
     final Paint dotPaint = Paint();
     final Paint linePaint = Paint()..strokeWidth = 2.0;
     final Offset heroTopLeft = diagram.globalToLocal(hero.localToGlobal(Offset.zero));
     for (final Label label in labels) {
-      final RenderBox box = label.key.currentContext.findRenderObject() as RenderBox;
+      final RenderBox box = label.key.currentContext!.findRenderObject() as RenderBox;
       final Offset anchor = diagram.globalToLocal(box.localToGlobal(label.anchor.alongSize(box.size)));
       final Offset anchorOnHero = anchor - heroTopLeft;
       final FractionalOffset relativeAnchor = FractionalOffset.fromOffsetAndSize(anchorOnHero, hero.size);
@@ -110,7 +103,7 @@ class LabelPainter extends CustomPainter {
       final double distanceToRight = hero.size.width - anchorOnHero.dx;
       Offset labelPosition;
       Offset textPosition = Offset.zero;
-      final TextPainter painter = _painters[label];
+      final TextPainter painter = _painters[label]!;
       if (distanceToTop <= distanceToLeft && distanceToTop <= distanceToRight && distanceToTop <= distanceToBottom) {
         labelPosition = Offset(anchor.dx + (relativeAnchor.dx - 0.5) * margin, heroTopLeft.dy - margin);
         textPosition = Offset(labelPosition.dx - painter.width / 2.0, labelPosition.dy - painter.height);

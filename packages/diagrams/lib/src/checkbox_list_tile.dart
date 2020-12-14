@@ -12,10 +12,10 @@ import 'diagram_step.dart';
 
 class LinkedLabelCheckbox extends StatelessWidget {
   const LinkedLabelCheckbox({
-    this.label,
-    this.padding,
-    this.value,
-    this.onChanged,
+    required this.label,
+    required this.padding,
+    required this.value,
+    required this.onChanged,
   });
 
   final String label;
@@ -46,7 +46,7 @@ class LinkedLabelCheckbox extends StatelessWidget {
           ),
           Checkbox(
             value: value,
-            onChanged: (bool newValue) {
+            onChanged: (bool? newValue) {
               onChanged(newValue);
             },
           ),
@@ -58,10 +58,10 @@ class LinkedLabelCheckbox extends StatelessWidget {
 
 class LabeledCheckbox extends StatelessWidget {
   const LabeledCheckbox({
-    this.label,
-    this.padding,
-    this.value,
-    this.onChanged,
+    required this.label,
+    required this.padding,
+    required this.value,
+    required this.onChanged,
   });
 
   final String label;
@@ -82,7 +82,7 @@ class LabeledCheckbox extends StatelessWidget {
             Expanded(child: Text(label)),
             Checkbox(
               value: value,
-              onChanged: (bool newValue) {
+              onChanged: (bool? newValue) {
                 onChanged(newValue);
               },
             ),
@@ -120,14 +120,13 @@ class _CheckboxListTileDiagramState extends State<CheckboxListTileDiagram> {
             child: CheckboxListTile(
               title: const Text('Animate Slowly'),
               value: timeDilation != 1.0,
-              onChanged: (bool value) {
-                setState(() { timeDilation = value ? 20.0 : 1.0; });
+              onChanged: (bool? value) {
+                setState(() { timeDilation = (value ?? false) ? 20.0 : 1.0; });
               },
               secondary: const Icon(Icons.hourglass_empty),
             ),
           ),
         );
-        break;
       case 'checkbox_list_tile_semantics':
         return ConstrainedBox(
           key: UniqueKey(),
@@ -169,7 +168,6 @@ class _CheckboxListTileDiagramState extends State<CheckboxListTileDiagram> {
             );
         default:
           return const Text('Error');
-          break;
     }
   }
 }

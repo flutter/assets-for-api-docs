@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// @dart=2.9
+
 import 'dart:io';
 
 import 'package:test/test.dart';
@@ -11,7 +13,8 @@ import 'package:process_runner/process_runner.dart';
 import '../generate.dart';
 import 'fake_process_manager.dart';
 
-final String repoRoot = path.dirname(path.dirname(path.dirname(path.fromUri(Platform.script))));
+final String repoRoot =
+    path.dirname(path.dirname(path.dirname(path.fromUri(Platform.script))));
 
 void main() {
   group('DiagramGenerator', () {
@@ -20,7 +23,7 @@ void main() {
     FakeProcessManager processManager;
 
     setUp(() {
-      processManager = FakeProcessManager();
+      processManager = FakeProcessManager((String input) {});
       temporaryDirectory = Directory.systemTemp.createTempSync();
       generator = DiagramGenerator(
         processRunner: ProcessRunner(processManager: processManager),
@@ -29,9 +32,23 @@ void main() {
       );
     });
     test('make sure generate generates', () async {
-      final Map<String, List<ProcessResult>> calls = <String, List<ProcessResult>>{
-        'flutter run': null,
-        'adb exec-out run-as io.flutter.api.diagramgenerator tar c -C app_flutter/diagrams .': null,
+      final Map<FakeInvocationRecord, List<ProcessResult>> calls =
+          <FakeInvocationRecord, List<ProcessResult>>{
+        FakeInvocationRecord(<String>['flutter', 'devices', '--machine'],
+            temporaryDirectory.path): <ProcessResult>[
+          ProcessResult(
+            0,
+            0,
+            '[{"name": "linux", "id": "linux", "targetPlatform": "linux"}]',
+            '',
+          )
+        ],
+        FakeInvocationRecord(
+            <String>['flutter', 'run', '--no-sound-null-safety', '-d', 'linux'],
+            path.join(Directory.current.absolute.path, 'utils',
+                'diagram_generator')): <ProcessResult>[
+          ProcessResult(0, 0, '', ''),
+        ],
       };
       processManager.fakeResults = calls;
       await generator.generateDiagrams(<String>[], <String>[]);

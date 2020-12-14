@@ -151,7 +151,7 @@ class _HeroesDiagramState extends State<HeroesDiagram> {
                           angle: -0.2,
                           child: CustomPaint(
                             size: const Size(320.0, 20.0),
-                            painter: RightArrowPainter(fillColor: Colors.blue[600]),
+                            painter: RightArrowPainter(fillColor: Colors.blue[600]!),
                           ),
                         ),
                       ),
@@ -213,7 +213,7 @@ class _HeroesDiagramState extends State<HeroesDiagram> {
 }
 
 class RightArrowPainter extends CustomPainter {
-  const RightArrowPainter({ this.fillColor });
+  const RightArrowPainter({ required this.fillColor });
 
   final Color fillColor;
 

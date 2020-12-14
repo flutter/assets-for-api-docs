@@ -4,5 +4,7 @@
 # This file should be version controlled and should not be manually edited.
 
 version:
-  revision: a043ac41f6bba370c8c6184884d4f30b5b7edd62
-  channel: master
+  revision: 4cdd10839c5026b56b4b3253631da046b24d93c3
+  channel: actions_shortcuts_samples
+
+project_type: app

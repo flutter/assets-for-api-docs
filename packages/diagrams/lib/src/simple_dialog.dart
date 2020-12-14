@@ -67,7 +67,7 @@ class SimpleDialogDiagram extends StatelessWidget implements DiagramMetadata {
   }
 
   Future<void> _askedToLead(BuildContext context) async {
-    final Department result = await showDialog<Department>(
+    final Department result = (await showDialog<Department>(
       context: context,
       useRootNavigator: false,
       builder: (BuildContext context) {
@@ -91,7 +91,7 @@ class SimpleDialogDiagram extends StatelessWidget implements DiagramMetadata {
           ],
         );
       },
-    );
+    ))!;
 
     switch (result) {
       case Department.treasury:
@@ -149,7 +149,7 @@ class SimpleDialogDiagramStep extends DiagramStep<SimpleDialogDiagram> {
   }
 
   Future<void> _tap(GlobalKey key) async {
-    final RenderBox target = key.currentContext.findRenderObject() as RenderBox;
+    final RenderBox target = key.currentContext!.findRenderObject() as RenderBox;
     final Offset targetOffset =
         target.localToGlobal(target.size.center(Offset.zero));
     final TestGesture gesture = await controller.startGesture(targetOffset);

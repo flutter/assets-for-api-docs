@@ -23,6 +23,6 @@ if [[ "$SHARD" == "analyze" ]]; then
   done
 elif [[ "$SHARD" == "test" ]]; then
   echo "Running tests."
-  (cd "$REPO_DIR/bin" && pub run test/generate_test.dart)
-  (cd "$REPO_DIR/packages/diagram_capture" && flutter test)
+  (cd "$REPO_DIR/bin" && pub run --no-sound-null-safety test/generate_test.dart)
+  (cd "$REPO_DIR/packages/diagram_capture" && flutter test --no-sound-null-safety)
 fi

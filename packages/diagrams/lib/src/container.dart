@@ -31,7 +31,6 @@ class ContainerDiagram extends StatelessWidget implements DiagramMetadata {
             ),
           ),
         );
-        break;
       case 'container_b':
         return Container(
           height: 250,
@@ -47,16 +46,14 @@ class ContainerDiagram extends StatelessWidget implements DiagramMetadata {
               child: Text('Hello World',
                   style: Theme.of(context)
                       .textTheme
-                      .headline4
+                      .headline4!
                       .copyWith(color: Colors.white)),
               transform: Matrix4.rotationZ(0.1),
             ),
           ),
         );
-        break;
       default:
         return const Text('Error');
-        break;
     }
   }
 }

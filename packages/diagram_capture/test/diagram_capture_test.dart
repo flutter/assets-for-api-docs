@@ -11,6 +11,7 @@ import 'package:path/path.dart' as path;
 import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:image/image.dart' as image;
 
 Widget buildStaticDiagram(BuildContext context) {
@@ -25,7 +26,7 @@ File filenameGenerator() {
 }
 
 class TestAnimatedDiagram extends StatelessWidget {
-  const TestAnimatedDiagram({Key key, this.size = 1.0}) : super(key: key);
+  const TestAnimatedDiagram({Key? key, this.size = 1.0}) : super(key: key);
 
   final double size;
 
@@ -68,14 +69,14 @@ class _TestTappableDiagramState extends State<TestTappableDiagram> {
 
 void main() {
   group('DiagramController', () {
-    Directory outputDir;
+    late Directory outputDir;
 
     setUp(() async {
       outputDir = Directory.systemTemp.createTempSync();
     });
 
     tearDown(() {
-      outputDir?.delete(recursive: true);
+      outputDir.delete(recursive: true);
     });
 
     test('can create an image from a static widget', () async {
@@ -89,8 +90,8 @@ void main() {
       final ui.Image captured = await controller.drawDiagramToImage();
       expect(captured.width, equals(100));
       expect(captured.height, equals(50));
-      final ByteData output = await captured.toByteData(format: ui.ImageByteFormat.rawRgba);
-      expect(output.lengthInBytes, equals(20000));
+      final ByteData? output = await captured.toByteData(format: ui.ImageByteFormat.rawRgba);
+      expect(output!.lengthInBytes, equals(20000));
     });
 
     test('allows a null builder', () async {
@@ -104,8 +105,8 @@ void main() {
       final ui.Image captured = await controller.drawDiagramToImage();
       expect(captured.width, equals(100));
       expect(captured.height, equals(50));
-      final ByteData output = await captured.toByteData(format: ui.ImageByteFormat.rawRgba);
-      expect(output.lengthInBytes, equals(20000));
+      final ByteData? output = await captured.toByteData(format: ui.ImageByteFormat.rawRgba);
+      expect(output!.lengthInBytes, equals(20000));
     });
 
     test('can write an image from static widget to a file', () async {
@@ -210,7 +211,7 @@ void main() {
       expect(decodedImage.width, equals(300));
       expect(decodedImage.height, equals(150));
       expect(decodedImage.length, equals(45000));
-      expect(decodedImage[decodedImage.index(150, 75)], equals(0xdd000000)); // Check a pixel value
+      expect(decodedImage[decodedImage.index(150, 20)], equals(0xdd000000)); // Check a pixel value
     });
 
     test('can inject gestures', () async {

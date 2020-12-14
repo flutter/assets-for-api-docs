@@ -38,7 +38,7 @@ class _SliverFillRemainingDiagramState extends State<SliverFillRemainingDiagram>
   @override
   void initState() {
     super.initState();
-    SchedulerBinding.instance.scheduleFrameCallback((Duration _) {
+    SchedulerBinding.instance!.scheduleFrameCallback((Duration _) {
       _play();
     });
   }
@@ -47,7 +47,7 @@ class _SliverFillRemainingDiagramState extends State<SliverFillRemainingDiagram>
   void didUpdateWidget(SliverFillRemainingDiagram oldWidget) {
     super.didUpdateWidget(oldWidget);
     _scrollController.jumpTo(0.0);
-    SchedulerBinding.instance.scheduleFrameCallback((Duration _) {
+    SchedulerBinding.instance!.scheduleFrameCallback((Duration _) {
       _play();
     });
   }
@@ -61,7 +61,7 @@ class _SliverFillRemainingDiagramState extends State<SliverFillRemainingDiagram>
     await Future<void>.delayed(_kScrollPauseDuration);
   }
 
-  Future<void> _animate({double to, Duration duration}) {
+  Future<void> _animate({required double to, required Duration duration}) {
     final ScrollPositionWithSingleContext position = _scrollController.position as ScrollPositionWithSingleContext;
     final FakeDragScrollActivity activity = FakeDragScrollActivity(
       position,

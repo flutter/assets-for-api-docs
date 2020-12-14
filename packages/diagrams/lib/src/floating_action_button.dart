@@ -21,7 +21,7 @@ class FloatingActionButtonDiagram extends StatelessWidget implements DiagramMeta
 
   @override
   Widget build(BuildContext context) {
-    Widget returnWidget;
+    late Widget returnWidget;
 
     switch (name) {
       case _basic:

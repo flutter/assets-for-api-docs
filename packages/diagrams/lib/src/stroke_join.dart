@@ -19,9 +19,9 @@ const double _kAnimationFrameRate = 60.0;
 class StrokeJoinDescription extends CustomPainter {
   StrokeJoinDescription({
     this.filename,
-    this.angle,
-    this.join,
-    this.strokeMiterLimit,
+    required this.angle,
+    required this.join,
+    required this.strokeMiterLimit,
   })  : _anglePainter = _createLabelPainter('θ = ${angle.round()}°'),
         _joinPainter = _createLabelPainter(join.toString()),
         _miterLimitPainter = _createLabelPainter(join == StrokeJoin.miter //
@@ -30,7 +30,7 @@ class StrokeJoinDescription extends CustomPainter {
 
   static const EdgeInsets padding = EdgeInsets.all(8.0);
 
-  final String filename;
+  final String? filename;
   final double angle;
   final StrokeJoin join;
   final double strokeMiterLimit;
@@ -131,7 +131,7 @@ class StrokeJoinDescription extends CustomPainter {
 
 class StrokeJoinDiagram extends StatefulWidget implements DiagramMetadata {
   const StrokeJoinDiagram({
-    this.name,
+    required this.name,
     this.duration = _kAnimationDuration,
     this.startAngle = 0.0,
     this.endAngle = 360.0,
@@ -154,7 +154,7 @@ class StrokeJoinDiagram extends StatefulWidget implements DiagramMetadata {
 class StrokeJoinPainterState extends State<StrokeJoinDiagram> //
     with
         TickerProviderStateMixin<StrokeJoinDiagram> {
-  AnimationController controller;
+  late AnimationController controller;
 
   @override
   void didUpdateWidget(StrokeJoinDiagram oldWidget) {

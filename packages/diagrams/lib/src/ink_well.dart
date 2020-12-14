@@ -15,7 +15,7 @@ import 'utils.dart';
 final GlobalKey _splashKey = GlobalKey();
 
 class InkWellDiagram extends StatelessWidget implements DiagramMetadata {
-  InkWellDiagram({Key key}) : super(key: key);
+  InkWellDiagram({Key? key}) : super(key: key);
 
   final GlobalKey canvasKey = GlobalKey();
   final GlobalKey childKey = GlobalKey();
@@ -100,7 +100,7 @@ class InkWellDiagramStep extends DiagramStep<InkWellDiagram> {
     controller.builder = (BuildContext context) => diagram;
 
     controller.advanceTime(Duration.zero);
-    final RenderBox target = _splashKey.currentContext.findRenderObject() as RenderBox;
+    final RenderBox target = _splashKey.currentContext!.findRenderObject() as RenderBox;
     final Offset targetOffset = target.localToGlobal(target.size.bottomRight(Offset.zero));
     final TestGesture gesture = await controller.startGesture(targetOffset);
     final File result = await controller.drawDiagramToFile(

@@ -64,7 +64,8 @@ class IconButtonDiagram extends StatelessWidget implements DiagramMetadata {
           ),
         );
     }
-    return null;
+    assert(name == _iconButton || name == _iconButtonBackground);
+    return const SizedBox();
   }
 }
 

@@ -30,7 +30,7 @@ final List<GlobalKey> _iconKeys = <GlobalKey>[
 ];
 
 class ToggleButtonsDiagram extends StatefulWidget implements DiagramMetadata {
-  const ToggleButtonsDiagram(this.name, { Key key }) : super(key: key);
+  const ToggleButtonsDiagram(this.name, { Key? key }) : super(key: key);
 
   @override
   final String name;
@@ -147,8 +147,7 @@ class _ToggleButtonsDiagramState extends State<ToggleButtonsDiagram> {
 class ToggleButtonsDiagramStep extends DiagramStep<ToggleButtonsDiagram> {
   ToggleButtonsDiagramStep(DiagramController controller) : super(controller);
 
-  String _testName;
-
+  String _testName = '';
   int _stepCount = 0;
 
   @override
@@ -165,9 +164,9 @@ class ToggleButtonsDiagramStep extends DiagramStep<ToggleButtonsDiagram> {
   Future<void> tapIcons(DiagramController controller, Duration now) async {
     RenderBox target;
     if (now.inMilliseconds % 2000 == 0) {
-      final int targetIcon = tapSteps[_testName][_stepCount];
+      final int targetIcon = tapSteps[_testName]![_stepCount];
       _stepCount += 1;
-      target = _iconKeys[targetIcon].currentContext.findRenderObject() as RenderBox;
+      target = _iconKeys[targetIcon].currentContext!.findRenderObject() as RenderBox;
       final Offset targetOffset = target.localToGlobal(target.size.center(Offset.zero));
       final TestGesture gesture = await controller.startGesture(targetOffset);
       Future<void>.delayed(const Duration(milliseconds: 500), gesture.up);
@@ -180,7 +179,7 @@ class ToggleButtonsDiagramStep extends DiagramStep<ToggleButtonsDiagram> {
     controller.builder = (BuildContext context) => diagram;
     _testName = diagram.name;
     return await controller.drawAnimatedDiagramToFiles(
-      end: Duration(seconds: tapSteps[_testName].length * 2),
+      end: Duration(seconds: tapSteps[_testName]!.length * 2),
       frameRate: _kAnimationFrameRate,
       name: _testName,
       category: category,
