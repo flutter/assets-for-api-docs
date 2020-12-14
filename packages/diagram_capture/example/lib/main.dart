@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:path/path.dart' as path;
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:path_provider/path_provider.dart';
 
 class MyDiagram extends StatefulWidget {

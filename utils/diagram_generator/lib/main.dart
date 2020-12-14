@@ -6,11 +6,13 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
 
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:args/args.dart';
 import 'package:diagram_capture/diagram_capture.dart';
 import 'package:diagrams/diagrams.dart';
 import 'package:platform/platform.dart' as platform_pkg;
 import 'package:path/path.dart' as path;
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:path_provider/path_provider.dart';
 
 const platform_pkg.Platform platform = platform_pkg.LocalPlatform();

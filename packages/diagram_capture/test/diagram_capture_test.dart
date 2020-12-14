@@ -11,6 +11,7 @@ import 'package:path/path.dart' as path;
 import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:image/image.dart' as image;
 
 Widget buildStaticDiagram(BuildContext context) {
