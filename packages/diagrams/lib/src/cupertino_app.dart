@@ -56,7 +56,6 @@ class CupertinoAppDiagram extends StatelessWidget implements DiagramMetadata {
       key: UniqueKey(),
       constraints: BoxConstraints.tight(const Size(300.0, 533.33)),
       child: Container(
-        // padding: const EdgeInsets.all(5.0),
         color: CupertinoColors.white,
         child: returnWidget,
       ),
