@@ -72,9 +72,9 @@ class CupertinoAppDiagramStep extends DiagramStep<CupertinoAppDiagram> {
 
   @override
   Future<List<CupertinoAppDiagram>> get diagrams async => <CupertinoAppDiagram>[
-        const CupertinoAppDiagram(_basic),
-        const CupertinoAppDiagram(_theme),
-      ];
+    const CupertinoAppDiagram(_basic),
+    const CupertinoAppDiagram(_theme),
+  ];
 
   @override
   Future<File> generateDiagram(CupertinoAppDiagram diagram) async {
