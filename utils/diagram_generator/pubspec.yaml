@@ -3,6 +3,7 @@ description: Main app for building API doc assets.
 
 dependencies:
   archive: ^2.0.10
+  cupertino_icons: ^1.0.0
   diagram_capture:
     path: ../../packages/diagram_capture
   diagrams:
