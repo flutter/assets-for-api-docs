@@ -95,7 +95,7 @@ class _SliverFillRemainingDiagramState extends State<SliverFillRemainingDiagram>
             alignment: Alignment.bottomCenter,
             child: Padding(
               padding: const EdgeInsets.all(16.0),
-              child: RaisedButton(
+              child: OutlinedButton(
                 onPressed: () {},
                 child: const Text('Bottom Pinned Button!'),
               ),

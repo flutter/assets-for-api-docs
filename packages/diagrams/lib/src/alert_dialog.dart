@@ -43,7 +43,7 @@ class AlertDialogDiagram extends StatelessWidget implements DiagramMetadata {
                 body: Center(
                   child: Builder(
                     builder: (BuildContext context) {
-                      return RaisedButton(
+                      return OutlinedButton(
                         key: _openDialogKey,
                         child: const Text('Show Dialog'),
                         onPressed: () => _neverSatisfied(context),
@@ -76,7 +76,7 @@ class AlertDialogDiagram extends StatelessWidget implements DiagramMetadata {
             ),
           ),
           actions: <Widget>[
-            FlatButton(
+            TextButton(
               child: const Text('Approve'),
               onPressed: () => Navigator.of(context).pop(),
             ),

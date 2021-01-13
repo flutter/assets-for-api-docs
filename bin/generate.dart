@@ -16,6 +16,13 @@ import 'package:path/path.dart' as path;
 
 final String repoRoot = path.dirname(path.fromUri(Platform.script));
 
+class GeneratorException implements Exception {
+  GeneratorException(this.message);
+  final String message;
+  @override
+  String toString() => message;
+}
+
 /// Generates diagrams from dart programs for use in the online documentation.
 ///
 /// Runs a dart program to generate diagrams, and the optimizes the output
@@ -33,7 +40,7 @@ class DiagramGenerator {
         temporaryDirectory = temporaryDirectory ??
             (device == 'linux'
                 ? Directory('/tmp/diagrams')
-                : Directory.systemTemp.createTempSync('api_generate_')) {
+                : Directory.systemTemp.createTempSync('flutter_diagrams.')) {
     print('Dart path: $generatorMain');
     print('Temp directory: ${this.temporaryDirectory.path}');
   }
@@ -134,8 +141,10 @@ class DiagramGenerator {
         ] +
         filterArgs +
         deviceArgs;
-    await processRunner.runProcess(args,
-        workingDirectory: Directory(generatorDir));
+    await processRunner.runProcess(
+      args,
+      workingDirectory: Directory(generatorDir),
+    );
   }
 
   Future<bool> _findIdForDeviceName() async {
@@ -255,11 +264,26 @@ class DiagramGenerator {
   }
 
   Future<List<File>> _combineAnimations(List<File> inputFiles) async {
-    print('Input files: $inputFiles');
-    final List<File> metadataFiles = inputFiles.where((File input) {
-      return input.path.endsWith('.json');
-    }).toList();
-    print('Metadata: $metadataFiles');
+    print('Processing ${inputFiles.length} files...');
+    final List<File> errorFiles = inputFiles
+      .where((File input) => path.basename(input.path) == 'error.log')
+      .toList();
+
+    if (errorFiles.length != 1)
+      throw GeneratorException('Subprocess did not complete cleanly!');
+
+    final String errorsFileName = path.join(temporaryDirectory.absolute.path, errorFiles.single.path);
+    final String errors = await File(errorsFileName).readAsString();
+    if (errors.isNotEmpty) {
+      print('Failed. Errors:');
+      print(errors);
+      throw GeneratorException('Failed with errors (see $errorsFileName).');
+    }
+
+    final List<File> metadataFiles = inputFiles
+      .where((File input) => path.extension(input.path) == '.json')
+      .toList();
+
     // Collect all the animation frames that are in the metadata files so that
     // we can eliminate them from the other files that were transferred.
     final Set<String> animationFiles = <String>{};
@@ -374,9 +398,13 @@ Future<void> main(List<String> arguments) async {
   temporaryDirectory.createSync(recursive: true);
   keepTemporaryDirectory = true;
 
-  DiagramGenerator(
-    device: deviceId,
-    temporaryDirectory: temporaryDirectory,
-    cleanup: !keepTemporaryDirectory,
-  ).generateDiagrams(flags['category'] as List<String>, flags['name'] as List<String>);
+  try {
+    await DiagramGenerator(
+      device: deviceId,
+      temporaryDirectory: temporaryDirectory,
+      cleanup: !keepTemporaryDirectory,
+    ).generateDiagrams(flags['category'] as List<String>, flags['name'] as List<String>);
+  } on GeneratorException catch (error) {
+    print('Aborting. $error');
+  }
 }

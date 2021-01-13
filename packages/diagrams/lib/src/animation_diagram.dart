@@ -102,17 +102,19 @@ class TransitionDiagramState<T> extends State<TransitionDiagram<T>>
               fontSize: _kFontSize,
             ),
           ),
-          Container(
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-              border: Border.all(color: Colors.black26, width: 1.0),
+          Expanded(
+            child: Container(
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                border: Border.all(color: Colors.black26, width: 1.0),
+              ),
+              constraints: const BoxConstraints.tightFor(
+                width: 250.0,
+                height: 250.0,
+              ),
+              child: widget.buildTransition(context, animation),
             ),
-            constraints: const BoxConstraints.tightFor(
-              width: 250.0,
-              height: 250.0,
-            ),
-            child: widget.buildTransition(context, animation),
           ),
           Container(height: 25.0),
           Container(

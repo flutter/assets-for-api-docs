@@ -315,9 +315,9 @@ class SizeTransitionDiagram extends TransitionDiagram<double> {
   @override
   Widget buildTransition(BuildContext context, Animation<double> animation) {
     return Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: <Widget>[
         Container(
           // TODO(gspencer): remove these constraints when
           // https://github.com/flutter/flutter/issues/19850 is fixed.

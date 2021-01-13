@@ -11,12 +11,13 @@ import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
 
-final Duration _kTotalDuration = _kBreakDuration +
-    _kAnimationDuration +
-    _kBreakDuration +
-    _kAnimationDuration;
-const Duration _kAnimationDuration = Duration(seconds: 3);
 const Duration _kBreakDuration = Duration(seconds: 1, milliseconds: 500);
+const Duration _kAnimationDuration = Duration(seconds: 3);
+
+final Duration _kTotalDuration = _kBreakDuration +
+                                 _kAnimationDuration +
+                                 _kBreakDuration +
+                                 _kAnimationDuration;
 
 const double _kCurveAnimationFrameRate = 60.0;
 
@@ -30,32 +31,43 @@ class TweensDiagram extends StatefulWidget implements DiagramMetadata {
   String get name => 'tweens';
 }
 
-class TweensDiagramState extends State<TweensDiagram>
-    with TickerProviderStateMixin<TweensDiagram> {
+class TweensDiagramState extends State<TweensDiagram> with TickerProviderStateMixin<TweensDiagram> {
   late AnimationController _controller;
+  Timer? _timer;
 
   @override
   void initState() {
     super.initState();
-    _controller =
-        AnimationController(vsync: this, duration: _kAnimationDuration);
-    Timer(_kBreakDuration, () {
+    _controller = AnimationController(
+      vsync: this,
+      duration: _kAnimationDuration,
+    );
+    _timer = Timer(_kBreakDuration, () {
       _controller.forward();
+      _timer = null;
     });
-    _controller
-      .addStatusListener((AnimationStatus status) {
-        switch (status) {
-          case AnimationStatus.dismissed:
-          case AnimationStatus.forward:
-          case AnimationStatus.reverse:
-            break;
-          case AnimationStatus.completed:
-            Timer(_kBreakDuration, () {
-              _controller.reverse();
-            });
-            break;
-        }
-      });
+    _controller.addStatusListener((AnimationStatus status) {
+      switch (status) {
+        case AnimationStatus.dismissed:
+        case AnimationStatus.forward:
+        case AnimationStatus.reverse:
+          break;
+        case AnimationStatus.completed:
+          assert(_timer == null);
+          _timer = Timer(_kBreakDuration, () {
+            _controller.reverse();
+            _timer = null;
+          });
+          break;
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _timer?.cancel();
+    super.dispose();
   }
 
   @override
@@ -164,8 +176,8 @@ class TweensDiagramStep extends DiagramStep<TweensDiagram> {
 
   @override
   Future<List<TweensDiagram>> get diagrams async => <TweensDiagram>[
-        const TweensDiagram(),
-      ];
+    const TweensDiagram(),
+  ];
 
   @override
   Future<File> generateDiagram(TweensDiagram diagram) async {

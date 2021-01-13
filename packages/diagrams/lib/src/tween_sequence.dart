@@ -99,7 +99,7 @@ class TweenSequenceDiagramState extends State<TweenSequenceDiagram>
       child: Center(
         child: AnimatedBuilder(
           animation: _controller,
-          builder: (BuildContext context, Widget? _) {
+          builder: (BuildContext context, Widget? child) {
             return Center(
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -111,25 +111,28 @@ class TweenSequenceDiagramState extends State<TweenSequenceDiagram>
                     height: 200,
                     color: _tweenSequence.evaluate(_controller),
                   ),
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      const Text('TweenSequence(['),
-                      Text(
-                        '    TweenSequenceItem(\n        tween: ColorTween(begin: Colors.yellow, end: Colors.green),\n        weight: 2,\n    ),',
-                        style: _activeItem == 1 ? _activeStyle : null,
-                      ),
-                      Text(
-                        '    TweenSequenceItem(\n        tween: ConstantTween(Colors.green),\n        weight: 1,\n    ),',
-                        style: _activeItem == 2 ? _activeStyle : null,
-                      ),
-                      Text(
-                        '    TweenSequenceItem(\n        tween: ColorTween(begin: Colors.green, end: Colors.red),\n        weight: 2,\n    ),',
-                        style: _activeItem == 3 ? _activeStyle : null,
-                      ),
-                      const Text(']);'),
-                    ],
+                  DefaultTextStyle(
+                    style: DefaultTextStyle.of(context).style.copyWith(height: 1.2, fontSize: 13.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        const Text('TweenSequence(['),
+                        Text(
+                          '    TweenSequenceItem(\n        tween: ColorTween(begin: Colors.yellow, end: Colors.green),\n        weight: 2,\n    ),',
+                          style: _activeItem == 1 ? _activeStyle : null,
+                        ),
+                        Text(
+                          '    TweenSequenceItem(\n        tween: ConstantTween(Colors.green),\n        weight: 1,\n    ),',
+                          style: _activeItem == 2 ? _activeStyle : null,
+                        ),
+                        Text(
+                          '    TweenSequenceItem(\n        tween: ColorTween(begin: Colors.green, end: Colors.red),\n        weight: 2,\n    ),',
+                          style: _activeItem == 3 ? _activeStyle : null,
+                        ),
+                        const Text(']);'),
+                      ],
+                    ),
                   ),
                 ],
               ),
