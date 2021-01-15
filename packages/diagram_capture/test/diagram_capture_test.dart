@@ -21,10 +21,6 @@ Widget buildStaticDiagram(BuildContext context) {
   );
 }
 
-File filenameGenerator() {
-  return File('test_name');
-}
-
 class TestAnimatedDiagram extends StatelessWidget {
   const TestAnimatedDiagram({Key? key, this.size = 1.0}) : super(key: key);
 
@@ -56,8 +52,11 @@ class _TestTappableDiagramState extends State<TestTappableDiagram> {
 
   @override
   Widget build(BuildContext context) {
-    return RaisedButton(
-      color: on ? Colors.red : Colors.blue,
+    return TextButton(
+      child: const SizedBox.shrink(),
+      style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.all<Color?>(on ? Colors.red : Colors.blue),
+      ),
       onPressed: () {
         setState(() {
           on = !on;
@@ -72,7 +71,7 @@ void main() {
     late Directory outputDir;
 
     setUp(() async {
-      outputDir = Directory.systemTemp.createTempSync();
+      outputDir = Directory.systemTemp.createTempSync('flutter_diagram_capture_test.');
     });
 
     tearDown(() {
@@ -117,7 +116,7 @@ void main() {
         screenDimensions: const Size(100.0, 100.0),
       );
 
-      final File outputFile = File('test.png');
+      final File outputFile = File('test1.png');
       final File actualOutputFile = await controller.drawDiagramToFile(outputFile);
       expect(actualOutputFile.existsSync(), isTrue);
       final List<int> imageContents = actualOutputFile.readAsBytesSync();
@@ -203,7 +202,7 @@ void main() {
         screenDimensions: const Size(100.0, 100.0),
       );
 
-      final File outputFile = File('test.png');
+      final File outputFile = File('test2.png');
       final File actualOutputFile = await controller.drawDiagramToFile(outputFile);
       expect(actualOutputFile.existsSync(), isTrue);
       final List<int> imageContents = actualOutputFile.readAsBytesSync();
@@ -222,11 +221,11 @@ void main() {
         screenDimensions: const Size(100.0, 100.0),
       );
 
-      final File outputFile = File('test.png');
+      final File outputFile = File('test3.png');
       File actualOutputFile = await controller.drawDiagramToFile(outputFile);
       List<int> imageContents = actualOutputFile.readAsBytesSync();
       image.Image decodedImage = image.decodePng(imageContents);
-      expect(decodedImage.width, equals(88));
+      expect(decodedImage.width, equals(64));
       expect(decodedImage.height, equals(48));
       expect(decodedImage[decodedImage.index(44, 18)], equals(0xfff39621)); // Check a pixel value
 

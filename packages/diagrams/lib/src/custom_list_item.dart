@@ -35,6 +35,7 @@ class _VideoDescription extends StatelessWidget {
             style: const TextStyle(
               fontWeight: FontWeight.w500,
               fontSize: 14.0,
+              height: 1.0,
             ),
           ),
           const Padding(padding: EdgeInsets.symmetric(vertical: 2.0)),
@@ -127,7 +128,7 @@ class _ArticleDescription extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
-                ),
+               ),
               ),
               const Padding(padding: EdgeInsets.only(bottom: 2.0)),
               Text(
@@ -195,7 +196,7 @@ class CustomListItemTwo extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0),
       child: SizedBox(
-        height: 100,
+        height: 120,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[

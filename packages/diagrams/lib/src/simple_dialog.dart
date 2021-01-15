@@ -50,7 +50,7 @@ class SimpleDialogDiagram extends StatelessWidget implements DiagramMetadata {
                 body: Center(
                   child: Builder(
                     builder: (BuildContext context) {
-                      return RaisedButton(
+                      return OutlinedButton(
                         key: _openDialogKey,
                         child: const Text('Show Options'),
                         onPressed: () => _askedToLead(context),

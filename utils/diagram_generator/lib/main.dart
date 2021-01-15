@@ -10,6 +10,7 @@ import 'dart:ui';
 import 'package:args/args.dart';
 import 'package:diagram_capture/diagram_capture.dart';
 import 'package:diagrams/diagrams.dart';
+import 'package:flutter/foundation.dart';
 import 'package:platform/platform.dart' as platform_pkg;
 import 'package:path/path.dart' as path;
 // ignore: import_of_legacy_library_into_null_safe
@@ -46,6 +47,17 @@ Future<void> main() async {
   parser.addMultiOption('name');
   parser.addOption('outputDir');
   final ArgResults flags = parser.parse(arguments);
+
+  final StringBuffer errorLog = StringBuffer();
+  FlutterError.onError = (FlutterErrorDetails details) {
+    final DebugPrintCallback oldDebugPrint = debugPrint;
+    debugPrint = (String? message, { int? wrapWidth }) {
+      errorLog.writeln(message);
+      oldDebugPrint(message, wrapWidth: wrapWidth);
+    };
+    FlutterError.dumpErrorToConsole(details, forceReport: true);
+    debugPrint = oldDebugPrint;
+  };
 
   final List<String> categories = flags['category'] as List<String>;
   final List<String> names = flags['name'] as List<String>;
@@ -131,21 +143,46 @@ Future<void> main() async {
     TweenSequenceDiagramStep(controller),
   ];
 
-  for (final DiagramStep<DiagramMetadata> step in steps) {
-    if (categories.isNotEmpty && !categories.contains(step.category)) {
-      continue;
-    }
-    final Directory stepOutputDirectory =
-        Directory(path.join(outputDirectory.absolute.path, step.category));
-    stepOutputDirectory.createSync(recursive: true);
-    controller.outputDirectory = stepOutputDirectory;
-    controller.pixelRatio = 1.0;
-    print('Working on step ${step.runtimeType}');
-    final List<File> files = await step.generateDiagrams(onlyGenerate: names);
-    for (final File file in files) {
-      print('Created file ${file.path}');
-    }
-  }
+  final Completer<void> done = Completer<void>();
+  Zone
+    .current
+    .fork(specification: ZoneSpecification(
+      handleUncaughtError: (
+        Zone self,
+        ZoneDelegate parent,
+        Zone zone,
+        Object error,
+        StackTrace stackTrace,
+      ) {
+        print('Exception! $error\n$stackTrace');
+        errorLog.writeln(error);
+        errorLog.writeln(stackTrace);
+      },
+    ))
+    .runGuarded(() async {
+      for (final DiagramStep<DiagramMetadata> step in steps) {
+        if (categories.isNotEmpty && !categories.contains(step.category)) {
+          continue;
+        }
+        final Directory stepOutputDirectory =
+            Directory(path.join(outputDirectory.absolute.path, step.category));
+        stepOutputDirectory.createSync(recursive: true);
+        controller.outputDirectory = stepOutputDirectory;
+        controller.pixelRatio = 1.0;
+        print('Working on step ${step.runtimeType}');
+        await step.generateDiagrams(onlyGenerate: names);
+      }
+      done.complete();
+    });
+  await done.future;
+
+  // Save errors, if any. (We always create the file, even if empty, to signal we got to the end.)
+  final String errors = errorLog.toString();
+  final File errorsFile = File(path.join(outputDirectory.absolute.path, 'error.log'));
+  errorsFile.writeAsStringSync(errors);
+  if (errors.isNotEmpty)
+    print('Wrote errors to: ${errorsFile.path}');
+
   final DateTime end = DateTime.now();
   final Duration elapsed = end.difference(start);
   const Duration minExecutionTime = Duration(seconds: 10);

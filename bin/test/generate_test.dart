@@ -24,29 +24,30 @@ void main() {
 
     setUp(() {
       processManager = FakeProcessManager((String input) {});
-      temporaryDirectory = Directory.systemTemp.createTempSync();
+      temporaryDirectory = Directory.systemTemp.createTempSync('flutter_generate_test.');
       generator = DiagramGenerator(
         processRunner: ProcessRunner(processManager: processManager),
         temporaryDirectory: temporaryDirectory,
         cleanup: false,
       );
     });
+
+    tearDown(() {
+      temporaryDirectory.delete(recursive: true);
+    });
+
     test('make sure generate generates', () async {
-      final Map<FakeInvocationRecord, List<ProcessResult>> calls =
-          <FakeInvocationRecord, List<ProcessResult>>{
-        FakeInvocationRecord(<String>['flutter', 'devices', '--machine'],
-            temporaryDirectory.path): <ProcessResult>[
-          ProcessResult(
-            0,
-            0,
-            '[{"name": "linux", "id": "linux", "targetPlatform": "linux"}]',
-            '',
-          )
+      final Map<FakeInvocationRecord, List<ProcessResult>> calls = <FakeInvocationRecord, List<ProcessResult>>{
+        FakeInvocationRecord(
+          <String>['flutter', 'devices', '--machine'],
+          temporaryDirectory.path,
+        ): <ProcessResult>[
+          ProcessResult(0, 0, '[{"name": "linux", "id": "linux", "targetPlatform": "linux"}]', ''),
         ],
         FakeInvocationRecord(
-            <String>['flutter', 'run', '--no-sound-null-safety', '-d', 'linux'],
-            path.join(Directory.current.absolute.path, 'utils',
-                'diagram_generator')): <ProcessResult>[
+          <String>['flutter', 'run', '--no-sound-null-safety', '-d', 'linux'],
+          path.join(DiagramGenerator.projectDir, 'utils', 'diagram_generator'),
+        ): <ProcessResult>[
           ProcessResult(0, 0, '', ''),
         ],
       };

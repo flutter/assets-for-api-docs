@@ -64,12 +64,12 @@ class BoxFitDiagram extends StatelessWidget implements DiagramMetadata {
               ),
             ),
           ),
-          const SizedBox(width: 10.0),
+          const SizedBox(width: 30.0),
           Expanded(
             flex: 80,
             child: inner,
           ),
-          const SizedBox(width: 10.0),
+          const SizedBox(width: 30.0),
           Expanded(
             flex: 200,
             child: inner,

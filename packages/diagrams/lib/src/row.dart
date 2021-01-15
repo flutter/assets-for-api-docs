@@ -6,6 +6,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:diagram_capture/diagram_capture.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
@@ -13,13 +14,15 @@ import 'diagram_step.dart';
 const String _row = 'row';
 const String _rowError = 'row_error';
 const String _rowFixed = 'row_fixed';
-const String _rowtextDirection = 'row_textDirection';
+const String _rowTextDirection = 'row_textDirection';
 
 class RowDiagram extends StatelessWidget implements DiagramMetadata {
-  const RowDiagram(this.name);
+  const RowDiagram(this.name, { this.ignoreErrors = false });
 
   @override
   final String name;
+
+  final bool ignoreErrors;
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +53,7 @@ class RowDiagram extends StatelessWidget implements DiagramMetadata {
         );
         break;
       case _rowError:
+        assert(ignoreErrors);
         returnWidget = Row(
           children: const <Widget>[
             FlutterLogo(),
@@ -73,7 +77,7 @@ class RowDiagram extends StatelessWidget implements DiagramMetadata {
           ],
         );
         break;
-      case _rowtextDirection:
+      case _rowTextDirection:
         returnWidget = Row(
           textDirection: TextDirection.rtl,
           children: const <Widget>[
@@ -88,17 +92,16 @@ class RowDiagram extends StatelessWidget implements DiagramMetadata {
         );
         break;
       default:
-        returnWidget = const Text('Error');
-        break;
+        throw Exception('unknown $runtimeType diagram type: $name');
     }
     return ConstrainedBox(
       key: UniqueKey(),
       constraints: BoxConstraints.tight(const Size(400.0, 250.0)),
       child: Container(
-          alignment: FractionalOffset.center,
-          padding: const EdgeInsets.all(5.0),
-          color: Colors.white,
-          child: returnWidget,
+        alignment: FractionalOffset.center,
+        padding: const EdgeInsets.all(5.0),
+        color: Colors.white,
+        child: returnWidget,
       ),
     );
   }
@@ -112,15 +115,33 @@ class RowDiagramStep extends DiagramStep<RowDiagram> {
 
   @override
   Future<List<RowDiagram>> get diagrams async => <RowDiagram>[
-        const RowDiagram(_row),
-        const RowDiagram(_rowError),
-        const RowDiagram(_rowFixed),
-        const RowDiagram(_rowtextDirection),
-      ];
+    const RowDiagram(_row),
+    const RowDiagram(_rowError, ignoreErrors: true),
+    const RowDiagram(_rowFixed),
+    const RowDiagram(_rowTextDirection),
+  ];
 
   @override
   Future<File> generateDiagram(RowDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return await controller.drawDiagramToFile(File('${diagram.name}.png'));
+    final FlutterExceptionHandler? oldHandler = FlutterError.onError;
+    int errorCount = 0;
+    if (diagram.ignoreErrors) {
+      FlutterError.onError = (FlutterErrorDetails details) {
+        debugPrint('Ignoring one error ("${details.exception}").');
+        errorCount += 1;
+      };
+    }
+    try {
+      controller.builder = (BuildContext context) => diagram;
+      return await controller.drawDiagramToFile(File('${diagram.name}.png'));
+    } finally {
+      FlutterError.onError = oldHandler;
+      if (diagram.ignoreErrors && errorCount == 0) {
+        FlutterError.reportError(FlutterErrorDetails(
+          exception: Exception('Expected an error but did not get any errors for "${diagram.name}".'),
+          library: 'diagrams',
+        ));
+      }
+    }
   }
 }

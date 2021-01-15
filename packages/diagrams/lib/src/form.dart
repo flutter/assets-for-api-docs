@@ -37,7 +37,7 @@ class FormDiagram extends StatelessWidget implements DiagramMetadata {
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
-                  child: RaisedButton(
+                  child: OutlinedButton(
                     onPressed: () {},
                     child: const Text('Submit'),
                   ),

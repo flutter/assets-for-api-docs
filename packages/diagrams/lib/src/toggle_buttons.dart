@@ -164,20 +164,23 @@ class ToggleButtonsDiagramStep extends DiagramStep<ToggleButtonsDiagram> {
   Future<void> tapIcons(DiagramController controller, Duration now) async {
     RenderBox target;
     if (now.inMilliseconds % 2000 == 0) {
-      final int targetIcon = tapSteps[_testName]![_stepCount];
-      _stepCount += 1;
-      target = _iconKeys[targetIcon].currentContext!.findRenderObject() as RenderBox;
-      final Offset targetOffset = target.localToGlobal(target.size.center(Offset.zero));
-      final TestGesture gesture = await controller.startGesture(targetOffset);
-      Future<void>.delayed(const Duration(milliseconds: 500), gesture.up);
+      final List<int> steps = tapSteps[_testName]!;
+      if (_stepCount < steps.length) {
+        final int targetIcon = steps[_stepCount];
+        target = _iconKeys[targetIcon].currentContext!.findRenderObject() as RenderBox;
+        final Offset targetOffset = target.localToGlobal(target.size.center(Offset.zero));
+        final TestGesture gesture = await controller.startGesture(targetOffset);
+        Future<void>.delayed(const Duration(milliseconds: 500), gesture.up);
+        _stepCount += 1;
+      }
     }
   }
 
   @override
   Future<File> generateDiagram(ToggleButtonsDiagram diagram) async {
     _stepCount = 0;
-    controller.builder = (BuildContext context) => diagram;
     _testName = diagram.name;
+    controller.builder = (BuildContext context) => diagram;
     return await controller.drawAnimatedDiagramToFiles(
       end: Duration(seconds: tapSteps[_testName]!.length * 2),
       frameRate: _kAnimationFrameRate,

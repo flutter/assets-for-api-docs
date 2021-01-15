@@ -37,11 +37,11 @@ class CardDiagram extends StatelessWidget implements DiagramMetadata {
               ),
               ButtonBar(
                 children: <Widget>[
-                  FlatButton(
+                  TextButton(
                     child: const Text('BUY TICKETS'),
                     onPressed: () {},
                   ),
-                  FlatButton(
+                  TextButton(
                     child: const Text('LISTEN'),
                     onPressed: () {},
                   ),

@@ -265,10 +265,9 @@ class DiagramFlutterBinding extends BindingBase
   /// Advances time by the given duration, and generates a frame.
   ///
   /// The [duration] must not be null, or less than [Duration.zero].
-  Future<void>  pump({Duration duration = Duration.zero}) {
+  Future<void> pump({Duration duration = Duration.zero}) {
     assert(duration >= Duration.zero);
     _timestamp += duration;
-
     handleBeginFrame(_timestamp);
     handleDrawFrame();
     return Future<void>.value();

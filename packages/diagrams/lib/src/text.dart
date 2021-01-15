@@ -252,6 +252,8 @@ class TextDiagramPainter extends CustomPainter {
     path.lineTo(baseOffset.dx - 10, baseOffset.dy + bottom);
     canvas.drawPath(path, paint);
 
+    const double margin = 8;
+
     TextPainter label = TextPainter(
       text: const TextSpan(
         text: 'Font metrics\ndefault height',
@@ -264,7 +266,7 @@ class TextDiagramPainter extends CustomPainter {
       textDirection: TextDirection.ltr,
     );
     label.layout();
-    label.paint(canvas, baseOffset + Offset(-25.0 - 80, (top + bottom) / 2 - 16));
+    label.paint(canvas, baseOffset + Offset(-25.0 - (paint.strokeWidth + margin) - label.width, (top + bottom) / 2 - 16));
 
     paint.color = Colors.red[900]!;
     label = TextPainter(
@@ -279,13 +281,13 @@ class TextDiagramPainter extends CustomPainter {
       textDirection: TextDirection.ltr,
     );
     label.layout();
-    label.paint(canvas, baseOffset + Offset(width + 25 + 8, (emTop + emBottom) / 2 - 16));
+    label.paint(canvas, baseOffset + Offset(width + 25 + margin, (emTop + emBottom) / 2 - 16));
 
     paint.color = Colors.black;
     // Baseline label
     label = TextPainter(
       text: const TextSpan(
-        text: 'Baseline',
+        text: 'Alphabetic Baseline',
         style: TextStyle(
           fontSize: 11,
           color: Colors.black,
@@ -462,7 +464,7 @@ class TextHeightComparisonPainter extends CustomPainter {
     // Baseline label
     label = TextPainter(
       text: const TextSpan(
-        text:'Baseline',
+        text: 'Alphabetic Baseline',
         style: TextStyle(
           fontSize: 9,
           color: Colors.black,
@@ -490,9 +492,9 @@ class TextHeightDiagramStep extends DiagramStep<TextHeightDiagram> {
 
   @override
   Future<List<TextHeightDiagram>> get diagrams async => <TextHeightDiagram>[
-        const TextHeightDiagram('text_height_diagram'),
-        const TextHeightComparison('text_height_comparison_diagram'),
-      ];
+    const TextHeightDiagram('text_height_diagram'),
+    const TextHeightComparison('text_height_comparison_diagram'),
+  ];
 
   @override
   Future<File> generateDiagram(TextHeightDiagram diagram) async {
@@ -509,12 +511,12 @@ class TextDiagramStep extends DiagramStep<TextDiagram> {
 
   @override
   Future<List<TextDiagram>> get diagrams async => <TextDiagram>[
-        const TextDiagram(_text),
-        const TextDiagram(_textEllipsis),
-        const TextDiagram(_textRich),
-        const TextDiagram(_textBorder),
-        const TextDiagram(_textGradient),
-      ];
+    const TextDiagram(_text),
+    const TextDiagram(_textEllipsis),
+    const TextDiagram(_textRich),
+    const TextDiagram(_textBorder),
+    const TextDiagram(_textGradient),
+  ];
 
   @override
   Future<File> generateDiagram(TextDiagram diagram) async {

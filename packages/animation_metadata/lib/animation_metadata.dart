@@ -57,8 +57,8 @@ class AnimationMetadata {
       }).toList(),
     };
     const JsonEncoder encoder = JsonEncoder.withIndent('  ');
-    print('Metadata: $metadata');
     final String jsonMetadata = encoder.convert(metadata);
+    print('Writing metadata for ${duration.inMilliseconds}ms animation (${frameFiles.length} frames) to: ${metadataFile.path}');
     return metadataFile.writeAsString(jsonMetadata);
   }
 

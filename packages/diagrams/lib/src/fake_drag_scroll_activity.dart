@@ -47,8 +47,10 @@ class FakeDragScrollActivity extends ScrollActivity {
   double _lastValue;
 
   void _tick() {
-    delegate.applyUserOffset(_lastValue - _controller.value);
-    _lastValue = _controller.value;
+    if (_lastValue != _controller.value) {
+      delegate.applyUserOffset(_lastValue - _controller.value);
+      _lastValue = _controller.value;
+    }
   }
 
   void _end() {
