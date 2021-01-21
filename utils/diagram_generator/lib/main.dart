@@ -62,6 +62,8 @@ Future<void> main() async {
   final List<String> categories = flags['category'] as List<String>;
   final List<String> names = flags['name'] as List<String>;
 
+  print('Filters:\n  categories: $categories\n  names: $names');
+
   final DateTime start = DateTime.now();
   final Directory outputDirectory = await prepareOutputDirectory(platform.isAndroid ? null : '/tmp/diagrams');
 
@@ -72,8 +74,7 @@ Future<void> main() async {
   );
 
   // Add the diagram steps here.
-  final List<DiagramStep<DiagramMetadata>> steps =
-      <DiagramStep<DiagramMetadata>>[
+  final List<DiagramStep<DiagramMetadata>> steps = <DiagramStep<DiagramMetadata>>[
     AlertDialogDiagramStep(controller),
     AlignDiagramStep(controller),
     AnimationStatusValueDiagramStep(controller),
@@ -100,6 +101,7 @@ Future<void> main() async {
     FloatingActionButtonDiagramStep(controller),
     FloatingActionButtonLocationDiagramStep(controller),
     FormDiagramStep(controller),
+    FontFeatureDiagramStep(controller),
     GestureDetectorDiagramStep(controller),
     GridViewDiagramStep(controller),
     HeroesDiagramStep(controller),

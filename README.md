@@ -7,6 +7,7 @@ specially-crafted graphics.
 Assets committed to this repo and pushed to GitHub are immediately
 available for linking and reference.
 
+
 ## URL structure
 
 Reference the assets with this URL structure:
@@ -19,6 +20,7 @@ material library would go in the `assets/material/` directory and be at
 
 All asset files should be under the `assets` directory in an appropriate
 subdirectory.
+
 
 ## Generation
 
@@ -38,7 +40,7 @@ bin/generate.sh -c cupertino,material
 bin/generate.sh -n basic_material_app,blend_mode
 ```
 
-`bin/generate.sh -h` lists available arguments.
+`bin/generate.sh --help` lists available arguments.
 
 ### Prerequisites
 
@@ -57,6 +59,7 @@ in a directory in the `PATH` environment variable. (e.g. PATH=~/<path_to_flutter
 When using an Android device, be sure that the  `adb` command is the same as the one running
 as a server (which is often started by your IDE, so use the same `adb` the IDE is running).
 
+
 ## Optimization
 
 Please consider optimization tools for assets.
@@ -72,6 +75,20 @@ the `assets/tests` directory should not be optimized.
 
 The automatic generation tool will automatically apply optimization to
 the assets it generates.
+
+
+## Creating new diagrams
+
+To create a new diagram:
+
+1. Add a new file to `packages/diagrams/lib/src/`, and put the tests in there.
+
+2. Export that file from `packages/diagrams/lib/diagrams.dart`.
+
+3. Add your new class to the list in `assets-for-api-docs/utils/diagram_generator/lib/main.dart`.
+
+4. Run `generate.sh --name xxx` where 'xxx' is the name of your diagram.
+
 
 ## Origin of third-party content
 

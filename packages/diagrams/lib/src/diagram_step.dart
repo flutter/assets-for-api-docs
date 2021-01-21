@@ -36,7 +36,7 @@ abstract class DiagramStep<T extends DiagramMetadata> {
   Future<List<File>> generateDiagrams({List<String> onlyGenerate = const <String>[]}) async {
     final List<File> files = <File>[];
     for (final T diagram in await diagrams) {
-      if (onlyGenerate.isNotEmpty && !onlyGenerate.contains(diagram.name)) {
+      if (onlyGenerate.isNotEmpty && !onlyGenerate.any((String name) => diagram.name.contains(name))) {
         continue;
       }
       files.add(await generateDiagram(diagram));
