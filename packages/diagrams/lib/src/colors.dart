@@ -10,7 +10,7 @@ import 'package:diagram_capture/diagram_capture.dart';
 
 import 'diagram_step.dart';
 
-const double _kSwatchWidth = 400.0;
+const double _kSwatchWidth = 450.0;
 const double _kFontSize = 19.0;
 const double _kPadding = 10.0;
 
@@ -33,12 +33,14 @@ class ColorSwatchDiagram extends ColorDiagram {
     for (final int key in keys) {
       final Color textColor = ThemeData.estimateBrightnessForColor(swatch[key]!) == Brightness.light ? Colors.black : Colors.white;
       TextStyle style = TextStyle(color: textColor, fontSize: _kFontSize);
-      String label;
+      String label, shadeLabel;
       if (swatch[key]!.value == swatch.value) {
         label = name;
+        shadeLabel = '';
         style = style.copyWith(fontWeight: FontWeight.w800);
       } else {
         label = '$name[$key]';
+        shadeLabel = '$name.shade$key';
       }
       items.add(Container(
         color: swatch[key],
@@ -46,7 +48,13 @@ class ColorSwatchDiagram extends ColorDiagram {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Text(label, style: style),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(label, style: style),
+                if (shadeLabel != '') Text(shadeLabel, style: style)
+              ],
+            ),
             Text('0x${swatch[key]!.value.toRadixString(16).toUpperCase()}', style: style),
           ],
         ),
