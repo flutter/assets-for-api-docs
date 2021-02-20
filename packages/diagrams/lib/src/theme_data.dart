@@ -103,7 +103,7 @@ class ThemeDataDiagram extends StatelessWidget implements DiagramMetadata {
                           ),
                           Label(
                             _bodyKey,
-                            ' body1',
+                            ' bodyText2',
                             const FractionalOffset(1.1, 0.5),
                           ),
                           Label(
