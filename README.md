@@ -87,7 +87,7 @@ To create a new diagram:
 
 3. Add your new class to the list in `assets-for-api-docs/utils/diagram_generator/lib/main.dart`.
 
-4. Run `generate.sh --name xxx` where 'xxx' is the name of your diagram.
+4. Run `bin/generate.sh --name xxx` where 'xxx' is the name of your diagram.
 
 
 ## Origin of third-party content

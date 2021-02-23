@@ -260,6 +260,7 @@ class DiagramGenerator {
     }
     final ProcessPool pool = ProcessPool();
     await pool.runToCompletion(jobs);
+    _checkJobResults(jobs);
     return outputs;
   }
 
@@ -348,9 +349,31 @@ class DiagramGenerator {
     }
     if (jobs.isNotEmpty) {
       final ProcessPool pool = ProcessPool();
-      await for (final WorkerJob _ in pool.startWorkers(jobs)) {}
+      await pool.runToCompletion(jobs);
+      _checkJobResults(jobs);
     }
   }
+}
+
+/// Sets the exit code to 1 if at least one of the jobs failed.
+void _checkJobResults(List<WorkerJob> jobs) {
+  if (jobs.any(_hasJobFailed)) {
+    // We're already printing the error message. All that's left is set
+    // the exit code.
+    exitCode = 1;
+  }
+}
+
+/// Whether the execution of a job resulted in an exception or its process
+/// exited with a non-zero exit code.
+bool _hasJobFailed(WorkerJob job) {
+  if (job.exception != null) {
+    return true;
+  }
+  if ((job.result?.exitCode ?? 0) != 0) {
+    return true;
+  }
+  return false;
 }
 
 Future<void> main(List<String> arguments) async {
