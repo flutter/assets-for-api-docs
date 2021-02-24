@@ -106,15 +106,17 @@ class DiagramGenerator {
   Future<void> generateDiagrams(List<String> categories, List<String> names) async {
     final DateTime startTime = DateTime.now();
     if (!await _findIdForDeviceName()) {
-      stderr.writeln('Unable to find device ID for device $device. Are you sure it is attached?');
-      return;
+      throw GeneratorException('Unable to find device ID for device $device. Are you sure it is attached?');
     }
 
-    await _createScreenshots(categories, names);
-    final List<File> outputFiles = await _combineAnimations(await _transferImages());
-    await _optimizeImages(outputFiles);
-    if (cleanup) {
-      await temporaryDirectory.delete(recursive: true);
+    try {
+      await _createScreenshots(categories, names);
+      final List<File> outputFiles = await _combineAnimations(await _transferImages());
+      await _optimizeImages(outputFiles);
+    } finally {
+      if (cleanup) {
+        await temporaryDirectory.delete(recursive: true);
+      }
     }
     print('Elapsed time for diagram generation: ${DateTime.now().difference(startTime)}');
   }
@@ -260,7 +262,7 @@ class DiagramGenerator {
     }
     final ProcessPool pool = ProcessPool();
     await pool.runToCompletion(jobs);
-    _checkJobResults(jobs);
+    _checkJobResults(ffmpegCommand, jobs);
     return outputs;
   }
 
@@ -350,17 +352,15 @@ class DiagramGenerator {
     if (jobs.isNotEmpty) {
       final ProcessPool pool = ProcessPool();
       await pool.runToCompletion(jobs);
-      _checkJobResults(jobs);
+      _checkJobResults(optiPngCommand, jobs);
     }
   }
 }
 
-/// Sets the exit code to 1 if at least one of the jobs failed.
-void _checkJobResults(List<WorkerJob> jobs) {
+/// Throws a [GeneratorException] if at least one of the `jobs` failed.
+void _checkJobResults(String command, List<WorkerJob> jobs) {
   if (jobs.any(_hasJobFailed)) {
-    // We're already printing the error message. All that's left is set
-    // the exit code.
-    exitCode = 1;
+    throw GeneratorException('Some worker jobs failed: $command');
   }
 }
 
@@ -428,6 +428,9 @@ Future<void> main(List<String> arguments) async {
       cleanup: !keepTemporaryDirectory,
     ).generateDiagrams(flags['category'] as List<String>, flags['name'] as List<String>);
   } on GeneratorException catch (error) {
-    print('Aborting. $error');
+    stderr
+      ..writeln('Aborting diagram generator.')
+      ..writeln(error);
+    exitCode = 1;
   }
 }
