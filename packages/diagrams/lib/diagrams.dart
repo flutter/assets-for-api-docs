@@ -28,6 +28,7 @@ export 'src/divider.dart';
 export 'src/drawer.dart';
 export 'src/dropdown_button.dart';
 export 'src/expanded.dart';
+export 'src/filter_quality.dart';
 export 'src/flat_button.dart';
 export 'src/floating_action_button.dart';
 export 'src/floating_action_button_location.dart';

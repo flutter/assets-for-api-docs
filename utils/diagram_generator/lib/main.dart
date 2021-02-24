@@ -97,6 +97,7 @@ Future<void> main() async {
     DrawerDiagramStep(controller),
     DropdownButtonDiagramStep(controller),
     ExpandedDiagramStep(controller),
+    FilterQualityDiagramStep(controller),
     FlatButtonDiagramStep(controller),
     FloatingActionButtonDiagramStep(controller),
     FloatingActionButtonLocationDiagramStep(controller),

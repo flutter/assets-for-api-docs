@@ -106,15 +106,17 @@ class DiagramGenerator {
   Future<void> generateDiagrams(List<String> categories, List<String> names) async {
     final DateTime startTime = DateTime.now();
     if (!await _findIdForDeviceName()) {
-      stderr.writeln('Unable to find device ID for device $device. Are you sure it is attached?');
-      return;
+      throw GeneratorException('Unable to find device ID for device $device. Are you sure it is attached?');
     }
 
-    await _createScreenshots(categories, names);
-    final List<File> outputFiles = await _combineAnimations(await _transferImages());
-    await _optimizeImages(outputFiles);
-    if (cleanup) {
-      await temporaryDirectory.delete(recursive: true);
+    try {
+      await _createScreenshots(categories, names);
+      final List<File> outputFiles = await _combineAnimations(await _transferImages());
+      await _optimizeImages(outputFiles);
+    } finally {
+      if (cleanup) {
+        await temporaryDirectory.delete(recursive: true);
+      }
     }
     print('Elapsed time for diagram generation: ${DateTime.now().difference(startTime)}');
   }
@@ -260,6 +262,7 @@ class DiagramGenerator {
     }
     final ProcessPool pool = ProcessPool();
     await pool.runToCompletion(jobs);
+    _checkJobResults(ffmpegCommand, jobs);
     return outputs;
   }
 
@@ -348,9 +351,29 @@ class DiagramGenerator {
     }
     if (jobs.isNotEmpty) {
       final ProcessPool pool = ProcessPool();
-      await for (final WorkerJob _ in pool.startWorkers(jobs)) {}
+      await pool.runToCompletion(jobs);
+      _checkJobResults(optiPngCommand, jobs);
     }
   }
+}
+
+/// Throws a [GeneratorException] if at least one of the `jobs` failed.
+void _checkJobResults(String command, List<WorkerJob> jobs) {
+  if (jobs.any(_hasJobFailed)) {
+    throw GeneratorException('Some worker jobs failed: $command');
+  }
+}
+
+/// Whether the execution of a job resulted in an exception or its process
+/// exited with a non-zero exit code.
+bool _hasJobFailed(WorkerJob job) {
+  if (job.exception != null) {
+    return true;
+  }
+  if ((job.result?.exitCode ?? 0) != 0) {
+    return true;
+  }
+  return false;
 }
 
 Future<void> main(List<String> arguments) async {
@@ -405,6 +428,9 @@ Future<void> main(List<String> arguments) async {
       cleanup: !keepTemporaryDirectory,
     ).generateDiagrams(flags['category'] as List<String>, flags['name'] as List<String>);
   } on GeneratorException catch (error) {
-    print('Aborting. $error');
+    stderr
+      ..writeln('Aborting diagram generator.')
+      ..writeln(error);
+    exitCode = 1;
   }
 }
