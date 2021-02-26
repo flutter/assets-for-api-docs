@@ -44,21 +44,24 @@ bin/generate.sh -n basic_material_app,blend_mode
 
 ### Prerequisites
 
-The `generate.dart` script only works on macOS and Linux, because of the supporting apps it needs to
-run.
+The `generate.dart` script works on macOS, Linux, and Windows, but it needs several prerequisites in order to run. On
+Linux and macOS run `bin/generate.sh`. On Windows, run `bin/generate.bat`.
 
 To optimize PNG files, it needs `optipng`, which is available for macOS via Homebrew, and Linux via
-apt-get.
+apt-get, and Windows from the [optipng website](http://optipng.sourceforge.net/). 
 
 To convert animations into mp4 files, it needs `ffmpeg`, available for macOS via Homebrew and Linux
-via apt-get.
+via apt-get, and for Windows from the [FFMPEG website](https://ffmpeg.org/download.html).
 
-`flutter`, `dart` (and when using an Android device, `adb`) commands need to be available
-in a directory in the `PATH` environment variable. (e.g. PATH=~/<path_to_flutter>/flutter/bin/cache/dart-sdk/bin:~/Android/Sdk/platform-tools:$PATH)
+Both `optipng` and `ffmpeg` need to be in your path when you run the generate script.
+
+`flutter`, `dart` (and when using an Android device, `adb`) commands also need to be available
+in a directory in the `PATH` environment variable. (e.g. `PATH=~/<path_to_flutter>/flutter/bin/cache/dart-sdk/bin:~/Android/Sdk/platform-tools:$PATH`)
 
 When using an Android device, be sure that the  `adb` command is the same as the one running
 as a server (which is often started by your IDE, so use the same `adb` the IDE is running).
 
+You cannot currently generate docs on an iOS device (although you can generate them on macOS).
 
 ## Optimization
 
