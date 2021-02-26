@@ -24,7 +24,8 @@ void main() {
 
     setUp(() {
       processManager = FakeProcessManager((String input) {});
-      temporaryDirectory = Directory.systemTemp.createTempSync('flutter_generate_test.');
+      temporaryDirectory =
+          Directory.systemTemp.createTempSync('flutter_generate_test.');
       generator = DiagramGenerator(
         processRunner: ProcessRunner(processManager: processManager),
         temporaryDirectory: temporaryDirectory,
@@ -36,24 +37,52 @@ void main() {
       temporaryDirectory.delete(recursive: true);
     });
 
-    test('make sure generate generates', () async {
-      final Map<FakeInvocationRecord, List<ProcessResult>> calls = <FakeInvocationRecord, List<ProcessResult>>{
-        FakeInvocationRecord(
-          <String>['flutter', 'devices', '--machine'],
-          temporaryDirectory.path,
-        ): <ProcessResult>[
-          ProcessResult(0, 0, '[{"name": "linux", "id": "linux", "targetPlatform": "linux"}]', ''),
-        ],
-        FakeInvocationRecord(
-          <String>['flutter', 'run', '--no-sound-null-safety', '-d', 'linux'],
-          path.join(DiagramGenerator.projectDir, 'utils', 'diagram_generator'),
-        ): <ProcessResult>[
-          ProcessResult(0, 0, '', ''),
-        ],
-      };
-      processManager.fakeResults = calls;
-      await generator.generateDiagrams(<String>[], <String>[]);
-      processManager.verifyCalls(calls.keys.toList());
-    });
+    try {
+      test('make sure generate generates', () async {
+        final Map<FakeInvocationRecord, List<ProcessResult>> calls =
+            <FakeInvocationRecord, List<ProcessResult>>{
+          FakeInvocationRecord(
+            <String>['flutter', 'devices', '--machine'],
+            temporaryDirectory.path,
+          ): <ProcessResult>[
+            ProcessResult(
+                0,
+                0,
+                '[{"name": "linux", "id": "linux", "targetPlatform": "linux"}]',
+                ''),
+          ],
+          FakeInvocationRecord(
+            <String>[
+              'flutter',
+              'run',
+              '--no-sound-null-safety',
+              '-d',
+              'linux',
+              '--dart-entrypoint-args',
+              '--platform',
+              '--dart-entrypoint-args',
+              'linux',
+              '--dart-entrypoint-args',
+              '--output-dir',
+              '--dart-entrypoint-args',
+              temporaryDirectory.path,
+            ],
+            path.join(DiagramGenerator.projectDir, 'utils', 'diagram_generator'),
+          ): <ProcessResult>[
+            ProcessResult(0, 0, '', ''),
+          ],
+        };
+        processManager.fakeResults = calls;
+        // Fake an output file
+        final File errorLog = File(path.join(temporaryDirectory.path, 'error.log'));
+        errorLog.writeAsString('');
+        final File output = File(path.join(temporaryDirectory.path, 'output.png'));
+        output.writeAsString('');
+        await generator.generateDiagrams(<String>[], <String>[]);
+        processManager.verifyCalls(calls.keys.toList());
+      });
+    } catch (e, s) {
+      print(s);
+    }
   });
 }
