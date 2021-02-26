@@ -6,7 +6,7 @@ REM found in the LICENSE file.
 REM ---------------------------------- NOTE ----------------------------------
 REM
 REM Please keep the logic in this file consistent with the logic in the
-REM `generate.sh` script in the same directory to ensure that it continues to
+REM "generate" script in the same directory to ensure that it continues to
 REM work across platforms.
 REM
 REM --------------------------------------------------------------------------

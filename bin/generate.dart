@@ -1,4 +1,4 @@
-// Copyright 2018 The Chromium Authors. All rights reserved.
+// Copyright 2014 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -302,7 +302,7 @@ class DiagramGenerator {
       .toList();
 
     if (errorFiles.length != 1)
-      throw GeneratorException('Subprocess did not complete cleanly!: $errorFiles');
+      throw GeneratorException('Subprocess did not complete cleanly!');
 
     print('Processing ${inputFiles.length - 1} files...');
 
@@ -436,26 +436,14 @@ String getDeviceList(Map<String, Map<String, String>> devices) {
   return output.join('\n');
 }
 
-// This will default to macOS on macOS, linux on linux, and the first attached
-// Android device on Windows.
+// This will default to the platform that the script is running on.
 String getDefaultDevice(Map<String, Map<String, String>> devices) {
   if (devices.isEmpty) {
     return '';
   }
   final String platform = Platform.operatingSystem.toLowerCase();
   if (devices.keys.contains(platform)) {
-    if (platform != 'windows') {
-      // We don't yet support Windows as a device, since the process requires
-      // some Unix tools still (ffmpeg, optipng, etc.).
-      return devices[platform]!['id']!;
-    }
-  }
-  for (final String key in devices.keys) {
-    if (devices[key]!['targetPlatform']!.startsWith('android')) {
-      // If we're not on a supported platform, return the first Android device
-      // found, if any.
-      return devices[key]!['id']!;
-    }
+    return devices[platform]!['id']!;
   }
   return '';
 }

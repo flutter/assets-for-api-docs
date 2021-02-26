@@ -29,23 +29,24 @@ Images must be code-generated.
 To create new images, see the [`packages/diagrams/lib/src/`](./packages/diagrams/lib/src/) directory.
 
 The [`generate.dart`](./bin/generate.dart) script regenerates almost all of existing assets
-using the Flutter version you have installed. A small wrapper [`bin/generate.sh`](./bin/generate.sh)
+using the Flutter version you have installed. A small wrapper [`bin/generate`](./bin/generate)
+([`bin\generate.bat`](./bin/generate.bat) on Windows)
 is provided as a convenience.
 
 To limit image generation to certain categories and/or names, run:
 ```sh
 # Filter by category
-bin/generate.sh -c cupertino,material
+bin/generate -c cupertino,material
 # Filter by name
-bin/generate.sh -n basic_material_app,blend_mode
+bin/generate -n basic_material_app,blend_mode
 ```
 
-`bin/generate.sh --help` lists available arguments.
+`bin/generate --help` lists available arguments.
 
 ### Prerequisites
 
 The `generate.dart` script works on macOS, Linux, and Windows, but it needs several prerequisites in order to run. On
-Linux and macOS run `bin/generate.sh`. On Windows, run `bin/generate.bat`.
+Linux and macOS run `bin/generate`. On Windows, run `bin\generate.bat`.
 
 To optimize PNG files, it needs `optipng`, which is available for macOS via Homebrew, and Linux via
 apt-get, and Windows from the [optipng website](http://optipng.sourceforge.net/). 
@@ -90,7 +91,7 @@ To create a new diagram:
 
 3. Add your new class to the list in `assets-for-api-docs/utils/diagram_generator/lib/main.dart`.
 
-4. Run `bin/generate.sh --name xxx` where 'xxx' is the name of your diagram.
+4. Run `bin/generate --name xxx` where 'xxx' is the name of your diagram.
 
 
 ## Origin of third-party content
