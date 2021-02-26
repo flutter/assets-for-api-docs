@@ -112,8 +112,7 @@ class DiagramGenerator {
         await temporaryDirectory.delete(recursive: true);
       }
     }
-    print(
-        'Elapsed time for diagram generation: ${DateTime.now().difference(startTime)}');
+    print('Elapsed time for diagram generation: ${DateTime.now().difference(startTime)}');
   }
 
   Future<void> _createScreenshots(List<String> categories, List<String> names) async {
@@ -462,8 +461,8 @@ Future<void> main(List<String> arguments) async {
       abbr: 'd',
       help: 'Specify a device ID to use for generating the diagrams. Defaults '
           'to the host platform that the script is run on, if that platform is '
-          'supported, or an attached device if not. Default on this machine is '
-          '${getDefaultDevice(devices)}. Available devices are:\n${getDeviceList(devices)}\n',
+          'supported, or an attached device if not. Available devices '
+          'are:\n${getDeviceList(devices)}\n',
       defaultsTo: getDefaultDevice(devices));
   parser.addMultiOption('category',
       abbr: 'c',
