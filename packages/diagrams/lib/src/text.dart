@@ -680,7 +680,6 @@ class RenderTextHeightBreakDown extends RenderBox with RenderObjectWithChildMixi
       return;
     textPainter.textDirection = value;
     markNeedsLayout();
-    markNeedsSemanticsUpdate();
   }
 
   TextSpan get text => textPainter.text as TextSpan;
@@ -689,7 +688,6 @@ class RenderTextHeightBreakDown extends RenderBox with RenderObjectWithChildMixi
       return;
     textPainter.text = value;
     markNeedsLayout();
-    markNeedsSemanticsUpdate();
   }
 
   Color get backgroundColor => _backgroundColor;
@@ -714,28 +712,29 @@ class RenderTextHeightBreakDown extends RenderBox with RenderObjectWithChildMixi
   bool get shouldPaintHeightIndicator => _shouldPaintHeightIndicator;
   bool _shouldPaintHeightIndicator;
   set shouldPaintHeightIndicator(bool value) {
-    if (value != _shouldPaintHeightIndicator) {
-      _shouldPaintHeightIndicator = value;
-      markNeedsPaint();
-    }
+    if (value == _shouldPaintHeightIndicator)
+      return;
+
+    _shouldPaintHeightIndicator = value;
+    markNeedsPaint();
   }
 
   bool get shouldPaintLeadingIndicator => _shouldPaintLeadingIndicator;
   bool _shouldPaintLeadingIndicator;
   set shouldPaintLeadingIndicator(bool value) {
-    if (value != _shouldPaintLeadingIndicator) {
-      _shouldPaintLeadingIndicator = value;
-      markNeedsPaint();
-    }
+    if (value == _shouldPaintLeadingIndicator)
+      return;
+    _shouldPaintLeadingIndicator = value;
+    markNeedsPaint();
   }
 
   bool get shouldPaintCaptions => _shouldPaintCaptions;
   bool _shouldPaintCaptions;
   set shouldPaintCaptions(bool value) {
-    if (value != _shouldPaintCaptions) {
-      _shouldPaintCaptions = value;
-      markNeedsPaint();
-    }
+    if (value == _shouldPaintCaptions)
+      return;
+    _shouldPaintCaptions = value;
+    markNeedsPaint();
   }
 
   late final TextPainter heightCaptionTextPainter = TextPainter(textDirection: textDirection);
@@ -780,7 +779,7 @@ class RenderTextHeightBreakDown extends RenderBox with RenderObjectWithChildMixi
       : (size - textPainter.size as Offset) / 2 + offset;
 
     assert(lineBoxOrigin.dy == offset.dy);
-    // Paint the (almost) centered text.
+    // Paint the text. Layout is done in performLayout.
     textPainter.paint(canvas, lineBoxOrigin);
 
     // Change the coordinate space to the line box (i.e. in textPainter
@@ -882,7 +881,6 @@ class RenderTextHeightBreakDown extends RenderBox with RenderObjectWithChildMixi
         -fontMetricsLabelPadding + topLeadingArea.bottomCenter,
       );
     }
-
 
     if (glyphsBox.bottom >= size.height - 1)
       return;
