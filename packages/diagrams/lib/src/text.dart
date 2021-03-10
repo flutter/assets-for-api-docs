@@ -488,8 +488,8 @@ class TextHeightComparisonPainter extends CustomPainter {
 
 /// Side-by-side comparison of paragraphs with different text height
 /// configuration combinations.
-class TextHeightBreakDown extends TextHeightDiagram implements DiagramMetadata {
-  const TextHeightBreakDown(String name) : super(name);
+class TextHeightBreakdown extends TextHeightDiagram implements DiagramMetadata {
+  const TextHeightBreakdown(String name) : super(name);
 
   static const double height = 4;
   static const double fontSize = 90;
@@ -518,7 +518,7 @@ class TextHeightBreakDown extends TextHeightDiagram implements DiagramMetadata {
                 children: const <Widget>[
                   // This must be the first child of the column for the Row
                   // elements to be properly baseline-aligned.
-                  TextHeightBreakDownRow(
+                  TextHeightBreakdownRow(
                     text: text,
                     backgroundColor: Colors.transparent,
                     style: TextStyle(
@@ -545,7 +545,7 @@ class TextHeightBreakDown extends TextHeightDiagram implements DiagramMetadata {
                   Column(
                     mainAxisSize: MainAxisSize.min,
                     children: const <Widget>[
-                      TextHeightBreakDownRow(
+                      TextHeightBreakdownRow(
                         text: text,
                         backgroundColor: Colors.transparent,
                         style: TextStyle(
@@ -563,7 +563,7 @@ class TextHeightBreakDown extends TextHeightDiagram implements DiagramMetadata {
                   Column(
                     mainAxisSize: MainAxisSize.min,
                     children: const <Widget>[
-                      TextHeightBreakDownRow(
+                      TextHeightBreakdownRow(
                         text: text,
                         backgroundColor: Colors.transparent,
                         style: TextStyle(
@@ -582,7 +582,7 @@ class TextHeightBreakDown extends TextHeightDiagram implements DiagramMetadata {
                   Column(
                     mainAxisSize: MainAxisSize.min,
                     children: const <Widget>[
-                      TextHeightBreakDownRow(
+                      TextHeightBreakdownRow(
                         text: text,
                         backgroundColor: Colors.transparent,
                         style: TextStyle(
@@ -607,8 +607,8 @@ class TextHeightBreakDown extends TextHeightDiagram implements DiagramMetadata {
   }
 }
 
-class TextHeightBreakDownRow extends LeafRenderObjectWidget {
-   const TextHeightBreakDownRow({
+class TextHeightBreakdownRow extends LeafRenderObjectWidget {
+   const TextHeightBreakdownRow({
      Key? key,
      required this.text,
      required this.backgroundColor,
@@ -628,8 +628,8 @@ class TextHeightBreakDownRow extends LeafRenderObjectWidget {
   final bool shouldPaintCaptions;
 
   @override
-  RenderTextHeightBreakDown createRenderObject(BuildContext context) {
-    return RenderTextHeightBreakDown(
+  RenderTextHeightBreakdown createRenderObject(BuildContext context) {
+    return RenderTextHeightBreakdown(
       text: TextSpan(text: text, style: style),
       backgroundColor: backgroundColor,
       textDirection: Directionality.of(context),
@@ -641,7 +641,7 @@ class TextHeightBreakDownRow extends LeafRenderObjectWidget {
   }
 
   @override
-  void updateRenderObject(BuildContext context, RenderTextHeightBreakDown renderObject) {
+  void updateRenderObject(BuildContext context, RenderTextHeightBreakdown renderObject) {
     renderObject
       ..text = TextSpan(text: text, style: style)
       ..backgroundColor = backgroundColor
@@ -653,8 +653,8 @@ class TextHeightBreakDownRow extends LeafRenderObjectWidget {
   }
 }
 
-class RenderTextHeightBreakDown extends RenderBox with RenderObjectWithChildMixin<RenderBox>{
-  RenderTextHeightBreakDown({
+class RenderTextHeightBreakdown extends RenderBox with RenderObjectWithChildMixin<RenderBox>{
+  RenderTextHeightBreakdown({
     required TextDirection textDirection,
     required TextSpan text,
     required Color backgroundColor,
@@ -1004,7 +1004,7 @@ class TextHeightDiagramStep extends DiagramStep<TextHeightDiagram> {
   Future<List<TextHeightDiagram>> get diagrams async => <TextHeightDiagram>[
     const TextHeightDiagram('text_height_diagram'),
     const TextHeightComparison('text_height_comparison_diagram'),
-    const TextHeightBreakDown('text_height_breakdown'),
+    const TextHeightBreakdown('text_height_breakdown'),
   ];
 
   @override
