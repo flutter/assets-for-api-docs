@@ -491,9 +491,9 @@ class TextHeightComparisonPainter extends CustomPainter {
 class TextHeightBreakdown extends TextHeightDiagram implements DiagramMetadata {
   const TextHeightBreakdown(String name) : super(name);
 
-  static const double height = 4;
-  static const double fontSize = 90;
-  static const String text = ' Axy ';
+  static const double _height = 4;
+  static const double _fontSize = 90;
+  static const String _text = ' Axy ';
 
   @override
   Widget build(BuildContext context) {
@@ -505,7 +505,7 @@ class TextHeightBreakdown extends TextHeightDiagram implements DiagramMetadata {
         children: <Widget>[
           const Center(
             child: Text(
-              'Roboto, fontSize:$fontSize, height:$height',
+              'Roboto, fontSize: $_fontSize, height: $_height',
               style: TextStyle(fontSize: 30, fontWeight: FontWeight.w700),
             ),
           ),
@@ -513,29 +513,56 @@ class TextHeightBreakdown extends TextHeightDiagram implements DiagramMetadata {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: const <Widget>[
-                  // This must be the first child of the column for the Row
-                  // elements to be properly baseline-aligned.
-                  TextHeightBreakdownRow(
-                    text: text,
-                    backgroundColor: Colors.transparent,
-                    style: TextStyle(
-                      fontSize: fontSize,
-                      height: height,
-                      color: Colors.black,
-                      leadingDistribution: TextLeadingDistribution.proportional,
-                    ),
-                    shouldPaintHeightIndicator: true,
-                    shouldPaintCaptions: true,
-                    shouldPaintLeadingIndicator: true,
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.baseline,
+                textBaseline: TextBaseline.alphabetic,
+                children: <Widget>[
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: const <Widget>[
+                      // This must be the first child of the column for the Row
+                      // elements to be properly baseline-aligned.
+                      TextHeightBreakdownRow(
+                        text: _text,
+                        backgroundColor: Colors.transparent,
+                        style: TextStyle(
+                          fontSize: _fontSize,
+                          height: _height,
+                          color: Colors.black,
+                          leadingDistribution: TextLeadingDistribution.proportional,
+                        ),
+                        paintHeightIndicator: true,
+                        paintCaptions: true,
+                        paintLeadingIndicator: true,
+                      ),
+                      SizedBox(height: 30),
+                      // This column has the height indicator so the glyph is not
+                      // centered. This is a hack to offset the "Configuration 1"
+                      // caption so it looks more aligned with the glyph.
+                      Text('                        Configuration 1', textScaleFactor: 1.5),
+                    ],
                   ),
-                  SizedBox(height: 30),
-                  // This column has the height indicator so the glyph is not
-                  // centered. This is a hack to offset the "Configuration 1"
-                  // caption so it looks more aligned with the glyph.
-                  Text('                        Configuration 1', textScaleFactor: 1.5),
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: const <Widget>[
+                      TextHeightBreakdownRow(
+                        text: _text,
+                        backgroundColor: Colors.transparent,
+                        style: TextStyle(
+                          fontSize: _fontSize,
+                          height: _height,
+                          color: Colors.black,
+                          leadingDistribution:
+                              TextLeadingDistribution.proportional,
+                        ),
+                        textHeightBehavior:
+                            TextHeightBehavior(applyHeightToFirstAscent: false),
+                        paintCaptions: true,
+                      ),
+                      SizedBox(height: 30),
+                      Text('Configuration 2', textScaleFactor: 1.5),
+                    ],
+                  ),
                 ],
               ),
               Row(
@@ -546,34 +573,15 @@ class TextHeightBreakdown extends TextHeightDiagram implements DiagramMetadata {
                     mainAxisSize: MainAxisSize.min,
                     children: const <Widget>[
                       TextHeightBreakdownRow(
-                        text: text,
+                        text: _text,
                         backgroundColor: Colors.transparent,
                         style: TextStyle(
-                          fontSize: fontSize,
-                          height: height,
+                          fontSize: _fontSize,
+                          height: _height,
                           color: Colors.black,
                           leadingDistribution: TextLeadingDistribution.even,
                         ),
-                        shouldPaintLeadingIndicator: true,
-                      ),
-                      SizedBox(height: 30),
-                      Text('Configuration 2', textScaleFactor: 1.5),
-                    ],
-                  ),
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: const <Widget>[
-                      TextHeightBreakdownRow(
-                        text: text,
-                        backgroundColor: Colors.transparent,
-                        style: TextStyle(
-                          fontSize: fontSize,
-                          height: height,
-                          color: Colors.black,
-                          leadingDistribution: TextLeadingDistribution.even,
-                        ),
-                        textHeightBehavior: TextHeightBehavior(applyHeightToFirstAscent: false),
-                        shouldPaintCaptions: true,
+                        paintLeadingIndicator: true,
                       ),
                       SizedBox(height: 30),
                       Text('Configuration 3', textScaleFactor: 1.5),
@@ -583,11 +591,11 @@ class TextHeightBreakdown extends TextHeightDiagram implements DiagramMetadata {
                     mainAxisSize: MainAxisSize.min,
                     children: const <Widget>[
                       TextHeightBreakdownRow(
-                        text: text,
+                        text: _text,
                         backgroundColor: Colors.transparent,
                         style: TextStyle(
-                          fontSize: fontSize,
-                          height: height,
+                          fontSize: _fontSize,
+                          height: _height,
                           color: Colors.black,
                           leadingDistribution: TextLeadingDistribution.even,
                         ),
@@ -614,18 +622,18 @@ class TextHeightBreakdownRow extends LeafRenderObjectWidget {
      required this.backgroundColor,
      required this.style,
      this.textHeightBehavior,
-     this.shouldPaintHeightIndicator = false,
-     this.shouldPaintLeadingIndicator = false,
-     this.shouldPaintCaptions = false,
+     this.paintHeightIndicator = false,
+     this.paintLeadingIndicator = false,
+     this.paintCaptions = false,
   }) : super(key: key);
 
   final String text;
   final TextStyle style;
   final Color backgroundColor;
   final TextHeightBehavior? textHeightBehavior;
-  final bool shouldPaintHeightIndicator;
-  final bool shouldPaintLeadingIndicator;
-  final bool shouldPaintCaptions;
+  final bool paintHeightIndicator;
+  final bool paintLeadingIndicator;
+  final bool paintCaptions;
 
   @override
   RenderTextHeightBreakdown createRenderObject(BuildContext context) {
@@ -634,9 +642,9 @@ class TextHeightBreakdownRow extends LeafRenderObjectWidget {
       backgroundColor: backgroundColor,
       textDirection: Directionality.of(context),
       textHeightBehavior: textHeightBehavior,
-      shouldPaintHeightIndicator: shouldPaintHeightIndicator,
-      shouldPaintLeadingIndicator: shouldPaintLeadingIndicator,
-      shouldPaintCaptions: shouldPaintCaptions,
+      paintHeightIndicator: paintHeightIndicator,
+      paintLeadingIndicator: paintLeadingIndicator,
+      paintCaptions: paintCaptions,
     );
   }
 
@@ -647,9 +655,9 @@ class TextHeightBreakdownRow extends LeafRenderObjectWidget {
       ..backgroundColor = backgroundColor
       ..textDirection = Directionality.of(context)
       ..textHeightBehavior = textHeightBehavior
-      ..shouldPaintHeightIndicator = shouldPaintHeightIndicator
-      ..shouldPaintLeadingIndicator = shouldPaintLeadingIndicator
-      ..shouldPaintCaptions = shouldPaintCaptions;
+      ..paintHeightIndicator = paintHeightIndicator
+      ..paintLeadingIndicator = paintLeadingIndicator
+      ..paintCaptions = paintCaptions;
   }
 }
 
@@ -659,34 +667,34 @@ class RenderTextHeightBreakdown extends RenderBox with RenderObjectWithChildMixi
     required TextSpan text,
     required Color backgroundColor,
     required TextHeightBehavior? textHeightBehavior,
-    required bool shouldPaintHeightIndicator,
-    required bool shouldPaintCaptions,
-    required bool shouldPaintLeadingIndicator,
+    required bool paintHeightIndicator,
+    required bool paintCaptions,
+    required bool paintLeadingIndicator,
   })  : _backgroundColor = backgroundColor,
-        _shouldPaintHeightIndicator = shouldPaintHeightIndicator,
-        _shouldPaintLeadingIndicator = shouldPaintLeadingIndicator,
-        _shouldPaintCaptions = shouldPaintCaptions,
-        textPainter = TextPainter(
+        _paintHeightIndicator = paintHeightIndicator,
+        _paintLeadingIndicator = paintLeadingIndicator,
+        _paintCaptions = paintCaptions,
+        _textPainter = TextPainter(
           textDirection: textDirection,
           text: text,
           textHeightBehavior: textHeightBehavior,
         );
 
-  final TextPainter textPainter;
+  final TextPainter _textPainter;
 
-  TextDirection get textDirection => textPainter.textDirection!;
+  TextDirection get textDirection => _textPainter.textDirection!;
   set textDirection(TextDirection value) {
-    if (textPainter.textDirection == value)
+    if (_textPainter.textDirection == value)
       return;
-    textPainter.textDirection = value;
+    _textPainter.textDirection = value;
     markNeedsLayout();
   }
 
-  TextSpan get text => textPainter.text as TextSpan;
+  TextSpan get text => _textPainter.text as TextSpan;
   set text(TextSpan? value) {
-    if (textPainter.text == value)
+    if (_textPainter.text == value)
       return;
-    textPainter.text = value;
+    _textPainter.text = value;
     markNeedsLayout();
   }
 
@@ -700,69 +708,69 @@ class RenderTextHeightBreakdown extends RenderBox with RenderObjectWithChildMixi
     markNeedsPaint();
   }
 
-  TextHeightBehavior? get textHeightBehavior => textPainter.textHeightBehavior;
+  TextHeightBehavior? get textHeightBehavior => _textPainter.textHeightBehavior;
   set textHeightBehavior(TextHeightBehavior? newValue) {
     if (textHeightBehavior == newValue) {
       return;
     }
-    textPainter.textHeightBehavior = newValue;
+    _textPainter.textHeightBehavior = newValue;
     markNeedsLayout();
   }
 
-  bool get shouldPaintHeightIndicator => _shouldPaintHeightIndicator;
-  bool _shouldPaintHeightIndicator;
-  set shouldPaintHeightIndicator(bool value) {
-    if (value == _shouldPaintHeightIndicator)
+  bool get paintHeightIndicator => _paintHeightIndicator;
+  bool _paintHeightIndicator;
+  set paintHeightIndicator(bool value) {
+    if (value == _paintHeightIndicator)
       return;
 
-    _shouldPaintHeightIndicator = value;
+    _paintHeightIndicator = value;
     markNeedsPaint();
   }
 
-  bool get shouldPaintLeadingIndicator => _shouldPaintLeadingIndicator;
-  bool _shouldPaintLeadingIndicator;
-  set shouldPaintLeadingIndicator(bool value) {
-    if (value == _shouldPaintLeadingIndicator)
+  bool get paintLeadingIndicator => _paintLeadingIndicator;
+  bool _paintLeadingIndicator;
+  set paintLeadingIndicator(bool value) {
+    if (value == _paintLeadingIndicator)
       return;
-    _shouldPaintLeadingIndicator = value;
+    _paintLeadingIndicator = value;
     markNeedsPaint();
   }
 
-  bool get shouldPaintCaptions => _shouldPaintCaptions;
-  bool _shouldPaintCaptions;
-  set shouldPaintCaptions(bool value) {
-    if (value == _shouldPaintCaptions)
+  bool get paintCaptions => _paintCaptions;
+  bool _paintCaptions;
+  set paintCaptions(bool value) {
+    if (value == _paintCaptions)
       return;
-    _shouldPaintCaptions = value;
+    _paintCaptions = value;
     markNeedsPaint();
   }
 
-  late final TextPainter heightCaptionTextPainter = TextPainter(textDirection: textDirection);
+  late final TextPainter heightCaptionTextPainter = TextPainter(textDirection: textDirection, textAlign: TextAlign.center);
   static late final TextStyle heightCaptionTextStyle = TextStyle(fontSize: 20, color: Colors.blue[900]!);
   static const Offset fontMetricsLabelPadding = Offset(0, 3);
   static const double heightCaptionBracketMinX = -25;
 
   @override
   Size computeDryLayout(BoxConstraints constraints) {
-    textPainter.layout(minWidth: constraints.minWidth, maxWidth: double.infinity);
-    if (shouldPaintHeightIndicator) {
-      heightCaptionTextPainter.text = TextSpan(text: 'line-height:\n${textPainter.height} px', style: heightCaptionTextStyle);
+    _textPainter.layout(minWidth: constraints.minWidth, maxWidth: double.infinity);
+    if (paintHeightIndicator) {
+      heightCaptionTextPainter.text = TextSpan(text: 'Text Height:\n${_textPainter.height} px', style: heightCaptionTextStyle);
       heightCaptionTextPainter.layout(minWidth: constraints.minWidth, maxWidth: double.infinity);
       return constraints.constrain(Size(
-        heightCaptionTextPainter.width + textPainter.width + fontMetricsLabelPadding.dx - heightCaptionBracketMinX,
-        max(heightCaptionTextPainter.height, textPainter.height),
+        heightCaptionTextPainter.width + _textPainter.width + fontMetricsLabelPadding.dx - heightCaptionBracketMinX,
+        max(heightCaptionTextPainter.height, _textPainter.height),
       ));
     }
-    return constraints.constrain(textPainter.size);
+    return constraints.constrain(_textPainter.size);
   }
 
   @override
-  double? computeDistanceToActualBaseline(TextBaseline baseline) => textPainter.computeDistanceToActualBaseline(baseline);
+  double? computeDistanceToActualBaseline(TextBaseline baseline) => _textPainter.computeDistanceToActualBaseline(baseline);
 
   @override
   void performLayout() {
     size = computeDryLayout(constraints);
-    assert(size.height == textPainter.height);
+    assert(size.height == _textPainter.height);
   }
 
   @override
@@ -773,21 +781,21 @@ class RenderTextHeightBreakdown extends RenderBox with RenderObjectWithChildMixi
     // Paint the background color.
     canvas.drawRect(offset & size, paint);
 
-    final Offset lineBoxOrigin = shouldPaintHeightIndicator
+    final Offset lineBoxOrigin = paintHeightIndicator
       // Left-align the height caption. Ideally this should also be centered.
       ? Offset(heightCaptionTextPainter.width + fontMetricsLabelPadding.dx - heightCaptionBracketMinX, 0) + offset
-      : (size - textPainter.size as Offset) / 2 + offset;
+      : (size - _textPainter.size as Offset) / 2 + offset;
 
     assert(lineBoxOrigin.dy == offset.dy);
     // Paint the text. Layout is done in performLayout.
-    textPainter.paint(canvas, lineBoxOrigin);
+    _textPainter.paint(canvas, lineBoxOrigin);
 
     // Change the coordinate space to the line box (i.e. in textPainter
     // coordinates), paint the guides and labels.
     canvas.save();
     canvas.translate(lineBoxOrigin.dx, lineBoxOrigin.dy);
 
-    final List<TextBox> boxes = textPainter.getBoxesForSelection(TextSelection(baseOffset: 0, extentOffset: text.text!.length));
+    final List<TextBox> boxes = _textPainter.getBoxesForSelection(TextSelection(baseOffset: 0, extentOffset: text.text!.length));
     assert(boxes.length == 1);
     final Rect glyphsBox = boxes.first.toRect();
 
@@ -797,7 +805,7 @@ class RenderTextHeightBreakdown extends RenderBox with RenderObjectWithChildMixi
     // Top guide
     canvas.drawLine(Offset.zero, Offset(guideWidth, 0), paint);
     // Bottom guide
-    canvas.drawLine(Offset(0, textPainter.height), Offset(guideWidth, textPainter.height), paint);
+    canvas.drawLine(Offset(0, _textPainter.height), Offset(guideWidth, _textPainter.height), paint);
 
     paint.strokeWidth = 2.5;
     paint.color = Colors.red[900]!;
@@ -809,28 +817,28 @@ class RenderTextHeightBreakdown extends RenderBox with RenderObjectWithChildMixi
     // Baseline
     paint.strokeWidth = 2.5;
     paint.color = Colors.black;
-    final double baseline = textPainter.computeDistanceToActualBaseline(TextBaseline.alphabetic);
+    final double baseline = _textPainter.computeDistanceToActualBaseline(TextBaseline.alphabetic);
     canvas.drawLine(
       Offset(0, baseline),
       Offset(guideWidth, baseline),
       paint,
     );
 
-    if (shouldPaintHeightIndicator) {
-      _paintHeightIndicator(canvas, textPainter.size);
+    if (paintHeightIndicator) {
+      _doPaintHeightIndicator(canvas, _textPainter.size);
     }
 
-    if (shouldPaintCaptions) {
-      _paintCaptions(canvas, textPainter.size, glyphsBox, baseline);
+    if (paintCaptions) {
+      _doPaintCaptions(canvas, _textPainter.size, glyphsBox, baseline);
     }
 
-    if (shouldPaintLeadingIndicator) {
-      _paintLeadingIndicators(canvas, Size(guideWidth, textPainter.height), glyphsBox);
+    if (paintLeadingIndicator) {
+      _doPaintLeadingIndicators(canvas, Size(guideWidth, _textPainter.height), glyphsBox);
     }
     canvas.restore();
   }
 
-  void _paintLeadingIndicators(Canvas canvas, Size size, Rect glyphsBox) {
+  void _doPaintLeadingIndicators(Canvas canvas, Size size, Rect glyphsBox) {
     final TextStyle textStyle = TextStyle(fontSize: 9, color: Colors.blue[900]!);
     final TextPainter labelPainter = TextPainter(
       text: TextSpan(text: 'Top Leading', style: textStyle),
@@ -906,7 +914,7 @@ class RenderTextHeightBreakdown extends RenderBox with RenderObjectWithChildMixi
     );
   }
 
-  void _paintHeightIndicator(Canvas canvas, Size size) {
+  void _doPaintHeightIndicator(Canvas canvas, Size size) {
     final Paint paint = Paint();
     // Height bracket & label
     paint.strokeWidth = 2;
@@ -928,7 +936,7 @@ class RenderTextHeightBreakdown extends RenderBox with RenderObjectWithChildMixi
     heightCaptionTextPainter.paint(canvas, origin);
   }
 
-  void _paintCaptions(Canvas canvas, Size size, Rect glyphsBox, double baseline) {
+  void _doPaintCaptions(Canvas canvas, Size size, Rect glyphsBox, double baseline) {
     // Ascent
     final TextPainter labelPainter = TextPainter(
       text: TextSpan(
@@ -971,7 +979,7 @@ class RenderTextHeightBreakdown extends RenderBox with RenderObjectWithChildMixi
 
     // Top
     labelPainter.text = TextSpan(
-      text: 'Line-Box Top',
+      text: 'Text Top',
       style: TextStyle(
         fontSize: 9,
         color: Colors.blue[900]!,
@@ -982,7 +990,7 @@ class RenderTextHeightBreakdown extends RenderBox with RenderObjectWithChildMixi
     labelPainter.paint(canvas, labelPaintOrigin);
 
     labelPainter.text = TextSpan(
-      text: 'Line-Box Bottom',
+      text: 'Text Bottom',
       style: TextStyle(
         fontSize: 9,
         color: Colors.blue[900]!,
