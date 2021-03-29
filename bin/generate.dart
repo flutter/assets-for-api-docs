@@ -400,7 +400,7 @@ bool _hasJobFailed(WorkerJob job) {
   if (job.exception != null) {
     return true;
   }
-  if ((job.result?.exitCode ?? 0) != 0) {
+  if ((job.result.exitCode ?? 0) != 0) {
     return true;
   }
   return false;
