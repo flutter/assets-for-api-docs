@@ -1,0 +1,25 @@
+name: snippets_example
+version: 1.0.0
+author: Flutter Team <flutter-dev@googlegroups.com>
+description: A code snippet dartdoc extension for Flutter API docs.
+homepage: https://github.com/flutter/flutter
+publish_to: none
+
+environment:
+  sdk: ">=2.12.1 <3.0.0"
+
+dartdoc:
+  nodoc: true
+
+dependencies:
+  args: ^2.0.0
+  snippets:
+    path: ..
+
+dev_dependencies:
+  test: ^1.16.8
+
+executables:
+  snippets: bin/main.dart
+
+
