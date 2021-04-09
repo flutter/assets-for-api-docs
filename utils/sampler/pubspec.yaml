@@ -1,0 +1,30 @@
+name: sampler
+description: A new Flutter project.
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.12.0 <3.0.0"
+
+dependencies:
+  args: ^2.0.0
+  crypto: ^3.0.1
+  file: ^6.1.0
+  flutter_highlight: ^0.7.0
+  path: ^1.8.0
+  platform: ^3.0.0
+  process: ^4.2.1
+  process_runner: ^4.0.0
+  recase: ^4.0.0-nullsafety.0
+  watcher: ^1.0.0
+  snippets:
+    path: ../../packages/snippets
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
