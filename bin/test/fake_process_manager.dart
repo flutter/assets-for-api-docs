@@ -10,7 +10,7 @@ import 'package:process/process.dart';
 import 'package:test/test.dart' hide TypeMatcher, isInstanceOf;
 
 class FakeInvocationRecord {
-  FakeInvocationRecord(this.invocation, [this.workingDirectory]);
+  FakeInvocationRecord(this.invocation, {this.workingDirectory});
   final List<String> invocation;
   final String? workingDirectory;
 
@@ -58,8 +58,8 @@ class FakeProcessManager implements ProcessManager {
     int index = 0;
     expect(invocations.length, equals(calls.length));
     for (final FakeInvocationRecord call in calls) {
-      expect(call.invocation, orderedEquals(invocations[index].invocation));
-      expect(call.workingDirectory, equals(invocations[index].workingDirectory), reason: 'Wrong working directory for ${call.invocation}');
+      expect(invocations[index].invocation, orderedEquals(call.invocation));
+      expect(invocations[index].workingDirectory, equals(call.workingDirectory), reason: 'Wrong working directory for ${call.invocation}');
       index++;
     }
   }
@@ -93,19 +93,19 @@ class FakeProcessManager implements ProcessManager {
       FakeProcess(_popResult(command), stdinResults);
 
   Future<Process> _nextProcess(List<String> invocation, String? workingDirectory) async {
-    final FakeInvocationRecord record = FakeInvocationRecord(invocation, workingDirectory);
+    final FakeInvocationRecord record = FakeInvocationRecord(invocation, workingDirectory: workingDirectory);
     invocations.add(record);
     return Future<Process>.value(_popProcess(record));
   }
 
   ProcessResult _nextResultSync(List<String> invocation, String? workingDirectory) {
-    final FakeInvocationRecord record = FakeInvocationRecord(invocation, workingDirectory);
+    final FakeInvocationRecord record = FakeInvocationRecord(invocation, workingDirectory: workingDirectory);
     invocations.add(record);
     return _popResult(record);
   }
 
   Future<ProcessResult> _nextResult(List<String> invocation, String? workingDirectory) async {
-    final FakeInvocationRecord record = FakeInvocationRecord(invocation, workingDirectory);
+    final FakeInvocationRecord record = FakeInvocationRecord(invocation, workingDirectory: workingDirectory);
     invocations.add(record);
     return Future<ProcessResult>.value(_popResult(record));
   }

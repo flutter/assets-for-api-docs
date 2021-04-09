@@ -18,20 +18,20 @@ task:
     # disable analytics on the bots and download Flutter dependencies
     "$FLUTTER_DIR/bin/flutter" config --no-analytics
 
-    # update packages
-    ./bin/update_packages.sh
+    # upgrade packages
+    ./ci/pub_upgrade.sh
 
   matrix:
     - name: analyze
       env:
         SHARD: analyze
       test_script:
-        - ./bin/testing.sh
+        - ./ci/analyze.sh
     - name: tests-linux
       env:
-        SHARD: tests
+        SHARD: test
       test_script:
-        - ./bin/testing.sh
+        - ./ci/testing.sh
       container:
         cpu: 4
         memory: 8G

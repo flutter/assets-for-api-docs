@@ -43,7 +43,7 @@ void main() {
             <FakeInvocationRecord, List<ProcessResult>>{
           FakeInvocationRecord(
             <String>['flutter', 'devices', '--machine'],
-            temporaryDirectory.path,
+            workingDirectory: temporaryDirectory.path,
           ): <ProcessResult>[
             ProcessResult(
                 0,
@@ -55,7 +55,6 @@ void main() {
             <String>[
               'flutter',
               'run',
-              '--no-sound-null-safety',
               '-d',
               'linux',
               '--dart-entrypoint-args',
@@ -67,10 +66,25 @@ void main() {
               '--dart-entrypoint-args',
               temporaryDirectory.path,
             ],
-            path.join(DiagramGenerator.projectDir, 'utils', 'diagram_generator'),
+            workingDirectory: path.join(DiagramGenerator.projectDir, 'utils', 'diagram_generator'),
           ): <ProcessResult>[
             ProcessResult(0, 0, '', ''),
           ],
+          FakeInvocationRecord(
+              <String>[
+                'optipng',
+                '-zc1-9',
+                '-zm1-9',
+                '-zs0-3',
+                '-f0-5',
+                'output.png',
+                '-out',
+                path.join(DiagramGenerator.projectDir, 'assets', 'output.png'),
+              ],
+            workingDirectory: temporaryDirectory.path,
+            ): <ProcessResult>[
+              ProcessResult(0, 0, '', ''),
+            ],
         };
         processManager.fakeResults = calls;
         // Fake an output file
@@ -78,7 +92,7 @@ void main() {
         errorLog.writeAsString('');
         final File output = File(path.join(temporaryDirectory.path, 'output.png'));
         output.writeAsString('');
-        await generator.generateDiagrams(<String>[], <String>[]);
+        await generator.generateDiagrams();
         processManager.verifyCalls(calls.keys.toList());
       });
     } catch (e, s) {

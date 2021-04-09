@@ -120,7 +120,7 @@ void main() {
       final File actualOutputFile = await controller.drawDiagramToFile(outputFile);
       expect(actualOutputFile.existsSync(), isTrue);
       final List<int> imageContents = actualOutputFile.readAsBytesSync();
-      final image.Image decodedImage = image.decodePng(imageContents);
+      final image.Image decodedImage = image.decodePng(imageContents)!;
       expect(decodedImage.width, equals(100));
       expect(decodedImage.height, equals(50));
       expect(decodedImage.length, equals(5000));
@@ -187,7 +187,7 @@ void main() {
         expect(file.existsSync(), isTrue);
         expect(file.lengthSync(), greaterThan(0));
         final List<int> imageContents = file.readAsBytesSync();
-        final image.Image decodedImage = image.decodePng(imageContents);
+        final image.Image decodedImage = image.decodePng(imageContents)!;
         expect(decodedImage.width, equals(expectedSizes[count]));
         expect(decodedImage.height, equals(expectedSizes[count]));
         ++count;
@@ -206,7 +206,7 @@ void main() {
       final File actualOutputFile = await controller.drawDiagramToFile(outputFile);
       expect(actualOutputFile.existsSync(), isTrue);
       final List<int> imageContents = actualOutputFile.readAsBytesSync();
-      final image.Image decodedImage = image.decodePng(imageContents);
+      final image.Image decodedImage = image.decodePng(imageContents)!;
       expect(decodedImage.width, equals(300));
       expect(decodedImage.height, equals(150));
       expect(decodedImage.length, equals(45000));
@@ -224,7 +224,7 @@ void main() {
       final File outputFile = File('test3.png');
       File actualOutputFile = await controller.drawDiagramToFile(outputFile);
       List<int> imageContents = actualOutputFile.readAsBytesSync();
-      image.Image decodedImage = image.decodePng(imageContents);
+      image.Image decodedImage = image.decodePng(imageContents)!;
       expect(decodedImage.width, equals(64));
       expect(decodedImage.height, equals(48));
       expect(decodedImage[decodedImage.index(44, 18)], equals(0xfff39621)); // Check a pixel value
@@ -235,7 +235,7 @@ void main() {
 
       actualOutputFile = await controller.drawDiagramToFile(outputFile);
       imageContents = actualOutputFile.readAsBytesSync();
-      decodedImage = image.decodePng(imageContents);
+      decodedImage = image.decodePng(imageContents)!;
       expect(decodedImage[decodedImage.index(44, 18)], equals(0xff3643f4)); // Check a pixel value
     });
   });
