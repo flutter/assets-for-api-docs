@@ -6,9 +6,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:archive/archive.dart';
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:args/args.dart';
 import 'package:animation_metadata/animation_metadata.dart';
 import 'package:process_runner/process_runner.dart';
@@ -97,7 +95,10 @@ class DiagramGenerator {
   /// targeting.
   String deviceTargetPlatform = '';
 
-  Future<void> generateDiagrams(List<String> categories, List<String> names) async {
+  Future<void> generateDiagrams({
+    List<String> categories = const <String>[],
+    List<String> names = const <String>[],
+  }) async {
     final DateTime startTime = DateTime.now();
     if (!await _findIdForDeviceName()) {
       throw GeneratorException('Unable to find device ID for device $device. Are you sure it is attached?');
@@ -168,7 +169,6 @@ class DiagramGenerator {
     final List<String> args = <String>[
           flutterCommand,
           'run',
-          '--no-sound-null-safety'
         ] +
         deviceArgs +
         filterArgs;
@@ -289,7 +289,7 @@ class DiagramGenerator {
       ));
       outputs.add(destination);
     }
-    final ProcessPool pool = ProcessPool();
+    final ProcessPool pool = ProcessPool(processRunner: processRunner);
     await pool.runToCompletion(jobs);
     _checkJobResults(ffmpegCommand, jobs);
     return outputs;
@@ -380,7 +380,7 @@ class DiagramGenerator {
       ));
     }
     if (jobs.isNotEmpty) {
-      final ProcessPool pool = ProcessPool();
+      final ProcessPool pool = ProcessPool(processRunner: processRunner);
       await pool.runToCompletion(jobs);
       _checkJobResults(optiPngCommand, jobs);
     }
@@ -501,8 +501,8 @@ Future<void> main(List<String> arguments) async {
       temporaryDirectory: temporaryDirectory,
       cleanup: !keepTemporaryDirectory,
     ).generateDiagrams(
-      flags['category'] as List<String>,
-      flags['name'] as List<String>,
+      categories: flags['category'] as List<String>,
+      names: flags['name'] as List<String>,
     );
   } on GeneratorException catch (error) {
     stderr
