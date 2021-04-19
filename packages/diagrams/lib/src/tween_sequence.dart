@@ -72,18 +72,18 @@ class TweenSequenceDiagramState extends State<TweenSequenceDiagram>
       });
   }
 
-  final Animatable<Color> _tweenSequence =
-      TweenSequence<Color>(<TweenSequenceItem<Color>>[
-    TweenSequenceItem<Color>(
-      tween: ColorTween(begin: Colors.yellow, end: Colors.green) as Animatable<Color>,
+  final Animatable<Color?> _tweenSequence =
+      TweenSequence<Color?>(<TweenSequenceItem<Color?>>[
+    TweenSequenceItem<Color?>(
+      tween: ColorTween(begin: Colors.yellow, end: Colors.green),
       weight: 2,
     ),
-    TweenSequenceItem<Color>(
+    TweenSequenceItem<Color?>(
       tween: ConstantTween<Color>(Colors.green),
       weight: 1,
     ),
-    TweenSequenceItem<Color>(
-      tween: ColorTween(begin: Colors.green, end: Colors.red) as Animatable<Color>,
+    TweenSequenceItem<Color?>(
+      tween: ColorTween(begin: Colors.green, end: Colors.red),
       weight: 2,
     ),
   ]);
