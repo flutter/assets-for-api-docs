@@ -78,6 +78,19 @@ class TransitionDiagramStep extends DiagramStep<TransitionDiagram<dynamic>> {
   }
 }
 
+// Required because AlignTransition requires an Animation<Rect>, not a Animation<Rect?>.
+class _NonNullableAlignmentGeometryTween  extends Tween<AlignmentGeometry> {
+  /// Creates a fractional offset geometry tween.
+  _NonNullableAlignmentGeometryTween({
+    required AlignmentGeometry begin,
+    required AlignmentGeometry end,
+  }) : super(begin: begin, end: end);
+
+  /// Returns the value this variable has at the given animation clock value.
+  @override
+  AlignmentGeometry lerp(double t) => AlignmentGeometry.lerp(begin, end, t)!;
+}
+
 class AlignTransitionDiagram extends TransitionDiagram<AlignmentGeometry> {
   const AlignTransitionDiagram({Key? key, bool decorate = true}) : super(key: key, decorate: decorate);
 
@@ -91,10 +104,10 @@ class AlignTransitionDiagram extends TransitionDiagram<AlignmentGeometry> {
         parent: controller,
         curve: curve,
       ),
-    ) as Animation<AlignmentGeometry>;
+    );
   }
 
-  static final AlignmentGeometryTween _offsetTween = AlignmentGeometryTween(
+  static final _NonNullableAlignmentGeometryTween _offsetTween = _NonNullableAlignmentGeometryTween(
     begin: AlignmentDirectional.bottomStart,
     end: AlignmentDirectional.center,
   );
@@ -213,6 +226,16 @@ class PositionedTransitionDiagram extends TransitionDiagram<RelativeRect> {
   }
 }
 
+// Required because RelativePositionedTransition wants an Animation<Rect>, not a Animation<Rect?>.
+class _NonNullableRectTween extends Tween<Rect> {
+  /// Creates a [Rect] tween.
+  _NonNullableRectTween({ required Rect begin, required Rect end }) : super(begin: begin, end: end);
+
+  /// Returns the value this variable has at the given animation clock value.
+  @override
+  Rect lerp(double t) => Rect.lerp(begin, end, t)!;
+}
+
 class RelativePositionedTransitionDiagram extends TransitionDiagram<Rect> {
   const RelativePositionedTransitionDiagram({Key? key, bool decorate = true}) : super(key: key, decorate: decorate);
 
@@ -224,10 +247,10 @@ class RelativePositionedTransitionDiagram extends TransitionDiagram<Rect> {
     return _rectTween.animate(CurvedAnimation(
       parent: controller,
       curve: curve,
-    )) as Animation<Rect>;
+    ));
   }
 
-  static final RectTween _rectTween = RectTween(
+  static final _NonNullableRectTween _rectTween = _NonNullableRectTween(
     begin: const Rect.fromLTRB(0.0, 0.0, 50.0, 50.0),
     end: const Rect.fromLTRB(140.0, 140.0, 150.0, 150.0),
   );
