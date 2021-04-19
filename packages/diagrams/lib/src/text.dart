@@ -492,7 +492,7 @@ class TextHeightBreakdown extends TextHeightDiagram implements DiagramMetadata {
   const TextHeightBreakdown(String name) : super(name);
 
   static const double _height = 4;
-  static const double _fontSize = 90;
+  static const double _fontSize = 85;
   static const String _text = ' Axy ';
 
   @override
