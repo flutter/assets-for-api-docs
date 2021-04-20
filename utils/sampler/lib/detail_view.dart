@@ -111,7 +111,10 @@ class _DetailViewState extends State<DetailView> {
                         ),
                         onPressed: _extractSample),
                   if (project != null && !exporting)
-                    OutputLocation(location: project!.location.childDirectory('lib')),
+                    OutputLocation(
+                      location: project!.location,
+                      file: project!.location.childDirectory('lib').childFile('main.dart'),
+                    ),
                 ],
               ),
               ActionPanel(
@@ -125,8 +128,8 @@ class _DetailViewState extends State<DetailView> {
                   const Spacer(),
                   if (sample.start.file != null)
                     OutputLocation(
-                      location: sample.start.file!.parent,
-                      file: sample.start.file!,
+                      location: FlutterInformation.instance.getFlutterRoot(),
+                      file: sample.start.file!.absolute,
                       startLine: sample.start.line,
                     ),
                 ],

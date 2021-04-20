@@ -1,3 +1,7 @@
+// Copyright 2014 The Flutter Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 import 'dart:io' as io;
 import 'package:args/args.dart';
 import 'package:file/file.dart';
@@ -8,20 +12,11 @@ import 'package:flutter/services.dart';
 import 'package:path/path.dart' as path;
 import 'package:sampler/new_sample.dart';
 import 'package:snippets/snippets.dart';
-
-import 'detail_view.dart';
-import 'helper_widgets.dart';
-import 'model.dart';
-import 'new_sample.dart';
-import 'utils.dart';
+import 'package:sampler/sampler.dart';
 
 const String _kFileOption = 'file';
 const String _kFlutterRootOption = 'flutter-root';
 const String _kDartUiRootOption = 'dart-ui-root';
-
-const String kNewSampleSelectView = '/newSampleSelectView';
-const String kDetailView = '/detailView';
-const String kNewSampleView = '/newSampleView';
 
 void main(List<String> argv) {
   final ArgParser parser = ArgParser();

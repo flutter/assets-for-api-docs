@@ -76,7 +76,6 @@ class Model extends ChangeNotifier {
         if (path.split(relativePath.path).contains('test')) {
           continue;
         }
-        print('Adding $file');
         foundDartFiles.add(file);
       }
       files!.addAll(foundDartFiles);

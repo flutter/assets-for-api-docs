@@ -126,7 +126,7 @@ class OutputLocation extends StatelessWidget {
                     child: TextButton(
                       child: Text('OPEN IN ${getIdeName(type).toUpperCase()}'),
                       onPressed: () {
-                        openInIde(type, file ?? location, startLine: startLine);
+                        openInIde(type, location, file: file, startLine: startLine);
                       },
                     ),
                   ),

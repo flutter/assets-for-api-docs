@@ -63,31 +63,36 @@ String getIdeName(IdeType type) {
   }
 }
 
-void openInIde(IdeType type, FileSystemEntity location,
-    {ProcessManager processManager = const LocalProcessManager(),
-    Platform platform = const LocalPlatform(),
-    FileSystem filesystem = const LocalFileSystem(),
-    int startLine = 0}) {
+void openInIde(
+  IdeType type,
+  Directory location, {
+  File? file,
+  ProcessManager processManager = const LocalProcessManager(),
+  Platform platform = const LocalPlatform(),
+  int startLine = 0,
+}) {
   switch (platform.operatingSystem) {
     case 'linux':
       switch (type) {
         case IdeType.idea:
-          processManager.run(<String>[
+          final List<String> cmd = <String>[
             'idea',
             location.absolute.path,
-            if (startLine != 0) '--line',
-            if (startLine != 0) '$startLine',
-          ], runInShell: true);
+            if (file != null) '${file.absolute.path}:$startLine',
+          ];
+          processManager.run(cmd, runInShell: true);
+          print('Launched ${cmd.join(' ')}');
           break;
         case IdeType.vscode:
-          final Directory flutterRoot = FlutterInformation.instance.getFlutterRoot();
-          processManager.run(<String>[
+          final List<String> cmd = <String>[
             'code',
             '-n',
-            flutterRoot.absolute.path,
-            '--goto',
-            '${location.absolute.path}:$startLine',
-          ], runInShell: true);
+            location.absolute.path,
+            if (file != null) '--goto',
+            if (file != null) '${file.absolute.path}:$startLine',
+          ];
+          processManager.run(cmd, runInShell: true);
+          print('Launched ${cmd.join(' ')}');
           break;
       }
       break;
@@ -103,13 +108,12 @@ void openInIde(IdeType type, FileSystemEntity location,
             return !candidate.contains('/Application Support/');
           });
           final String appName = candidates.isNotEmpty ? candidates.first : 'IntelliJ IDEA CE';
-          print('attempting to launch $appName');
           final List<String> command = <String>[
             'open',
             '-na',
             appName,
             '--args',
-            location.absolute.path,
+            file?.absolute.path ?? location.absolute.path,
             if (startLine != 0) '--line',
             if (startLine != 0) '$startLine',
           ];
@@ -131,16 +135,15 @@ void openInIde(IdeType type, FileSystemEntity location,
           ], stdoutEncoding: utf8);
           final Iterable<String> candidates = (result.stdout as String).split('\n');
           final String appName = candidates.isNotEmpty ? candidates.first : 'Visual Studio Code';
-          final Directory flutterRoot = FlutterInformation.instance.getFlutterRoot();
           processManager.run(<String>[
             'open',
             '-na',
             appName,
             '--args',
             '-n',
-            flutterRoot.absolute.path,
-            '--goto',
-            '${location.absolute.path}:$startLine',
+            location.absolute.path,
+            if (file != null) '--goto',
+            if (file != null) '${file.absolute.path}:$startLine',
           ], stdoutEncoding: utf8, stderrEncoding: utf8).then((ProcessResult result) {
             if (result.exitCode != 0) {
               throw SnippetException(
@@ -157,15 +160,17 @@ void openInIde(IdeType type, FileSystemEntity location,
         case IdeType.idea:
           processManager.run(<String>[
             'idea64.exe',
-            if (startLine != 0) '${location.absolute.path}:$startLine',
-            if (startLine == 0) location.absolute.path,
+            location.absolute.path,
+            if (file != null) '${file.absolute.path}:$startLine',
           ], runInShell: true);
           break;
         case IdeType.vscode:
           processManager.run(<String>[
             'code',
-            '--goto',
-            '${location.absolute.path}:$startLine',
+            '-n',
+            location.absolute.path,
+            if (file != null) '--goto',
+            if (file != null) '${file.absolute.path}:$startLine',
           ], runInShell: true);
           break;
       }

@@ -5,12 +5,12 @@
 import 'package:file/file.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:sampler/utils.dart';
 import 'package:snippets/snippets.dart';
 
+import 'constants.dart';
 import 'helper_widgets.dart';
-import 'main.dart';
 import 'model.dart';
+import 'utils.dart';
 
 typedef _OptionDialogSubmitted = void Function(Type sampleType, String? template);
 
