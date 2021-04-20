@@ -12,9 +12,9 @@ dartdoc:
   nodoc: true
 
 dependencies:
+  args: ^2.0.0
   snippets:
     path: ..
-  args: ^2.0.0
 
 dev_dependencies:
   test: ^1.16.8

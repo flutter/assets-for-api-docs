@@ -13,8 +13,6 @@ import 'package:dart_style/dart_style.dart';
 import 'package:file/file.dart';
 import 'package:file/local.dart';
 import 'package:path/path.dart' as path;
-import 'package:platform/platform.dart';
-import 'package:process/process.dart';
 
 import 'configuration.dart';
 import 'data_types.dart';
@@ -25,25 +23,15 @@ import 'util.dart';
 class SnippetGenerator {
   SnippetGenerator(
       {SnippetConfiguration? configuration,
-      Platform platform = const LocalPlatform(),
-      ProcessManager processManager = const LocalProcessManager(),
       FileSystem filesystem = const LocalFileSystem(),
       Directory? flutterRoot})
       : flutterRoot = flutterRoot ??
-            getFlutterRoot(
-              platform: platform,
-              processManager: processManager,
-              filesystem: filesystem,
-            ),
+      FlutterInformation.instance.getFlutterRoot(),
         configuration = configuration ??
             FlutterRepoSnippetConfiguration(
                 filesystem: filesystem,
                 flutterRoot: flutterRoot ??
-                    getFlutterRoot(
-                      platform: platform,
-                      processManager: processManager,
-                      filesystem: filesystem,
-                    ));
+                    FlutterInformation.instance.getFlutterRoot());
 
   final Directory flutterRoot;
 
@@ -74,10 +62,6 @@ class SnippetGenerator {
   /// directory in the configuration.
   Iterable<File> getAvailableTemplates() sync* {
     final Directory templatesDir = configuration.templatesDirectory;
-    if (templatesDir == null) {
-      io.stderr.writeln('Unable to find the templates directory.');
-      io.exit(1);
-    }
     for (final File file in templatesDir.listSync().whereType<File>()) {
       if (file.basename.endsWith('.tmpl')) {
         yield file;
@@ -331,10 +315,6 @@ class SnippetGenerator {
       case DartpadSample:
       case ApplicationSample:
         final Directory templatesDir = configuration.templatesDirectory;
-        if (templatesDir == null) {
-          io.stderr.writeln('Unable to find the templates directory.');
-          io.exit(1);
-        }
         final String templateName = sample.template;
         final File? templateFile = getTemplatePath(templateName, templatesDir: templatesDir);
         if (templateFile == null) {
@@ -413,7 +393,7 @@ class SnippetGenerator {
       "import 'dart:typed_data';",
       "import 'dart:ui' as ui;",
       "import 'package:flutter_test/flutter_test.dart';",
-      for (final File file in _listDartFiles(getFlutterRoot()
+      for (final File file in _listDartFiles(FlutterInformation.instance.getFlutterRoot()
           .childDirectory('packages')
           .childDirectory('flutter')
           .childDirectory('lib'))) ...<String>[

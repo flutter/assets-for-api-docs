@@ -30,8 +30,8 @@ class SnippetDartdocParser {
   /// A RegExp that matches the end of a code block within dartdoc.
   static final RegExp _codeBlockEndRegex = RegExp(r'///\s+```\s*$');
 
-  /// Extracts the samples from the Dart files in [files], writes them
-  /// to disk, and adds them to the appropriate [sectionMap] or [sampleMap].
+  /// Extracts the samples from the elements in [elements] and adds the result
+  /// to the given elements.
   void parseAndAddAssumptions(
     Iterable<SourceElement> elements,
     File assumptionsFile, {
@@ -147,6 +147,12 @@ class SnippetDartdocParser {
       }
       parseComment(element);
       for (final CodeSample sample in element.samples) {
+        sample.metadata.addAll(<String, Object?>{
+          'id': '${sample.element}.${sample.index}',
+          'element': sample.element,
+          'sourcePath': sample.start.file?.path ?? '',
+          'sourceLine': sample.start.line,
+        });
         switch (sample.runtimeType) {
           case ApplicationSample:
             sampleCount++;
@@ -160,6 +166,7 @@ class SnippetDartdocParser {
         }
       }
     }
+
 
     if (!silent) {
       print('Found:\n'
@@ -258,10 +265,9 @@ class SnippetDartdocParser {
       if (!inSnippet && !inDart) {
         final RegExpMatch? sampleMatch = _dartDocSampleBeginRegex.firstMatch(trimmedLine);
         if (sampleMatch != null) {
-          inSnippet = sampleMatch != null &&
-              (sampleMatch.namedGroup('type') == 'snippet' ||
-                  sampleMatch.namedGroup('type') == 'sample' ||
-                  sampleMatch.namedGroup('type') == 'dartpad');
+          inSnippet = sampleMatch.namedGroup('type') == 'snippet' ||
+            sampleMatch.namedGroup('type') == 'sample' ||
+            sampleMatch.namedGroup('type') == 'dartpad';
           if (inSnippet) {
             if (sampleMatch.namedGroup('args') != null) {
               // There are arguments to the snippet tool to keep track of.

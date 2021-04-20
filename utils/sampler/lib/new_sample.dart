@@ -217,22 +217,20 @@ class _NewSampleSelectState extends State<NewSampleSelect> {
   Widget build(BuildContext context) {
     List<ExpansionPanel> panels = const <ExpansionPanel>[];
     Iterable<SourceElement> elements = const <SourceElement>[];
-    if (Model.instance.samples != null) {
-      if (Model.instance.currentElement == null) {
-        elements = Model.instance.elements!;
-      } else {
-        elements = <SourceElement>[Model.instance.currentElement!];
-      }
-      int index = 0;
-      panels = elements.map<ExpansionPanel>(
-        (SourceElement element) {
-          final ExpansionPanel result =
-              _createExpansionPanel(element, isExpanded: index == expandedIndex);
-          index++;
-          return result;
-        },
-      ).toList();
+    if (Model.instance.currentElement == null) {
+      elements = Model.instance.elements!;
+    } else {
+      elements = <SourceElement>[Model.instance.currentElement!];
     }
+    int index = 0;
+    panels = elements.map<ExpansionPanel>(
+      (SourceElement element) {
+        final ExpansionPanel result =
+            _createExpansionPanel(element, isExpanded: index == expandedIndex);
+        index++;
+        return result;
+      },
+    ).toList();
 
     return Scaffold(
       appBar: AppBar(

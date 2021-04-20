@@ -18,7 +18,7 @@ class Model extends ChangeNotifier {
     Directory? flutterRoot,
     this.filesystem = const LocalFileSystem(),
   })  : _workingFile = workingFile,
-        flutterRoot = flutterRoot ?? _findFlutterRoot(filesystem),
+        flutterRoot = flutterRoot ?? _findFlutterRoot(),
         _dartdocParser = SnippetDartdocParser(),
         _snippetGenerator = SnippetGenerator();
 
@@ -36,8 +36,8 @@ class Model extends ChangeNotifier {
 
   final FileSystem filesystem;
 
-  static Directory _findFlutterRoot(FileSystem filesystem) {
-    return getFlutterRoot(filesystem: filesystem);
+  static Directory _findFlutterRoot() {
+    return FlutterInformation.instance.getFlutterRoot();
   }
 
   Future<void> listFiles(Directory directory, {String suffix = '.dart'}) async {

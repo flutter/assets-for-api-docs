@@ -8,11 +8,14 @@ import 'package:analyzer/dart/analysis/utilities.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/file_system/file_system.dart' as afs;
+import 'package:analyzer/file_system/physical_file_system.dart' as afs;
 import 'package:file/file.dart';
-import 'package:pub_semver/pub_semver.dart';
+import 'package:snippets/snippets.dart';
 
 import 'data_types.dart';
 import 'interval_tree.dart';
+import 'util.dart';
 
 class _LineNumberInterval extends Interval<num, int> {
   _LineNumberInterval(int start, int end, int line) : super(start, end, line);
@@ -46,8 +49,7 @@ Iterable<SourceElement> getCommentElements(Iterable<SourceElement> elements) {
 Iterable<SourceElement> getElementsFromString(String content, File file) {
   final ParseStringResult parseResult = parseString(
       featureSet: FeatureSet.fromEnableFlags2(
-        // TODO(gspencergoog): Get the version string from the flutter --version
-        sdkLanguageVersion: Version(2, 12, 1),
+        sdkLanguageVersion: FlutterInformation.instance.getDartSdkVersion(),
         flags: <String>[],
       ),
       content: content);
@@ -57,14 +59,15 @@ Iterable<SourceElement> getElementsFromString(String content, File file) {
   return visitor.elements;
 }
 
-Iterable<SourceElement> getFileElements(File file) {
+Iterable<SourceElement> getFileElements(File file, {afs.ResourceProvider? resourceProvider}) {
+  resourceProvider ??= afs.PhysicalResourceProvider.INSTANCE;
   final ParseStringResult parseResult = parseFile(
       featureSet: FeatureSet.fromEnableFlags2(
-        // TODO(gspencergoog): Get the version string from the flutter --version
-        sdkLanguageVersion: Version(2, 12, 1),
+        sdkLanguageVersion: FlutterInformation.instance.getDartSdkVersion(),
         flags: <String>[],
       ),
-      path: file.absolute.path);
+      path: file.absolute.path,
+      resourceProvider: resourceProvider);
   final _CommentVisitor<CompilationUnit> visitor = _CommentVisitor<CompilationUnit>(file);
   visitor.visitCompilationUnit(parseResult.unit);
   visitor.assignLineNumbers();
@@ -186,7 +189,7 @@ class _CommentVisitor<T> extends RecursiveAstVisitor<T> {
 
   @override
   T? visitGenericTypeAlias(GenericTypeAlias node) {
-    if (node.name != null && isPublic(node.name.name)) {
+    if (isPublic(node.name.name)) {
       List<SourceLine> comment = <SourceLine>[];
       if (node.documentationComment != null && node.documentationComment!.tokens.isNotEmpty) {
         comment = _processComment(node.name.name, node.documentationComment!);
@@ -232,17 +235,16 @@ class _CommentVisitor<T> extends RecursiveAstVisitor<T> {
 
   @override
   T? visitConstructorDeclaration(ConstructorDeclaration node) {
-    if (node.name != null && isPublic(node.name!.name) && isPublic(enclosingClass)) {
+    final String fullName = '$enclosingClass.$enclosingClass${node.name == null ? '' : '.${node.name}'}';
+    if (isPublic(enclosingClass) && (node.name == null || isPublic(node.name!.name))) {
       List<SourceLine> comment = <SourceLine>[];
       if (node.documentationComment != null && node.documentationComment!.tokens.isNotEmpty) {
-        final String element =
-            '${enclosingClass.isNotEmpty ? '$enclosingClass.' : ''}${node.name!.name}';
-        comment = _processComment(element, node.documentationComment!);
+        comment = _processComment(fullName, node.documentationComment!);
       }
       elements.add(
         SourceElement(
           SourceElementType.constructorType,
-          node.name!.name,
+          fullName,
           node.beginToken.charOffset,
           file: file,
           className: enclosingClass,
@@ -255,7 +257,7 @@ class _CommentVisitor<T> extends RecursiveAstVisitor<T> {
 
   @override
   T? visitFunctionDeclaration(FunctionDeclaration node) {
-    if (node.name != null && isPublic(node.name.name)) {
+    if (isPublic(node.name.name)) {
       List<SourceLine> comment = <SourceLine>[];
       // Skip functions that are defined inside of methods.
       if (!isInsideMethod(node)) {
@@ -278,7 +280,7 @@ class _CommentVisitor<T> extends RecursiveAstVisitor<T> {
 
   @override
   T? visitMethodDeclaration(MethodDeclaration node) {
-    if (node.name != null && isPublic(node.name.name) && isPublic(enclosingClass)) {
+    if (isPublic(node.name.name) && isPublic(enclosingClass)) {
       List<SourceLine> comment = <SourceLine>[];
       if (node.documentationComment != null && node.documentationComment!.tokens.isNotEmpty) {
         assert(enclosingClass.isNotEmpty);
@@ -301,7 +303,7 @@ class _CommentVisitor<T> extends RecursiveAstVisitor<T> {
   @override
   T? visitClassDeclaration(ClassDeclaration node) {
     enclosingClass = node.name.name;
-    if (node.name != null && !node.name.name.startsWith('_')) {
+    if (!node.name.name.startsWith('_')) {
       enclosingClass = node.name.name;
       List<SourceLine> comment = <SourceLine>[];
       if (node.documentationComment != null && node.documentationComment!.tokens.isNotEmpty) {

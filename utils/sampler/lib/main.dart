@@ -117,9 +117,11 @@ class _SamplerState extends State<Sampler> {
           title: Text.rich(
             TextSpan(
               children: <InlineSpan>[
-                TextSpan(text: '${sample.type == 'dartpad' ? 'dartpad sample': sample.type} for '),
+                TextSpan(text: '${sample.type == 'dartpad' ? 'dartpad sample' : sample.type} for '),
                 codeTextSpan(context, sample.start.element!),
-                TextSpan(text: '${sample.index != 0 ? '(${sample.index})' : ''} at line ${sample.start.line}'),
+                TextSpan(
+                    text:
+                        '${sample.index != 0 ? '(${sample.index})' : ''} at line ${sample.start.line}'),
               ],
             ),
           ),
@@ -168,22 +170,25 @@ class _SamplerState extends State<Sampler> {
       textEditingController: textEditingController,
       onFieldSubmitted: onFieldSubmitted,
       hintText: 'Enter the name of a framework source file',
-      trailing: Model.instance.workingFile != null
+      trailing: textEditingController.text.isNotEmpty
           ? IconButton(
               icon: const Icon(Icons.highlight_remove),
               onPressed: () {
-                setState(() {
-                  Model.instance.clearWorkingFile();
-                  textEditingController.clear();
-                  expandedIndex = -1;
-                });
-              })
+                setState(
+                  () {
+                    Model.instance.clearWorkingFile();
+                    textEditingController.clear();
+                    expandedIndex = -1;
+                  },
+                );
+              },
+            )
           : null,
     );
   }
 
   String _getSampleStats() {
-    if (Model.instance.samples == null || Model.instance.samples.isEmpty) {
+    if (Model.instance.samples.isEmpty) {
       return 'No samples loaded.';
     }
     final int snippets = Model.instance.samples.whereType<SnippetSample>().length;
@@ -206,22 +211,20 @@ class _SamplerState extends State<Sampler> {
   Widget build(BuildContext context) {
     List<ExpansionPanel> panels = const <ExpansionPanel>[];
     Iterable<CodeSample> samples = const <CodeSample>[];
-    if (Model.instance.samples != null) {
-      if (Model.instance.currentSample == null) {
-        samples = Model.instance.samples;
-      } else {
-        samples = <CodeSample>[Model.instance.currentSample!];
-      }
-      int index = 0;
-      panels = samples.map<ExpansionPanel>(
-        (CodeSample sample) {
-          final ExpansionPanel result =
-              _createExpansionPanel(sample, isExpanded: index == expandedIndex);
-          index++;
-          return result;
-        },
-      ).toList();
+    if (Model.instance.currentSample == null) {
+      samples = Model.instance.samples;
+    } else {
+      samples = <CodeSample>[Model.instance.currentSample!];
     }
+    int index = 0;
+    panels = samples.map<ExpansionPanel>(
+      (CodeSample sample) {
+        final ExpansionPanel result =
+            _createExpansionPanel(sample, isExpanded: index == expandedIndex);
+        index++;
+        return result;
+      },
+    ).toList();
 
     return Scaffold(
       appBar: AppBar(
@@ -275,12 +278,11 @@ class _SamplerState extends State<Sampler> {
                       ],
                     ),
                   ),
-                  if (Model.instance.samples != null)
-                    Padding(
-                      padding: const EdgeInsetsDirectional.all(8.0),
-                      child: Text(_getSampleStats(),
-                          textAlign: TextAlign.center, style: Theme.of(context).textTheme.caption),
-                    ),
+                  Padding(
+                    padding: const EdgeInsetsDirectional.all(8.0),
+                    child: Text(_getSampleStats(),
+                        textAlign: TextAlign.center, style: Theme.of(context).textTheme.caption),
+                  ),
                   ExpansionPanelList(
                     children: panels,
                     expansionCallback: (int index, bool expanded) {

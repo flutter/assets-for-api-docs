@@ -133,7 +133,7 @@ void main(List<String> argList) {
   String? template;
   if (sampleType == 'sample' || sampleType == 'dartpad') {
     final String templateArg = args[_kTemplateOption] as String;
-    if (templateArg == null || templateArg.isEmpty) {
+    if (templateArg.isEmpty) {
       stderr.writeln(parser.usage);
       errorExit(
           'The --$_kTemplateOption option must be specified on the command '

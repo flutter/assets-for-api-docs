@@ -267,9 +267,6 @@ class IntervalTree<T extends Comparable<T>, U extends Object> with IterableMixin
   /// Adds an [interval] into this tree.
   void add(dynamic interval) {
     Interval<T, U> iv = _asInterval(interval);
-    if (iv == null) {
-      return;
-    }
 
     bool joined = false;
     BidirectionalIterator<Interval<T, U>> it = _tree.fromIterator(iv);
@@ -299,18 +296,12 @@ class IntervalTree<T extends Comparable<T>, U extends Object> with IterableMixin
 
   /// Adds all [intervals] into this tree.
   void addAll(Iterable<Interval<T, U>> intervals) {
-    if (intervals == null) {
-      return;
-    }
     intervals.forEach(add);
   }
 
   /// Removes an [interval] from this tree.
   void remove(dynamic interval) {
     final Interval<T, U> iv = _asInterval(interval);
-    if (iv == null) {
-      return;
-    }
 
     BidirectionalIterator<Interval<T, U>> it = _tree.fromIterator(iv);
     while (it.movePrevious()) {
@@ -333,9 +324,6 @@ class IntervalTree<T extends Comparable<T>, U extends Object> with IterableMixin
 
   /// Removes all [intervals] from this tree.
   void removeAll(Iterable<Interval<T, U>> intervals) {
-    if (intervals == null) {
-      return;
-    }
     intervals.forEach(remove);
   }
 
@@ -373,9 +361,6 @@ class IntervalTree<T extends Comparable<T>, U extends Object> with IterableMixin
   @override
   bool contains(dynamic element) {
     final Interval<T, U> iv = _asInterval(element);
-    if (iv == null) {
-      return false;
-    }
 
     BidirectionalIterator<Interval<T, U>> it = _tree.fromIterator(iv);
     while (it.movePrevious() && iv.intersects(it.current)) {
@@ -435,9 +420,6 @@ class IntervalTree<T extends Comparable<T>, U extends Object> with IterableMixin
   }
 
   Interval<T, U>? _tryJoin(Interval<T, U> a, Interval<T, U> b) {
-    if (a == null || b == null) {
-      return null;
-    }
     if (a.contains(b)) {
       return a;
     }
@@ -452,9 +434,6 @@ class IntervalTree<T extends Comparable<T>, U extends Object> with IterableMixin
   }
 
   bool _trySplit(Interval<T, U> a, Interval<T, U> b) {
-    if (a == null || b == null) {
-      return false;
-    }
     if (!a.intersects(b)) {
       return false;
     }

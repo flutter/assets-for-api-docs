@@ -216,7 +216,7 @@ void main() {
       expect(
           html,
           contains(
-              '<iframe class="snippet-dartpad" src="https://dartpad.dev/embed-flutter.html?split=60&run=true&sample_id=dartpad.src.widgets.foo.0&sample_channel=stable"></iframe>\n'));
+              '<iframe class="snippet-dartpad" src="https://dartpad.dev/embed-flutter.html?split=60&run=true&sample_id=MyElement.0&sample_channel=stable"></iframe>\n'));
     });
 
     test('generates sample metadata', () async {
@@ -257,7 +257,7 @@ void main() {
       expect(expectedMetadataFile.existsSync(), isTrue);
       final Map<String, dynamic> json =
           jsonDecode(expectedMetadataFile.readAsStringSync()) as Map<String, dynamic>;
-      expect(json['id'], equals('sample.src.widgets.foo.0'));
+      expect(json['id'], equals('MyElement.0'));
       expect(json['channel'], equals('stable'));
       expect(json['file'], equals('snippet_out.dart'));
       expect(json['description'], equals('A description of the snippet.\n\nOn several lines.\n'));
