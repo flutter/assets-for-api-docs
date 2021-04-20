@@ -76,8 +76,8 @@ class FlutterInformation {
     }
     io.ProcessResult result;
     try {
-      result =
-          processManager.runSync(<String>[flutterCommand, '--version', '--machine'], stdoutEncoding: utf8);
+      result = processManager
+          .runSync(<String>[flutterCommand, '--version', '--machine'], stdoutEncoding: utf8);
     } on io.ProcessException catch (e) {
       throw SnippetException(
           'Unable to determine Flutter information. Either set FLUTTER_ROOT, or place flutter command in your path.\n$e');
@@ -97,14 +97,14 @@ class FlutterInformation {
     info['flutterRoot'] = filesystem.directory(map['flutterRoot']! as String);
     info['frameworkVersion'] = Version.parse(map['frameworkVersion'] as String);
     final RegExpMatch? dartVersionRegex =
-    RegExp(r'(?<base>[\d.]+)(?:\s+\(build (?<detail>[-.\w]+)\))?')
-        .firstMatch(map['dartSdkVersion'] as String);
+        RegExp(r'(?<base>[\d.]+)(?:\s+\(build (?<detail>[-.\w]+)\))?')
+            .firstMatch(map['dartSdkVersion'] as String);
     if (dartVersionRegex == null) {
       throw SnippetException(
           'Flutter command output has unexpected format, unable to parse dart SDK version ${map['dartSdkVersion']}.');
     }
-    info['dartSdkVersion'] =
-        Version.parse(dartVersionRegex.namedGroup('detail') ?? dartVersionRegex.namedGroup('base')!);
+    info['dartSdkVersion'] = Version.parse(
+        dartVersionRegex.namedGroup('detail') ?? dartVersionRegex.namedGroup('base')!);
     _cachedFlutterInformation = info;
     return info;
   }

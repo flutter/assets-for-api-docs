@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:file/file.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sampler/utils.dart';
@@ -158,7 +159,8 @@ class _NewSampleSelectState extends State<NewSampleSelect> {
               ],
             ),
           ),
-          subtitle: Text('has ${element.samples.length} existing ${element.samples.length == 1 ? 'sample' : 'samples'}'),
+          subtitle: Text('has ${element.samples.length} existing '
+              '${element.samples.length == 1 ? 'sample' : 'samples'}'),
           trailing: TextButton(
             child: const Text('ADD SAMPLE'),
             onPressed: () async {
@@ -181,12 +183,15 @@ class _NewSampleSelectState extends State<NewSampleSelect> {
   @override
   void initState() {
     super.initState();
-    if (Model.instance.workingFile == null) {
-      Model.instance.listFiles(Model.instance.flutterPackageRoot).then((void _) {
-        setState(() {});
-      });
-    }
     Model.instance.addListener(_modelUpdated);
+    if (Model.instance.workingFile == null) {
+      Model.instance.collectFiles(
+        <Directory>[
+          Model.instance.flutterPackageRoot,
+          Model.instance.dartUiRoot,
+        ],
+      );
+    }
     editingController.addListener(_editingControllerChanged);
   }
 

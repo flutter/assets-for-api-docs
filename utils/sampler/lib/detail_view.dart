@@ -80,7 +80,7 @@ class _DetailViewState extends State<DetailView> {
     }
     final CodeSample sample = Model.instance.currentSample!;
     final String filename = sample.start.file != null
-        ? path.relative(sample.start.file!.path, from: Model.instance.flutterPackageRoot.path)
+        ? path.relative(sample.start.file!.path, from: Model.instance.flutterRoot.path)
         : '<generated>';
     return Scaffold(
       appBar: AppBar(

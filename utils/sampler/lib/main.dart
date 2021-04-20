@@ -1,3 +1,4 @@
+import 'dart:io' as io;
 import 'package:args/args.dart';
 import 'package:file/file.dart';
 import 'package:file/local.dart';
@@ -16,6 +17,7 @@ import 'utils.dart';
 
 const String _kFileOption = 'file';
 const String _kFlutterRootOption = 'flutter-root';
+const String _kDartUiRootOption = 'dart-ui-root';
 
 const String kNewSampleSelectView = '/newSampleSelectView';
 const String kDetailView = '/detailView';
@@ -26,21 +28,43 @@ void main(List<String> argv) {
   parser.addOption(_kFileOption, help: 'Specifies the file to edit samples in.');
   parser.addOption(_kFlutterRootOption,
       help: 'Specifies the location of the Flutter root directory.');
+  parser.addOption(_kDartUiRootOption,
+      help: 'Specifies the location of the dart:ui source directory.');
   final ArgResults args = parser.parse(argv);
 
   const FileSystem filesystem = LocalFileSystem();
 
   Directory? flutterRoot;
   if (args.wasParsed(_kFlutterRootOption)) {
-    flutterRoot = filesystem.directory(args[_kFlutterRootOption] as String);
+    flutterRoot = filesystem.directory(args[_kFlutterRootOption]! as String);
   }
+  if (flutterRoot != null && !flutterRoot.existsSync()) {
+    io.stderr.writeln('Supplied --$_kFlutterRootOption directory '
+        '${args[_kFlutterRootOption]!} does not exist.');
+    io.exit(-1);
+  }
+
+  Directory? dartUiRoot;
+  if (args.wasParsed(_kDartUiRootOption)) {
+    dartUiRoot = filesystem.directory(args[_kDartUiRootOption]! as String);
+  }
+  if (dartUiRoot != null && !dartUiRoot.existsSync()) {
+    io.stderr.writeln('Supplied --$_kDartUiRootOption directory '
+        '${args[_kDartUiRootOption]!} does not exist.');
+    io.exit(-1);
+  }
+
   File? workingFile;
   if (args.wasParsed(_kFileOption)) {
     workingFile = filesystem.file(args[_kFileOption]);
   }
 
-  Model.instance =
-      Model(workingFile: workingFile, flutterRoot: flutterRoot, filesystem: filesystem);
+  Model.instance = Model(
+    workingFile: workingFile,
+    flutterRoot: flutterRoot,
+    filesystem: filesystem,
+    dartUiRoot: dartUiRoot,
+  );
 
   runApp(const MainApp());
 }
@@ -85,9 +109,12 @@ class _SamplerState extends State<Sampler> {
   void initState() {
     super.initState();
     if (Model.instance.workingFile == null) {
-      Model.instance.listFiles(Model.instance.flutterPackageRoot).then((void _) {
-        setState(() {});
-      });
+      Model.instance.collectFiles(
+        <Directory>[
+          Model.instance.flutterPackageRoot,
+          Model.instance.dartUiRoot,
+        ],
+      );
     }
     Model.instance.addListener(_modelUpdated);
     editingController.addListener(_editingControllerChanged);
@@ -120,8 +147,8 @@ class _SamplerState extends State<Sampler> {
                 TextSpan(text: '${sample.type == 'dartpad' ? 'dartpad sample' : sample.type} for '),
                 codeTextSpan(context, sample.start.element!),
                 TextSpan(
-                    text:
-                        '${sample.index != 0 ? '(${sample.index})' : ''} at line ${sample.start.line}'),
+                    text: '${sample.index != 0 ? '(${sample.index})' : ''} '
+                        'at line ${sample.start.line}'),
               ],
             ),
           ),
@@ -269,10 +296,33 @@ class _SamplerState extends State<Sampler> {
                             child: Autocomplete<File>(
                           fieldViewBuilder: _buildFileField,
                           optionsBuilder: _fileOptions,
-                          displayStringForOption: (File file) => file.path,
+                          displayStringForOption: (File file) {
+                            if (path.isWithin(
+                                Model.instance.flutterRoot.path, file.absolute.path)) {
+                              return path.relative(file.absolute.path,
+                                  from: Model.instance.flutterRoot.absolute.path);
+                            } else {
+                              return file.absolute.path;
+                            }
+                          },
                           onSelected: (File file) {
                             expandedIndex = -1;
-                            Model.instance.setWorkingFile(file);
+                            Model.instance
+                                .setWorkingFile(file)
+                                .onError((Exception e, StackTrace trace) {
+                              if (e is! SnippetException) {
+                                throw e;
+                              }
+                              final ScaffoldMessengerState? scaffold =
+                                  ScaffoldMessenger.maybeOf(context);
+                              scaffold?.showSnackBar(
+                                SnackBar(
+                                  backgroundColor: Colors.red,
+                                  duration: const Duration(seconds: 10),
+                                  content: Text(e.toString()),
+                                ),
+                              );
+                            });
                           },
                         )),
                       ],

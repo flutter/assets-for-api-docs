@@ -42,7 +42,8 @@ class FlutterSampleEditor {
       return foundSample.index == sample.index;
     }).toList();
     if (foundBlocks.length != 1) {
-      throw SnippetException('Unable to find original location for sample ${sample.index} on ${sample.element}');
+      throw SnippetException(
+          'Unable to find original location for sample ${sample.index} on ${sample.element}');
     }
     final CodeSample foundBlock = foundBlocks.first;
     int startRange;
@@ -196,8 +197,7 @@ class FlutterSampleEditor {
           'Project output location ${location.absolute.path} exists, refusing to overwrite.');
     }
 
-    final Directory flutterRoot =
-        this.flutterRoot ?? FlutterInformation.instance.getFlutterRoot();
+    final Directory flutterRoot = this.flutterRoot ?? FlutterInformation.instance.getFlutterRoot();
     final File flutter = flutterRoot.childDirectory('bin').childFile('flutter');
     if (!processManager.canRun(flutter.absolute.path)) {
       throw SnippetException('Unable to run flutter command');

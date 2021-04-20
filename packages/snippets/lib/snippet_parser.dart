@@ -167,7 +167,6 @@ class SnippetDartdocParser {
       }
     }
 
-
     if (!silent) {
       print('Found:\n'
           '  $snippetCount snippet code blocks,\n'
@@ -266,8 +265,8 @@ class SnippetDartdocParser {
         final RegExpMatch? sampleMatch = _dartDocSampleBeginRegex.firstMatch(trimmedLine);
         if (sampleMatch != null) {
           inSnippet = sampleMatch.namedGroup('type') == 'snippet' ||
-            sampleMatch.namedGroup('type') == 'sample' ||
-            sampleMatch.namedGroup('type') == 'dartpad';
+              sampleMatch.namedGroup('type') == 'sample' ||
+              sampleMatch.namedGroup('type') == 'dartpad';
           if (inSnippet) {
             if (sampleMatch.namedGroup('args') != null) {
               // There are arguments to the snippet tool to keep track of.

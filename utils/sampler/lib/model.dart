@@ -16,9 +16,11 @@ class Model extends ChangeNotifier {
   Model({
     File? workingFile,
     Directory? flutterRoot,
+    Directory? dartUiRoot,
     this.filesystem = const LocalFileSystem(),
   })  : _workingFile = workingFile,
         flutterRoot = flutterRoot ?? _findFlutterRoot(),
+        dartUiRoot = dartUiRoot ?? _findDartUiRoot(),
         _dartdocParser = SnippetDartdocParser(),
         _snippetGenerator = SnippetGenerator();
 
@@ -40,27 +42,46 @@ class Model extends ChangeNotifier {
     return FlutterInformation.instance.getFlutterRoot();
   }
 
-  Future<void> listFiles(Directory directory, {String suffix = '.dart'}) async {
-    final List<File> foundDartFiles = <File>[];
-    await for (FileSystemEntity entity in directory.list(recursive: true)) {
-      if (entity is Directory || !entity.basename.endsWith(suffix)) {
-        continue;
-      }
-      if (entity is Link) {
-        final String resolvedPath = entity.resolveSymbolicLinksSync();
-        if (!(await filesystem.isFile(resolvedPath))) {
+  static Directory _findDartUiRoot() {
+    return FlutterInformation.instance
+        .getFlutterRoot()
+        .absolute
+        .childDirectory('bin')
+        .childDirectory('cache')
+        .childDirectory('pkg')
+        .childDirectory('sky_engine')
+        .childDirectory('lib')
+        .childDirectory('ui');
+  }
+
+  Future<void> collectFiles(Iterable<Directory> directories, {String suffix = '.dart'}) async {
+    files = <File>[];
+    for (final Directory directory in directories) {
+      final List<File> foundDartFiles = <File>[];
+      await for (FileSystemEntity entity in directory.list(recursive: true)) {
+        if (entity is Directory || !entity.basename.endsWith(suffix)) {
           continue;
         }
-        entity = filesystem.file(resolvedPath);
+        if (entity is Link) {
+          final String resolvedPath = entity.resolveSymbolicLinksSync();
+          if (!(await filesystem.isFile(resolvedPath))) {
+            continue;
+          }
+          entity = filesystem.file(resolvedPath);
+        }
+        assert(entity is File);
+        final File file = filesystem.file(entity.absolute.path);
+        final File relativePath =
+            filesystem.file(path.relative(file.path, from: directory.absolute.path));
+        if (path.split(relativePath.path).contains('test')) {
+          continue;
+        }
+        print('Adding $file');
+        foundDartFiles.add(file);
       }
-      final File relativePath =
-          filesystem.file(path.relative(entity.absolute.path, from: directory.absolute.path));
-      if (path.split(relativePath.path).contains('test')) {
-        continue;
-      }
-      foundDartFiles.add(relativePath);
+      files!.addAll(foundDartFiles);
     }
-    files = foundDartFiles;
+    notifyListeners();
   }
 
   File? _workingFile;
@@ -306,6 +327,8 @@ class Model extends ChangeNotifier {
   Iterable<SourceElement>? _elements;
 
   Iterable<SourceElement>? get elements => _elements;
+
+  Directory dartUiRoot;
 
   Directory flutterRoot;
   Directory get flutterPackageRoot =>

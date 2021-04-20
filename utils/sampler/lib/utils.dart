@@ -2,13 +2,17 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'dart:convert';
+import 'dart:io' show ProcessResult;
+
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:file/file.dart';
+import 'package:file/local.dart';
 import 'package:platform/platform.dart';
-
 import 'package:process/process.dart';
 import 'package:process_runner/process_runner.dart';
+import 'package:snippets/snippets.dart';
 
 void openFileBrowser(FileSystemEntity location,
     {Platform platform = const LocalPlatform(),
@@ -62,6 +66,7 @@ String getIdeName(IdeType type) {
 void openInIde(IdeType type, FileSystemEntity location,
     {ProcessManager processManager = const LocalProcessManager(),
     Platform platform = const LocalPlatform(),
+    FileSystem filesystem = const LocalFileSystem(),
     int startLine = 0}) {
   switch (platform.operatingSystem) {
     case 'linux':
@@ -69,13 +74,17 @@ void openInIde(IdeType type, FileSystemEntity location,
         case IdeType.idea:
           processManager.run(<String>[
             'idea',
-            if (startLine != 0) '${location.absolute.path}:$startLine',
-            if (startLine == 0) location.absolute.path,
+            location.absolute.path,
+            if (startLine != 0) '--line',
+            if (startLine != 0) '$startLine',
           ], runInShell: true);
           break;
         case IdeType.vscode:
+          final Directory flutterRoot = FlutterInformation.instance.getFlutterRoot();
           processManager.run(<String>[
             'code',
+            '-n',
+            flutterRoot.absolute.path,
             '--goto',
             '${location.absolute.path}:$startLine',
           ], runInShell: true);
@@ -85,24 +94,61 @@ void openInIde(IdeType type, FileSystemEntity location,
     case 'macos':
       switch (type) {
         case IdeType.idea:
-          processManager.run(<String>[
+          final ProcessResult result = processManager.runSync(<String>[
+            'mdfind',
+            'kMDItemCFBundleIdentifier=com.jetbrains.intellij* kind:application',
+          ], stdoutEncoding: utf8);
+          final Iterable<String> candidates =
+              (result.stdout as String).split('\n').where((String candidate) {
+            return !candidate.contains('/Application Support/');
+          });
+          final String appName = candidates.isNotEmpty ? candidates.first : 'IntelliJ IDEA CE';
+          print('attempting to launch $appName');
+          final List<String> command = <String>[
             'open',
-            '-a',
-            'IntelliJ',
+            '-na',
+            appName,
             '--args',
-            if (startLine != 0) '${location.absolute.path}:$startLine',
-            if (startLine == 0) location.absolute.path,
-          ], runInShell: true);
+            location.absolute.path,
+            if (startLine != 0) '--line',
+            if (startLine != 0) '$startLine',
+          ];
+          processManager
+              .run(command, stdoutEncoding: utf8, stderrEncoding: utf8)
+              .then((ProcessResult result) {
+            if (result.exitCode != 0) {
+              throw SnippetException(
+                  'Unable to launch app $appName (${result.exitCode}): ${result.stderr}');
+            }
+          }).onError((Exception exception, StackTrace stackTrace) {
+            throw SnippetException('Unable to launch app $appName: $exception');
+          });
           break;
         case IdeType.vscode:
+          final ProcessResult result = processManager.runSync(<String>[
+            'mdfind',
+            'kMDItemCFBundleIdentifier=com.microsoft.VSCode* kind:application',
+          ], stdoutEncoding: utf8);
+          final Iterable<String> candidates = (result.stdout as String).split('\n');
+          final String appName = candidates.isNotEmpty ? candidates.first : 'Visual Studio Code';
+          final Directory flutterRoot = FlutterInformation.instance.getFlutterRoot();
           processManager.run(<String>[
             'open',
-            '-a',
-            'Visual Studio Code',
+            '-na',
+            appName,
             '--args',
+            '-n',
+            flutterRoot.absolute.path,
             '--goto',
             '${location.absolute.path}:$startLine',
-          ], runInShell: true);
+          ], stdoutEncoding: utf8, stderrEncoding: utf8).then((ProcessResult result) {
+            if (result.exitCode != 0) {
+              throw SnippetException(
+                  'Unable to launch app $appName (${result.exitCode}): ${result.stderr}');
+            }
+          }).onError((Exception exception, StackTrace stackTrace) {
+            throw SnippetException('Unable to launch app $appName: $exception');
+          });
           break;
       }
       break;

@@ -21,9 +21,9 @@ class FakeFlutterInformation extends FlutterInformation {
   @override
   Map<String, dynamic> getFlutterInformation() {
     return <String, dynamic>{
-       'flutterRoot': flutterRoot,
-       'frameworkVersion': Version(2,10,0),
-       'dartSdkVersion': Version(2,12,1),
+      'flutterRoot': flutterRoot,
+      'frameworkVersion': Version(2, 10, 0),
+      'dartSdkVersion': Version(2, 12, 1),
     };
   }
 }
@@ -62,10 +62,10 @@ void main() {
       // Create a new filesystem.
       memoryFileSystem = MemoryFileSystem();
       tmpDir = memoryFileSystem.systemTempDirectory.createTempSync('flutter_snippets_test.');
-      final Directory flutterRoot = memoryFileSystem.directory(path.join(tmpDir.absolute.path, 'flutter'));
-      configuration = FlutterRepoSnippetConfiguration(
-          flutterRoot: flutterRoot,
-          filesystem: memoryFileSystem);
+      final Directory flutterRoot =
+          memoryFileSystem.directory(path.join(tmpDir.absolute.path, 'flutter'));
+      configuration =
+          FlutterRepoSnippetConfiguration(flutterRoot: flutterRoot, filesystem: memoryFileSystem);
       configuration.createOutputDirectoryIfNeeded();
       configuration.templatesDirectory.createSync(recursive: true);
       configuration.skeletonsDirectory.createSync(recursive: true);
@@ -90,7 +90,8 @@ void main() {
 
     test('parses from comments', () async {
       final File inputFile = _createSourceFile(tmpDir, memoryFileSystem);
-      final Iterable<SourceElement> elements = getFileElements(inputFile, resourceProvider: FileSystemResourceProvider(memoryFileSystem));
+      final Iterable<SourceElement> elements = getFileElements(inputFile,
+          resourceProvider: FileSystemResourceProvider(memoryFileSystem));
       expect(elements, isNotEmpty);
       final SnippetDartdocParser sampleParser = SnippetDartdocParser();
       sampleParser.parseFromComments(elements);
@@ -102,10 +103,14 @@ void main() {
         sampleCount += element.samples.length;
         final String code = generator.generateCode(element.samples.first);
         expect(code, contains('// Description'));
-        expect(code, contains(RegExp('^void ${element.name}Sample\\(\\) \\{.*\$', multiLine:true)));
+        expect(
+            code, contains(RegExp('^void ${element.name}Sample\\(\\) \\{.*\$', multiLine: true)));
         final String html = generator.generateHtml(element.samples.first);
-        expect(html, contains(RegExp(r'^<pre>void .*Sample\(\) \{.*$', multiLine:true)));
-        expect(html, contains('<div class="snippet-description">{@end-inject-html}Description{@inject-html}</div>\n'));
+        expect(html, contains(RegExp(r'^<pre>void .*Sample\(\) \{.*$', multiLine: true)));
+        expect(
+            html,
+            contains(
+                '<div class="snippet-description">{@end-inject-html}Description{@inject-html}</div>\n'));
       }
       expect(sampleCount, equals(8));
     });

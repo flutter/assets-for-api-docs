@@ -25,13 +25,11 @@ class SnippetGenerator {
       {SnippetConfiguration? configuration,
       FileSystem filesystem = const LocalFileSystem(),
       Directory? flutterRoot})
-      : flutterRoot = flutterRoot ??
-      FlutterInformation.instance.getFlutterRoot(),
+      : flutterRoot = flutterRoot ?? FlutterInformation.instance.getFlutterRoot(),
         configuration = configuration ??
             FlutterRepoSnippetConfiguration(
                 filesystem: filesystem,
-                flutterRoot: flutterRoot ??
-                    FlutterInformation.instance.getFlutterRoot());
+                flutterRoot: flutterRoot ?? FlutterInformation.instance.getFlutterRoot());
 
   final Directory flutterRoot;
 
@@ -393,7 +391,8 @@ class SnippetGenerator {
       "import 'dart:typed_data';",
       "import 'dart:ui' as ui;",
       "import 'package:flutter_test/flutter_test.dart';",
-      for (final File file in _listDartFiles(FlutterInformation.instance.getFlutterRoot()
+      for (final File file in _listDartFiles(FlutterInformation.instance
+          .getFlutterRoot()
           .childDirectory('packages')
           .childDirectory('flutter')
           .childDirectory('lib'))) ...<String>[
