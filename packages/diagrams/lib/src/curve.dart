@@ -445,6 +445,7 @@ class CurveDiagramStep extends DiagramStep<CurveDiagram> {
       const CurveDiagram(name: 'ease_in_out_sine', caption: 'Curves.easeInOutSine', curve: Curves.easeInOutSine),
       const CurveDiagram(name: 'ease_in_out_quad', caption: 'Curves.easeInOutQuad', curve: Curves.easeInOutSine),
       const CurveDiagram(name: 'ease_in_out_cubic', caption: 'Curves.easeInOutCubic', curve: Curves.easeInOutCubic),
+      const CurveDiagram(name: 'ease_in_out_cubic_emphasized', caption: 'Curves.easeInOutCubicEmphasized', curve: Curves.easeInOutCubicEmphasized),
       const CurveDiagram(name: 'ease_in_out_quart', caption: 'Curves.easeInOutQuart', curve: Curves.easeInOutQuart),
       const CurveDiagram(name: 'ease_in_out_quint', caption: 'Curves.easeInOutQuint', curve: Curves.easeInOutQuint),
       const CurveDiagram(name: 'ease_in_out_expo', caption: 'Curves.easeInOutExpo', curve: Curves.easeInOutExpo),
