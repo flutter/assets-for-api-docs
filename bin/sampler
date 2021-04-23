@@ -1,0 +1,33 @@
+#!/bin/bash
+set -e
+
+# Please keep the logic in this file consistent with the logic in the
+# "sampler.bat" script in the same directory to ensure that it continues to
+# work across platforms.
+
+# So that users can run this script from anywhere and it will work as expected.
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null && pwd)"
+REPO_DIR="$(dirname "$SCRIPT_DIR")"
+
+DEVICE=''
+case $OSTYPE in
+  darwin*)
+  DEVICE='-d macos'
+  ;;
+  linux*)
+  DEVICE='-d linux'
+  ;;
+  msys*|win*)
+  # If we're on windows, run the batch file instead.
+  exec "$SCRIPT_DIR/sampler.bat" "$@"
+  ;;
+  *)
+  echo "Unknown OSTYPE '$OSTYPE'"
+  ;;
+esac
+
+# Flutter needs to be in the path already...
+cd ${REPO_DIR}/utils/sampler
+flutter pub upgrade
+echo flutter run $DEVICE "${REPO_DIR}/utils/sampler/bin/sampler.dart" "$@"
+flutter run --release $DEVICE "${REPO_DIR}/utils/sampler/bin/sampler.dart" "$@"
