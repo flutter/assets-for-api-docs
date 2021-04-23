@@ -54,7 +54,7 @@ void main(List<String> argv) {
     workingFile = filesystem.file(args[_kFileOption]);
   }
 
-  Model.instance = Model(
+  Model.resetInstance(
     workingFile: workingFile,
     flutterRoot: flutterRoot,
     filesystem: filesystem,

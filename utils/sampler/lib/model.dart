@@ -12,8 +12,9 @@ import 'package:snippets/snippets.dart';
 import 'package:crypto/crypto.dart';
 import 'package:watcher/watcher.dart';
 
+/// The application model singleton that contains current application state.
 class Model extends ChangeNotifier {
-  Model({
+  Model._({
     File? workingFile,
     Directory? flutterRoot,
     Directory? dartUiRoot,
@@ -26,16 +27,31 @@ class Model extends ChangeNotifier {
 
   static Model? _instance;
 
+  /// Resets the instance with new parameters.
+  ///
+  /// Any existing data in the model will be lost.
+  static void resetInstance({
+    File? workingFile,
+    Directory? flutterRoot,
+    Directory? dartUiRoot,
+    FileSystem filesystem = const LocalFileSystem()
+  }) {
+    _instance?.dispose();
+    _instance = Model._(
+      workingFile: workingFile,
+      flutterRoot: flutterRoot,
+      dartUiRoot: dartUiRoot,
+      filesystem: filesystem,
+    );
+  }
+
+  /// Get the singleton instance for the model class.
   static Model get instance {
-    _instance ??= Model();
+    _instance ??= Model._();
     return _instance!;
   }
 
-  static set instance(Model value) {
-    _instance?.dispose();
-    _instance = value;
-  }
-
+  /// The [FileSystem] used to handle filesystem requests.
   final FileSystem filesystem;
 
   static Directory _findFlutterRoot() {
@@ -54,6 +70,8 @@ class Model extends ChangeNotifier {
         .childDirectory('ui');
   }
 
+  /// Collects the list of Flutter source files to choose from and populates the
+  /// [files] member.
   Future<void> collectFiles(Iterable<Directory> directories, {String suffix = '.dart'}) async {
     files = <File>[];
     for (final Directory directory in directories) {
@@ -84,20 +102,27 @@ class Model extends ChangeNotifier {
   }
 
   File? _workingFile;
-  bool suspendReloads = false;
+  /// If true, response to changes in files in the filesystem is suspended.
+  /// This is set when writing out updated source files to prevent races.
+  bool _suspendReloads = false;
   FileWatcher? _workingFileWatcher;
   String? _workingFileContents;
   String? _workingFileDigest;
 
+  /// Gets the current Flutter dart source file that is being worked on.
   File? get workingFile {
     return _workingFile == null
         ? null
         : filesystem.file(path.join(flutterPackageRoot.absolute.path, _workingFile!.path));
   }
 
+  /// Gets the contents of the [workingFile] as a String.
+  ///
+  /// The contents are cached to avoid re-reading it all the time.
   String? get workingFileContents => _workingFileContents;
 
-  void clearWorkingFile() {
+  /// Unset the current working file, and clear out any cached data.
+  void clearWorkingFile({bool notify = true}) {
     if (_workingFile == null) {
       return;
     }
@@ -108,22 +133,24 @@ class Model extends ChangeNotifier {
     _currentSample = null;
     _currentElement = null;
     _elements = null;
-    notifyListeners();
+    if (notify) {
+      notifyListeners();
+    }
   }
 
   String _computeDigest(String contents) {
     return md5.convert(utf8.encode(contents)).toString();
   }
 
-  // Re-parses the working file, and attempts to set the current sample and
-  // element to the updated sample and element, if they exist.
+  /// Re-parses the working file, and attempts to set the current sample and
+  /// element to the updated sample and element, if they exist.
   Future<void> reloadWorkingFile({bool notify = true}) async {
     if (_workingFile == null) {
       assert(_workingFileWatcher == null);
       // No working file, nothing to reload.
       return;
     }
-    // Only actually reload if the contents have actually changed.
+    // Only reload if the contents have actually changed.
     final String contents = await workingFile!.readAsString();
     if (_workingFileDigest != null && _computeDigest(contents) == _workingFileDigest!) {
       return;
@@ -162,7 +189,7 @@ class Model extends ChangeNotifier {
     _workingFileDigest = _computeDigest(_workingFileContents!);
     _workingFileWatcher = FileWatcher(workingFile!.path);
     _workingFileWatcher!.events.listen((WatchEvent event) {
-      if (!suspendReloads) {
+      if (!_suspendReloads) {
         reloadWorkingFile();
       }
     });
@@ -175,20 +202,18 @@ class Model extends ChangeNotifier {
     print('Loaded ${samples.length} samples from ${workingFile!.path}');
   }
 
+  /// Set the current working file, resetting any cached data.
   Future<void> setWorkingFile(File value) async {
     if (_workingFile == value) {
       return;
     }
+    clearWorkingFile(notify: false);
     _workingFile = value;
-
-    // Clear existing selections if the file has changed.
-    _currentSample = null;
-    _currentElement = null;
-
-    await _loadWorkingFile();
-    notifyListeners();
+    reloadWorkingFile();
   }
 
+  /// Inserts a new sample placeholder into the [currentElement], and write it
+  /// out to the [workingFile].
   Future<void> insertNewSample({Type sampleType = SnippetSample, String? template}) async {
     assert(_workingFile != null, 'Working file must be set to insert a sample');
 
@@ -262,7 +287,7 @@ class Model extends ChangeNotifier {
         insertedTags.map<String>((String line) => '$indent$line'),
       );
 
-    suspendReloads = true;
+    _suspendReloads = true;
     await workingFile!.writeAsString(output.join('\n'));
 
     // Now reload to parse the new sample.
@@ -279,20 +304,20 @@ class Model extends ChangeNotifier {
     // found as the last sample on the current element.
     _currentSample = _currentElement!.samples.last;
 
-    suspendReloads = false;
+    _suspendReloads = false;
     notifyListeners();
   }
 
+  /// Get the names of all the available templates in the templates dir.
   Iterable<String> getTemplateNames() {
     return _snippetGenerator
         .getAvailableTemplates()
         .map<String>((File file) => file.basename.replaceFirst('.tmpl', ''));
   }
 
-  CodeSample? _currentSample;
-
+  /// The currently selected code sample, or null, if none is selected.
   CodeSample? get currentSample => _currentSample;
-
+  CodeSample? _currentSample;
   set currentSample(CodeSample? value) {
     if (value != _currentSample) {
       _currentSample = value;
@@ -300,10 +325,9 @@ class Model extends ChangeNotifier {
     }
   }
 
-  SourceElement? _currentElement;
-
+  /// The element corresponding to the currently selected code sample.
   SourceElement? get currentElement => _currentElement;
-
+  SourceElement? _currentElement;
   set currentElement(SourceElement? value) {
     if (value != _currentElement) {
       _currentElement = value;
@@ -311,6 +335,7 @@ class Model extends ChangeNotifier {
     }
   }
 
+  /// Find the element that owns a particular sample.
   SourceElement? getElementForSample(CodeSample sample) {
     if (elements == null) {
       return null;
@@ -318,20 +343,30 @@ class Model extends ChangeNotifier {
     return elements!.where((SourceElement element) => element.samples.contains(sample)).single;
   }
 
+  /// The list of samples available in all of the elements in the file.
   Iterable<CodeSample> get samples {
     return _elements?.expand<CodeSample>((SourceElement element) => element.samples) ??
         const <CodeSample>[];
   }
 
+  /// The Dart elements (classes, members, etc.) defined in the [workingFile].
+  Iterable<SourceElement>? get elements => _elements;
   Iterable<SourceElement>? _elements;
 
-  Iterable<SourceElement>? get elements => _elements;
-
+  /// The location of the dart:ui root, so that the examples in that root may be
+  /// edited.
   Directory dartUiRoot;
 
+  /// The location of the flutter root directory to look for files in.
   Directory flutterRoot;
+
+  /// The location of the flutter framework package directory.
   Directory get flutterPackageRoot =>
       flutterRoot.childDirectory('packages').childDirectory('flutter');
+
+  /// The list of source files available in the Flutter framework and dart:ui.
+  ///
+  /// Populated by calling [collectFiles].
   List<File>? files;
 
   final SnippetDartdocParser _dartdocParser;

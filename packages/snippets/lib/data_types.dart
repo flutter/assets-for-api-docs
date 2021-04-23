@@ -5,7 +5,8 @@
 import 'package:file/file.dart';
 import 'package:args/args.dart';
 
-/// A class to represent a line of input code.
+/// A class to represent a line of input code, with associated line number, file
+/// and element name.
 class SourceLine {
   const SourceLine(
     this.text, {
@@ -52,7 +53,7 @@ class SourceLine {
   String toString() => '$file:${line == -1 ? '??' : line}: $text';
 }
 
-/// A class containing the name and contents associated with a code block inside if a
+/// A class containing the name and contents associated with a code block inside of a
 /// code sample, for named injection into a template.
 class TemplateInjection {
   TemplateInjection(this.name, this.contents, {this.language = ''});
@@ -115,10 +116,8 @@ abstract class CodeSample {
 /// A class to represent a snippet of sample code, marked by "{@tool
 /// snippet}...{@end-tool}".
 ///
-/// This is code that is not meant to be run as a complete application, but
-/// rather as a code usage example. One [SnippetSample] contains all of the "snippet"
-/// blocks for an entire file, since they are evaluated in the analysis tool in
-/// a single block.
+/// Snippets are code that is not meant to be run as a complete application, but
+/// rather as a code usage example.
 class SnippetSample extends CodeSample {
   SnippetSample(
     List<SourceLine> input, {
@@ -194,8 +193,8 @@ class SnippetSample extends CodeSample {
 /// A class to represent a plain application sample in the dartdoc comments,
 /// marked by `{@tool sample ...}...{@end-tool}`.
 ///
-/// Application samples are processed separately from non-application snippets,
-/// because they must be injected into templates in order to be analyzed. Each
+/// Application samples are processed separately from [SnippetSample]s, because
+/// they must be injected into templates in order to be analyzed. Each
 /// [ApplicationSample] represents one `{@tool sample ...}...{@end-tool}` block
 /// in the source file.
 class ApplicationSample extends CodeSample {
@@ -214,8 +213,8 @@ class ApplicationSample extends CodeSample {
 /// A class to represent a Dartpad application sample in the dartdoc comments,
 /// marked by `{@tool dartpad ...}...{@end-tool}`.
 ///
-/// Dartpad samples are processed separately from non-application snippets,
-/// because they must be injected into templates in order to be analyzed. Each
+/// Dartpad samples are processed separately from [SnippetSample]s, because they
+/// must be injected into templates in order to be analyzed. Each
 /// [DartpadSample] represents one `{@tool dartpad ...}...{@end-tool}` block in
 /// the source file.
 class DartpadSample extends ApplicationSample {
@@ -231,17 +230,27 @@ class DartpadSample extends ApplicationSample {
   String get type => 'dartpad';
 }
 
+/// The different types of Dart [SourceElement]s that can be found in a source file.
 enum SourceElementType {
+  /// A class
   classType,
+  /// A field variable of a class.
   fieldType,
+  /// A method of a class.
   methodType,
+  /// A constructor for a class.
   constructorType,
+  /// A function typedef
   typedefType,
+  /// A top level (non-class) variable.
   topLevelVariableType,
+  /// A function, either top level, or embedded in another function.
   functionType,
+  /// An unknown type used for initialization.
   unknownType,
 }
 
+/// Converts the enun type [SourceElementType] to a human readable string.
 String sourceElementTypeAsString(SourceElementType type) {
   switch (type) {
     case SourceElementType.classType:
@@ -263,9 +272,14 @@ String sourceElementTypeAsString(SourceElementType type) {
   }
 }
 
+/// A class that represents a Dart element in a source file.
+///
+/// The element is one of the types in [SourceElementType].
 class SourceElement {
-  // This uses a factory so that the default for the lists can be modifiable
-  // lists.
+  /// A factory constructor for SourceElements.
+  ///
+  /// This uses a factory so that the default for the `comment` and `samples`
+  /// lists can be modifiable lists.
   factory SourceElement(
     SourceElementType type,
     String name,
@@ -299,17 +313,42 @@ class SourceElement {
     this.samples = const <CodeSample>[],
   });
 
+  /// The type of the element
   final SourceElementType type;
+  /// The name of the element.
+  ///
+  /// For example, a method called "doSomething" that is part of the class
+  /// "MyClass" would have "doSomething" as its name.
   final String name;
+  /// The name of the class the element belongs to, if any.
+  ///
+  /// This is the empty string if it isn't part of a class.
+  ///
+  /// For example, a method called "doSomething" that is part of the class
+  /// "MyClass" would have "MyClass" as its `className`.
   final String className;
+  /// The file that this [SourceElement] was parsed from.
   final File file;
+  /// The character position in the file that this [SourceElement] starts at.
   final int startPos;
+  /// The line in the file that the first position of [SourceElement] is on.
   final int startLine;
+  /// The list of [SourceLine]s that make up the documentation comment for this
+  /// [SourceElement].
   final List<SourceLine> comment;
+  /// The list of [CodeSample]s that are in the documentation comment for this
+  /// [SourceElement].
+  ///
+  /// This field will be populated by [SnippetDartdocParser.parseFromComments].
   final List<CodeSample> samples;
 
+  /// Returns the fully qualified name of this element.
+  ///
+  /// For example, a method called "doSomething" that is part of the class
+  /// "MyClass" would have "MyClass.doSomething" as its `elementName`.
   String get elementName => className.isEmpty ? name : '$className.$name';
 
+  /// Returns the type of this element as a [String].
   String get typeAsString => sourceElementTypeAsString(type);
 
   SourceElement copyWith({

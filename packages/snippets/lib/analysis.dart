@@ -12,40 +12,57 @@ import 'package:analyzer/file_system/file_system.dart' as afs;
 import 'package:analyzer/file_system/physical_file_system.dart' as afs;
 import 'package:file/file.dart';
 import 'package:snippets/snippets.dart';
+import 'package:interval_tree/interval_tree.dart';
 
 import 'data_types.dart';
 import 'interval_tree.dart';
 import 'util.dart';
 
-class _LineNumberInterval extends Interval<num, int> {
+class _LineNumberInterval extends PayloadInterval<num, int> {
   _LineNumberInterval(int start, int end, int line) : super(start, end, line);
 
   @override
-  int? mergePayload(Interval<num, int> other) {
+  _LineNumberInterval copyWith(int? start, int? end, int? payload) {
+    return _LineNumberInterval(start ?? this.start as int, end ?? this.end as int, payload ?? this.payload as int);
+  }
+
+  @override
+  int? mergePayload(PayloadInterval<num, int> other) {
     return other.payload == -1 ? payload : other.payload;
   }
 }
 
-Iterable<List<SourceLine>> getFileComments(File file) {
-  return getComments(getFileElements(file));
+/// Gets an iterable over all of the blocks of documentation comments in a file
+/// using the analyzer.
+///
+/// Each entry in the list is a list of source lines corresponding to the
+/// documentation comment block.
+Iterable<List<SourceLine>> getFileDocumentationComments(File file) {
+  return getDocumentationComments(getFileElements(file));
 }
 
-Iterable<List<SourceLine>> getComments(Iterable<SourceElement> elements) {
+/// Gets an iterable over all of the blocks of documentation comments from an
+/// iterable over the [SourceElement]s involved.
+Iterable<List<SourceLine>> getDocumentationComments(Iterable<SourceElement> elements) {
   return elements
       .where((SourceElement element) => element.comment.isNotEmpty)
       .map<List<SourceLine>>((SourceElement element) => element.comment);
 }
 
+/// Gets an iterable over the comment [SourceElement]s in a file.
 Iterable<SourceElement> getFileCommentElements(File file) {
   return getCommentElements(getFileElements(file));
 }
 
+/// Filters the source `elements` to only return the comment elements.
 Iterable<SourceElement> getCommentElements(Iterable<SourceElement> elements) {
   return elements.where((SourceElement element) => element.comment.isNotEmpty);
 }
 
-// Reads the file content from the string, to avoid having to read it twice if
-// the caller already has the content in memory.
+/// Reads the file content from a string, to avoid having to read the file more
+/// than once if the caller already has the content in memory.
+///
+/// The `file` argument is used to tag the lines with a filename that they came from.
 Iterable<SourceElement> getElementsFromString(String content, File file) {
   final ParseStringResult parseResult = parseString(
       featureSet: FeatureSet.fromEnableFlags2(
@@ -53,12 +70,16 @@ Iterable<SourceElement> getElementsFromString(String content, File file) {
         flags: <String>[],
       ),
       content: content);
-  final _CommentVisitor<CompilationUnit> visitor = _CommentVisitor<CompilationUnit>(file);
+  final _SourceVisitor<CompilationUnit> visitor = _SourceVisitor<CompilationUnit>(file);
   visitor.visitCompilationUnit(parseResult.unit);
   visitor.assignLineNumbers();
   return visitor.elements;
 }
 
+/// Gets an iterable over the [SourceElement]s in the given `file`.
+///
+/// Takes an optional [ResourceProvider] to allow reading from a memory
+/// filesystem.
 Iterable<SourceElement> getFileElements(File file, {afs.ResourceProvider? resourceProvider}) {
   resourceProvider ??= afs.PhysicalResourceProvider.INSTANCE;
   final ParseStringResult parseResult = parseFile(
@@ -68,14 +89,14 @@ Iterable<SourceElement> getFileElements(File file, {afs.ResourceProvider? resour
       ),
       path: file.absolute.path,
       resourceProvider: resourceProvider);
-  final _CommentVisitor<CompilationUnit> visitor = _CommentVisitor<CompilationUnit>(file);
+  final _SourceVisitor<CompilationUnit> visitor = _SourceVisitor<CompilationUnit>(file);
   visitor.visitCompilationUnit(parseResult.unit);
   visitor.assignLineNumbers();
   return visitor.elements;
 }
 
-class _CommentVisitor<T> extends RecursiveAstVisitor<T> {
-  _CommentVisitor(this.file) : elements = <SourceElement>{};
+class _SourceVisitor<T> extends RecursiveAstVisitor<T> {
+  _SourceVisitor(this.file) : elements = <SourceElement>{};
 
   final Set<SourceElement> elements;
   String enclosingClass = '';
@@ -86,7 +107,7 @@ class _CommentVisitor<T> extends RecursiveAstVisitor<T> {
     final String contents = file.readAsStringSync();
     int lineNumber = 0;
     int startRange = 0;
-    final IntervalTree<num, int> itree = IntervalTree<num, int>();
+    final IntervalTree itree = IntervalTree();
     for (int i = 0; i < contents.length; ++i) {
       if (contents[i] == '\n') {
         itree.add(_LineNumberInterval(startRange, i, lineNumber + 1));
@@ -96,11 +117,11 @@ class _CommentVisitor<T> extends RecursiveAstVisitor<T> {
     }
 
     int getLineForPosition(int startChar, int endChar) {
-      final IntervalTree<num, int> resultTree = IntervalTree<num, int>()
+      final IntervalTree resultTree = IntervalTree()
         ..add(_LineNumberInterval(startChar, endChar, -1));
-      final IntervalTree<num, int> intersection = itree.intersection(resultTree);
+      final IntervalTree intersection = itree.intersection(resultTree);
       if (intersection.isNotEmpty) {
-        return intersection.single.payload!;
+        return (intersection.single as _LineNumberInterval).payload!;
       } else {
         return -1;
       }

@@ -11,6 +11,7 @@ import 'package:platform/platform.dart';
 
 import 'utils.dart';
 
+/// A label widget that shows a padded label with some bold data.
 class DataLabel extends StatelessWidget {
   const DataLabel({Key? key, this.label = '', this.data = ''}) : super(key: key);
 
@@ -42,6 +43,9 @@ class DataLabel extends StatelessWidget {
   }
 }
 
+/// A widget that contains controls for managing an output file: opening it in
+/// various IDEs, copying the path to the clipboard, and displaying a label for
+/// it.
 class OutputLocation extends StatelessWidget {
   OutputLocation({
     Key? key,
@@ -139,6 +143,8 @@ class OutputLocation extends StatelessWidget {
   }
 }
 
+/// A widget that shows a list of actions in a row, with a progress indicator
+/// when an action is in progress.
 class ActionPanel extends StatelessWidget {
   const ActionPanel({
     Key? key,
@@ -222,6 +228,7 @@ class AutocompleteField extends StatelessWidget {
   }
 }
 
+/// A widget that shows formatted Dart source code in a scrollable panel.
 class CodePanel extends StatefulWidget {
   const CodePanel({Key? key, required this.code}) : super(key: key);
 

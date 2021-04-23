@@ -12,6 +12,9 @@ import 'package:snippets/snippets.dart';
 import 'helper_widgets.dart';
 import 'model.dart';
 
+/// The detail view that shows the details of a particular sample.
+///
+/// And
 class DetailView extends StatefulWidget {
   const DetailView({Key? key}) : super(key: key);
 
@@ -19,12 +22,13 @@ class DetailView extends StatefulWidget {
   _DetailViewState createState() => _DetailViewState();
 }
 
-Future<void> _doExport(FlutterSampleEditor project) async {
+// Used to run export in another isolate.
+Future<void> _doExport(FlutterSampleLiberator project) async {
   await project.extract(overwrite: true);
 }
 
 class _DetailViewState extends State<DetailView> {
-  FlutterSampleEditor? project;
+  FlutterSampleLiberator? project;
   bool exporting = false;
   bool importing = false;
 
@@ -34,7 +38,7 @@ class _DetailViewState extends State<DetailView> {
       if (project == null) {
         final Directory outputLocation =
             Model.instance.filesystem.systemTempDirectory.createTempSync('flutter_sample.');
-        project = FlutterSampleEditor(
+        project = FlutterSampleLiberator(
           Model.instance.currentElement!,
           Model.instance.currentSample!,
           location: outputLocation,
@@ -106,8 +110,11 @@ class _DetailViewState extends State<DetailView> {
                 children: <Widget>[
                   if (!exporting)
                     TextButton(
-                        child: Text(
-                          project == null ? 'EXTRACT SAMPLE' : 'RE-EXTRACT SAMPLE',
+                        child: Tooltip(
+                          message: 'Extract a sample from the Flutter source file',
+                          child: Text(
+                            project == null ? 'EXTRACT SAMPLE' : 'RE-EXTRACT SAMPLE',
+                          ),
                         ),
                         onPressed: _extractSample),
                   if (project != null && !exporting)
@@ -121,7 +128,9 @@ class _DetailViewState extends State<DetailView> {
                 isBusy: importing,
                 children: <Widget>[
                   TextButton(
-                      child: const Text('REINSERT'),
+                      child: const Tooltip(message: 'Reinsert extracted, edited sample into the Flutter source file',
+                        child: Text('REINSERT'),
+                      ),
                       onPressed: project != null && !exporting && !importing
                           ? () => _reinsertIntoFrameworkFile(context)
                           : null),

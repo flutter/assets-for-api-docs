@@ -14,8 +14,12 @@ import 'package:pub_semver/pub_semver.dart';
 import 'data_types.dart';
 import 'util.dart';
 
-class FlutterSampleEditor {
-  const FlutterSampleEditor(
+/// An editor for the samples in a Flutter source file.
+///
+/// This class is used to [extract] an editable sample to a project at the given [location], and then [reinsert] the
+/// edited sample in the original Flutter source file.
+class FlutterSampleLiberator {
+  const FlutterSampleLiberator(
     this.element,
     this.sample, {
     required this.location,
@@ -25,16 +29,38 @@ class FlutterSampleEditor {
     this.flutterRoot,
   }) : _name = name;
 
+  /// The optional [FileSystem] object to use for filesystem access.
+  ///
+  /// Defaults to [LocalFileSystem].
   final FileSystem filesystem;
+  /// The optional [ProcessManager] object to use for invoking subprocesses.
+  ///
+  /// Defaults to [LocalProcessManager].
   final ProcessManager processManager;
+  /// The [SourceElement] that owns the [sample] to be extracted/reinserted.
   final SourceElement element;
+  /// The [CodeSample] to extract/reinsert into the source file.
   final CodeSample sample;
+  /// The location of the editable sample.
+  ///
+  /// This serves as a destination for the [extract] function, and a source for
+  /// the [reinsert] function.
   final Directory location;
+  // A name that overrides the default naming if specified in the constructor.
   final String? _name;
+  /// The optional Flutter root directory specified.
+  ///
+  /// Defaults to the output of [FlutterInformation.instance.getFlutterRoot].
   final Directory? flutterRoot;
 
+  /// The name of the extracted sample, either supplied to the constructor, or
+  /// (if not), a name valid for use in a "pubspec.yaml" file derived from the
+  /// element's type, element name, and which sample within the element's doc
+  /// comment it is.
   String get name =>
       _name ?? '${sample.type}_${sample.element.snakeCase.replaceAll('.', '_')}_${sample.index}';
+
+  /// The output "main.dart" file for the extracted sample.
   File get mainDart => location.childDirectory('lib').childFile('main.dart');
 
   Future<Map<String, int>> _findReplacementRangeAndIndents() async {
@@ -162,35 +188,9 @@ class FlutterSampleEditor {
     }
   }
 
-  Future<String> reinsert() async {
-    try {
-      // Load up the modified main.dart and parse out the components, keeping them
-      // in order.
-      final Map<String, List<String>> sections = <String, List<String>>{};
-      final List<String> sectionOrder = <String>[];
-      await _parseMainDart(sections: sections, sectionOrder: sectionOrder);
-
-      // Re-parse the original file to find the current char range for the
-      // original example.
-      final Map<String, int> rangesAndIndents = await _findReplacementRangeAndIndents();
-      final int startRange = rangesAndIndents['startRange']!;
-      final int endRange = rangesAndIndents['endRange']!;
-      final File frameworkFile = sample.start.file!;
-      String frameworkContents = await frameworkFile.readAsString();
-
-      // 3) Create a substitute example, and replace the char range with the new example.
-      final String replacement =
-          _buildSampleReplacement(sections, sectionOrder, rangesAndIndents['firstIndent']!);
-      // 4) Rewrite the original framework file.
-      frameworkContents = frameworkContents.replaceRange(
-          startRange, endRange, startRange == endRange ? '\n$replacement' : replacement);
-      await frameworkFile.writeAsString(frameworkContents);
-    } on SnippetException catch (e) {
-      return e.message;
-    }
-    return '';
-  }
-
+  /// Extracts the configured sample project to the configured output location.
+  ///
+  /// Returns true if the extraction succeeded.
   Future<bool> extract({bool overwrite = false}) async {
     if (await location.exists() && !overwrite) {
       throw SnippetException(
@@ -270,5 +270,36 @@ include: ${flutterRoot.absolute.path}/analysis_options.yaml
         workingDirectory: location.absolute.path);
 
     return result.exitCode == 0;
+  }
+
+  /// Reinserts the configured sample into its original Flutter source file
+  /// after editing.
+  Future<String> reinsert() async {
+    try {
+      // Load up the modified main.dart and parse out the components, keeping them
+      // in order.
+      final Map<String, List<String>> sections = <String, List<String>>{};
+      final List<String> sectionOrder = <String>[];
+      await _parseMainDart(sections: sections, sectionOrder: sectionOrder);
+
+      // Re-parse the original file to find the current char range for the
+      // original example.
+      final Map<String, int> rangesAndIndents = await _findReplacementRangeAndIndents();
+      final int startRange = rangesAndIndents['startRange']!;
+      final int endRange = rangesAndIndents['endRange']!;
+      final File frameworkFile = sample.start.file!;
+      String frameworkContents = await frameworkFile.readAsString();
+
+      // 3) Create a substitute example, and replace the char range with the new example.
+      final String replacement =
+          _buildSampleReplacement(sections, sectionOrder, rangesAndIndents['firstIndent']!);
+      // 4) Rewrite the original framework file.
+      frameworkContents = frameworkContents.replaceRange(
+          startRange, endRange, startRange == endRange ? '\n$replacement' : replacement);
+      await frameworkFile.writeAsString(frameworkContents);
+    } on SnippetException catch (e) {
+      return e.message;
+    }
+    return '';
   }
 }

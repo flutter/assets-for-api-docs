@@ -51,29 +51,6 @@ class SnippetConfiguration {
 }
 
 /// A class to compute the configuration of the snippets input and output
-/// locations based in the current location of the snippets package.
-class PackageSnippetConfiguration extends SnippetConfiguration {
-  PackageSnippetConfiguration({
-    required Directory packageRoot,
-    required Directory outputDirectory,
-    FileSystem filesystem = const LocalFileSystem(),
-  }) : super(
-            filesystem: filesystem,
-            configDirectory: _underRoot(filesystem, packageRoot, const <String>['config']),
-            outputDirectory: outputDirectory,
-            skeletonsDirectory:
-                _underRoot(filesystem, packageRoot, const <String>['config', 'skeletons']),
-            templatesDirectory: _underRoot(
-              filesystem,
-              packageRoot,
-              const <String>['config', 'templates'],
-            ));
-
-  static Directory _underRoot(FileSystem fs, Directory packageRoot, List<String> dirs) =>
-      fs.directory(path.canonicalize(path.joinAll(<String>[packageRoot.absolute.path, ...dirs])));
-}
-
-/// A class to compute the configuration of the snippets input and output
 /// locations based in the current location of the snippets main.dart.
 class FlutterRepoSnippetConfiguration extends SnippetConfiguration {
   FlutterRepoSnippetConfiguration(

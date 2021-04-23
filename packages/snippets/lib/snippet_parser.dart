@@ -7,7 +7,15 @@ import 'package:file/file.dart';
 import 'data_types.dart';
 import 'util.dart';
 
-/// Parses [CodeSample]s from the source file given to [parse], or from
+/// Parses [CodeSample]s from the source file given to one of the parsing routines.
+///
+/// - [parseFromDartdocToolFile] parses the output of the dartdoc `@tool`
+///   directive, which contains the dartdoc comment lines (with comment markers
+///   stripped) contained between the tool markers.
+///
+/// - [parseAndAddAssumptions] parses the assumptions in the "Examples can
+///   assume:" block at the top of the file and adds them to the code samples
+///   contained in the given [SourceElement] iterable.
 class SnippetDartdocParser {
   SnippetDartdocParser();
 
@@ -30,8 +38,9 @@ class SnippetDartdocParser {
   /// A RegExp that matches the end of a code block within dartdoc.
   static final RegExp _codeBlockEndRegex = RegExp(r'///\s+```\s*$');
 
-  /// Extracts the samples from the elements in [elements] and adds the result
-  /// to the given elements.
+  /// Parses the assumptions in the "Examples can assume:" block at the top of
+  /// the `assumptionsFile` and adds them to the code samples contained in the
+  /// given `elements` iterable.
   void parseAndAddAssumptions(
     Iterable<SourceElement> elements,
     File assumptionsFile, {
@@ -52,6 +61,11 @@ class SnippetDartdocParser {
     }
   }
 
+  /// Parses a file containing the output of the dartdoc `@tool` directive,
+  /// which contains the dartdoc comment lines (with comment markers stripped)
+  /// between the tool markers.
+  ///
+  /// This is meant to be run as part of a dartdoc tool that handles snippets.
   SourceElement parseFromDartdocToolFile(
     File input, {
     int? startLine,
@@ -95,6 +109,8 @@ class SnippetDartdocParser {
     return newElement;
   }
 
+  /// This parses the assumptions in the "Examples can assume:" block from the
+  /// given `file`.
   List<SourceLine> parseAssumptions(File file) {
     // Whether or not we're in the file-wide preamble section ("Examples can assume").
     bool inPreamble = false;
@@ -133,6 +149,9 @@ class SnippetDartdocParser {
     return preamble;
   }
 
+  /// This parses the code snippets from the documentation comments in the given
+  /// `elements`, and sets the resulting samples as the `samples` member of
+  /// each element in the supplied iterable.
   void parseFromComments(
     Iterable<SourceElement> elements, {
     bool silent = true,
@@ -147,12 +166,6 @@ class SnippetDartdocParser {
       }
       parseComment(element);
       for (final CodeSample sample in element.samples) {
-        sample.metadata.addAll(<String, Object?>{
-          'id': '${sample.element}.${sample.index}',
-          'element': sample.element,
-          'sourcePath': sample.start.file?.path ?? '',
-          'sourceLine': sample.start.line,
-        });
         switch (sample.runtimeType) {
           case ApplicationSample:
             sampleCount++;
@@ -175,6 +188,9 @@ class SnippetDartdocParser {
     }
   }
 
+  /// This parses the documentation comment on a single [SourceElement] and
+  /// assigns the resulting samples to the `samples` member of the given
+  /// `element`.
   void parseComment(SourceElement element) {
     // Whether or not we're in a snippet code sample (with template) specifically.
     bool inSnippet = false;
@@ -283,19 +299,27 @@ class SnippetDartdocParser {
         }
       }
     }
+    for (final CodeSample sample in samples) {
+      sample.metadata.addAll(<String, Object?>{
+        'id': '${sample.element}.${sample.index}',
+        'element': sample.element,
+        'sourcePath': sample.start.file?.path ?? '',
+        'sourceLine': sample.start.line,
+      });
+    }
     element.samples.clear();
     element.samples.addAll(samples);
   }
 
-  /// Helper to process arguments given as a (possibly quoted) string.
-  ///
-  /// First, this will split the given [argsAsString] into separate arguments,
-  /// taking any quoting (either ' or " are accepted) into account, including
-  /// handling backslash-escaped quotes.
-  ///
-  /// Then, it will prepend "--" to any args that start with an identifier
-  /// followed by an equals sign, allowing the argument parser to treat any
-  /// "foo=bar" argument as "--foo=bar" (which is a dartdoc-ism).
+  // Helper to process arguments given as a (possibly quoted) string.
+  //
+  // First, this will split the given [argsAsString] into separate arguments,
+  // taking any quoting (either ' or " are accepted) into account, including
+  // handling backslash-escaped quotes.
+  //
+  // Then, it will prepend "--" to any args that start with an identifier
+  // followed by an equals sign, allowing the argument parser to treat any
+  // "foo=bar" argument as "--foo=bar" (which is a dartdoc-ism).
   Iterable<String> _splitUpQuotedArgs(String argsAsString) {
     // This function is used because the arg parser package doesn't handle
     // quoted args.

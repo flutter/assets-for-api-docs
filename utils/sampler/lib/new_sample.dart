@@ -14,6 +14,7 @@ import 'utils.dart';
 
 typedef _OptionDialogSubmitted = void Function(Type sampleType, String? template);
 
+/// A modal dialog that allows selection of parameters for the new sample.
 class OptionDialog extends StatefulWidget {
   const OptionDialog({Key? key, required this.onSubmitted}) : super(key: key);
 
@@ -116,6 +117,7 @@ class _OptionDialogState extends State<OptionDialog> {
   }
 }
 
+/// A widget that allows selecting of a Dart element to add a sample to.
 class NewSampleSelect extends StatefulWidget {
   const NewSampleSelect({Key? key, required this.title}) : super(key: key);
 

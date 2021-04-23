@@ -8,7 +8,6 @@ import 'dart:io' show ProcessResult;
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:file/file.dart';
-import 'package:file/local.dart';
 import 'package:platform/platform.dart';
 import 'package:process/process.dart';
 import 'package:process_runner/process_runner.dart';

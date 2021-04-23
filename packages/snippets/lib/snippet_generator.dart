@@ -2,10 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// Copyright 2014 The Flutter Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-
 import 'dart:convert';
 import 'dart:io' as io;
 
@@ -230,7 +226,7 @@ class SnippetGenerator {
   }
 
   /// Parses the input for the various code and description segments, and
-  /// returns them in the order found.
+  /// returns a set of template injections in the order found.
   List<TemplateInjection> parseInput(CodeSample sample) {
     bool inCodeBlock = false;
     final List<SourceLine> description = <SourceLine>[];
@@ -275,31 +271,29 @@ class SnippetGenerator {
     return file.readAsStringSync(encoding: utf8);
   }
 
+  /// Generate the HTML using the skeleton file for the type of the given sample.
+  ///
+  /// Returns a string with the HTML needed to embed in a web page for showing a
+  /// sample on the web page.
   String generateHtml(CodeSample sample) {
     final String skeleton = _loadFileAsUtf8(configuration.getHtmlSkeletonFile(sample.type));
     return interpolateSkeleton(sample, skeleton);
   }
 
-  /// The main routine for generating snippets.
+  /// The main routine for generating code samples from the source code doc comments.
   ///
-  /// The [sample] is the file containing the dartdoc comments (minus the leading
-  /// comment markers).
+  /// The `sample` is the block of sample code from a dartdoc comment.
   ///
-  /// The [type] is the type of snippet to create: either a
-  /// [SampleType.sample] or a [SampleType.snippet].
+  /// The optional `output` is the file to write the generated sample code to.
   ///
-  /// [showDartPad] indicates whether DartPad should be shown where possible.
-  /// Currently, this value only has an effect if [type] is
-  /// [SampleType.sample], in which case an alternate skeleton file is
-  /// used to create the final HTML output.
+  /// If `addSectionMarkers` is true, then markers will be added before and
+  /// after each template section in the output.  This is intended to facilitate
+  /// editing of the sample during the authoring process.
   ///
-  /// The optional [template] parameter can be used to override specifies the
-  /// name of the template to use for interpolating the application code.
-  /// Defaults to the template provided by the [CodeSample].
+  /// If `includeAssumptions` is true, then the block in the "Examples can
+  /// assume:" block will also be included in the output.
   ///
-  /// The [id] is a string ID to use for the output file, and to tell the user
-  /// about in the `flutter create` hint. It must not be null if the [type] is
-  /// [SampleType.sample].
+  /// Returns a string containing the resulting code sample.
   String generateCode(
     CodeSample sample, {
     File? output,
@@ -379,6 +373,8 @@ class SnippetGenerator {
   }
 
   /// Computes the headers needed for each snippet file.
+  ///
+  /// Not used for "sample" and "dartpad" samples, which use their own template.
   List<SourceLine> get headers {
     return _headers ??= <String>[
       '// generated code',
