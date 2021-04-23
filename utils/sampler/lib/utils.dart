@@ -37,11 +37,11 @@ void openFileBrowser(FileSystemEntity location,
         }
       });
       break;
-    case 'macOS':
-      processManager.run(<String>['open', '-R', location.absolute.path], runInShell: true);
+    case 'macos':
+      processManager.run(<String>['open', '-R', location.absolute.path]);
       break;
     case 'windows':
-      processManager.run(<String>['start', '/select', location.absolute.path], runInShell: true);
+      processManager.run(<String>['start', '/select', location.absolute.path]);
       break;
     default:
       throw Exception('Opening files on platform ${platform.operatingSystem} is not supported.');

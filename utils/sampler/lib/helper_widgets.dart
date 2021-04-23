@@ -120,7 +120,7 @@ class OutputLocation extends StatelessWidget {
                   child: TextButton(
                     child: Text('OPEN IN $_fileBrowserName'),
                     onPressed: () {
-                      openFileBrowser(file?.parent ?? location);
+                      openFileBrowser(file ?? location);
                     },
                   ),
                 ),
