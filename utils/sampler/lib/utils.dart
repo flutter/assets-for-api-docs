@@ -41,7 +41,10 @@ void openFileBrowser(FileSystemEntity location,
       processManager.run(<String>['open', '-R', location.absolute.path]);
       break;
     case 'windows':
-      processManager.run(<String>['start', '/select', location.absolute.path]);
+      processManager.run(<String>[
+        'start',
+        if (location is Directory) location.absolute.path else location.parent.absolute.path
+      ], runInShell: true);
       break;
     default:
       throw Exception('Opening files on platform ${platform.operatingSystem} is not supported.');
@@ -161,7 +164,7 @@ void openInIde(
             'idea64.exe',
             location.absolute.path,
             if (file != null) '${file.absolute.path}:$startLine',
-          ], runInShell: true);
+          ]);
           break;
         case IdeType.vscode:
           processManager.run(<String>[
@@ -170,7 +173,7 @@ void openInIde(
             location.absolute.path,
             if (file != null) '--goto',
             if (file != null) '${file.absolute.path}:$startLine',
-          ], runInShell: true);
+          ]);
           break;
       }
       break;
