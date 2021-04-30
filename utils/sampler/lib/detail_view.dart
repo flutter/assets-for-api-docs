@@ -103,7 +103,10 @@ class _DetailViewState extends State<DetailView> {
                   label: 'Sample is attached to:',
                   data: '${sample.element} starting at line ${sample.start.line}'),
               Expanded(
-                child: CodePanel(code: sample.inputAsString),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: CodePanel(code: sample.inputAsString, color: Colors.deepPurple.shade50),
+                ),
               ),
               ActionPanel(
                 isBusy: exporting,

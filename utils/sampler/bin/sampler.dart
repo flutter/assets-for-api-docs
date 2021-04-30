@@ -152,10 +152,14 @@ class _SamplerState extends State<Sampler> {
         TextSpan(
           children: <InlineSpan>[
             TextSpan(
-              text: 'No documentation or samples.',
+              text: <String>[
+                'No documentation or samples.',
+                if (element.override) " No worries, it's an override.",
+              ].join(''),
               style: TextStyle(
                 color: element.override ? null : Colors.red,
-                fontStyle: FontStyle.italic,
+                fontStyle: element.override ? null : FontStyle.italic,
+                fontWeight: element.override ? null : FontWeight.bold,
               ),
             ),
           ],
@@ -209,29 +213,55 @@ class _SamplerState extends State<Sampler> {
     }
   }
 
-  ExpansionPanel _createExpansionPanel(SourceElement element, {bool isExpanded = false}) {
+  ExpansionPanel _createExpansionPanel(SourceElement element, int index,
+      {bool isExpanded = false}) {
     return ExpansionPanel(
       headerBuilder: (BuildContext context, bool isExpanded) {
-        return ListTile(
-          title: Text.rich(
-            TextSpan(
-              children: <InlineSpan>[
-                TextSpan(text: '${element.typeAsString} '),
-                codeTextSpan(context, element.elementName),
-                TextSpan(text: ' at line ${element.startLine}'),
-              ],
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: ListTile(
+                  visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(10.0),
+                    ),
+                  ),
+                  onTap: () {
+                    setState(() {
+                      if (expandedIndex == index) {
+                        expandedIndex = -1;
+                      } else {
+                        expandedIndex = index;
+                      }
+                    });
+                  },
+                  title: Text.rich(
+                    TextSpan(
+                      children: <InlineSpan>[
+                        TextSpan(text: '${element.typeAsString} '),
+                        codeTextSpan(context, element.elementName),
+                        TextSpan(text: ' at line ${element.startLine}'),
+                      ],
+                    ),
+                  ),
+                  subtitle: _getElementStats(element),
+                ),
+              ),
             ),
-          ),
-          subtitle: _getElementStats(element),
-          trailing: TextButton(
-            child: const Text('ADD SAMPLE'),
-            onPressed: () async {
-              Navigator.of(context).push<void>(_createOptionDialog(context, element));
-            },
-          ),
+            TextButton(
+              child: const Text('ADD SAMPLE'),
+              onPressed: () async {
+                Navigator.of(context).push<void>(_createOptionDialog(context, element));
+              },
+            ),
+          ],
         );
       },
-      body: ElementExpansionPanelList(element: element),
+      body: ElementExpansionPanel(element: element),
       isExpanded: isExpanded,
     );
   }
@@ -311,7 +341,7 @@ class _SamplerState extends State<Sampler> {
     panels = elements.map<ExpansionPanel>(
       (SourceElement element) {
         final ExpansionPanel result =
-            _createExpansionPanel(element, isExpanded: index == expandedIndex);
+            _createExpansionPanel(element, index, isExpanded: index == expandedIndex);
         index++;
         return result;
       },
@@ -321,96 +351,101 @@ class _SamplerState extends State<Sampler> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Stack(
-            alignment: Alignment.center,
-            children: <Widget>[
-              if (filesLoading) const CircularProgressIndicator.adaptive(value: null),
-              ListView(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsetsDirectional.only(end: 8.0),
-                          child: Text('Framework File:',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .subtitle1!
-                                  .copyWith(fontWeight: FontWeight.bold)),
-                        ),
-                        Expanded(
-                            child: Autocomplete<File>(
-                          fieldViewBuilder: _buildFileField,
-                          optionsBuilder: _fileOptions,
-                          displayStringForOption: (File file) {
-                            if (path.isWithin(
-                                Model.instance.flutterRoot.path, file.absolute.path)) {
-                              return path.relative(file.absolute.path,
-                                  from: Model.instance.flutterRoot.absolute.path);
-                            } else {
-                              return file.absolute.path;
+      body: Container(
+        padding: const EdgeInsets.all(8.0),
+        color: Colors.deepPurple.shade50,
+        child: Stack(
+          alignment: Alignment.center,
+          children: <Widget>[
+            if (filesLoading) const CircularProgressIndicator.adaptive(value: null),
+            Column(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsetsDirectional.only(end: 8.0),
+                        child: Text('Framework File:',
+                            style: Theme.of(context)
+                                .textTheme
+                                .subtitle1!
+                                .copyWith(fontWeight: FontWeight.bold)),
+                      ),
+                      Expanded(
+                          child: Autocomplete<File>(
+                        fieldViewBuilder: _buildFileField,
+                        optionsBuilder: _fileOptions,
+                        displayStringForOption: (File file) {
+                          if (path.isWithin(Model.instance.flutterRoot.path, file.absolute.path)) {
+                            return path.relative(file.absolute.path,
+                                from: Model.instance.flutterRoot.absolute.path);
+                          } else {
+                            return file.absolute.path;
+                          }
+                        },
+                        onSelected: (File file) {
+                          expandedIndex = -1;
+                          Model.instance
+                              .setWorkingFile(file)
+                              .onError((Exception e, StackTrace trace) {
+                            if (e is! SnippetException) {
+                              throw e;
                             }
-                          },
-                          onSelected: (File file) {
-                            expandedIndex = -1;
-                            Model.instance
-                                .setWorkingFile(file)
-                                .onError((Exception e, StackTrace trace) {
-                              if (e is! SnippetException) {
-                                throw e;
-                              }
-                              final ScaffoldMessengerState? scaffold =
-                                  ScaffoldMessenger.maybeOf(context);
-                              scaffold?.showSnackBar(
-                                SnackBar(
-                                  backgroundColor: Colors.red,
-                                  duration: const Duration(seconds: 10),
-                                  content: Text(e.toString()),
-                                ),
-                              );
-                            });
-                          },
-                        )),
-                      ],
-                    ),
+                            final ScaffoldMessengerState? scaffold =
+                                ScaffoldMessenger.maybeOf(context);
+                            scaffold?.showSnackBar(
+                              SnackBar(
+                                backgroundColor: Colors.red,
+                                duration: const Duration(seconds: 10),
+                                content: Text(e.toString()),
+                              ),
+                            );
+                          });
+                        },
+                      )),
+                    ],
                   ),
-                  Padding(
-                    padding: const EdgeInsetsDirectional.all(8.0),
-                    child: Text(_getSampleStats(),
-                        textAlign: TextAlign.center, style: Theme.of(context).textTheme.caption),
+                ),
+                Padding(
+                  padding: const EdgeInsetsDirectional.all(8.0),
+                  child: Text(_getSampleStats(),
+                      textAlign: TextAlign.center, style: Theme.of(context).textTheme.caption),
+                ),
+                Expanded(
+                  child: ListView(
+                    children: <Widget>[
+                      ExpansionPanelList(
+                        elevation: 0,
+                        children: panels,
+                        expansionCallback: (int index, bool expanded) {
+                          setState(() {
+                            expandedIndex = expanded ? -1 : index;
+                          });
+                        },
+                      ),
+                    ],
                   ),
-                  ExpansionPanelList(
-                    children: panels,
-                    expansionCallback: (int index, bool expanded) {
-                      setState(() {
-                        expandedIndex = expanded ? -1 : index;
-                      });
-                    },
-                  ),
-                ],
-              ),
-            ],
-          ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
   }
 }
 
-class ElementExpansionPanelList extends StatefulWidget {
-  const ElementExpansionPanelList({Key? key, required this.element}) : super(key: key);
+class ElementExpansionPanel extends StatefulWidget {
+  const ElementExpansionPanel({Key? key, required this.element}) : super(key: key);
 
   final SourceElement element;
 
   @override
-  _ElementExpansionPanelListState createState() => _ElementExpansionPanelListState();
+  _ElementExpansionPanelState createState() => _ElementExpansionPanelState();
 }
 
-class _ElementExpansionPanelListState extends State<ElementExpansionPanelList> {
+class _ElementExpansionPanelState extends State<ElementExpansionPanel> {
   bool get filesLoading => Model.instance.files == null;
   int expandedIndex = -1;
 
@@ -432,41 +467,66 @@ class _ElementExpansionPanelListState extends State<ElementExpansionPanelList> {
     });
   }
 
-  ExpansionPanel _createExpansionPanel(CodeSample sample, {bool isExpanded = false}) {
+  ExpansionPanel _createExpansionPanel(CodeSample sample, int index, {bool isExpanded = false}) {
     return ExpansionPanel(
       headerBuilder: (BuildContext context, bool isExpanded) {
         return Padding(
           padding: const EdgeInsetsDirectional.only(start: 16.0),
-          child: ListTile(
-            tileColor: Colors.deepPurple.shade100,
-            title: Text.rich(
-              TextSpan(
-                children: <InlineSpan>[
-                  TextSpan(
-                      text: '${sample.type == 'dartpad' ? 'dartpad sample' : sample.type} for '),
-                  codeTextSpan(context, sample.start.element!),
-                  TextSpan(
-                      text: '${sample.index != 0 ? '(${sample.index})' : ''} '
-                          'at line ${sample.start.line}'),
-                ],
+          child: Row(
+            children: <Widget>[
+              Expanded(
+                child: ListTile(
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(10.0),
+                    ),
+                  ),
+                  visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+                  onTap: () {
+                    setState(() {
+                      if (expandedIndex == index) {
+                        expandedIndex = -1;
+                      } else {
+                        expandedIndex = index;
+                      }
+                    });
+                  },
+                  tileColor: Colors.deepPurple.shade100,
+                  title: Text.rich(
+                    TextSpan(
+                      children: <InlineSpan>[
+                        TextSpan(
+                          text: '${sample.type == 'dartpad' ? 'dartpad sample' : sample.type} for ',
+                        ),
+                        codeTextSpan(context, sample.start.element!),
+                        TextSpan(
+                            text: '${sample.index != 0 ? '(${sample.index})' : ''} '
+                                'at line ${sample.start.line}'),
+                      ],
+                    ),
+                  ),
+                ),
               ),
-            ),
-            trailing: TextButton(
-              child: const Text('SELECT'),
-              onPressed: () {
-                Model.instance.currentElement = Model.instance.getElementForSample(sample);
-                Model.instance.currentSample = sample;
-                Navigator.of(context).pushNamed(kDetailView).then((Object? result) {
-                  Model.instance.currentSample = null;
-                  Model.instance.currentElement = null;
-                });
-              },
-            ),
+              TextButton(
+                child: const Text('SELECT'),
+                onPressed: () {
+                  Model.instance.currentElement = Model.instance.getElementForSample(sample);
+                  Model.instance.currentSample = sample;
+                  Navigator.of(context).pushNamed(kDetailView).then((Object? result) {
+                    Model.instance.currentSample = null;
+                    Model.instance.currentElement = null;
+                  });
+                },
+              )
+            ],
           ),
         );
       },
-      body: ListTile(
-        title: CodePanel(code: sample.inputAsString),
+      body: Padding(
+        padding: const EdgeInsetsDirectional.only(start: 16.0, end: 16.0),
+        child: ConstrainedBox(
+            constraints: const BoxConstraints(maxHeight: 200),
+            child: CodePanel(code: sample.inputAsString)),
       ),
       isExpanded: isExpanded,
     );
@@ -477,38 +537,45 @@ class _ElementExpansionPanelListState extends State<ElementExpansionPanelList> {
     final List<ExpansionPanel> panels = <ExpansionPanel>[];
     final Iterable<CodeSample> samples = widget.element.samples;
     int index = 0;
-    if (widget.element.comment.isNotEmpty) {
-      panels.add(
-          ExpansionPanel(
-            headerBuilder: (BuildContext context, bool isExpanded) {
-              return const Padding(
-                padding: EdgeInsetsDirectional.only(start: 16.0),
-                child: ListTile(
-                  title: Text('Documentation'),
-                ),
-              );
-            },
-            body: ListTile(title: TextPanel(text: widget.element.commentStringWithoutTools)),
-            isExpanded: index == expandedIndex,
-          ));
-      index++;
-    }
     panels.addAll(samples.map<ExpansionPanel>(
       (CodeSample sample) {
         final ExpansionPanel result =
-            _createExpansionPanel(sample, isExpanded: index == expandedIndex);
+            _createExpansionPanel(sample, index, isExpanded: index == expandedIndex);
         index++;
         return result;
       },
     ));
 
-    return ExpansionPanelList(
-      children: panels,
-      expansionCallback: (int index, bool expanded) {
-        setState(() {
-          expandedIndex = expanded ? -1 : index;
-        });
-      },
+    return Container(
+      padding: const EdgeInsets.all(8.0),
+      decoration: const ShapeDecoration(
+        shape: RoundedRectangleBorder(
+          side: BorderSide(
+            color: Colors.deepPurple,
+            width: 4.0,
+          ),
+          borderRadius: BorderRadius.all(
+            Radius.circular(10.0),
+          ),
+        ),
+      ),
+      child: Column(
+        children: <Widget>[
+          ConstrainedBox(
+            constraints: const BoxConstraints(maxHeight: 200),
+            child: TextPanel(text: widget.element.commentStringWithoutTools),
+          ),
+          ExpansionPanelList(
+            elevation: 0,
+            children: panels,
+            expansionCallback: (int index, bool expanded) {
+              setState(() {
+                expandedIndex = expanded ? -1 : index;
+              });
+            },
+          ),
+        ],
+      ),
     );
   }
 }

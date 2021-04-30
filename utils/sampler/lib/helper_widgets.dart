@@ -230,9 +230,10 @@ class AutocompleteField extends StatelessWidget {
 
 /// A widget that shows formatted Dart source code in a scrollable panel.
 class CodePanel extends StatefulWidget {
-  const CodePanel({Key? key, required this.code}) : super(key: key);
+  const CodePanel({Key? key, required this.code, this.color}) : super(key: key);
 
   final String code;
+  final Color? color;
 
   @override
   _CodePanelState createState() => _CodePanelState();
@@ -251,11 +252,9 @@ class _CodePanelState extends State<CodePanel> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.all(8.0),
-      padding: const EdgeInsets.all(8.0),
-      decoration: const ShapeDecoration(
-        color: Colors.black12,
-        shape: RoundedRectangleBorder(
+      decoration: ShapeDecoration(
+        color: widget.color ?? Colors.black12,
+        shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(
             Radius.circular(10.0),
           ),
@@ -290,13 +289,18 @@ class TextPanel extends StatelessWidget {
 
   final String text;
 
+  // Strips out multiple empty lines, since those can appear when the tool
+  // sections are stripped out.
+  String _formatText(String text) {
+    return text.replaceAll(RegExp(r'(\n[ \t]*$){2,}', dotAll: true, multiLine: true), '\n');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.all(8.0),
       padding: const EdgeInsets.all(8.0),
       decoration: const ShapeDecoration(
-        color: Colors.black12,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(
             Radius.circular(10.0),
@@ -306,15 +310,13 @@ class TextPanel extends StatelessWidget {
       child: ListView(
         shrinkWrap: true,
         children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: SelectableText(
-              // The original code to be highlighted
-              text,
-              style: const TextStyle(
-                fontFamily: 'Fira Code',
-                fontSize: 12,
-              ),
+          SelectableText(
+            // The original code to be highlighted
+            _formatText(text),
+            style: const TextStyle(
+              fontFamily: 'Fira Code',
+              fontSize: 12,
+              color: Colors.black,
             ),
           ),
         ],
