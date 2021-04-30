@@ -234,18 +234,25 @@ class DartpadSample extends ApplicationSample {
 enum SourceElementType {
   /// A class
   classType,
+
   /// A field variable of a class.
   fieldType,
+
   /// A method of a class.
   methodType,
+
   /// A constructor for a class.
   constructorType,
+
   /// A function typedef
   typedefType,
+
   /// A top level (non-class) variable.
   topLevelVariableType,
+
   /// A function, either top level, or embedded in another function.
   functionType,
+
   /// An unknown type used for initialization.
   unknownType,
 }
@@ -289,6 +296,7 @@ class SourceElement {
     List<SourceLine>? comment,
     int startLine = -1,
     List<CodeSample>? samples,
+    bool override = false,
   }) {
     return SourceElement._(
       type,
@@ -299,6 +307,7 @@ class SourceElement {
       comment: comment ?? <SourceLine>[],
       startLine: startLine,
       samples: samples ?? <CodeSample>[],
+      override: override,
     );
   }
 
@@ -311,15 +320,18 @@ class SourceElement {
     this.comment = const <SourceLine>[],
     this.startLine = -1,
     this.samples = const <CodeSample>[],
+    this.override = false,
   });
 
   /// The type of the element
   final SourceElementType type;
+
   /// The name of the element.
   ///
   /// For example, a method called "doSomething" that is part of the class
   /// "MyClass" would have "doSomething" as its name.
   final String name;
+
   /// The name of the class the element belongs to, if any.
   ///
   /// This is the empty string if it isn't part of a class.
@@ -327,30 +339,104 @@ class SourceElement {
   /// For example, a method called "doSomething" that is part of the class
   /// "MyClass" would have "MyClass" as its `className`.
   final String className;
+
+  /// Whether or not this element has the "@override" annotation attached to it.
+  final bool override;
+
   /// The file that this [SourceElement] was parsed from.
   final File file;
+
   /// The character position in the file that this [SourceElement] starts at.
   final int startPos;
+
   /// The line in the file that the first position of [SourceElement] is on.
   final int startLine;
+
   /// The list of [SourceLine]s that make up the documentation comment for this
   /// [SourceElement].
   final List<SourceLine> comment;
+
   /// The list of [CodeSample]s that are in the documentation comment for this
   /// [SourceElement].
   ///
   /// This field will be populated by [SnippetDartdocParser.parseFromComments].
   final List<CodeSample> samples;
 
+  Iterable<String> get commentLines sync* {
+    for (final SourceLine line in comment) {
+      yield line.text;
+    }
+  }
+
+  String get commentString => commentLines.join('\n');
+
+  /// Does not include the description of the sample code, just the text outside of any dartdoc tools.
+  String get commentStringWithoutTools {
+    return commentString.replaceAll(RegExp(r'(\{@tool ([^}]*)\}.*?\{@end-tool\}|/// ?)', dotAll: true), '');
+  }
+
+  /// Includes the description text inside of an "@tool"-based sample, but not
+  /// the code itself, or any dartdoc tags.
+  String get commentStringWithoutCode =>
+      commentString.replaceAll(RegExp(r'([`]{3}.*?[`]{3}|\{@\w+[^}]*\}|/// ?)', dotAll: true), '');
+
+  /// The number of samples in the dartdoc comment for this element.
+  int get sampleCount => samples.length;
+
+  /// The number of [DartpadSample]s in the dartdoc comment for this element.
+  int get dartpadSampleCount => samples.whereType<DartpadSample>().length;
+
+  /// The number of [ApplicationSample]s in the dartdoc comment for this element.
+  int get applicationSampleCount => samples.where((CodeSample sample) {
+        return sample is ApplicationSample && sample is! DartpadSample;
+      }).length;
+
+  /// The number of [SnippetSample]s in the dartdoc comment for this element.
+  int get snippetCount => samples.whereType<SnippetSample>().length;
+
+  /// Count of comment lines, not including lines of code in the comment.
+  int get lineCount => commentStringWithoutCode.split('\n').length;
+
+  /// Count of comment words, not including words in any code in the comment.
+  int get wordCount {
+    return commentStringWithoutCode.split(RegExp(r'\s+')).length;
+  }
+
+  /// Count of comment characters, not including any code samples in the
+  /// comment, after collapsing each run of whitespace to a single space.
+  int get charCount => commentStringWithoutCode.replaceAll(RegExp(r'\s+'), ' ').length;
+
+  /// Whether or not this element's documentation has a "See also:" section in it.
+  bool get hasSeeAlso => commentStringWithoutTools.contains('See also:');
+
+  int get referenceCount {
+    final RegExp regex = RegExp(r'\[[. \w]*\](?!\(.*\))');
+    return regex.allMatches(commentStringWithoutCode).length;
+  }
+
+  int get linkCount {
+    final RegExp regex = RegExp(r'\[[. \w]*\]\(.*\)');
+    return regex.allMatches(commentStringWithoutCode).length;
+  }
+
   /// Returns the fully qualified name of this element.
   ///
   /// For example, a method called "doSomething" that is part of the class
   /// "MyClass" would have "MyClass.doSomething" as its `elementName`.
-  String get elementName => className.isEmpty ? name : '$className.$name';
+  String get elementName {
+    if (type == SourceElementType.constructorType) {
+      // Constructors already have the name of the class in them.
+      return name;
+    }
+    return className.isEmpty ? name : '$className.$name';
+  }
 
   /// Returns the type of this element as a [String].
-  String get typeAsString => sourceElementTypeAsString(type);
+  String get typeAsString {
+    return '${override ? 'overridden ' : ''}${sourceElementTypeAsString(type)}';
+  }
 
+  /// Copy the source element, with some attributes optionally replaced.
   SourceElement copyWith({
     SourceElementType? type,
     String? name,
@@ -360,6 +446,7 @@ class SourceElement {
     List<SourceLine>? comment,
     int? startLine,
     List<CodeSample>? samples,
+    bool? override,
   }) {
     return SourceElement(
       type ?? this.type,
@@ -370,6 +457,7 @@ class SourceElement {
       comment: comment ?? this.comment,
       startLine: startLine ?? this.startLine,
       samples: samples ?? this.samples,
+      override: override ?? this.override,
     );
   }
 }

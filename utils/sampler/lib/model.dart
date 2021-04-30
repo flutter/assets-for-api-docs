@@ -158,9 +158,13 @@ class Model extends ChangeNotifier {
     await _loadWorkingFile(contents: contents);
     if (_currentElement != null && _elements != null) {
       // Try to find the old element.
-      _currentElement = _elements!
-          .where((SourceElement element) => element.elementName == _currentElement!.elementName)
-          .single;
+      final Iterable<SourceElement> oldMatches = _elements!
+          .where((SourceElement element) => element.elementName == _currentElement!.elementName);
+      if (oldMatches.isNotEmpty) {
+        _currentElement = oldMatches.first;
+      } else {
+        throw SnippetException('Unable to find element ${_currentElement!.elementName} during reload.');
+      }
     } else {
       _currentElement = null;
       _currentSample = null;
@@ -236,7 +240,12 @@ class Model extends ChangeNotifier {
         foundSeeAlso = true;
       }
     }
-    insertAfterLine ??= _currentElement!.comment.last.line;
+
+    // If there's no comment, we want to insert after the line before the
+    // location of the element, to be sure to insert before any annotations.
+    insertAfterLine ??= _currentElement!.comment.isNotEmpty
+        ? _currentElement!.comment.last.line
+        : currentElement!.startLine - 1;
 
     late List<String> insertedTags;
     final List<String> body = <String>[

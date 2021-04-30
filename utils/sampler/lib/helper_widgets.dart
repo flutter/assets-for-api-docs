@@ -283,3 +283,43 @@ class _CodePanelState extends State<CodePanel> {
     );
   }
 }
+
+/// A widget that shows monospaced text in a container.
+class TextPanel extends StatelessWidget {
+  const TextPanel({Key? key, required this.text}) : super(key: key);
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(8.0),
+      decoration: const ShapeDecoration(
+        color: Colors.black12,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(10.0),
+          ),
+        ),
+      ),
+      child: ListView(
+        shrinkWrap: true,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SelectableText(
+              // The original code to be highlighted
+              text,
+              style: const TextStyle(
+                fontFamily: 'Fira Code',
+                fontSize: 12,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+

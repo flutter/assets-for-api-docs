@@ -78,8 +78,6 @@ class MainApp extends StatelessWidget {
       ),
       routes: <String, WidgetBuilder>{
         kDetailView: (BuildContext context) => const DetailView(),
-        kNewSampleSelectView: (BuildContext context) =>
-            const NewSampleSelect(title: 'Add a Sample'),
       },
       home: const Sampler(title: _title),
     );
@@ -132,37 +130,108 @@ class _SamplerState extends State<Sampler> {
     }
   }
 
-  ExpansionPanel _createExpansionPanel(CodeSample sample, {bool isExpanded = false}) {
+  DialogRoute<void> _createOptionDialog(BuildContext context, SourceElement element) {
+    return DialogRoute<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return OptionDialog(onSubmitted: (Type sampleType, String? template) async {
+          Model.instance.currentElement = element;
+          await Model.instance.insertNewSample(sampleType: sampleType, template: template);
+          Navigator.of(context).popAndPushNamed(kDetailView).then((Object? result) {
+            // Clear the current element when returning from the detail view.
+            Model.instance.currentElement = null;
+          });
+        });
+      },
+    );
+  }
+
+  Widget _getElementStats(SourceElement element) {
+    if (element.comment.isEmpty) {
+      return Text.rich(
+        TextSpan(
+          children: <InlineSpan>[
+            TextSpan(
+              text: 'No documentation or samples.',
+              style: TextStyle(
+                color: element.override ? null : Colors.red,
+                fontStyle: FontStyle.italic,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+    final int total = element.sampleCount;
+    final int dartpads = element.dartpadSampleCount;
+    final int snippets = element.snippetCount;
+    final int applications = element.applicationSampleCount;
+    final bool allOneKind = total == snippets || total == applications || total == dartpads;
+    final String sampleCount = <String>[
+      if (!allOneKind)
+        '${Model.instance.samples.length} sample${Model.instance.samples.length != 1 ? 's' : ''} total',
+      if (snippets > 0) '$snippets snippet${snippets != 1 ? 's' : ''}',
+      if (applications > 0) '$applications application sample${applications != 1 ? 's' : ''}',
+      if (dartpads > 0) '$dartpads dartpad sample${dartpads != 1 ? 's' : ''}'
+    ].join(', ');
+    final int wordCount = element.wordCount;
+    final int lineCount = element.lineCount;
+    final int linkCount = element.referenceCount;
+    final String description = <String>[
+      if (total > 0) 'Has $sampleCount. ',
+      'Documentation has $wordCount ${wordCount == 1 ? 'word' : 'words'} on ',
+      '$lineCount ${lineCount == 1 ? 'line' : 'lines'}',
+      if (linkCount > 0 && element.hasSeeAlso) ', ',
+      if (linkCount > 0 && !element.hasSeeAlso) ' and ',
+      if (linkCount > 0) 'refers to $linkCount other ${linkCount == 1 ? 'symbol' : 'symbols'}',
+      if (linkCount > 0 && element.hasSeeAlso) ', and ',
+      if (linkCount == 0 && element.hasSeeAlso) 'and ',
+      if (element.hasSeeAlso) 'has a "See also:" section',
+      '.',
+    ].join('');
+    if (total == 0) {
+      return Text.rich(
+        TextSpan(
+          children: <InlineSpan>[
+            const TextSpan(
+              text: 'Has no sample code. ',
+              style: TextStyle(
+                color: Colors.red,
+                fontStyle: FontStyle.italic,
+              ),
+            ),
+            TextSpan(text: description),
+          ],
+        ),
+      );
+    } else {
+      return Text(description);
+    }
+  }
+
+  ExpansionPanel _createExpansionPanel(SourceElement element, {bool isExpanded = false}) {
     return ExpansionPanel(
       headerBuilder: (BuildContext context, bool isExpanded) {
         return ListTile(
           title: Text.rich(
             TextSpan(
               children: <InlineSpan>[
-                TextSpan(text: '${sample.type == 'dartpad' ? 'dartpad sample' : sample.type} for '),
-                codeTextSpan(context, sample.start.element!),
-                TextSpan(
-                    text: '${sample.index != 0 ? '(${sample.index})' : ''} '
-                        'at line ${sample.start.line}'),
+                TextSpan(text: '${element.typeAsString} '),
+                codeTextSpan(context, element.elementName),
+                TextSpan(text: ' at line ${element.startLine}'),
               ],
             ),
           ),
+          subtitle: _getElementStats(element),
           trailing: TextButton(
-            child: const Text('SELECT'),
-            onPressed: () {
-              Model.instance.currentElement = Model.instance.getElementForSample(sample);
-              Model.instance.currentSample = sample;
-              Navigator.of(context).pushNamed(kDetailView).then((Object? result) {
-                Model.instance.currentSample = null;
-                Model.instance.currentElement = null;
-              });
+            child: const Text('ADD SAMPLE'),
+            onPressed: () async {
+              Navigator.of(context).push<void>(_createOptionDialog(context, element));
             },
           ),
         );
       },
-      body: ListTile(
-        title: CodePanel(code: sample.inputAsString),
-      ),
+      body: ElementExpansionPanelList(element: element),
       isExpanded: isExpanded,
     );
   }
@@ -232,17 +301,17 @@ class _SamplerState extends State<Sampler> {
   @override
   Widget build(BuildContext context) {
     List<ExpansionPanel> panels = const <ExpansionPanel>[];
-    Iterable<CodeSample> samples = const <CodeSample>[];
-    if (Model.instance.currentSample == null) {
-      samples = Model.instance.samples;
+    Iterable<SourceElement> elements;
+    if (Model.instance.currentElement == null) {
+      elements = Model.instance.elements ?? const <SourceElement>[];
     } else {
-      samples = <CodeSample>[Model.instance.currentSample!];
+      elements = <SourceElement>[Model.instance.currentElement!];
     }
     int index = 0;
-    panels = samples.map<ExpansionPanel>(
-      (CodeSample sample) {
+    panels = elements.map<ExpansionPanel>(
+      (SourceElement element) {
         final ExpansionPanel result =
-            _createExpansionPanel(sample, isExpanded: index == expandedIndex);
+            _createExpansionPanel(element, isExpanded: index == expandedIndex);
         index++;
         return result;
       },
@@ -252,20 +321,6 @@ class _SamplerState extends State<Sampler> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      floatingActionButton: Model.instance.workingFile != null
-          ? FloatingActionButton(
-              child: const Icon(Icons.add),
-              tooltip: 'Add a new sample to ${Model.instance.workingFile!.basename}',
-              onPressed: () {
-                Model.instance.currentElement = null;
-                Model.instance.currentSample = null;
-                Navigator.of(context).pushNamed(kNewSampleSelectView).then((Object? result) {
-                  Model.instance.currentElement = null;
-                  Model.instance.currentSample = null;
-                });
-              },
-            )
-          : null,
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -342,6 +397,118 @@ class _SamplerState extends State<Sampler> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class ElementExpansionPanelList extends StatefulWidget {
+  const ElementExpansionPanelList({Key? key, required this.element}) : super(key: key);
+
+  final SourceElement element;
+
+  @override
+  _ElementExpansionPanelListState createState() => _ElementExpansionPanelListState();
+}
+
+class _ElementExpansionPanelListState extends State<ElementExpansionPanelList> {
+  bool get filesLoading => Model.instance.files == null;
+  int expandedIndex = -1;
+
+  @override
+  void initState() {
+    super.initState();
+    Model.instance.addListener(_modelUpdated);
+  }
+
+  @override
+  void dispose() {
+    Model.instance.removeListener(_modelUpdated);
+    super.dispose();
+  }
+
+  void _modelUpdated() {
+    setState(() {
+      // model updated, so force widget update.
+    });
+  }
+
+  ExpansionPanel _createExpansionPanel(CodeSample sample, {bool isExpanded = false}) {
+    return ExpansionPanel(
+      headerBuilder: (BuildContext context, bool isExpanded) {
+        return Padding(
+          padding: const EdgeInsetsDirectional.only(start: 16.0),
+          child: ListTile(
+            tileColor: Colors.deepPurple.shade100,
+            title: Text.rich(
+              TextSpan(
+                children: <InlineSpan>[
+                  TextSpan(
+                      text: '${sample.type == 'dartpad' ? 'dartpad sample' : sample.type} for '),
+                  codeTextSpan(context, sample.start.element!),
+                  TextSpan(
+                      text: '${sample.index != 0 ? '(${sample.index})' : ''} '
+                          'at line ${sample.start.line}'),
+                ],
+              ),
+            ),
+            trailing: TextButton(
+              child: const Text('SELECT'),
+              onPressed: () {
+                Model.instance.currentElement = Model.instance.getElementForSample(sample);
+                Model.instance.currentSample = sample;
+                Navigator.of(context).pushNamed(kDetailView).then((Object? result) {
+                  Model.instance.currentSample = null;
+                  Model.instance.currentElement = null;
+                });
+              },
+            ),
+          ),
+        );
+      },
+      body: ListTile(
+        title: CodePanel(code: sample.inputAsString),
+      ),
+      isExpanded: isExpanded,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final List<ExpansionPanel> panels = <ExpansionPanel>[];
+    final Iterable<CodeSample> samples = widget.element.samples;
+    int index = 0;
+    if (widget.element.comment.isNotEmpty) {
+      panels.add(
+          ExpansionPanel(
+            headerBuilder: (BuildContext context, bool isExpanded) {
+              return const Padding(
+                padding: EdgeInsetsDirectional.only(start: 16.0),
+                child: ListTile(
+                  title: Text('Documentation'),
+                ),
+              );
+            },
+            body: ListTile(title: TextPanel(text: widget.element.commentStringWithoutTools)),
+            isExpanded: index == expandedIndex,
+          ));
+      index++;
+    }
+    panels.addAll(samples.map<ExpansionPanel>(
+      (CodeSample sample) {
+        final ExpansionPanel result =
+            _createExpansionPanel(sample, isExpanded: index == expandedIndex);
+        index++;
+        return result;
+      },
+    ));
+
+    return ExpansionPanelList(
+      children: panels,
+      expansionCallback: (int index, bool expanded) {
+        setState(() {
+          expandedIndex = expanded ? -1 : index;
+        });
+      },
     );
   }
 }
