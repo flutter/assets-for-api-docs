@@ -93,10 +93,19 @@ class Sampler extends StatefulWidget {
   _SamplerState createState() => _SamplerState();
 }
 
+enum SortBy {
+  name,
+  lineNumber,
+}
+
 class _SamplerState extends State<Sampler> {
   bool get filesLoading => Model.instance.files == null;
   int expandedIndex = -1;
   TextEditingController editingController = TextEditingController();
+  SortBy sortBy = SortBy.lineNumber;
+  bool showOnlySamples = false;
+  bool showOverrides = false;
+  Set<SourceElementType> showTypes = SourceElementType.values.toSet();
 
   @override
   void initState() {
@@ -182,7 +191,6 @@ class _SamplerState extends State<Sampler> {
     final int lineCount = element.lineCount;
     final int linkCount = element.referenceCount;
     final String description = <String>[
-      if (total > 0) 'Has $sampleCount. ',
       'Documentation has $wordCount ${wordCount == 1 ? 'word' : 'words'} on ',
       '$lineCount ${lineCount == 1 ? 'line' : 'lines'}',
       if (linkCount > 0 && element.hasSeeAlso) ', ',
@@ -193,24 +201,27 @@ class _SamplerState extends State<Sampler> {
       if (element.hasSeeAlso) 'has a "See also:" section',
       '.',
     ].join('');
-    if (total == 0) {
-      return Text.rich(
-        TextSpan(
-          children: <InlineSpan>[
-            const TextSpan(
-              text: 'Has no sample code. ',
-              style: TextStyle(
-                color: Colors.red,
-                fontStyle: FontStyle.italic,
-              ),
+    return Text.rich(
+      TextSpan(children: <InlineSpan>[
+        if (total == 0)
+          const TextSpan(
+            text: 'Has no sample code. ',
+            style: TextStyle(
+              color: Colors.red,
+              fontStyle: FontStyle.italic,
             ),
-            TextSpan(text: description),
-          ],
-        ),
-      );
-    } else {
-      return Text(description);
-    }
+          ),
+        if (total > 0)
+          TextSpan(
+            text: 'Has $sampleCount. ',
+            style: const TextStyle(
+              color: Colors.green,
+              fontStyle: FontStyle.italic,
+            ),
+          ),
+        TextSpan(text: description),
+      ]),
+    );
   }
 
   ExpansionPanel _createExpansionPanel(SourceElement element, int index,
@@ -252,11 +263,15 @@ class _SamplerState extends State<Sampler> {
                 ),
               ),
             ),
-            TextButton(
-              child: const Text('ADD SAMPLE'),
-              onPressed: () async {
-                Navigator.of(context).push<void>(_createOptionDialog(context, element));
-              },
+            Tooltip(
+              message: 'Add a new sample to the\nframework file for this element',
+              height: 40,
+              child: TextButton(
+                child: const Text('ADD SAMPLE'),
+                onPressed: () async {
+                  Navigator.of(context).push<void>(_createOptionDialog(context, element));
+                },
+              ),
             ),
           ],
         );
@@ -331,14 +346,30 @@ class _SamplerState extends State<Sampler> {
   @override
   Widget build(BuildContext context) {
     List<ExpansionPanel> panels = const <ExpansionPanel>[];
-    Iterable<SourceElement> elements;
+    List<SourceElement> elements;
     if (Model.instance.currentElement == null) {
-      elements = Model.instance.elements ?? const <SourceElement>[];
+      elements = Model.instance.elements?.toList() ?? <SourceElement>[];
     } else {
       elements = <SourceElement>[Model.instance.currentElement!];
     }
     int index = 0;
-    panels = elements.map<ExpansionPanel>(
+    elements.sort((SourceElement a, SourceElement b) {
+      switch (sortBy) {
+        case SortBy.name:
+          final int compare = a.elementName.compareTo(b.elementName);
+          if (compare != 0) {
+            return compare;
+          }
+          return a.type.index.compareTo(b.type.index);
+        case SortBy.lineNumber:
+          return a.startLine.compareTo(b.startLine);
+      }
+    });
+    panels = elements.where((SourceElement element) {
+      return showTypes.contains(element.type) &&
+          (!showOnlySamples || element.sampleCount != 0) &&
+          (showOverrides || !element.override);
+    }).map<ExpansionPanel>(
       (SourceElement element) {
         final ExpansionPanel result =
             _createExpansionPanel(element, index, isExpanded: index == expandedIndex);
@@ -409,8 +440,78 @@ class _SamplerState extends State<Sampler> {
                 ),
                 Padding(
                   padding: const EdgeInsetsDirectional.all(8.0),
-                  child: Text(_getSampleStats(),
-                      textAlign: TextAlign.center, style: Theme.of(context).textTheme.caption),
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                        flex: 4,
+                        child: Wrap(
+                          direction: Axis.horizontal,
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          children: <Widget>[
+                            IconButton(
+                              tooltip: sortBy == SortBy.lineNumber
+                                  ? 'Sort Alphabetically'
+                                  : 'Sort By Line Number',
+                              onPressed: () {
+                                setState(() {
+                                  switch (sortBy) {
+                                    case SortBy.name:
+                                      sortBy = SortBy.lineNumber;
+                                      break;
+                                    case SortBy.lineNumber:
+                                      sortBy = SortBy.name;
+                                      break;
+                                  }
+                                });
+                              },
+                              icon: Icon(
+                                sortBy == SortBy.lineNumber
+                                    ? Icons.sort_by_alpha
+                                    : Icons.sort_rounded,
+                              ),
+                            ),
+                            LabeledCheckbox(
+                              value: showOnlySamples,
+                              onChanged: (bool? value) {
+                                setState(() {
+                                  showOnlySamples = value!;
+                                });
+                              },
+                              label: const Text('has samples'),
+                            ),
+                            for (final SourceElementType type in SourceElementType.values.where(
+                                (SourceElementType type) => type != SourceElementType.unknownType))
+                              LabeledCheckbox(
+                                value: showTypes.contains(type),
+                                onChanged: (bool? value) {
+                                  setState(() {
+                                    if (value!) {
+                                      showTypes.add(type);
+                                    } else {
+                                      showTypes.remove(type);
+                                    }
+                                  });
+                                },
+                                label: Text(sourceElementTypeAsString(type)),
+                              ),
+                            LabeledCheckbox(
+                              value: showOverrides,
+                              onChanged: (bool? value) {
+                                setState(() {
+                                  showOverrides = value!;
+                                });
+                              },
+                              label: const Text('overrides'),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: Text(_getSampleStats(),
+                            textAlign: TextAlign.end, style: Theme.of(context).textTheme.caption),
+                      ),
+                    ],
+                  ),
                 ),
                 Expanded(
                   child: ListView(
@@ -507,16 +608,19 @@ class _ElementExpansionPanelState extends State<ElementExpansionPanel> {
                   ),
                 ),
               ),
-              TextButton(
-                child: const Text('SELECT'),
-                onPressed: () {
-                  Model.instance.currentElement = Model.instance.getElementForSample(sample);
-                  Model.instance.currentSample = sample;
-                  Navigator.of(context).pushNamed(kDetailView).then((Object? result) {
-                    Model.instance.currentSample = null;
-                    Model.instance.currentElement = null;
-                  });
-                },
+              Tooltip(
+                message: 'Select this sample for editing',
+                child: TextButton(
+                  child: const Text('SELECT'),
+                  onPressed: () {
+                    Model.instance.currentElement = Model.instance.getElementForSample(sample);
+                    Model.instance.currentSample = sample;
+                    Navigator.of(context).pushNamed(kDetailView).then((Object? result) {
+                      Model.instance.currentSample = null;
+                      Model.instance.currentElement = null;
+                    });
+                  },
+                ),
               )
             ],
           ),

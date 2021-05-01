@@ -131,7 +131,8 @@ class _DetailViewState extends State<DetailView> {
                 isBusy: importing,
                 children: <Widget>[
                   TextButton(
-                      child: const Tooltip(message: 'Reinsert extracted, edited sample into the Flutter source file',
+                      child: const Tooltip(
+                        message: 'Reinsert extracted, edited sample into the Flutter source file',
                         child: Text('REINSERT'),
                       ),
                       onPressed: project != null && !exporting && !importing

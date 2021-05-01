@@ -325,3 +325,30 @@ class TextPanel extends StatelessWidget {
   }
 }
 
+class LabeledCheckbox extends StatelessWidget {
+  const LabeledCheckbox({
+    Key? key,
+    this.label,
+    this.value,
+    this.onChanged,
+  }) : super(key: key);
+
+  final Widget? label;
+  final bool? value;
+  final ValueChanged<bool?>? onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return UnconstrainedBox(
+      child: InkWell(
+        onTap: () => onChanged?.call(!value!),
+        child: Row(
+          children: <Widget>[
+            Checkbox(value: value, onChanged: onChanged),
+            if (label != null) label!,
+          ],
+        ),
+      ),
+    );
+  }
+}

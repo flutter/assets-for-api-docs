@@ -29,5 +29,5 @@ esac
 # Flutter needs to be in the path already...
 cd ${REPO_DIR}/utils/sampler
 flutter pub upgrade
-echo flutter run $DEVICE "${REPO_DIR}/utils/sampler/bin/sampler.dart" "$@"
+echo flutter run --release $DEVICE "${REPO_DIR}/utils/sampler/bin/sampler.dart" "$@"
 flutter run --release $DEVICE "${REPO_DIR}/utils/sampler/bin/sampler.dart" "$@"

@@ -307,8 +307,7 @@ class SnippetDartdocParser {
         'sourceLine': sample.start.line,
       });
     }
-    element.samples.clear();
-    element.samples.addAll(samples);
+    element.replaceSamples(samples);
   }
 
   // Helper to process arguments given as a (possibly quoted) string.

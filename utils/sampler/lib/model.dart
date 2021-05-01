@@ -30,12 +30,11 @@ class Model extends ChangeNotifier {
   /// Resets the instance with new parameters.
   ///
   /// Any existing data in the model will be lost.
-  static void resetInstance({
-    File? workingFile,
-    Directory? flutterRoot,
-    Directory? dartUiRoot,
-    FileSystem filesystem = const LocalFileSystem()
-  }) {
+  static void resetInstance(
+      {File? workingFile,
+      Directory? flutterRoot,
+      Directory? dartUiRoot,
+      FileSystem filesystem = const LocalFileSystem()}) {
     _instance?.dispose();
     _instance = Model._(
       workingFile: workingFile,
@@ -102,6 +101,7 @@ class Model extends ChangeNotifier {
   }
 
   File? _workingFile;
+
   /// If true, response to changes in files in the filesystem is suspended.
   /// This is set when writing out updated source files to prevent races.
   bool _suspendReloads = false;
@@ -163,7 +163,8 @@ class Model extends ChangeNotifier {
       if (oldMatches.isNotEmpty) {
         _currentElement = oldMatches.first;
       } else {
-        throw SnippetException('Unable to find element ${_currentElement!.elementName} during reload.');
+        throw SnippetException(
+            'Unable to find element ${_currentElement!.elementName} during reload.');
       }
     } else {
       _currentElement = null;

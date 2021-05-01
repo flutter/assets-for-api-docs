@@ -238,11 +238,11 @@ enum SourceElementType {
   /// A field variable of a class.
   fieldType,
 
-  /// A method of a class.
-  methodType,
-
   /// A constructor for a class.
   constructorType,
+
+  /// A method of a class.
+  methodType,
 
   /// A function typedef
   typedefType,
@@ -298,16 +298,24 @@ class SourceElement {
     List<CodeSample>? samples,
     bool override = false,
   }) {
+    comment ??= <SourceLine>[];
+    samples ??= <CodeSample>[];
+    final List<String> commentLines = comment.map<String>((SourceLine line) => line.text).toList();
+    final String commentString = commentLines.join('\n');
     return SourceElement._(
       type,
       name,
       startPos,
       file: file,
       className: className,
-      comment: comment ?? <SourceLine>[],
+      comment: comment,
       startLine: startLine,
-      samples: samples ?? <CodeSample>[],
+      samples: samples,
       override: override,
+      commentString: commentString,
+      commentStringWithoutTools: _getCommentStringWithoutTools(commentString),
+      commentStringWithoutCode: _getCommentStringWithoutCode(commentString),
+      commentLines: commentLines,
     );
   }
 
@@ -321,7 +329,32 @@ class SourceElement {
     this.startLine = -1,
     this.samples = const <CodeSample>[],
     this.override = false,
-  });
+    String commentString = '',
+    String commentStringWithoutTools = '',
+    String commentStringWithoutCode = '',
+    List<String> commentLines = const <String>[],
+  })  : _commentString = commentString,
+        _commentStringWithoutTools = commentStringWithoutTools,
+        _commentStringWithoutCode = commentStringWithoutCode,
+        _commentLines = commentLines;
+
+  final String _commentString;
+  final String _commentStringWithoutTools;
+  final String _commentStringWithoutCode;
+  final List<String> _commentLines;
+
+  // Does not include the description of the sample code, just the text outside
+  // of any dartdoc tools.
+  static String _getCommentStringWithoutTools(String string) {
+    return string.replaceAll(
+        RegExp(r'(\{@tool ([^}]*)\}.*?\{@end-tool\}|/// ?)', dotAll: true), '');
+  }
+
+  // Includes the description text inside of an "@tool"-based sample, but not
+  // the code itself, or any dartdoc tags.
+  static String _getCommentStringWithoutCode(String string) {
+    return string.replaceAll(RegExp(r'([`]{3}.*?[`]{3}|\{@\w+[^}]*\}|/// ?)', dotAll: true), '');
+  }
 
   /// The type of the element
   final SourceElementType type;
@@ -359,26 +392,21 @@ class SourceElement {
   /// The list of [CodeSample]s that are in the documentation comment for this
   /// [SourceElement].
   ///
-  /// This field will be populated by [SnippetDartdocParser.parseFromComments].
+  /// This field will be populated by calling [replaceSamples].
   final List<CodeSample> samples;
 
-  Iterable<String> get commentLines sync* {
-    for (final SourceLine line in comment) {
-      yield line.text;
-    }
-  }
+  /// Get the comments as an iterable of lines.
+  Iterable<String> get commentLines => _commentLines;
 
-  String get commentString => commentLines.join('\n');
+  /// Get the comments as a single string.
+  String get commentString => _commentString;
 
   /// Does not include the description of the sample code, just the text outside of any dartdoc tools.
-  String get commentStringWithoutTools {
-    return commentString.replaceAll(RegExp(r'(\{@tool ([^}]*)\}.*?\{@end-tool\}|/// ?)', dotAll: true), '');
-  }
+  String get commentStringWithoutTools => _commentStringWithoutTools;
 
   /// Includes the description text inside of an "@tool"-based sample, but not
   /// the code itself, or any dartdoc tags.
-  String get commentStringWithoutCode =>
-      commentString.replaceAll(RegExp(r'([`]{3}.*?[`]{3}|\{@\w+[^}]*\}|/// ?)', dotAll: true), '');
+  String get commentStringWithoutCode => _commentStringWithoutCode;
 
   /// The number of samples in the dartdoc comment for this element.
   int get sampleCount => samples.length;
@@ -434,6 +462,11 @@ class SourceElement {
   /// Returns the type of this element as a [String].
   String get typeAsString {
     return '${override ? 'overridden ' : ''}${sourceElementTypeAsString(type)}';
+  }
+
+  void replaceSamples(Iterable<CodeSample> samples) {
+    this.samples.clear();
+    this.samples.addAll(samples);
   }
 
   /// Copy the source element, with some attributes optionally replaced.

@@ -23,7 +23,8 @@ class _LineNumberInterval extends PayloadInterval<num, int> {
 
   @override
   _LineNumberInterval copyWith(int? start, int? end, int? payload) {
-    return _LineNumberInterval(start ?? this.start as int, end ?? this.end as int, payload ?? this.payload as int);
+    return _LineNumberInterval(
+        start ?? this.start as int, end ?? this.end as int, payload ?? this.payload as int);
   }
 
   @override
@@ -257,8 +258,7 @@ class _SourceVisitor<T> extends RecursiveAstVisitor<T> {
 
   @override
   T? visitConstructorDeclaration(ConstructorDeclaration node) {
-    final String fullName =
-        '$enclosingClass${node.name == null ? '' : '.${node.name}'}';
+    final String fullName = '$enclosingClass${node.name == null ? '' : '.${node.name}'}';
     if (isPublic(enclosingClass) && (node.name == null || isPublic(node.name!.name))) {
       List<SourceLine> comment = <SourceLine>[];
       if (node.documentationComment != null && node.documentationComment!.tokens.isNotEmpty) {
