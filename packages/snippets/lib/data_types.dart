@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'package:file/file.dart';
 import 'package:args/args.dart';
+import 'package:file/file.dart';
 
 /// A class to represent a line of input code, with associated line number, file
 /// and element name.

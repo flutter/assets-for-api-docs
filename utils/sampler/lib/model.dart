@@ -3,13 +3,13 @@
 // found in the LICENSE file.
 
 import 'dart:convert';
+import 'package:crypto/crypto.dart';
 import 'package:file/file.dart';
 import 'package:file/local.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as path;
 import 'package:snippets/snippets.dart';
-import 'package:crypto/crypto.dart';
 import 'package:watcher/watcher.dart';
 
 /// The application model singleton that contains current application state.

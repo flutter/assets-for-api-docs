@@ -4,11 +4,12 @@
 
 import 'dart:convert';
 import 'dart:io' as io;
+
 import 'package:file/file.dart';
 import 'package:file/local.dart';
 import 'package:meta/meta.dart';
-import 'package:process/process.dart' show ProcessManager, LocalProcessManager;
 import 'package:platform/platform.dart' show LocalPlatform, Platform;
+import 'package:process/process.dart' show ProcessManager, LocalProcessManager;
 import 'package:pub_semver/pub_semver.dart';
 
 import 'data_types.dart';

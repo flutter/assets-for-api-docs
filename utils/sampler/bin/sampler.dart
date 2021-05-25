@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'dart:io' as io;
+
 import 'package:args/args.dart';
 import 'package:file/file.dart';
 import 'package:file/local.dart';
@@ -11,8 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart' as path;
 import 'package:sampler/new_sample.dart';
-import 'package:snippets/snippets.dart';
 import 'package:sampler/sampler.dart';
+import 'package:snippets/snippets.dart';
 
 const String _kFileOption = 'file';
 const String _kFlutterRootOption = 'flutter-root';
@@ -77,7 +78,7 @@ class MainApp extends StatelessWidget {
         primarySwatch: Colors.deepPurple,
       ),
       routes: <String, WidgetBuilder>{
-        kDetailView: (BuildContext context) => const DetailView(),
+        kDetailViewRoute: (BuildContext context) => const DetailView(),
       },
       home: const Sampler(title: _title),
     );
@@ -146,7 +147,7 @@ class _SamplerState extends State<Sampler> {
         return OptionDialog(onSubmitted: (Type sampleType, String? template) async {
           Model.instance.currentElement = element;
           await Model.instance.insertNewSample(sampleType: sampleType, template: template);
-          Navigator.of(context).popAndPushNamed(kDetailView).then((Object? result) {
+          Navigator.of(context).popAndPushNamed(kDetailViewRoute).then((Object? result) {
             // Clear the current element when returning from the detail view.
             Model.instance.currentElement = null;
           });
@@ -615,7 +616,7 @@ class _ElementExpansionPanelState extends State<ElementExpansionPanel> {
                   onPressed: () {
                     Model.instance.currentElement = Model.instance.getElementForSample(sample);
                     Model.instance.currentSample = sample;
-                    Navigator.of(context).pushNamed(kDetailView).then((Object? result) {
+                    Navigator.of(context).pushNamed(kDetailViewRoute).then((Object? result) {
                       Model.instance.currentSample = null;
                       Model.instance.currentElement = null;
                     });

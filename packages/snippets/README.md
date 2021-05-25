@@ -1,4 +1,4 @@
-# Dartdoc Generation
+# Dartdoc Sample Generation
 
 The Flutter API documentation contains code blocks that help provide context or
 a good starting point when learning to use any of Flutter's APIs.

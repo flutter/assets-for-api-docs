@@ -11,8 +11,8 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/file_system/file_system.dart' as afs;
 import 'package:analyzer/file_system/physical_file_system.dart' as afs;
 import 'package:file/file.dart';
-import 'package:snippets/snippets.dart';
 import 'package:interval_tree/interval_tree.dart';
+import 'package:snippets/snippets.dart';
 
 import 'data_types.dart';
 import 'interval_tree.dart';

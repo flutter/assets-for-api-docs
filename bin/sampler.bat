@@ -16,5 +16,5 @@ SETLOCAL ENABLEDELAYEDEXPANSION
 FOR %%i IN ("%~dp0..") DO SET REPO_DIR=%%~fi
 
 cd "%REPO_DIR%/utils/sampler"
-flutter pub get
+flutter pub upgrade
 flutter run --release -d windows "%REPO_DIR%/utils/sampler/bin/sampler.dart" %* & exit /B !ERRORLEVEL!

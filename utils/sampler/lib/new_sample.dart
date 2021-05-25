@@ -24,6 +24,9 @@ class _OptionDialogState extends State<OptionDialog> {
   String? selectedSampleType;
   String? selectedTemplate;
 
+  bool get okEnabled => selectedSampleType != null &&
+      (selectedTemplate != null || selectedSampleType == 'snippet');
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -87,8 +90,7 @@ class _OptionDialogState extends State<OptionDialog> {
         ),
         TextButton(
           child: const Text('OK'),
-          onPressed: selectedSampleType != null &&
-                  (selectedTemplate != null || selectedSampleType == 'snippet')
+          onPressed: okEnabled
               ? () async {
                   Type sampleType;
                   switch (selectedSampleType!) {

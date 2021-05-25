@@ -65,8 +65,11 @@ class ThemeDataDiagram extends StatelessWidget implements DiagramMetadata {
               child: MaterialApp(
                 debugShowCheckedModeBanner: false,
                 theme: ThemeData(
-                  primaryColor: Colors.blue,
-                  accentColor: Colors.green,
+                  colorScheme: ColorScheme.fromSwatch(
+                    primarySwatch: Colors.blue,
+                  ).copyWith(
+                    secondary: Colors.green,
+                  ),
                   textTheme: const TextTheme(bodyText2: TextStyle(color: Colors.purple)),
                 ),
                 home: Stack(

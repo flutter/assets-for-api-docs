@@ -3,6 +3,6 @@
 // found in the LICENSE file.
 
 // Route names.
-const String kNewSampleSelectView = '/newSampleSelectView';
-const String kDetailView = '/detailView';
-const String kNewSampleView = '/newSampleView';
+const String kNewSampleSelectViewRoute = '/newSampleSelectView';
+const String kDetailViewRoute = '/detailView';
+const String kNewSampleViewRoute = '/newSampleView';

@@ -6,17 +6,14 @@ import 'dart:io' as io;
 import 'dart:typed_data';
 
 import 'package:analyzer/file_system/file_system.dart';
-import 'package:meta/meta.dart';
-import 'package:path/path.dart';
+import 'package:analyzer/src/generated/source.dart';
+import 'package:analyzer/src/source/source_resource.dart';
 import 'package:file/file.dart' as file;
 import 'package:file/local.dart' as file;
-import 'package:watcher/watcher.dart';
-// ignore: implementation_imports
-import 'package:analyzer/src/generated/source.dart';
-// ignore: implementation_imports
+import 'package:meta/meta.dart';
+import 'package:path/path.dart';
 import 'package:path/src/context.dart';
-// ignore: implementation_imports
-import 'package:analyzer/src/source/source_resource.dart';
+import 'package:watcher/watcher.dart';
 
 /// The name of the directory containing plugin specific subfolders used to
 /// store data across sessions.

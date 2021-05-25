@@ -89,7 +89,6 @@ class _DetailViewState extends State<DetailView> {
     return Scaffold(
       appBar: AppBar(
         title: Text('${sample.element} - $filename:${sample.start.line}'),
-        actions: const <Widget>[],
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
