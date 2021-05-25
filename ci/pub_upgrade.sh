@@ -17,6 +17,7 @@ REPO_DIR="$(dirname "$SCRIPT_DIR")"
 function pub_upgrade() {
   local dir="$1"
   if [[ -e "$dir/pubspec.yaml" ]]; then
+    echo "Running 'flutter pub upgrade' in $dir"
     (cd $dir; flutter pub upgrade)
   fi
 }
