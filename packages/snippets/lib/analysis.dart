@@ -11,8 +11,8 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/file_system/file_system.dart' as afs;
 import 'package:analyzer/file_system/physical_file_system.dart' as afs;
 import 'package:file/file.dart';
-import 'package:snippets/snippets.dart';
 import 'package:interval_tree/interval_tree.dart';
+import 'package:snippets/snippets.dart';
 
 import 'data_types.dart';
 import 'interval_tree.dart';
@@ -23,7 +23,8 @@ class _LineNumberInterval extends PayloadInterval<num, int> {
 
   @override
   _LineNumberInterval copyWith(int? start, int? end, int? payload) {
-    return _LineNumberInterval(start ?? this.start as int, end ?? this.end as int, payload ?? this.payload as int);
+    return _LineNumberInterval(
+        start ?? this.start as int, end ?? this.end as int, payload ?? this.payload as int);
   }
 
   @override
@@ -248,6 +249,7 @@ class _SourceVisitor<T> extends RecursiveAstVisitor<T> {
           file: file,
           className: enclosingClass,
           comment: comment,
+          override: _isOverridden(node),
         ),
       );
       return super.visitFieldDeclaration(node);
@@ -256,12 +258,11 @@ class _SourceVisitor<T> extends RecursiveAstVisitor<T> {
 
   @override
   T? visitConstructorDeclaration(ConstructorDeclaration node) {
-    final String fullName =
-        '$enclosingClass.$enclosingClass${node.name == null ? '' : '.${node.name}'}';
+    final String fullName = '$enclosingClass${node.name == null ? '' : '.${node.name}'}';
     if (isPublic(enclosingClass) && (node.name == null || isPublic(node.name!.name))) {
       List<SourceLine> comment = <SourceLine>[];
       if (node.documentationComment != null && node.documentationComment!.tokens.isNotEmpty) {
-        comment = _processComment(fullName, node.documentationComment!);
+        comment = _processComment('$enclosingClass.$fullName', node.documentationComment!);
       }
       elements.add(
         SourceElement(
@@ -293,6 +294,7 @@ class _SourceVisitor<T> extends RecursiveAstVisitor<T> {
             node.beginToken.charOffset,
             file: file,
             comment: comment,
+            override: _isOverridden(node),
           ),
         );
       }
@@ -316,10 +318,17 @@ class _SourceVisitor<T> extends RecursiveAstVisitor<T> {
           file: file,
           className: enclosingClass,
           comment: comment,
+          override: _isOverridden(node),
         ),
       );
     }
     return super.visitMethodDeclaration(node);
+  }
+
+  bool _isOverridden(AnnotatedNode node) {
+    return node.metadata.where((Annotation annotation) {
+      return annotation.name.name == 'override';
+    }).isNotEmpty;
   }
 
   @override

@@ -3,10 +3,8 @@
 // found in the LICENSE file.
 
 import 'package:file/memory.dart';
-
-import 'package:test/test.dart' hide TypeMatcher, isInstanceOf;
-
 import 'package:snippets/snippets.dart';
+import 'package:test/test.dart' hide TypeMatcher, isInstanceOf;
 
 void main() {
   group('Configuration', () {

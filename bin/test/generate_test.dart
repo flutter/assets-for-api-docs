@@ -6,9 +6,9 @@
 
 import 'dart:io';
 
-import 'package:test/test.dart';
 import 'package:path/path.dart' as path;
 import 'package:process_runner/process_runner.dart';
+import 'package:test/test.dart';
 
 import '../generate.dart';
 import 'fake_process_manager.dart';

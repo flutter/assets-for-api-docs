@@ -3,13 +3,12 @@
 // found in the LICENSE file.
 
 import 'dart:convert';
+
 import 'package:file/file.dart';
 import 'package:file/memory.dart';
 import 'package:path/path.dart' as path;
-
-import 'package:test/test.dart' hide TypeMatcher, isInstanceOf;
-
 import 'package:snippets/snippets.dart';
+import 'package:test/test.dart' hide TypeMatcher, isInstanceOf;
 
 void main() {
   group('Generator', () {

@@ -1,4 +1,4 @@
-# Dartdoc Generation
+# Dartdoc Sample Generation
 
 The Flutter API documentation contains code blocks that help provide context or
 a good starting point when learning to use any of Flutter's APIs.
@@ -58,12 +58,15 @@ code. Here is an example of the code `snippet` tool in use:
 This will generate sample code that can be copied to the clipboard and added to
 existing applications.
 
-This uses the skeleton for [snippet](config/skeletons/snippet.html) snippets
-when generating the HTML to put into the Dart docs.
+This uses the skeleton for `snippet` snippets when generating the HTML to put
+into the Dart docs. You can find this [template in the Flutter
+repo](https://github.com/flutter/flutter/blob/master/dev/snippets/config/skeletons/snippet.html).
 
 #### Analysis
 
-The `../bots/analyze_sample_code.dart` script finds code inside the `@tool
+The
+[`analyze_sample_code.dart`](https://github.com/flutter/flutter/blob/master/dev/bots/analyze_sample_code.dart)
+script finds code inside the `@tool
 snippet` sections and uses the Dart analyzer to check them.
 
 There are several kinds of sample code you can specify:
@@ -137,8 +140,8 @@ applications in the API documentation.
 /// {@end-tool}
 ```
 
-This uses the skeleton for [application](config/skeletons/sample.html)
-snippets.
+This uses the skeleton for [application](https://github.com/flutter/flutter/blob/master/dev/snippets/config/skeletons/sample.html)
+snippets in the Flutter repo.
 
 The `sample` and `dartpad` tools also allow for quick Flutter app generation
 using the following command:
@@ -155,13 +158,15 @@ To support showing an entire app when you click on the right tab of the
 code sample UI, we have to be able to insert the `sample` or `dartpad` block
 into the template and instantiate the right parts.
 
-To do this, there is a [config/templates](config/templates) directory that
+To do this, there is a [templates
+directory](https://github.com/flutter/flutter/blob/master/dev/snippets/config/templates)
+that
 contains a list of templates. These templates represent an entire app that the
 `sample` or `dartpad` can be placed into, basically a replacement for
 `lib/main.dart` in a flutter app package.
 
-For more information about how to create, use, or update templates, see
-[config/templates/README.md](config/templates/README.md).
+For more information about how to create, use, or update templates, see the
+[templates README.md](https://github.com/flutter/flutter/blob/master/dev/snippets/config/templates/README.md).
 
 #### Analysis
 
@@ -175,9 +180,12 @@ A skeleton (concerning this tool) is an HTML template into which the Dart
 code blocks and descriptions are interpolated.
 
 There is currently one skeleton for
-[application](config/skeletons/sample.html) samples, one for
-[dartpad](config/skeletons/dartpad-sample.html), and one for
-[snippet](config/skeletons/snippet.html) code samples, but there could be more.
+[application](https://github.com/flutter/flutter/blob/master/dev/snippets/config/skeletons/sample.html)
+samples, one for
+[dartpad](https://github.com/flutter/flutter/blob/master/dev/snippets/config/skeletons/dartpad-sample.html),
+and one for
+[snippet](https://github.com/flutter/flutter/blob/master/dev/snippets/config/skeletons/snippet.html)
+code samples, but there could be more.
 
 Skeletons use mustache notation (e.g. `{{code}}`) to mark where components will
 be interpolated into the template. It doesn't use the mustache

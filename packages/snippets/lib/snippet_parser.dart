@@ -27,10 +27,10 @@ class SnippetDartdocParser {
 
   /// A RegExp that matches the beginning of a dartdoc snippet or sample.
   static final RegExp _dartDocSampleBeginRegex =
-      RegExp(r'{@tool (?<type>sample|snippet|dartpad)(?:| (?<args>[^}]*))}');
+      RegExp(r'\{@tool (?<type>sample|snippet|dartpad)(?:| (?<args>[^}]*))\}');
 
   /// A RegExp that matches the end of a dartdoc snippet or sample.
-  static final RegExp _dartDocSampleEndRegex = RegExp(r'{@end-tool}');
+  static final RegExp _dartDocSampleEndRegex = RegExp(r'\{@end-tool\}');
 
   /// A RegExp that matches the start of a code block within dartdoc.
   static final RegExp _codeBlockStartRegex = RegExp(r'///\s+```dart.*$');
@@ -307,8 +307,7 @@ class SnippetDartdocParser {
         'sourceLine': sample.start.line,
       });
     }
-    element.samples.clear();
-    element.samples.addAll(samples);
+    element.replaceSamples(samples);
   }
 
   // Helper to process arguments given as a (possibly quoted) string.

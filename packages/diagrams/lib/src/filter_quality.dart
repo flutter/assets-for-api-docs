@@ -8,8 +8,8 @@
 import 'dart:io';
 import 'dart:ui' as ui;
 
-import 'package:flutter/widgets.dart';
 import 'package:diagram_capture/diagram_capture.dart';
+import 'package:flutter/widgets.dart';
 
 import 'diagram_step.dart';
 

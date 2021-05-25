@@ -7,12 +7,11 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
-import 'package:path/path.dart' as path;
 import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:image/image.dart' as image;
+import 'package:path/path.dart' as path;
 
 Widget buildStaticDiagram(BuildContext context) {
   return Container(

@@ -6,11 +6,11 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:animation_metadata/animation_metadata.dart';
 import 'package:archive/archive.dart';
 import 'package:args/args.dart';
-import 'package:animation_metadata/animation_metadata.dart';
-import 'package:process_runner/process_runner.dart';
 import 'package:path/path.dart' as path;
+import 'package:process_runner/process_runner.dart';
 
 final String repoRoot = path.dirname(path.fromUri(Platform.script));
 

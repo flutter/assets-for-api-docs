@@ -8,6 +8,10 @@ dependencies:
   process_runner: ">=4.0.0 <5.0.0"
 
 dev_dependencies:
+  # Pinning analyzer because of a temporary incompatibility with test package in
+  # released version of 1.6.0.
+  # TODO(gspencergoog): unpin this version once incompatibility is resolved.
+  analyzer: ">=1.4.0 <1.6.0"
   test: ^1.16.8
 
 environment:

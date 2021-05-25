@@ -5,11 +5,11 @@
 import 'dart:io';
 import 'dart:math' as math;
 
-import 'package:file/local.dart';
 import 'package:file/file.dart';
+import 'package:file/local.dart';
 import 'package:process/process.dart';
-import 'package:recase/recase.dart';
 import 'package:pub_semver/pub_semver.dart';
+import 'package:recase/recase.dart';
 
 import 'data_types.dart';
 import 'util.dart';
