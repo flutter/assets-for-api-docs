@@ -277,10 +277,18 @@ class SparklinePainter extends CustomPainter {
     // The sparkline itself.
     final Path sparkline = Path()..moveTo(area.left, area.bottom);
     final double stepSize = 1.0 / (area.width * ui.window.devicePixelRatio);
-    for (double t = 0.0; t <= position; t += stepSize) {
+    
+    void lineToPoint(Path path, double t) {
       final Offset point = FractionalOffset(t, 1.0 - curve.transform(t)).withinRect(area);
-      sparkline.lineTo(point.dx, point.dy);
+      path.lineTo(point.dx, point.dy);
     }
+    
+    for (double t = 0.0; t <= position; t += stepSize) {
+      lineToPoint(sparkline, t);
+    }
+    // In case the last value wasn't at position due to rounding.
+    lineToPoint(sparkline, position);
+
     canvas.drawPath(sparkline, _sparklinePaint);
     final Offset startPoint = FractionalOffset(
       position,
@@ -288,9 +296,10 @@ class SparklinePainter extends CustomPainter {
     ).withinRect(area);
     final Path graphProgress = Path()..moveTo(startPoint.dx, startPoint.dy);
     for (double t = position; t <= 1.0; t += stepSize) {
-      final Offset point = FractionalOffset(t, 1.0 - curve.transform(t)).withinRect(area);
-      graphProgress.lineTo(point.dx, point.dy);
+      lineToPoint(graphProgress, t);
     }
+    // In case the last value wasn't at 1.0 due to rounding.
+    lineToPoint(graphProgress, 1.0);
     canvas.drawPath(graphProgress, _graphProgressPaint);
     canvas.drawCircle(Offset(activePoint.dx, activePoint.dy), 4.0, _positionCirclePaint);
   }
