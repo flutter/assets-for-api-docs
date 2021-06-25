@@ -8,8 +8,7 @@ dependencies:
   process_runner: ">=4.0.0 <5.0.0"
 
 dev_dependencies:
-  # TODO(gspencergoog): unpin this version once https://github.com/dart-lang/sdk/issues/46136 is fixed.
-  analyzer: ">=1.4.0 <1.6.0"
+  analyzer: "^1.6.0"
   test: ^1.16.8
 
 environment:
