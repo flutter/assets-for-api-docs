@@ -5,7 +5,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:math';
-import 'dart:ui' show Image;
+import 'dart:ui' show Image, FontFeature;
 
 import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/foundation.dart';
@@ -78,7 +78,7 @@ class BlendModeDiagram extends StatelessWidget implements DiagramMetadata {
                       '$mode',
                       style: const TextStyle(
                         inherit: false,
-                        fontFamily: 'monospace',
+                        fontFamily: 'Fira Code',
                         color: Colors.black,
                         fontSize: 10.0,
                         fontWeight: FontWeight.w900,
@@ -96,7 +96,7 @@ class BlendModeDiagram extends StatelessWidget implements DiagramMetadata {
                       '⟵ destination ⟶',
                       style: TextStyle(
                         inherit: false,
-                        fontFamily: 'monospace',
+                        fontFamily: 'Fira Code',
                         color: Colors.black,
                         fontSize: 8.0,
                         fontWeight: FontWeight.bold,
@@ -116,7 +116,7 @@ class BlendModeDiagram extends StatelessWidget implements DiagramMetadata {
                         '⟵ source ⟶',
                         style: TextStyle(
                           inherit: false,
-                          fontFamily: 'monospace',
+                          fontFamily: 'Fira Code',
                           color: Colors.black,
                           fontSize: 8.0,
                           fontWeight: FontWeight.bold,
