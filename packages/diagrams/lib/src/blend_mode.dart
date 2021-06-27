@@ -19,6 +19,8 @@ const ImageProvider destinationImageProvider = ExactAssetImage('assets/blend_mod
 const ImageProvider sourceImageProvider = ExactAssetImage('assets/blend_mode_source.png', package: 'diagrams');
 const ImageProvider gridImageProvider = ExactAssetImage('assets/blend_mode_grid.png', package: 'diagrams');
 
+const String kMonospaceFont = 'Courier New';
+
 Image? destinationImage, sourceImage, gridImage;
 int pageIndex = 0;
 
@@ -78,7 +80,7 @@ class BlendModeDiagram extends StatelessWidget implements DiagramMetadata {
                       '$mode',
                       style: const TextStyle(
                         inherit: false,
-                        fontFamily: 'monospace',
+                        fontFamily: kMonospaceFont,
                         color: Colors.black,
                         fontSize: 10.0,
                         fontWeight: FontWeight.w900,
@@ -96,7 +98,7 @@ class BlendModeDiagram extends StatelessWidget implements DiagramMetadata {
                       '⟵ destination ⟶',
                       style: TextStyle(
                         inherit: false,
-                        fontFamily: 'monospace',
+                        fontFamily: kMonospaceFont,
                         color: Colors.black,
                         fontSize: 8.0,
                         fontWeight: FontWeight.bold,
@@ -116,7 +118,7 @@ class BlendModeDiagram extends StatelessWidget implements DiagramMetadata {
                         '⟵ source ⟶',
                         style: TextStyle(
                           inherit: false,
-                          fontFamily: 'monospace',
+                          fontFamily: kMonospaceFont,
                           color: Colors.black,
                           fontSize: 8.0,
                           fontWeight: FontWeight.bold,

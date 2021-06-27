@@ -60,6 +60,7 @@ class TabsDiagramState extends State<TabsDiagram> with SingleTickerProviderState
       key: UniqueKey(),
       constraints: BoxConstraints.tight(const Size(540.0, 960.0)),
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         home: Scaffold(
           appBar: AppBar(
             bottom: TabBar(
