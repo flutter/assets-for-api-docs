@@ -191,7 +191,7 @@ class FlutterSampleLiberator {
   /// Extracts the configured sample project to the configured output location.
   ///
   /// Returns true if the extraction succeeded.
-  Future<bool> extract({bool overwrite = false}) async {
+  Future<bool> extract({bool overwrite = false, File? mainDart, bool includeMobile = false}) async {
     if (await location.exists() && !overwrite) {
       throw SnippetException(
           'Project output location ${location.absolute.path} exists, refusing to overwrite.');
@@ -215,7 +215,7 @@ class FlutterSampleLiberator {
       '--project-name',
       name,
       '--template=app',
-      '--platforms=linux,windows,macos,web',
+      '--platforms=linux,windows,macos,web${includeMobile ? ',ios,android' : ''}',
       location.absolute.path,
     ]);
 
@@ -228,7 +228,7 @@ class FlutterSampleLiberator {
     await location.childDirectory('lib').delete(recursive: true);
     await location.childDirectory('lib').create();
 
-    final File mainDart = location.childDirectory('lib').childFile('main.dart');
+    mainDart ??= location.childDirectory('lib').childFile('main.dart');
     await mainDart.writeAsString(sample.output);
 
     // Rewrite the pubspec to include the right constraints and point to the flutter root.

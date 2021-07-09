@@ -280,6 +280,34 @@ class SnippetGenerator {
     return interpolateSkeleton(sample, skeleton);
   }
 
+  // Sets the description string on the sample and in the sample metadata to a
+  // comment version of the description.
+  // Trims lines of extra whitespace, and strips leading and trailing blank
+  // lines.
+  void _setDescription(List<TemplateInjection> injection, CodeSample sample, {String? description}) {
+    final List<String> descriptionString = <String>[];
+    if (description == null) {
+      final int descriptionIndex = injection.indexWhere((TemplateInjection data) =>
+      data.name == 'description');
+      // Place the description into a comment.
+      descriptionString.addAll(injection[descriptionIndex]
+          .contents
+          .map<String>((SourceLine line) => line.text.trimRight()));
+    } else {
+      descriptionString.addAll(description.split('\n').map<String>((String line) => line.trimRight()));
+    }
+    // Remove any leading/trailing empty comment lines. We don't want to remove
+    // ALL empty comment lines, only the ones at the beginning and the end.
+    while (descriptionString.isNotEmpty && descriptionString.last.isEmpty) {
+      descriptionString.removeLast();
+    }
+    while (descriptionString.isNotEmpty && descriptionString.first.isEmpty) {
+      descriptionString.removeAt(0);
+    }
+    sample.description = descriptionString.map<String>((String line) => '// $line').join('\n');
+    sample.metadata['description'] = sample.description;
+  }
+
   /// The main routine for generating code samples from the source code doc comments.
   ///
   /// The `sample` is the block of sample code from a dartdoc comment.
@@ -297,11 +325,14 @@ class SnippetGenerator {
   String generateCode(
     CodeSample sample, {
     File? output,
+    String? description,
+    String? copyright,
     bool addSectionMarkers = false,
     bool includeAssumptions = false,
   }) {
     configuration.createOutputDirectoryIfNeeded();
 
+    sample.metadata['copyright'] ??= copyright;
     final List<TemplateInjection> snippetData = parseInput(sample);
     switch (sample.runtimeType) {
       case DartpadSample:
@@ -319,6 +350,7 @@ class SnippetGenerator {
             templateFile.absolute.path.contains(flutterRoot.absolute.path)
                 ? path.relative(templateFile.absolute.path, from: flutterRoot.absolute.path)
                 : templateFile.absolute.path;
+        _setDescription(snippetData, sample, description: description);
         sample.output = interpolateTemplate(
           snippetData,
           addSectionMarkers
@@ -326,13 +358,8 @@ class SnippetGenerator {
               : templateContents,
           sample.metadata,
           addSectionMarkers: addSectionMarkers,
+          addCopyright: copyright != null,
         );
-
-        final int descriptionIndex =
-            snippetData.indexWhere((TemplateInjection data) => data.name == 'description');
-        final String descriptionString =
-            descriptionIndex == -1 ? '' : snippetData[descriptionIndex].mergedContent;
-        sample.description = descriptionString;
         break;
       case SnippetSample:
         if (sample is SnippetSample) {
@@ -345,22 +372,18 @@ class SnippetGenerator {
           } else {
             templateContents = '{{description}}\n{{code}}';
           }
+          _setDescription(snippetData, sample, description: description);
           final String app = interpolateTemplate(
             snippetData,
             templateContents,
             metadata,
             addSectionMarkers: addSectionMarkers,
+            addCopyright: copyright != null,
           );
           sample.output = app;
-          final int descriptionIndex =
-              snippetData.indexWhere((TemplateInjection data) => data.name == 'description');
-          final String descriptionString =
-              descriptionIndex == -1 ? '' : snippetData[descriptionIndex].mergedContent;
-          sample.description = descriptionString;
         }
         break;
     }
-    sample.metadata['description'] = sample.description;
     if (output != null) {
       output.writeAsStringSync(sample.output);
 
