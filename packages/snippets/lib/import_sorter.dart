@@ -42,6 +42,11 @@ String sortImports(String contents) {
 
 /// Organizer of imports (and other directives) in the [unit].
 // Adapted from the analysis_server package.
+// This code is largely copied from:
+// https://github.com/dart-lang/sdk/blob/c7405b9d86b4b47cf7610667491f1db72723b0dd/pkg/analysis_server/lib/src/services/correction/organize_imports.dart#L15
+// TODO(gspencergoog): If ImportOrganizer ever becomes part of the public API,
+// this class should probably be replaced.
+// https://github.com/flutter/flutter/issues/86197
 class _ImportOrganizer {
   _ImportOrganizer(this.initialCode, this.unit, this.errors)
       : code = initialCode {
