@@ -1,5 +1,5 @@
 # assets-for-api-docs
-
+slack://T023M6AMCH2/magic-login/2182681572678-164c0a6d6622837fd5c0c5a133912e787b52d3476a03227de4781cf3becea056
 This repo is used to host and serve static assets in support of
 [docs.flutter.dev](https://docs.flutter.dev), as well as some manual tests that use
 specially-crafted graphics.
