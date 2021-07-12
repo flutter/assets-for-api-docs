@@ -12,6 +12,7 @@ import 'package:path/path.dart' as path;
 
 import 'configuration.dart';
 import 'data_types.dart';
+import 'import_sorter.dart';
 import 'util.dart';
 
 /// Generates the snippet HTML, as well as saving the output snippet main to
@@ -284,17 +285,19 @@ class SnippetGenerator {
   // comment version of the description.
   // Trims lines of extra whitespace, and strips leading and trailing blank
   // lines.
-  void _setDescription(List<TemplateInjection> injection, CodeSample sample, {String? description}) {
+  void _setDescription(List<TemplateInjection> injection, CodeSample sample,
+      {String? description}) {
     final List<String> descriptionString = <String>[];
     if (description == null) {
-      final int descriptionIndex = injection.indexWhere((TemplateInjection data) =>
-      data.name == 'description');
+      final int descriptionIndex =
+          injection.indexWhere((TemplateInjection data) => data.name == 'description');
       // Place the description into a comment.
       descriptionString.addAll(injection[descriptionIndex]
           .contents
           .map<String>((SourceLine line) => line.text.trimRight()));
     } else {
-      descriptionString.addAll(description.split('\n').map<String>((String line) => line.trimRight()));
+      descriptionString
+          .addAll(description.split('\n').map<String>((String line) => line.trimRight()));
     }
     // Remove any leading/trailing empty comment lines. We don't want to remove
     // ALL empty comment lines, only the ones at the beginning and the end.
@@ -351,14 +354,16 @@ class SnippetGenerator {
                 ? path.relative(templateFile.absolute.path, from: flutterRoot.absolute.path)
                 : templateFile.absolute.path;
         _setDescription(snippetData, sample, description: description);
-        sample.output = interpolateTemplate(
-          snippetData,
-          addSectionMarkers
-              ? '/// Template: $templateRelativePath\n$templateContents'
-              : templateContents,
-          sample.metadata,
-          addSectionMarkers: addSectionMarkers,
-          addCopyright: copyright != null,
+        sample.output = sortImports(
+          interpolateTemplate(
+            snippetData,
+            addSectionMarkers
+                ? '/// Template: $templateRelativePath\n$templateContents'
+                : templateContents,
+            sample.metadata,
+            addSectionMarkers: addSectionMarkers,
+            addCopyright: copyright != null,
+          ),
         );
         break;
       case SnippetSample:
