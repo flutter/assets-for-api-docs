@@ -7,10 +7,13 @@ import 'dart:math' as math;
 
 import 'package:file/file.dart';
 import 'package:file/local.dart';
+import 'package:path/path.dart' as path;
 import 'package:process/process.dart';
 import 'package:pub_semver/pub_semver.dart';
 import 'package:recase/recase.dart';
+import 'package:snippets/snippet_parser.dart';
 
+import 'analysis.dart';
 import 'data_types.dart';
 import 'util.dart';
 
@@ -19,15 +22,16 @@ import 'util.dart';
 /// This class is used to [extract] an editable sample to a project at the given [location], and then [reinsert] the
 /// edited sample in the original Flutter source file.
 class FlutterSampleLiberator {
-  const FlutterSampleLiberator(
+  FlutterSampleLiberator(
     this.element,
     this.sample, {
     required this.location,
     String? name,
     this.filesystem = const LocalFileSystem(),
     this.processManager = const LocalProcessManager(),
-    this.flutterRoot,
-  }) : _name = name;
+    Directory? flutterRoot,
+  }) : _name = name,
+       flutterRoot = flutterRoot ?? FlutterInformation.instance.getFlutterRoot();
 
   /// The optional [FileSystem] object to use for filesystem access.
   ///
@@ -51,12 +55,12 @@ class FlutterSampleLiberator {
   /// The optional Flutter root directory specified.
   ///
   /// Defaults to the output of [FlutterInformation.instance.getFlutterRoot].
-  final Directory? flutterRoot;
+  final Directory flutterRoot;
 
   /// The name of the extracted sample, either supplied to the constructor, or
   /// (if not), a name valid for use in a "pubspec.yaml" file derived from the
-  /// element's type, element name, and which sample within the element's doc
-  /// comment it is.
+  /// element's type, element name, and the index of the sample within the
+  /// element's doc comment.
   String get name =>
       _name ?? '${sample.type}_${sample.element.snakeCase.replaceAll('.', '_')}_${sample.index}';
 
@@ -64,18 +68,30 @@ class FlutterSampleLiberator {
   File get mainDart => location.childDirectory('lib').childFile('main.dart');
 
   Future<Map<String, int>> _findReplacementRangeAndIndents() async {
-    final List<CodeSample> foundBlocks = element.samples.where((CodeSample foundSample) {
+    final Iterable<SourceElement> sourceElements = getFileCommentElements(element.file);
+    final Iterable<SourceElement> matchingElements = sourceElements.where((SourceElement element) {
+      return element.elementName == element.elementName;
+    });
+    if (matchingElements.length != 1) {
+      throw SnippetException(
+          'Unable to find original location for sample ${sample.index} on ${sample.element} in ${element.file}');
+    }
+    final SnippetDartdocParser parser = SnippetDartdocParser();
+    final SourceElement matchingElement = matchingElements.first;
+    parser.parseComment(matchingElement);
+    final List<CodeSample> foundBlocks = matchingElement.samples.where((CodeSample foundSample) {
       return foundSample.index == sample.index;
     }).toList();
     if (foundBlocks.length != 1) {
       throw SnippetException(
           'Unable to find original location for sample ${sample.index} on ${sample.element}');
     }
+
     final CodeSample foundBlock = foundBlocks.first;
-    int startRange;
-    int endRange;
-    int startFirstLine;
-    String firstLine;
+    int startRange = 0;
+    int endRange = 0;
+    int startFirstLine = 0;
+    String firstLine = '';
     if (foundBlock.input.isEmpty) {
       startRange = foundBlock.start.startChar - 1;
       endRange = startRange;
@@ -86,17 +102,19 @@ class FlutterSampleLiberator {
       endRange = foundBlock.input.last.endChar;
       // Back up from the start of range, and find the first newline.
       final String contents = await element.file.readAsString();
-      int cursor = startRange;
-      while (cursor >= 0 && contents[cursor] != '\n') {
-        cursor--;
+      if (contents.isNotEmpty) {
+        int cursor = startRange;
+        while (cursor >= 0 && contents[cursor] != '\n') {
+          cursor--;
+        }
+        startFirstLine = contents[cursor] == '\n' ? cursor + 1 : cursor;
+        // Move forward from the start of range, and find the first newline.
+        cursor = startRange;
+        while (cursor < contents.length && contents[cursor] != '\n') {
+          cursor++;
+        }
+        firstLine = contents.substring(startFirstLine, cursor);
       }
-      startFirstLine = contents[cursor] == '\n' ? cursor + 1 : cursor;
-      // Move forward from the start of range, and find the first newline.
-      cursor = startRange;
-      while (cursor < contents.length && contents[cursor] != '\n') {
-        cursor++;
-      }
-      firstLine = contents.substring(startFirstLine, cursor);
     }
 
     return <String, int>{
@@ -118,7 +136,7 @@ class FlutterSampleLiberator {
       final String dartdocSection = section.replaceFirst(RegExp(r'code-?'), ' ').trimRight();
       final List<String> sectionContents = sections[section]!;
       final int sectionIndent = getIndent(sectionContents.first);
-      if (section != 'description') {
+      if (section != 'description' && section != 'sampleLink') {
         result.add('$commentMarker ```dart$dartdocSection');
       }
       result.addAll(sections[section]!.map<String>((String line) {
@@ -126,7 +144,7 @@ class FlutterSampleLiberator {
         line = line.substring(math.min(math.min(sectionIndent, getIndent(line)), line.length));
         return '$commentMarker $line'.trimRight();
       }));
-      if (section != 'description') {
+      if (section != 'description' && section != 'sampleLink') {
         result.add('$commentMarker ```');
       }
       if (section != sectionOrder.last) {
@@ -197,7 +215,6 @@ class FlutterSampleLiberator {
           'Project output location ${location.absolute.path} exists, refusing to overwrite.');
     }
 
-    final Directory flutterRoot = this.flutterRoot ?? FlutterInformation.instance.getFlutterRoot();
     final File flutter = flutterRoot.childDirectory('bin').childFile('flutter');
     if (!processManager.canRun(flutter.absolute.path)) {
       throw SnippetException('Unable to run flutter command');
@@ -229,6 +246,7 @@ class FlutterSampleLiberator {
     await location.childDirectory('lib').create();
 
     mainDart ??= location.childDirectory('lib').childFile('main.dart');
+    await mainDart.parent.create(recursive: true);
     await mainDart.writeAsString(sample.output);
 
     // Rewrite the pubspec to include the right constraints and point to the flutter root.
@@ -290,10 +308,40 @@ include: ${flutterRoot.absolute.path}/analysis_options.yaml
       final File frameworkFile = sample.start.file!;
       String frameworkContents = await frameworkFile.readAsString();
 
-      // 3) Create a substitute example, and replace the char range with the new example.
+      // Create a substitute example, and replace the char range with the new example.
       final String replacement =
           _buildSampleReplacement(sections, sectionOrder, rangesAndIndents['firstIndent']!);
-      // 4) Rewrite the original framework file.
+      // Rewrite the original framework file.
+      frameworkContents = frameworkContents.replaceRange(
+          startRange, endRange, startRange == endRange ? '\n$replacement' : replacement);
+      await frameworkFile.writeAsString(frameworkContents);
+    } on SnippetException catch (e) {
+      return e.message;
+    }
+    return '';
+  }
+
+  /// Reinserts the configured sample into its original Flutter source file
+  /// after editing.
+  Future<String> reinsertAsReference(File mainDart) async {
+    try {
+      // Re-parse the original file to find the current char range for the
+      // original example.
+      final Map<String, int> rangesAndIndents = await _findReplacementRangeAndIndents();
+      final int startRange = rangesAndIndents['startRange']!;
+      final int endRange = rangesAndIndents['endRange']!;
+      final File frameworkFile = sample.start.file!;
+      String frameworkContents = await frameworkFile.readAsString();
+
+      // Create a substitute example that only contains a reference to the
+      // output file, and the description.
+      final String linkPath = path.relative(mainDart.path, from: flutterRoot.absolute.path);
+      final String replacement = _buildSampleReplacement(<String, List<String>>{
+        'description': sample.description.split('\n'),
+        'sampleLink': <String>['[See code in $linkPath]'],
+      }, <String>['description', 'sampleLink'], rangesAndIndents['firstIndent']!);
+      print('Replacement:\n$replacement');
+      // Rewrite the original framework file.
       frameworkContents = frameworkContents.replaceRange(
           startRange, endRange, startRange == endRange ? '\n$replacement' : replacement);
       await frameworkFile.writeAsString(frameworkContents);

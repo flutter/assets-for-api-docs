@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'dart:io' show Process, ProcessResult, Platform, stderr, exit;
+import 'dart:io' show stderr, exit;
 
 import 'package:args/args.dart';
 import 'package:file/file.dart';
@@ -88,7 +88,8 @@ Future<void> main(List<String> argList) async {
     snippetGenerator.generateCode(
       sample,
       includeAssumptions: false,
-      description: 'See description in the comments at line ${sample.start.line} of the file:\n  $relativePath',
+      description:
+          'See description in the comments in the file:\n  $relativePath',
       copyright: copyright,
     );
   }
@@ -98,44 +99,45 @@ Future<void> main(List<String> argList) async {
     flutterInformation.getFlutterRoot().absolute.path,
     'examples',
     'api',
-    path.dirname(srcPath),
   );
-  final Directory destDirectory = filesystem.directory(dstPath);
   for (final SourceElement element in fileElements.where((SourceElement element) {
     return element.sampleCount > 0;
   })) {
     for (final CodeSample sample in element.samples) {
-      // Ignore anything else, because those are full apps.
+      // Ignore anything else, because those are not full apps.
       if (sample.type != 'dartpad' && sample.type != 'sample') {
         continue;
       }
-      await destDirectory.create(recursive: true);
-      final String className =
-          element.type == SourceElementType.constructorType ? '' : element.className.snakeCase;
-      final String elementName = element.name.snakeCase;
-      final String id = <String>[
-        if (className.isNotEmpty) className,
-        path.basenameWithoutExtension(srcPath),
-        elementName,
-      ].join('.');
-      final File outputFile =
-          filesystem.file('${path.join(dstPath, 'lib', id)}.${sample.index}.dart');
-      // if (outputFile.existsSync()) {
-      //   print('File $outputFile already exists!');
-      //   exit(-1);
-      // }
+      final File outputFile = filesystem.file(
+        path.joinAll(<String>[
+          dstPath,
+          'lib',
+          path.withoutExtension(srcPath), // e.g. material/app_bar
+          <String>[
+            if (element.className.isNotEmpty) element.className.snakeCase,
+            element.name.snakeCase,
+            sample.index.toString(),
+            'dart',
+          ].join('.'),
+        ]),
+      );
+      await outputFile.absolute.parent.create(recursive: true);
+      if (outputFile.existsSync()) {
+        print('File $outputFile already exists!');
+        exit(-1);
+      }
+      final FlutterSampleLiberator liberator = FlutterSampleLiberator(
+        element,
+        sample,
+        location: filesystem.directory(dstPath),
+      );
       if (!filesystem.file(path.join(dstPath, 'pubspec.yaml')).existsSync()) {
         print('Publishing ${outputFile.absolute.path}');
-        final FlutterSampleLiberator liberator = FlutterSampleLiberator(
-          element,
-          sample,
-          location: filesystem.directory(dstPath),
-        );
         await liberator.extract(overwrite: true, mainDart: outputFile, includeMobile: true);
       } else {
-        print('Writing ${outputFile.absolute.path}');
-        await outputFile.writeAsString(sample.output);
+        await outputFile.absolute.writeAsString(sample.output);
       }
+      await liberator.reinsertAsReference(outputFile);
       print('${outputFile.path}: ${getSampleStats(element)}');
     }
   }

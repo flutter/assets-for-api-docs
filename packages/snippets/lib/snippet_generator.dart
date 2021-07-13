@@ -285,7 +285,7 @@ class SnippetGenerator {
   // comment version of the description.
   // Trims lines of extra whitespace, and strips leading and trailing blank
   // lines.
-  void _setDescription(List<TemplateInjection> injection, CodeSample sample,
+  String _getDescription(List<TemplateInjection> injection, CodeSample sample,
       {String? description}) {
     final List<String> descriptionString = <String>[];
     if (description == null) {
@@ -307,8 +307,8 @@ class SnippetGenerator {
     while (descriptionString.isNotEmpty && descriptionString.first.isEmpty) {
       descriptionString.removeAt(0);
     }
-    sample.description = descriptionString.map<String>((String line) => '// $line').join('\n');
-    sample.metadata['description'] = sample.description;
+    final String newDescription = descriptionString.map<String>((String line) => '// $line').join('\n');
+    return newDescription;
   }
 
   /// The main routine for generating code samples from the source code doc comments.
@@ -353,14 +353,15 @@ class SnippetGenerator {
             templateFile.absolute.path.contains(flutterRoot.absolute.path)
                 ? path.relative(templateFile.absolute.path, from: flutterRoot.absolute.path)
                 : templateFile.absolute.path;
-        _setDescription(snippetData, sample, description: description);
+        final Map<String, Object?> metadata = Map<String, Object?>.from(sample.metadata);
+        metadata['description'] = _getDescription(snippetData, sample, description: description);
         sample.output = sortImports(
           interpolateTemplate(
             snippetData,
             addSectionMarkers
                 ? '/// Template: $templateRelativePath\n$templateContents'
                 : templateContents,
-            sample.metadata,
+            metadata,
             addSectionMarkers: addSectionMarkers,
             addCopyright: copyright != null,
           ),
@@ -368,7 +369,6 @@ class SnippetGenerator {
         break;
       case SnippetSample:
         if (sample is SnippetSample) {
-          // So Dart does correct type inference.
           String templateContents;
           final Map<String, Object?> metadata = Map<String, Object?>.from(sample.metadata);
           if (includeAssumptions) {
@@ -377,7 +377,7 @@ class SnippetGenerator {
           } else {
             templateContents = '{{description}}\n{{code}}';
           }
-          _setDescription(snippetData, sample, description: description);
+          metadata['description'] = _getDescription(snippetData, sample, description: description);
           final String app = interpolateTemplate(
             snippetData,
             templateContents,

@@ -7,9 +7,8 @@ import 'package:file/memory.dart';
 import 'package:path/path.dart' as path;
 import 'package:pub_semver/pub_semver.dart';
 import 'package:snippets/import_sorter.dart';
-import 'package:test/test.dart' hide TypeMatcher, isInstanceOf;
-
 import 'package:snippets/snippets.dart';
+import 'package:test/test.dart' hide TypeMatcher, isInstanceOf;
 
 class FakeFlutterInformation extends FlutterInformation {
   FakeFlutterInformation(this.flutterRoot);
@@ -28,7 +27,6 @@ class FakeFlutterInformation extends FlutterInformation {
 
 void main() {
   late MemoryFileSystem memoryFileSystem = MemoryFileSystem();
-  late FlutterRepoSnippetConfiguration configuration;
   late Directory tmpDir;
 
   setUp(() {
