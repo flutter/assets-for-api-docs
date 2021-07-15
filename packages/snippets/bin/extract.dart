@@ -120,8 +120,7 @@ Future<void> main(List<String> argList) async {
       );
       await outputFile.absolute.parent.create(recursive: true);
       if (outputFile.existsSync()) {
-        print('File $outputFile already exists!');
-        exit(-1);
+        errorExit('File $outputFile already exists!');
       }
       final FlutterSampleLiberator liberator = FlutterSampleLiberator(
         element,
