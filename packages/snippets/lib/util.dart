@@ -138,19 +138,9 @@ String interpolateTemplate(
   bool addCopyright = false,
 }) {
   String wrapSectionMarker(Iterable<String> contents, {required String name}) {
-    final List<String> strippedContents =
-        contents.map<String>((String line) => line.trimRight()).toList();
-    // Remove any leading/trailing empty lines. We don't want to remove
-    // ALL empty lines, only the ones at the beginning and the end.
-    while (strippedContents.isNotEmpty && strippedContents.last.isEmpty) {
-      strippedContents.removeLast();
-    }
-    while (strippedContents.isNotEmpty && strippedContents.first.isEmpty) {
-      strippedContents.removeAt(0);
-    }
     final String result = <String>[
       if (addSectionMarkers) sectionArrows(name, start: true),
-      ...strippedContents,
+      ...contents,
       if (addSectionMarkers) sectionArrows(name, start: false),
     ].join('\n');
     return result.isEmpty ? result : '$result\n';
@@ -164,12 +154,7 @@ String interpolateTemplate(
     if (metadata[name] != null && componentIndex == -1) {
       // If the match isn't found in the injections, then just return the
       // metadata entry.
-      return metadata[name]!.toString();
-    }
-    if (name == 'description' && metadata['description'] != null) {
-      // Use the description from the metadata instead of from the injection,
-      // because it could have been replaced.
-      return wrapSectionMarker((metadata['description']! as String).split('\n'), name: name);
+      return wrapSectionMarker((metadata[name]! as String).split('\n'), name: name);
     }
     return wrapSectionMarker(
         componentIndex >= 0 ? injections[componentIndex].stringContents : <String>[],

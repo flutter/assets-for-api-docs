@@ -13,11 +13,16 @@ import 'package:snippets/snippets.dart';
 
 const LocalFileSystem filesystem = LocalFileSystem();
 
+const String _kCopyrightNotice = '''
+// Copyright 2014 The Flutter Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.''';
+
 const String _kHelpOption = 'help';
 const String _kInputOption = 'input';
 const String _kOutputOption = 'output';
 
-/// Extracts the samples in a source file to the given output directory, and
+/// Extracts the samples from a source file to the given output directory, and
 /// removes them from the original source files, replacing them with a pointer
 /// to the new location.
 Future<void> main(List<String> argList) async {
@@ -26,7 +31,7 @@ Future<void> main(List<String> argList) async {
   parser.addOption(
     _kOutputOption,
     defaultsTo: path.join(flutterInformation.getFlutterRoot().absolute.path, 'examples', 'api'),
-    help: 'The output path for the generated sample application.',
+    help: 'The output path for generated sample applications.',
   );
   parser.addOption(
     _kInputOption,
@@ -47,19 +52,19 @@ Future<void> main(List<String> argList) async {
     exit(0);
   }
 
-  if (args[_kInputOption] == null) {
+  if (args[_kInputOption] == null || (args[_kInputOption] as String).isEmpty) {
     stderr.writeln(parser.usage);
-    errorExit('The --$_kInputOption option must be specified.');
+    errorExit('The --$_kInputOption option must not be empty.');
   }
 
   if (args[_kOutputOption] == null || (args[_kOutputOption] as String).isEmpty) {
     stderr.writeln(parser.usage);
-    errorExit('The --$_kOutputOption option must be specified.');
+    errorExit('The --$_kOutputOption option must be specified, and not empty.');
   }
 
   final File input = filesystem.file(args['input'] as String);
   if (!input.existsSync()) {
-    errorExit('The input file ${input.path} does not exist.');
+    errorExit('The input file ${input.absolute.path} does not exist.');
   }
   final String flutterSource = path.join(
     flutterInformation.getFlutterRoot().absolute.path,
@@ -69,7 +74,7 @@ Future<void> main(List<String> argList) async {
     'src',
   );
   if (!path.isWithin(flutterSource, input.absolute.path)) {
-    errorExit('Input file must be under the $flutterSource directory: $input is not.');
+    errorExit('Input file must be under the $flutterSource directory: ${input.absolute.path} is not.');
   }
 
   final Iterable<SourceElement> fileElements = getFileElements(input);
@@ -77,22 +82,6 @@ Future<void> main(List<String> argList) async {
   final SnippetGenerator snippetGenerator = SnippetGenerator();
   dartdocParser.parseFromComments(fileElements);
   dartdocParser.parseAndAddAssumptions(fileElements, input, silent: true);
-  const String copyright = '''
-// Copyright 2014 The Flutter Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.''';
-  for (final CodeSample sample
-      in fileElements.expand<CodeSample>((SourceElement element) => element.samples)) {
-    final String relativePath = path.relative(sample.start.file!.path,
-        from: flutterInformation.getFlutterRoot().absolute.path);
-    snippetGenerator.generateCode(
-      sample,
-      includeAssumptions: false,
-      description:
-          'See description in the comments in the file:\n  $relativePath',
-      copyright: copyright,
-    );
-  }
 
   final String srcPath = path.relative(input.absolute.path, from: flutterSource);
   final String dstPath = path.join(
@@ -108,6 +97,14 @@ Future<void> main(List<String> argList) async {
       if (sample.type != 'dartpad' && sample.type != 'sample') {
         continue;
       }
+      final String relativePath = path.relative(sample.start.file!.path,
+          from: flutterInformation.getFlutterRoot().absolute.path);
+      snippetGenerator.generateCode(
+        sample,
+        includeAssumptions: false,
+        copyright: _kCopyrightNotice,
+        description: 'See description in the comments in the file:\n  $relativePath',
+      );
       final File outputFile = filesystem.file(
         path.joinAll(<String>[
           dstPath,

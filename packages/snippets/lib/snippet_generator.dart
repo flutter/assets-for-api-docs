@@ -94,11 +94,8 @@ class SnippetGenerator {
     // Only insert a div for the description if there actually is some text there.
     // This means that the {{description}} marker in the skeleton needs to
     // be inside of an {@inject-html} block.
-    String description = sample.parts
-        .firstWhere((TemplateInjection tuple) => tuple.name == 'description')
-        .mergedContent;
-    description = description.trim().isNotEmpty
-        ? '<div class="snippet-description">{@end-inject-html}$description{@inject-html}</div>'
+    final String description = sample.description.trim().isNotEmpty
+        ? '<div class="snippet-description">{@end-inject-html}${sample.description.trim()}{@inject-html}</div>'
         : '';
 
     // DartPad only supports stable or master as valid channels. Use master
@@ -165,7 +162,6 @@ class SnippetGenerator {
   /// into valid Dart code.
   List<SourceLine> _processBlocks(CodeSample sample) {
     final List<SourceLine> block = sample.parts
-        .where((TemplateInjection injection) => injection.name != 'description')
         .expand<SourceLine>((TemplateInjection injection) => injection.contents)
         .toList();
     if (block.isEmpty) {
@@ -260,8 +256,24 @@ class SnippetGenerator {
         components.last.contents.add(line);
       }
     }
+    final List<String> descriptionLines = <String>[];
+    bool lastWasWhitespace = false;
+    for (final String line in description.map<String>((SourceLine line) => line.text.trimRight())) {
+      final bool onlyWhitespace = line.trim().isEmpty;
+      if (onlyWhitespace && descriptionLines.isEmpty) {
+        // Don't add whitespace lines until we see something without whitespace.
+        lastWasWhitespace = onlyWhitespace;
+        continue;
+      }
+      if (onlyWhitespace && lastWasWhitespace) {
+        // Don't add more than one whitespace line in a row.
+        continue;
+      }
+      descriptionLines.add(line);
+      lastWasWhitespace = onlyWhitespace;
+    }
+    sample.description = descriptionLines.join('\n').trimRight();
     sample.parts = <TemplateInjection>[
-      TemplateInjection('description', description),
       if (sample is SnippetSample) TemplateInjection('#assumptions', sample.assumptions),
       ...components,
     ];
@@ -285,30 +297,12 @@ class SnippetGenerator {
   // comment version of the description.
   // Trims lines of extra whitespace, and strips leading and trailing blank
   // lines.
-  String _getDescription(List<TemplateInjection> injection, CodeSample sample,
-      {String? description}) {
-    final List<String> descriptionString = <String>[];
-    if (description == null) {
-      final int descriptionIndex =
-          injection.indexWhere((TemplateInjection data) => data.name == 'description');
-      // Place the description into a comment.
-      descriptionString.addAll(injection[descriptionIndex]
-          .contents
-          .map<String>((SourceLine line) => line.text.trimRight()));
-    } else {
-      descriptionString
-          .addAll(description.split('\n').map<String>((String line) => line.trimRight()));
-    }
-    // Remove any leading/trailing empty comment lines. We don't want to remove
-    // ALL empty comment lines, only the ones at the beginning and the end.
-    while (descriptionString.isNotEmpty && descriptionString.last.isEmpty) {
-      descriptionString.removeLast();
-    }
-    while (descriptionString.isNotEmpty && descriptionString.first.isEmpty) {
-      descriptionString.removeAt(0);
-    }
-    final String newDescription = descriptionString.map<String>((String line) => '// $line').join('\n');
-    return newDescription;
+  String _getDescription(CodeSample sample) {
+    return sample.description.splitMapJoin(
+      '\n',
+      onMatch: (Match match) => match.group(0)!,
+      onNonMatch: (String nonmatch) => '// ${nonmatch.trimRight()}',
+    );
   }
 
   /// The main routine for generating code samples from the source code doc comments.
@@ -328,8 +322,8 @@ class SnippetGenerator {
   String generateCode(
     CodeSample sample, {
     File? output,
-    String? description,
     String? copyright,
+    String? description,
     bool addSectionMarkers = false,
     bool includeAssumptions = false,
   }) {
@@ -337,6 +331,8 @@ class SnippetGenerator {
 
     sample.metadata['copyright'] ??= copyright;
     final List<TemplateInjection> snippetData = parseInput(sample);
+    sample.description = description ?? sample.description;
+    sample.metadata['description'] = _getDescription(sample);
     switch (sample.runtimeType) {
       case DartpadSample:
       case ApplicationSample:
@@ -353,35 +349,30 @@ class SnippetGenerator {
             templateFile.absolute.path.contains(flutterRoot.absolute.path)
                 ? path.relative(templateFile.absolute.path, from: flutterRoot.absolute.path)
                 : templateFile.absolute.path;
-        final Map<String, Object?> metadata = Map<String, Object?>.from(sample.metadata);
-        metadata['description'] = _getDescription(snippetData, sample, description: description);
-        sample.output = sortImports(
-          interpolateTemplate(
-            snippetData,
-            addSectionMarkers
-                ? '/// Template: $templateRelativePath\n$templateContents'
-                : templateContents,
-            metadata,
-            addSectionMarkers: addSectionMarkers,
-            addCopyright: copyright != null,
-          ),
+        final String app = interpolateTemplate(
+          snippetData,
+          addSectionMarkers
+              ? '/// Template: $templateRelativePath\n$templateContents'
+              : templateContents,
+          sample.metadata,
+          addSectionMarkers: addSectionMarkers,
+          addCopyright: copyright != null,
         );
+        sample.output = sortImports(app);
         break;
       case SnippetSample:
         if (sample is SnippetSample) {
           String templateContents;
-          final Map<String, Object?> metadata = Map<String, Object?>.from(sample.metadata);
           if (includeAssumptions) {
             templateContents =
                 '${headers.map<String>((SourceLine line) => line.text).join('\n')}\n{{#assumptions}}\n{{description}}\n{{code}}';
           } else {
             templateContents = '{{description}}\n{{code}}';
           }
-          metadata['description'] = _getDescription(snippetData, sample, description: description);
           final String app = interpolateTemplate(
             snippetData,
             templateContents,
-            metadata,
+            sample.metadata,
             addSectionMarkers: addSectionMarkers,
             addCopyright: copyright != null,
           );
