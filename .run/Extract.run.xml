@@ -1,0 +1,13 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Extract" type="DartCommandLineRunConfigurationType" factoryName="Dart Command Line Application">
+    <option name="arguments" value="--input=&quot;$PROJECT_DIR$/../flutter/packages/flutter/lib/src/widgets/navigator.dart&quot;" />
+    <option name="envs">
+      <entry key="FLUTTER_ROOT" value="$PROJECT_DIR$/../flutter" />
+    </option>
+    <option name="filePath" value="$PROJECT_DIR$/packages/snippets/bin/extract.dart" />
+    <option name="workingDirectory" value="$PROJECT_DIR$/../flutter" />
+    <method v="2">
+      <option name="ToolBeforeRunTask" enabled="true" actionId="Tool_External Tools_Remove API" />
+    </method>
+  </configuration>
+</component>

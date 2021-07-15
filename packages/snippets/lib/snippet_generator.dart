@@ -12,6 +12,7 @@ import 'package:path/path.dart' as path;
 
 import 'configuration.dart';
 import 'data_types.dart';
+import 'import_sorter.dart';
 import 'util.dart';
 
 /// Generates the snippet HTML, as well as saving the output snippet main to
@@ -93,11 +94,8 @@ class SnippetGenerator {
     // Only insert a div for the description if there actually is some text there.
     // This means that the {{description}} marker in the skeleton needs to
     // be inside of an {@inject-html} block.
-    String description = sample.parts
-        .firstWhere((TemplateInjection tuple) => tuple.name == 'description')
-        .mergedContent;
-    description = description.trim().isNotEmpty
-        ? '<div class="snippet-description">{@end-inject-html}$description{@inject-html}</div>'
+    final String description = sample.description.trim().isNotEmpty
+        ? '<div class="snippet-description">{@end-inject-html}${sample.description.trim()}{@inject-html}</div>'
         : '';
 
     // DartPad only supports stable or master as valid channels. Use master
@@ -164,7 +162,6 @@ class SnippetGenerator {
   /// into valid Dart code.
   List<SourceLine> _processBlocks(CodeSample sample) {
     final List<SourceLine> block = sample.parts
-        .where((TemplateInjection injection) => injection.name != 'description')
         .expand<SourceLine>((TemplateInjection injection) => injection.contents)
         .toList();
     if (block.isEmpty) {
@@ -259,8 +256,24 @@ class SnippetGenerator {
         components.last.contents.add(line);
       }
     }
+    final List<String> descriptionLines = <String>[];
+    bool lastWasWhitespace = false;
+    for (final String line in description.map<String>((SourceLine line) => line.text.trimRight())) {
+      final bool onlyWhitespace = line.trim().isEmpty;
+      if (onlyWhitespace && descriptionLines.isEmpty) {
+        // Don't add whitespace lines until we see something without whitespace.
+        lastWasWhitespace = onlyWhitespace;
+        continue;
+      }
+      if (onlyWhitespace && lastWasWhitespace) {
+        // Don't add more than one whitespace line in a row.
+        continue;
+      }
+      descriptionLines.add(line);
+      lastWasWhitespace = onlyWhitespace;
+    }
+    sample.description = descriptionLines.join('\n').trimRight();
     sample.parts = <TemplateInjection>[
-      TemplateInjection('description', description),
       if (sample is SnippetSample) TemplateInjection('#assumptions', sample.assumptions),
       ...components,
     ];
@@ -280,6 +293,18 @@ class SnippetGenerator {
     return interpolateSkeleton(sample, skeleton);
   }
 
+  // Sets the description string on the sample and in the sample metadata to a
+  // comment version of the description.
+  // Trims lines of extra whitespace, and strips leading and trailing blank
+  // lines.
+  String _getDescription(CodeSample sample) {
+    return sample.description.splitMapJoin(
+      '\n',
+      onMatch: (Match match) => match.group(0)!,
+      onNonMatch: (String nonmatch) => '// ${nonmatch.trimRight()}',
+    );
+  }
+
   /// The main routine for generating code samples from the source code doc comments.
   ///
   /// The `sample` is the block of sample code from a dartdoc comment.
@@ -297,12 +322,17 @@ class SnippetGenerator {
   String generateCode(
     CodeSample sample, {
     File? output,
+    String? copyright,
+    String? description,
     bool addSectionMarkers = false,
     bool includeAssumptions = false,
   }) {
     configuration.createOutputDirectoryIfNeeded();
 
+    sample.metadata['copyright'] ??= copyright;
     final List<TemplateInjection> snippetData = parseInput(sample);
+    sample.description = description ?? sample.description;
+    sample.metadata['description'] = _getDescription(sample);
     switch (sample.runtimeType) {
       case DartpadSample:
       case ApplicationSample:
@@ -319,26 +349,20 @@ class SnippetGenerator {
             templateFile.absolute.path.contains(flutterRoot.absolute.path)
                 ? path.relative(templateFile.absolute.path, from: flutterRoot.absolute.path)
                 : templateFile.absolute.path;
-        sample.output = interpolateTemplate(
+        final String app = interpolateTemplate(
           snippetData,
           addSectionMarkers
               ? '/// Template: $templateRelativePath\n$templateContents'
               : templateContents,
           sample.metadata,
           addSectionMarkers: addSectionMarkers,
+          addCopyright: copyright != null,
         );
-
-        final int descriptionIndex =
-            snippetData.indexWhere((TemplateInjection data) => data.name == 'description');
-        final String descriptionString =
-            descriptionIndex == -1 ? '' : snippetData[descriptionIndex].mergedContent;
-        sample.description = descriptionString;
+        sample.output = sortImports(app);
         break;
       case SnippetSample:
         if (sample is SnippetSample) {
-          // So Dart does correct type inference.
           String templateContents;
-          final Map<String, Object?> metadata = Map<String, Object?>.from(sample.metadata);
           if (includeAssumptions) {
             templateContents =
                 '${headers.map<String>((SourceLine line) => line.text).join('\n')}\n{{#assumptions}}\n{{description}}\n{{code}}';
@@ -348,19 +372,14 @@ class SnippetGenerator {
           final String app = interpolateTemplate(
             snippetData,
             templateContents,
-            metadata,
+            sample.metadata,
             addSectionMarkers: addSectionMarkers,
+            addCopyright: copyright != null,
           );
           sample.output = app;
-          final int descriptionIndex =
-              snippetData.indexWhere((TemplateInjection data) => data.name == 'description');
-          final String descriptionString =
-              descriptionIndex == -1 ? '' : snippetData[descriptionIndex].mergedContent;
-          sample.description = descriptionString;
         }
         break;
     }
-    sample.metadata['description'] = sample.description;
     if (output != null) {
       output.writeAsStringSync(sample.output);
 
