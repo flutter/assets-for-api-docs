@@ -176,8 +176,8 @@ class FlutterSampleLiberator {
       if (match != null) {
         if (match.namedGroup('direction')! == '\u25bc' /* ▼ */) {
           // Start of section, initialize it.
-          currentSection = match.namedGroup('name')!;
-          sections[currentSection] ??= <String>[];
+          currentSection = match.namedGroup('name');
+          sections[currentSection!] ??= <String>[];
           sectionOrder.add(currentSection);
         } else {
           // End of a section

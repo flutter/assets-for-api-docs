@@ -54,13 +54,13 @@ class TransitionDiagramStep extends DiagramStep<TransitionDiagram<dynamic>> {
 
     final Map<Duration, DiagramKeyframe> keyframes = <Duration, DiagramKeyframe>{
       Duration.zero: (Duration now) async {
-        final RenderBox target = _transitionKey.currentContext!.findRenderObject() as RenderBox;
+        final RenderBox target = _transitionKey.currentContext!.findRenderObject()! as RenderBox;
         final Offset targetOffset = target.localToGlobal(target.size.center(Offset.zero));
         final TestGesture gesture = await controller.startGesture(targetOffset);
         await gesture.up();
       },
       const Duration(seconds: 3): (Duration now) async {
-        final RenderBox target = _transitionKey.currentContext!.findRenderObject() as RenderBox;
+        final RenderBox target = _transitionKey.currentContext!.findRenderObject()! as RenderBox;
         final Offset targetOffset = target.localToGlobal(target.size.center(Offset.zero));
         final TestGesture gesture = await controller.startGesture(targetOffset);
         await gesture.up();
@@ -139,7 +139,7 @@ class DecoratedBoxTransitionDiagram extends TransitionDiagram<Decoration> {
   }
 
   static const BorderRadius _beginRadius = BorderRadius.all(Radius.circular(50.0));
-  static const BorderRadius _endRadius = BorderRadius.all(Radius.circular(0.0));
+  static const BorderRadius _endRadius = BorderRadius.zero;
   static final DecorationTween _decorationTween = DecorationTween(
     begin: BoxDecoration(
       borderRadius: _beginRadius,
@@ -157,10 +157,10 @@ class DecoratedBoxTransitionDiagram extends TransitionDiagram<Decoration> {
     return DecoratedBoxTransition(
       key: _transitionKey,
       decoration: animation,
-      child: Container(
+      child: const SizedBox(
         width: 158.0,
         height: 158.0,
-        child: const SampleWidget(),
+        child: SampleWidget(),
       ),
     );
   }
@@ -214,7 +214,7 @@ class PositionedTransitionDiagram extends TransitionDiagram<RelativeRect> {
     return Center(
       child: Stack(
         children: <Widget>[
-          Container(width: 250.0, height: 250.0),
+          const SizedBox(width: 250.0, height: 250.0),
           PositionedTransition(
             key: _transitionKey,
             rect: animation,

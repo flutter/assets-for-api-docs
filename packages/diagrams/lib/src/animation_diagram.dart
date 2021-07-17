@@ -117,7 +117,7 @@ class TransitionDiagramState<T> extends State<TransitionDiagram<T>>
             ),
           ),
           Container(height: 25.0),
-          Container(
+          SizedBox(
             width: 100.0,
             height: 50.0,
             child: Sparkline(curve: widget.curve, position: _controller.value),

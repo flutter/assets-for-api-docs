@@ -25,7 +25,7 @@ class StrokeJoinDescription extends CustomPainter {
   })  : _anglePainter = _createLabelPainter('θ = ${angle.round()}°'),
         _joinPainter = _createLabelPainter(join.toString()),
         _miterLimitPainter = _createLabelPainter(join == StrokeJoin.miter //
-            ? 'Miter Limit: ${strokeMiterLimit.toStringAsFixed(1)}' + (strokeMiterLimit == 4.0 ? ' (default)' : '')
+            ? 'Miter Limit: ${strokeMiterLimit.toStringAsFixed(1)}${strokeMiterLimit == 4.0 ? ' (default)' : ''}'
             : '');
 
   static const EdgeInsets padding = EdgeInsets.all(8.0);
@@ -137,7 +137,8 @@ class StrokeJoinDiagram extends StatefulWidget implements DiagramMetadata {
     this.endAngle = 360.0,
     this.join = StrokeJoin.miter,
     this.strokeMiterLimit = 4.0,
-  });
+    Key? key,
+  }) : super(key: key);
 
   @override
   final String name;
@@ -242,7 +243,7 @@ class StrokeJoinDiagramStep extends DiagramStep<StrokeJoinDiagram> {
   @override
   Future<File> generateDiagram(StrokeJoinDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawAnimatedDiagramToFiles(
+    return controller.drawAnimatedDiagramToFiles(
       end: _kAnimationDuration,
       frameRate: _kAnimationFrameRate,
       name: diagram.name,

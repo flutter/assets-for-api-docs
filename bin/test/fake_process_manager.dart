@@ -80,7 +80,7 @@ class FakeProcessManager implements ProcessManager {
         }
       }
       if (listsIdentical) {
-        foundResult = fakeResults[fakeCommand]!;
+        foundResult = fakeResults[fakeCommand];
         foundCommand = fakeCommand;
         break;
       }

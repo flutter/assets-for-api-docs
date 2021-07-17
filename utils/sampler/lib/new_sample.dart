@@ -8,16 +8,16 @@ import 'package:snippets/snippets.dart';
 
 import 'model.dart';
 
-typedef _OptionDialogSubmitted = void Function(Type sampleType, String? template);
+typedef OptionDialogSubmitted = void Function(Type sampleType, String? template);
 
 /// A modal dialog that allows selection of parameters for the new sample.
 class OptionDialog extends StatefulWidget {
   const OptionDialog({Key? key, required this.onSubmitted}) : super(key: key);
 
-  final _OptionDialogSubmitted onSubmitted;
+  final OptionDialogSubmitted onSubmitted;
 
   @override
-  _OptionDialogState createState() => _OptionDialogState();
+  State<OptionDialog> createState() => _OptionDialogState();
 }
 
 class _OptionDialogState extends State<OptionDialog> {

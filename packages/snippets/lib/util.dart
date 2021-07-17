@@ -71,7 +71,7 @@ class FlutterInformation {
     String flutterCommand;
     if (platform.environment['FLUTTER_ROOT'] != null) {
       flutterCommand = filesystem
-          .directory(platform.environment['FLUTTER_ROOT']!)
+          .directory(platform.environment['FLUTTER_ROOT'])
           .childDirectory('bin')
           .childFile('flutter')
           .absolute

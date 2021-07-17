@@ -112,6 +112,6 @@ class ScaffoldDiagramStep extends DiagramStep<ScaffoldDiagram> {
   @override
   Future<File> generateDiagram(ScaffoldDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawDiagramToFile(File('${diagram.name}.png'));
+    return controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }

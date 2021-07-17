@@ -38,7 +38,7 @@ class InkResponseLargeDiagram extends StatelessWidget implements DiagramMetadata
           child: Stack(
             children: <Widget>[
               Center(
-                child: Container(
+                child: SizedBox(
                   width: 150.0,
                   height: 100.0,
                   child: InkResponse(
@@ -56,7 +56,7 @@ class InkResponseLargeDiagram extends StatelessWidget implements DiagramMetadata
                   width: 120.0,
                   height: 80.0,
                   alignment: FractionalOffset.bottomRight,
-                  child: Container(
+                  child: SizedBox(
                     key: splashKey,
                     width: 20.0,
                     height: 25.0,
@@ -68,7 +68,7 @@ class InkResponseLargeDiagram extends StatelessWidget implements DiagramMetadata
                   key: canvasKey,
                   labels: <Label>[
                     Label(childKey, 'child', const FractionalOffset(0.2, 0.8)),
-                    Label(splashKey, 'splash', const FractionalOffset(0.0, 0.0)),
+                    Label(splashKey, 'splash', FractionalOffset.topLeft),
                     Label(heroKey, 'highlight', const FractionalOffset(0.45, 0.3)),
                   ],
                   heroKey: heroKey,
@@ -99,7 +99,7 @@ class InkResponseLargeDiagramStep extends DiagramStep<InkResponseLargeDiagram> {
   Future<File> generateDiagram(InkResponseLargeDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
     controller.advanceTime(Duration.zero);
-    final RenderBox target = splashKey.currentContext!.findRenderObject() as RenderBox;
+    final RenderBox target = splashKey.currentContext!.findRenderObject()! as RenderBox;
     final Offset targetOffset = target.localToGlobal(target.size.bottomRight(Offset.zero));
     final TestGesture gesture = await controller.startGesture(targetOffset);
     final File result = await controller.drawDiagramToFile(

@@ -14,7 +14,7 @@ const String _gridView = 'grid_view';
 const String _customScrollGridView = 'grid_view_custom_scroll';
 
 class GridViewDiagram extends StatelessWidget implements DiagramMetadata {
-  const GridViewDiagram(this.name);
+  const GridViewDiagram(this.name, {Key? key}) : super(key: key);
 
   @override
   final String name;
@@ -32,7 +32,7 @@ class GridViewDiagram extends StatelessWidget implements DiagramMetadata {
           mainAxisSpacing: 10.0,
           crossAxisCount: 2,
           children: <Widget>[
-            Container(child: const Padding(padding: EdgeInsets.all(8.0), child: Text('He\'d have you all unravel at the')), color: Colors.teal[100]),
+            Container(child: const Padding(padding: EdgeInsets.all(8.0), child: Text("He'd have you all unravel at the")), color: Colors.teal[100]),
             Container(child: const Padding(padding: EdgeInsets.all(8.0), child: Text('Heed not the rabble')), color: Colors.teal[200]),
             Container(child: const Padding(padding: EdgeInsets.all(8.0), child: Text('Sound of screams but the')), color: Colors.teal[300]),
             Container(child: const Padding(padding: EdgeInsets.all(8.0), child: Text('Who scream')), color: Colors.teal[400]),
@@ -52,7 +52,7 @@ class GridViewDiagram extends StatelessWidget implements DiagramMetadata {
                 mainAxisSpacing: 10.0,
                 crossAxisCount: 2,
                 children: <Widget>[
-                  Container(child: const Padding(padding: EdgeInsets.all(8.0), child: Text('He\'d have you all unravel at the')), color: Colors.lightGreen[100]),
+                  Container(child: const Padding(padding: EdgeInsets.all(8.0), child: Text("He'd have you all unravel at the")), color: Colors.lightGreen[100]),
                   Container(child: const Padding(padding: EdgeInsets.all(8.0), child: Text('Heed not the rabble')), color: Colors.lightGreen[200]),
                   Container(child: const Padding(padding: EdgeInsets.all(8.0), child: Text('Sound of screams but the')), color: Colors.lightGreen[300]),
                   Container(child: const Padding(padding: EdgeInsets.all(8.0), child: Text('Who scream')), color: Colors.lightGreen[400]),
@@ -93,6 +93,6 @@ class GridViewDiagramStep extends DiagramStep<GridViewDiagram> {
   @override
   Future<File> generateDiagram(GridViewDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawDiagramToFile(File('${diagram.name}.png'));
+    return controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }

@@ -18,7 +18,7 @@ class AppBarDiagram extends StatefulWidget implements DiagramMetadata {
   final String name;
 
   @override
-  _DiagramState createState() => _DiagramState();
+  State<AppBarDiagram> createState() => _DiagramState();
 }
 
 class _DiagramState extends State<AppBarDiagram> {
@@ -46,12 +46,12 @@ class _DiagramState extends State<AppBarDiagram> {
           color: const Color(0xFFFFFFFF),
           child: MediaQuery(
             data: const MediaQueryData(
-              padding: EdgeInsets.all(0.0),
+              padding: EdgeInsets.zero,
             ),
             child: Stack(
               children: <Widget>[
                 Center(
-                  child: Container(
+                  child: SizedBox(
                     width: 300.0,
                     height: kToolbarHeight * 2.0 + 50.0,
                     child: AppBar(
@@ -67,7 +67,7 @@ class _DiagramState extends State<AppBarDiagram> {
                         key: flexibleSpace,
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
-                            begin: const FractionalOffset(0.50, 0.0),
+                            begin: FractionalOffset.topCenter,
                             end: const FractionalOffset(0.48, 1.0),
                             colors: <Color>[Colors.blue.shade500, Colors.blue.shade800],
                           ),
@@ -94,7 +94,7 @@ class _DiagramState extends State<AppBarDiagram> {
                     labels: <Label>[
                       Label(leading, 'leading', const FractionalOffset(0.5, 0.25)),
                       Label(actions, 'actions', const FractionalOffset(0.25, 0.5)),
-                      Label(title, 'title', const FractionalOffset(0.5, 0.5)),
+                      Label(title, 'title', FractionalOffset.center),
                       Label(flexibleSpace, 'flexibleSpace', const FractionalOffset(0.2, 0.5)),
                       Label(bottom, 'bottom', const FractionalOffset(0.5, 0.75)),
                     ],
@@ -122,6 +122,6 @@ class AppBarDiagramStep extends DiagramStep<AppBarDiagram> {
   @override
   Future<File> generateDiagram(AppBarDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawDiagramToFile(File('${diagram.name}.png'));
+    return controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }

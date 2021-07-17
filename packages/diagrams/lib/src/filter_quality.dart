@@ -97,7 +97,7 @@ Future<ui.Picture> _paintScaledSample(double scale, String label, FilterQuality 
 }
 
 class FilterQualityDiagram extends StatelessWidget implements DiagramMetadata {
-  const FilterQualityDiagram();
+  const FilterQualityDiagram({Key? key}) : super(key: key);
 
   @override
   String get name => 'filter_quality';
@@ -151,6 +151,6 @@ class FilterQualityDiagramStep extends DiagramStep<FilterQualityDiagram> {
   Future<File> generateDiagram(FilterQualityDiagram diagram) async {
     await _generateSamples();
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawDiagramToFile(File('${diagram.name}.png'));
+    return controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }

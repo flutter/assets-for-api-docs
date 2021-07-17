@@ -24,7 +24,7 @@ final GlobalKey _treasuryKey = GlobalKey();
 final GlobalKey _stateKey = GlobalKey();
 
 class SimpleDialogDiagram extends StatelessWidget implements DiagramMetadata {
-  const SimpleDialogDiagram(this.name);
+  const SimpleDialogDiagram(this.name, {Key? key}) : super(key: key);
 
   @override
   final String name;
@@ -149,7 +149,7 @@ class SimpleDialogDiagramStep extends DiagramStep<SimpleDialogDiagram> {
   }
 
   Future<void> _tap(GlobalKey key) async {
-    final RenderBox target = key.currentContext!.findRenderObject() as RenderBox;
+    final RenderBox target = key.currentContext!.findRenderObject()! as RenderBox;
     final Offset targetOffset =
         target.localToGlobal(target.size.center(Offset.zero));
     final TestGesture gesture = await controller.startGesture(targetOffset);

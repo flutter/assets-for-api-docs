@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'diagram_step.dart';
 
 class RaisedButtonDiagram extends StatelessWidget implements DiagramMetadata {
-  const RaisedButtonDiagram(this.name);
+  const RaisedButtonDiagram(this.name, {Key? key}) : super(key: key);
 
   @override
   final String name;
@@ -46,7 +46,7 @@ class RaisedButtonDiagram extends StatelessWidget implements DiagramMetadata {
               RaisedButton( // ignore: deprecated_member_use
                 onPressed: () {},
                 textColor: Colors.white,
-                padding: const EdgeInsets.only(),
+                padding: EdgeInsets.zero,
                 child: Container(
                   decoration: const BoxDecoration(
                     gradient: LinearGradient(
@@ -86,6 +86,6 @@ class RaisedButtonDiagramStep extends DiagramStep<RaisedButtonDiagram> {
   @override
   Future<File> generateDiagram(RaisedButtonDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawDiagramToFile(File('${diagram.name}.png'));
+    return controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }

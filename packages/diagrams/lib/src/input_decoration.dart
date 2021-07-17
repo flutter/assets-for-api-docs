@@ -16,7 +16,7 @@ const String _inputDecorationPrefixSuffix = 'input_decoration_prefix_suffix';
 const String _inputDecorationCollapsed = 'input_decoration_collapsed';
 
 class InputDecorationDiagram extends StatelessWidget implements DiagramMetadata {
-  const InputDecorationDiagram(this.name);
+  const InputDecorationDiagram(this.name, {Key? key}) : super(key: key);
 
   @override
   final String name;
@@ -126,6 +126,6 @@ class InputDecorationDiagramStep extends DiagramStep<InputDecorationDiagram> {
   @override
   Future<File> generateDiagram(InputDecorationDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawDiagramToFile(File('${diagram.name}.png'));
+    return controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }

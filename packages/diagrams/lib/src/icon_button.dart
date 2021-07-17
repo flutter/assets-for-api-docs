@@ -14,7 +14,7 @@ const String _iconButton = 'icon_button';
 const String _iconButtonBackground = 'icon_button_background';
 
 class IconButtonDiagram extends StatelessWidget implements DiagramMetadata {
-  const IconButtonDiagram(this.name);
+  const IconButtonDiagram(this.name, {Key? key}) : super(key: key);
 
   @override
   final String name;
@@ -84,6 +84,6 @@ class IconButtonDiagramStep extends DiagramStep<IconButtonDiagram> {
   @override
   Future<File> generateDiagram(IconButtonDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawDiagramToFile(File('${diagram.name}.png'));
+    return controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }

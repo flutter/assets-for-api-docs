@@ -21,7 +21,7 @@ const Duration _kBreakDuration = Duration(seconds: 1, milliseconds: 500);
 const double _kCurveAnimationFrameRate = 60.0;
 
 class TweenSequenceDiagram extends StatefulWidget implements DiagramMetadata {
-  const TweenSequenceDiagram();
+  const TweenSequenceDiagram({Key? key}) : super(key: key);
 
   @override
   State<TweenSequenceDiagram> createState() => TweenSequenceDiagramState();
@@ -159,7 +159,7 @@ class TweenSequenceDiagramStep extends DiagramStep<TweenSequenceDiagram> {
   @override
   Future<File> generateDiagram(TweenSequenceDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawAnimatedDiagramToFiles(
+    return controller.drawAnimatedDiagramToFiles(
       end: _kTotalDuration,
       frameRate: _kCurveAnimationFrameRate,
       name: diagram.name,

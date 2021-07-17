@@ -26,7 +26,7 @@ enum GradientMode {
 }
 
 class TileModeDiagram extends StatelessWidget implements DiagramMetadata {
-  const TileModeDiagram(this.gradientMode, this.tileMode);
+  const TileModeDiagram(this.gradientMode, this.tileMode, {Key? key}) : super(key: key);
 
   @override
   String get name => 'tile_mode_${describeEnum(tileMode)}_${describeEnum(gradientMode)}';
@@ -153,6 +153,6 @@ class TileModeDiagramStep extends DiagramStep<TileModeDiagram> {
   @override
   Future<File> generateDiagram(TileModeDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawDiagramToFile(File('${diagram.name}.png'));
+    return controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }

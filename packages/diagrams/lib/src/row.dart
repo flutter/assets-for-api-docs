@@ -17,7 +17,7 @@ const String _rowFixed = 'row_fixed';
 const String _rowTextDirection = 'row_textDirection';
 
 class RowDiagram extends StatelessWidget implements DiagramMetadata {
-  const RowDiagram(this.name, { this.ignoreErrors = false });
+  const RowDiagram(this.name, { this.ignoreErrors = false, Key? key}) : super(key: key);
 
   @override
   final String name;
@@ -58,7 +58,7 @@ class RowDiagram extends StatelessWidget implements DiagramMetadata {
           children: const <Widget>[
             FlutterLogo(),
             Text(
-              'Flutter\'s hot reload helps you quickly and easily experiment, build UIs, add features, and fix bug faster. Experience sub-second reload times, without losing state, on emulators, simulators, and hardware for iOS and Android.',
+              "Flutter's hot reload helps you quickly and easily experiment, build UIs, add features, and fix bug faster. Experience sub-second reload times, without losing state, on emulators, simulators, and hardware for iOS and Android.",
             ),
             Icon(Icons.sentiment_very_satisfied),
           ],
@@ -70,7 +70,7 @@ class RowDiagram extends StatelessWidget implements DiagramMetadata {
             FlutterLogo(),
             Expanded(
               child: Text(
-                'Flutter\'s hot reload helps you quickly and easily experiment, build UIs, add features, and fix bug faster. Experience sub-second reload times, without losing state, on emulators, simulators, and hardware for iOS and Android.',
+                "Flutter's hot reload helps you quickly and easily experiment, build UIs, add features, and fix bug faster. Experience sub-second reload times, without losing state, on emulators, simulators, and hardware for iOS and Android.",
               ),
             ),
             Icon(Icons.sentiment_very_satisfied),
@@ -84,7 +84,7 @@ class RowDiagram extends StatelessWidget implements DiagramMetadata {
             FlutterLogo(),
             Expanded(
               child: Text(
-                'Flutter\'s hot reload helps you quickly and easily experiment, build UIs, add features, and fix bug faster. Experience sub-second reload times, without losing state, on emulators, simulators, and hardware for iOS and Android.',
+                "Flutter's hot reload helps you quickly and easily experiment, build UIs, add features, and fix bug faster. Experience sub-second reload times, without losing state, on emulators, simulators, and hardware for iOS and Android.",
               ),
             ),
             Icon(Icons.sentiment_very_satisfied),
@@ -133,7 +133,7 @@ class RowDiagramStep extends DiagramStep<RowDiagram> {
     }
     try {
       controller.builder = (BuildContext context) => diagram;
-      return await controller.drawDiagramToFile(File('${diagram.name}.png'));
+      return controller.drawDiagramToFile(File('${diagram.name}.png'));
     } finally {
       FlutterError.onError = oldHandler;
       if (diagram.ignoreErrors && errorCount == 0) {

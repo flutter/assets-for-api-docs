@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'diagram_step.dart';
 
 class AlignDiagram extends StatelessWidget implements DiagramMetadata {
-  const AlignDiagram(this.name);
+  const AlignDiagram(this.name, {Key? key}) : super(key: key);
 
   @override
   final String name;
@@ -109,6 +109,6 @@ class AlignDiagramStep extends DiagramStep<AlignDiagram> {
   @override
   Future<File> generateDiagram(AlignDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawDiagramToFile(File('${diagram.name}.png'));
+    return controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }

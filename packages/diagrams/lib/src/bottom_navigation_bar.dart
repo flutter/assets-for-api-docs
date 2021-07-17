@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'diagram_step.dart';
 
 class BottomNavigationBarDiagram extends StatelessWidget implements DiagramMetadata {
-  const BottomNavigationBarDiagram(this.name);
+  const BottomNavigationBarDiagram(this.name, {Key? key}) : super(key: key);
 
   @override
   final String name;
@@ -72,6 +72,6 @@ class BottomNavigationBarDiagramStep extends DiagramStep<BottomNavigationBarDiag
   @override
   Future<File> generateDiagram(BottomNavigationBarDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawDiagramToFile(File('${diagram.name}.png'));
+    return controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }

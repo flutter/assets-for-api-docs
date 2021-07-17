@@ -13,7 +13,7 @@ import 'diagram_step.dart';
 const String _boxDecoration = 'box_decoration';
 
 class BoxDecorationDiagram extends StatelessWidget implements DiagramMetadata {
-  const BoxDecorationDiagram(this.name);
+  const BoxDecorationDiagram(this.name, {Key? key}) : super(key: key);
 
   @override
   final String name;
@@ -64,6 +64,6 @@ class BoxDecorationDiagramStep extends DiagramStep<BoxDecorationDiagram> {
 
     await Future<void>.delayed(const Duration(seconds: 1));
 
-    return await controller.drawDiagramToFile(File('${diagram.name}.png'));
+    return controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }

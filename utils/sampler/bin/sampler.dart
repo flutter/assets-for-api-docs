@@ -92,7 +92,7 @@ class Sampler extends StatefulWidget {
   final String title;
 
   @override
-  _SamplerState createState() => _SamplerState();
+  State<Sampler> createState() => _SamplerState();
 }
 
 enum SortBy {
@@ -545,7 +545,7 @@ class ElementExpansionPanel extends StatefulWidget {
   final SourceElement element;
 
   @override
-  _ElementExpansionPanelState createState() => _ElementExpansionPanelState();
+  State<ElementExpansionPanel> createState() => _ElementExpansionPanelState();
 }
 
 class _ElementExpansionPanelState extends State<ElementExpansionPanel> {

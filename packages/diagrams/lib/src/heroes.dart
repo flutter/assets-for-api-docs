@@ -12,7 +12,7 @@ import 'diagram_step.dart';
 import 'utils.dart';
 
 class HeroesDiagram extends StatefulWidget implements DiagramMetadata {
-  const HeroesDiagram();
+  const HeroesDiagram({Key? key}) : super(key: key);
 
   @override
   String get name => 'heroes';
@@ -20,7 +20,7 @@ class HeroesDiagram extends StatefulWidget implements DiagramMetadata {
   static const Color borderColor = Colors.black;
 
   @override
-  _HeroesDiagramState createState() {
+  State<HeroesDiagram> createState() {
     return _HeroesDiagramState();
   }
 }
@@ -54,7 +54,7 @@ class _HeroesDiagramState extends State<HeroesDiagram> {
                         key: heroKey,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
-                          Container(
+                          SizedBox(
                             height: 400.0,
                             child: Stack(
                               children: <Widget>[
@@ -220,7 +220,7 @@ class RightArrowPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final List<Offset> points = <Offset>[
-      const Offset(0.0, 0.0),
+      Offset.zero,
       Offset(size.width - size.height / 2.0, 0.0),
       Offset(size.width, size.height / 2.0),
       Offset(size.width - size.height / 2.0, size.height),
@@ -261,6 +261,6 @@ class HeroesDiagramStep extends DiagramStep<HeroesDiagram> {
   @override
   Future<File> generateDiagram(HeroesDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawDiagramToFile(File('${diagram.name}.png'));
+    return controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }

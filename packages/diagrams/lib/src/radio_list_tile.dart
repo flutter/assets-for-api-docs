@@ -18,13 +18,14 @@ class LinkedLabelRadio extends StatelessWidget {
     required this.groupValue,
     required this.value,
     required this.onChanged,
-  });
+    Key? key,
+  }) : super(key: key);
 
   final String label;
   final EdgeInsets padding;
   final bool groupValue;
   final bool value;
-  final Function onChanged;
+  final ValueChanged<bool?> onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -64,13 +65,14 @@ class LabeledRadio extends StatelessWidget {
     required this.groupValue,
     required this.value,
     required this.onChanged,
-  });
+    Key? key,
+  }) : super(key: key);
 
   final String label;
   final EdgeInsets padding;
   final bool groupValue;
   final bool value;
-  final Function onChanged;
+  final ValueChanged<bool?> onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -99,13 +101,13 @@ class LabeledRadio extends StatelessWidget {
 }
 
 class RadioListTileDiagram extends StatefulWidget implements DiagramMetadata {
-  const RadioListTileDiagram(this.name);
+  const RadioListTileDiagram(this.name, {Key? key}) : super(key: key);
 
   @override
   final String name;
 
   @override
-  _RadioListTileDiagramState createState() => _RadioListTileDiagramState();
+  State<RadioListTileDiagram> createState() => _RadioListTileDiagramState();
 }
 
 class _RadioListTileDiagramState extends State<RadioListTileDiagram> {
@@ -156,9 +158,9 @@ class _RadioListTileDiagramState extends State<RadioListTileDiagram> {
                   padding: const EdgeInsets.symmetric(horizontal: 5.0),
                   value: true,
                   groupValue: _isRadioSelected,
-                  onChanged: (bool newValue) {
+                  onChanged: (bool? newValue) {
                     setState(() {
-                      _isRadioSelected = newValue;
+                      _isRadioSelected = newValue!;
                     });
                   },
                 ),
@@ -167,9 +169,9 @@ class _RadioListTileDiagramState extends State<RadioListTileDiagram> {
                   padding: const EdgeInsets.symmetric(horizontal: 5.0),
                   value: false,
                   groupValue: _isRadioSelected,
-                  onChanged: (bool newValue) {
+                  onChanged: (bool? newValue) {
                     setState(() {
-                      _isRadioSelected = newValue;
+                      _isRadioSelected = newValue!;
                     });
                   },
                 ),
@@ -192,9 +194,9 @@ class _RadioListTileDiagramState extends State<RadioListTileDiagram> {
                     padding: const EdgeInsets.symmetric(horizontal: 5.0),
                     value: true,
                     groupValue: _isRadioSelected,
-                    onChanged: (bool newValue) {
+                    onChanged: (bool? newValue) {
                       setState(() {
-                        _isRadioSelected = newValue;
+                        _isRadioSelected = newValue!;
                       });
                     },
                   ),
@@ -203,9 +205,9 @@ class _RadioListTileDiagramState extends State<RadioListTileDiagram> {
                     padding: const EdgeInsets.symmetric(horizontal: 5.0),
                     value: false,
                     groupValue: _isRadioSelected,
-                    onChanged: (bool newValue) {
+                    onChanged: (bool? newValue) {
                       setState(() {
-                        _isRadioSelected = newValue;
+                        _isRadioSelected = newValue!;
                       });
                     },
                   ),
@@ -235,6 +237,6 @@ class RadioListTileDiagramStep extends DiagramStep<RadioListTileDiagram> {
   @override
   Future<File> generateDiagram(RadioListTileDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawDiagramToFile(File('${diagram.name}.png'));
+    return controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }

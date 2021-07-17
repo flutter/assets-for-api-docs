@@ -21,7 +21,7 @@ const double _margin = 5.0;
 const double _gap = _margin * 5;
 
 abstract class FontFeatureDiagram<T> extends StatelessWidget implements DiagramMetadata {
-  const FontFeatureDiagram();
+  const FontFeatureDiagram({Key? key}) : super(key: key);
 
   Iterable<T> get entries;
   Widget buildEntry(BuildContext context, T entry);
@@ -93,7 +93,8 @@ class FontFeatureValueDiagram extends FontFeatureDiagram<int> {
     this.sampleText = 'The infamous Tuna Torture.', // from s03e09, of course
     this.style,
     this.additionalFontFeatures,
-  });
+    Key? key,
+  }) : super(key: key);
 
   @override
   String get name => 'font_feature_$feature';
@@ -130,7 +131,8 @@ class HistoricalFontFeatureDiagram extends FontFeatureDiagram<List<FontFeature>>
   const HistoricalFontFeatureDiagram(
     this.font, {
     required this.sampleText,
-  });
+    Key? key
+  }) : super(key: key);
 
   @override
   String get name => 'font_feature_historical';
@@ -162,7 +164,7 @@ class HistoricalFontFeatureDiagram extends FontFeatureDiagram<List<FontFeature>>
 }
 
 class LocalizedFontFeatureDiagram extends FontFeatureDiagram<Locale> {
-  const LocalizedFontFeatureDiagram();
+  const LocalizedFontFeatureDiagram({Key? key}) : super(key: key);
 
   @override
   String get name => 'font_feature_locl';
@@ -189,7 +191,7 @@ class LocalizedFontFeatureDiagram extends FontFeatureDiagram<Locale> {
 }
 
 abstract class SideBySideFontFeatureDiagram<T> extends FontFeatureDiagram<T> {
-  const SideBySideFontFeatureDiagram();
+  const SideBySideFontFeatureDiagram({Key? key}) : super(key: key);
 
   String get font;
 
@@ -245,7 +247,7 @@ abstract class SideBySideFontFeatureDiagram<T> extends FontFeatureDiagram<T> {
 }
 
 class CharacterVariantsFontFeatureDiagram extends SideBySideFontFeatureDiagram<String> {
-  const CharacterVariantsFontFeatureDiagram();
+  const CharacterVariantsFontFeatureDiagram({Key? key}) : super(key: key);
 
   @override
   String get name => 'font_feature_cvXX';
@@ -269,7 +271,7 @@ class CharacterVariantsFontFeatureDiagram extends SideBySideFontFeatureDiagram<S
 
     'cv12': '0',
     'cv17': '1',
-    'cv16': '\$',
+    'cv16': r'$',
     'cv15': '*',
   };
 
@@ -294,7 +296,7 @@ class CharacterVariantsFontFeatureDiagram extends SideBySideFontFeatureDiagram<S
 }
 
 class StylisticSetsFontFeatureDiagram1 extends SideBySideFontFeatureDiagram<String> {
-  const StylisticSetsFontFeatureDiagram1();
+  const StylisticSetsFontFeatureDiagram1({Key? key}) : super(key: key);
 
   @override
   String get name => 'font_feature_ssXX_1';
@@ -332,7 +334,7 @@ class StylisticSetsFontFeatureDiagram1 extends SideBySideFontFeatureDiagram<Stri
 }
 
 class StylisticSetsFontFeatureDiagram2 extends FontFeatureDiagram<int> {
-  const StylisticSetsFontFeatureDiagram2();
+  const StylisticSetsFontFeatureDiagram2({Key? key}) : super(key: key);
 
   @override
   String get name => 'font_feature_ssXX_2';
@@ -380,7 +382,7 @@ class FontFeatureDiagramStep extends DiagramStep<FontFeatureDiagram<Object>> {
   Future<List<FontFeatureDiagram<Object>>> get diagrams async => <FontFeatureDiagram<Object>>[
     const FontFeatureValueDiagram('aalt', <int>[0, 1, 2], 'Raleway'),
     const FontFeatureValueDiagram('afrc', <int>[0, 1], 'Ubuntu Mono', sampleText: 'Fractions: 1/2 2/3 3/4 4/5'),
-    const FontFeatureValueDiagram('calt', <int>[0, 1], 'Barriecito', sampleText: 'Ooohh, we weren\'t going to tell him that.'),
+    const FontFeatureValueDiagram('calt', <int>[0, 1], 'Barriecito', sampleText: "Ooohh, we weren't going to tell him that."),
     const FontFeatureValueDiagram('case', <int>[0, 1], 'Piazzolla', sampleText: '(A) [A] {A} «A» A/B A•B'),
     const CharacterVariantsFontFeatureDiagram(), // cvXX, uses 'Source Code Pro'
     const FontFeatureValueDiagram('dnom', <int>[0, 1], 'Piazzolla', sampleText: 'Fractions: 1/2 2/3 3/4 4/5'),
@@ -393,7 +395,7 @@ class FontFeatureDiagramStep extends DiagramStep<FontFeatureDiagram<Object>> {
     const FontFeatureValueDiagram('onum', <int>[0, 1], 'Piazzolla', sampleText: 'Call 311-555-2368 now!'),
     const FontFeatureValueDiagram('ordn', <int>[0, 1], 'Piazzolla', sampleText: '1st, 2nd, 3rd, 4th...'),
     const FontFeatureValueDiagram('pnum', <int>[0, 1], 'Kufam', sampleText: 'Call 311-555-2368 now!'),
-    const FontFeatureValueDiagram('salt', <int>[0, 1], 'Source Code Pro', sampleText: 'Agile Game - \$100 initial bet'),
+    const FontFeatureValueDiagram('salt', <int>[0, 1], 'Source Code Pro', sampleText: r'Agile Game - $100 initial bet'),
     const FontFeatureValueDiagram('sinf', <int>[0, 1], 'Piazzolla', sampleText: 'C8H10N4O2'),
     const StylisticSetsFontFeatureDiagram1(), // ssXX, uses 'Source Code Pro'
     const StylisticSetsFontFeatureDiagram2(), // ssXX, uses 'Piazzolla'
@@ -407,6 +409,6 @@ class FontFeatureDiagramStep extends DiagramStep<FontFeatureDiagram<Object>> {
   @override
   Future<File> generateDiagram(FontFeatureDiagram<Object> diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawDiagramToFile(File('${diagram.name}.png'));
+    return controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }

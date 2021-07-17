@@ -14,7 +14,7 @@ const String _basic = 'basic_cupertino_app';
 const String _theme = 'theme_cupertino_app';
 
 class CupertinoAppDiagram extends StatelessWidget implements DiagramMetadata {
-  const CupertinoAppDiagram(this.name);
+  const CupertinoAppDiagram(this.name, {Key? key}) : super(key: key);
 
   @override
   final String name;
@@ -83,6 +83,6 @@ class CupertinoAppDiagramStep extends DiagramStep<CupertinoAppDiagram> {
   @override
   Future<File> generateDiagram(CupertinoAppDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawDiagramToFile(File('${diagram.name}.png'));
+    return controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }

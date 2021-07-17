@@ -61,7 +61,8 @@ class CustomListItem extends StatelessWidget {
     required this.title,
     required this.user,
     required this.viewCount,
-  });
+    Key? key,
+  }) : super(key: key);
 
   final Widget thumbnail;
   final String title;
@@ -223,7 +224,7 @@ class CustomListItemTwo extends StatelessWidget {
   }
 }
 class CustomListItemDiagram extends StatelessWidget implements DiagramMetadata {
-  const CustomListItemDiagram(this.name);
+  const CustomListItemDiagram(this.name, {Key? key}) : super(key: key);
 
   @override
   final String name;
@@ -280,7 +281,7 @@ class CustomListItemDiagram extends StatelessWidget implements DiagramMetadata {
                   ),
                   title: 'Flutter 1.0 Launch',
                   subtitle:
-                    'Flutter continues to improve and expand its horizons.'
+                    'Flutter continues to improve and expand its horizons. '
                     'This text should max out at two lines and clip',
                   author: 'Dash',
                   publishDate: 'Dec 28',
@@ -321,7 +322,7 @@ class CustomListItemDiagramStep extends DiagramStep<CustomListItemDiagram> {
   @override
   Future<File> generateDiagram(CustomListItemDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawDiagramToFile(
+    return controller.drawDiagramToFile(
       File('${diagram.name}.png'),
     );
   }

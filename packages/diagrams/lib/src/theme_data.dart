@@ -20,7 +20,7 @@ final GlobalKey _appBarKey = GlobalKey();
 final GlobalKey _fabKey = GlobalKey();
 
 class ThemeDataDiagram extends StatelessWidget implements DiagramMetadata {
-  const ThemeDataDiagram(this.name);
+  const ThemeDataDiagram(this.name, {Key? key}) : super(key: key);
 
   @override
   final String name;
@@ -145,6 +145,6 @@ class ThemeDataDiagramStep extends DiagramStep<ThemeDataDiagram> {
   @override
   Future<File> generateDiagram(ThemeDataDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawDiagramToFile(File('${diagram.name}.png'));
+    return controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }

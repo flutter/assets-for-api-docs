@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'diagram_step.dart';
 
 class DataTableDiagram extends StatelessWidget implements DiagramMetadata {
-  const DataTableDiagram(this.name);
+  const DataTableDiagram(this.name, {Key? key}) : super(key: key);
 
   @override
   final String name;
@@ -90,6 +90,6 @@ class DataTableDiagramStep extends DiagramStep<DataTableDiagram> {
   @override
   Future<File> generateDiagram(DataTableDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawDiagramToFile(File('${diagram.name}.png'));
+    return controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }

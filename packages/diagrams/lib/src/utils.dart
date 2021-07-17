@@ -87,13 +87,13 @@ class LabelPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final RenderBox hero = heroKey.currentContext!.findRenderObject() as RenderBox;
-    final RenderBox diagram = canvasKey.currentContext!.findRenderObject() as RenderBox;
+    final RenderBox hero = heroKey.currentContext!.findRenderObject()! as RenderBox;
+    final RenderBox diagram = canvasKey.currentContext!.findRenderObject()! as RenderBox;
     final Paint dotPaint = Paint();
     final Paint linePaint = Paint()..strokeWidth = 2.0;
     final Offset heroTopLeft = diagram.globalToLocal(hero.localToGlobal(Offset.zero));
     for (final Label label in labels) {
-      final RenderBox box = label.key.currentContext!.findRenderObject() as RenderBox;
+      final RenderBox box = label.key.currentContext!.findRenderObject()! as RenderBox;
       final Offset anchor = diagram.globalToLocal(box.localToGlobal(label.anchor.alongSize(box.size)));
       final Offset anchorOnHero = anchor - heroTopLeft;
       final FractionalOffset relativeAnchor = FractionalOffset.fromOffsetAndSize(anchorOnHero, hero.size);

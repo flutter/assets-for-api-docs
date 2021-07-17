@@ -25,7 +25,7 @@ final List<GlobalKey> _tabKeys = <GlobalKey>[
 ];
 
 class TabsDiagram extends StatefulWidget implements DiagramMetadata {
-  const TabsDiagram(this.name);
+  const TabsDiagram(this.name, {Key? key}) : super(key: key);
 
   @override
   final String name;
@@ -103,10 +103,10 @@ class TabsDiagramStep extends DiagramStep<TabsDiagram> {
     RenderBox target;
     switch(now.inMilliseconds) {
       case 0:
-        target = _tabKeys[1].currentContext!.findRenderObject() as RenderBox;
+        target = _tabKeys[1].currentContext!.findRenderObject()! as RenderBox;
         break;
       case 2300:
-        target = _tabKeys[0].currentContext!.findRenderObject() as RenderBox;
+        target = _tabKeys[0].currentContext!.findRenderObject()! as RenderBox;
         break;
       default:
         return;
@@ -119,7 +119,7 @@ class TabsDiagramStep extends DiagramStep<TabsDiagram> {
   @override
   Future<File> generateDiagram(TabsDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawAnimatedDiagramToFiles(
+    return controller.drawAnimatedDiagramToFiles(
       end: _kTotalAnimationTime,
       frameRate: _kAnimationFrameRate,
       name: diagram.name,

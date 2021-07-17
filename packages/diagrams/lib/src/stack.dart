@@ -14,7 +14,7 @@ const String _stack = 'stack';
 const String _stackWithGradient = 'stack_with_gradient';
 
 class StackDiagram extends StatelessWidget implements DiagramMetadata {
-  const StackDiagram(this.name);
+  const StackDiagram(this.name, {Key? key}) : super(key: key);
 
   @override
   final String name;
@@ -106,6 +106,6 @@ class StackDiagramStep extends DiagramStep<StackDiagram> {
   @override
   Future<File> generateDiagram(StackDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawDiagramToFile(File('${diagram.name}.png'));
+    return controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }
