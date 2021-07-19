@@ -29,7 +29,13 @@ const double _kCurveAnimationFrameRate = 60.0;
 
 class SliverAppBarDiagram extends StatefulWidget implements DiagramMetadata {
 
-  const SliverAppBarDiagram({this.pinned = false, this.floating = false, this.snap = false, this.repeatAnimation = false});
+  const SliverAppBarDiagram({
+    this.pinned = false,
+    this.floating = false,
+    this.snap = false,
+    this.repeatAnimation = false,
+    Key? key,
+  }) : super(key: key);
 
   final bool pinned;
   final bool floating;
@@ -138,7 +144,7 @@ class SliverAppBarDiagramState extends State<SliverAppBarDiagram> with TickerPro
           SliverList(
             delegate: SliverChildListDelegate(List<Widget>.generate(20, (int i) {
               return Container(
-                color: i % 2 == 0 ? Colors.white : Colors.black12,
+                color: i.isEven ? Colors.white : Colors.black12,
                 height: 100.0,
                 child: Center(
                   child: Text('$i', textScaleFactor: 5),
@@ -179,7 +185,7 @@ class SliverAppBarDiagramStep extends DiagramStep<SliverAppBarDiagram> {
   @override
   Future<File> generateDiagram(SliverAppBarDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawAnimatedDiagramToFiles(
+    return controller.drawAnimatedDiagramToFiles(
       end: _kTotalDuration,
       frameRate: _kCurveAnimationFrameRate,
       name: diagram.name,

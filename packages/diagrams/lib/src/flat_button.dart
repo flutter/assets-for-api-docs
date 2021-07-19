@@ -14,7 +14,7 @@ const String _basic = 'flat_button';
 const String _properties = 'flat_button_properties';
 
 class FlatButtonDiagram extends StatelessWidget implements DiagramMetadata {
-  const FlatButtonDiagram(this.name);
+  const FlatButtonDiagram(this.name, {Key? key}) : super(key: key);
 
   @override
   final String name;
@@ -76,6 +76,6 @@ class FlatButtonDiagramStep extends DiagramStep<FlatButtonDiagram> {
   @override
   Future<File> generateDiagram(FlatButtonDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawDiagramToFile(File('${diagram.name}.png'));
+    return controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }

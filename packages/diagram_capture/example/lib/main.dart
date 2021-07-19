@@ -14,12 +14,12 @@ import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 
 class MyDiagram extends StatefulWidget {
-  const MyDiagram({this.size = 1.0});
+  const MyDiagram({this.size = 1.0, Key? key}) : super(key: key);
 
   final double size;
 
   @override
-  _MyDiagramState createState() => _MyDiagramState();
+  State<MyDiagram> createState() => _MyDiagramState();
 }
 
 class _MyDiagramState extends State<MyDiagram> {

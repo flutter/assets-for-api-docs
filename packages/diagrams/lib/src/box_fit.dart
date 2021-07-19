@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 import 'diagram_step.dart';
 
 class BoxFitDiagram extends StatelessWidget implements DiagramMetadata {
-  const BoxFitDiagram(this.fit);
+  const BoxFitDiagram(this.fit, {Key? key}) : super(key: key);
 
   final BoxFit fit;
 
@@ -47,7 +47,7 @@ class BoxFitDiagram extends StatelessWidget implements DiagramMetadata {
         ),
       ),
     );
-    return Container(
+    return SizedBox(
       key: UniqueKey(),
       width: 300.0,
       height: 90.0,
@@ -98,6 +98,6 @@ class BoxFitDiagramStep extends DiagramStep<BoxFitDiagram> {
   @override
   Future<File> generateDiagram(BoxFitDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawDiagramToFile(File('${diagram.name}.png'));
+    return controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }

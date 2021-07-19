@@ -20,7 +20,7 @@ const String _textBorder = 'text_border';
 const String _textGradient = 'text_gradient';
 
 class TextDiagram extends StatelessWidget implements DiagramMetadata {
-  const TextDiagram(this.name);
+  const TextDiagram(this.name, {Key? key}) : super(key: key);
 
   @override
   final String name;
@@ -138,7 +138,7 @@ class TextDiagram extends StatelessWidget implements DiagramMetadata {
 }
 
 class TextHeightDiagram extends StatelessWidget implements DiagramMetadata {
-  const TextHeightDiagram(this.name);
+  const TextHeightDiagram(this.name, {Key? key}) : super(key: key);
 
   @override
   final String name;
@@ -311,7 +311,7 @@ class TextDiagramPainter extends CustomPainter {
 
 // Height values comparison.
 class TextHeightComparison extends TextHeightDiagram implements DiagramMetadata {
-  const TextHeightComparison(String name) : super(name);
+  const TextHeightComparison(String name, {Key? key}) : super(name, key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -377,7 +377,7 @@ class TextHeightComparisonPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final Paint paint = Paint();
-    if (index % 2 == 0) {
+    if (index.isEven) {
       paint.color = const Color.fromARGB(255, 235, 235, 235);
     } else {
       paint.color = const Color.fromARGB(255, 250, 250, 250);
@@ -489,7 +489,7 @@ class TextHeightComparisonPainter extends CustomPainter {
 /// Side-by-side comparison of paragraphs with different text height
 /// configuration combinations.
 class TextHeightBreakdown extends TextHeightDiagram implements DiagramMetadata {
-  const TextHeightBreakdown(String name) : super(name);
+  const TextHeightBreakdown(String name, {Key? key}) : super(name, key: key);
 
   static const double _height = 4;
   static const double _fontSize = 85;
@@ -690,7 +690,7 @@ class RenderTextHeightBreakdown extends RenderBox with RenderObjectWithChildMixi
     markNeedsLayout();
   }
 
-  TextSpan get text => _textPainter.text as TextSpan;
+  TextSpan get text => _textPainter.text! as TextSpan;
   set text(TextSpan? value) {
     if (_textPainter.text == value)
       return;
@@ -746,7 +746,7 @@ class RenderTextHeightBreakdown extends RenderBox with RenderObjectWithChildMixi
   }
 
   late final TextPainter heightCaptionTextPainter = TextPainter(textDirection: textDirection, textAlign: TextAlign.center);
-  static late final TextStyle heightCaptionTextStyle = TextStyle(fontSize: 20, color: Colors.blue[900]!);
+  static late final TextStyle heightCaptionTextStyle = TextStyle(fontSize: 20, color: Colors.blue[900]);
   static const Offset fontMetricsLabelPadding = Offset(0, 3);
   static const double heightCaptionBracketMinX = -25;
 
@@ -839,7 +839,7 @@ class RenderTextHeightBreakdown extends RenderBox with RenderObjectWithChildMixi
   }
 
   void _doPaintLeadingIndicators(Canvas canvas, Size size, Rect glyphsBox) {
-    final TextStyle textStyle = TextStyle(fontSize: 9, color: Colors.blue[900]!);
+    final TextStyle textStyle = TextStyle(fontSize: 9, color: Colors.blue[900]);
     final TextPainter labelPainter = TextPainter(
       text: TextSpan(text: 'Top Leading', style: textStyle),
       textAlign: TextAlign.right,
@@ -943,7 +943,7 @@ class RenderTextHeightBreakdown extends RenderBox with RenderObjectWithChildMixi
         text:'Font Ascent',
         style: TextStyle(
           fontSize: 9,
-          color: Colors.red[900]!,
+          color: Colors.red[900],
         ),
       ),
       textAlign: TextAlign.right,
@@ -958,7 +958,7 @@ class RenderTextHeightBreakdown extends RenderBox with RenderObjectWithChildMixi
       text: 'Font Descent',
       style: TextStyle(
         fontSize: 9,
-        color: Colors.red[900]!,
+        color: Colors.red[900],
       ),
     );
     labelPainter.layout();
@@ -982,7 +982,7 @@ class RenderTextHeightBreakdown extends RenderBox with RenderObjectWithChildMixi
       text: 'Text Top',
       style: TextStyle(
         fontSize: 9,
-        color: Colors.blue[900]!,
+        color: Colors.blue[900],
       ),
     );
     labelPainter.layout();
@@ -993,7 +993,7 @@ class RenderTextHeightBreakdown extends RenderBox with RenderObjectWithChildMixi
       text: 'Text Bottom',
       style: TextStyle(
         fontSize: 9,
-        color: Colors.blue[900]!,
+        color: Colors.blue[900],
       ),
     );
     labelPainter.layout();
@@ -1018,7 +1018,7 @@ class TextHeightDiagramStep extends DiagramStep<TextHeightDiagram> {
   @override
   Future<File> generateDiagram(TextHeightDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawDiagramToFile(File('${diagram.name}.png'));
+    return controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }
 
@@ -1040,6 +1040,6 @@ class TextDiagramStep extends DiagramStep<TextDiagram> {
   @override
   Future<File> generateDiagram(TextDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawDiagramToFile(File('${diagram.name}.png'));
+    return controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }

@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'diagram_step.dart';
 
 class ListViewDiagram extends StatelessWidget implements DiagramMetadata {
-  const ListViewDiagram(this.name);
+  const ListViewDiagram(this.name, {Key? key}) : super(key: key);
 
   @override
   final String name;
@@ -102,6 +102,6 @@ class ListViewDiagramStep extends DiagramStep<ListViewDiagram> {
   @override
   Future<File> generateDiagram(ListViewDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawDiagramToFile(File('${diagram.name}.png'));
+    return controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }

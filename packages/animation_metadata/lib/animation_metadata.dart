@@ -22,20 +22,20 @@ class AnimationMetadata {
   factory AnimationMetadata.fromFile(File metadataFile) {
     assert(metadataFile.existsSync());
     metadataFile = File(path.normalize(metadataFile.absolute.path));
-    final Map<String, dynamic> metadata = json.decode(metadataFile.readAsStringSync()) as Map<String, dynamic>;
+    final Map<String, Object?> metadata = json.decode(metadataFile.readAsStringSync()) as Map<String, dynamic>;
     final String baseDir = path.dirname(metadataFile.absolute.path);
-    final List<File> frameFiles = metadata[_frameFilesKey].map<File>(
+    final List<File> frameFiles = (metadata[_frameFilesKey]! as List<String>).map<File>(
           (dynamic name) {
         return File(path.normalize(path.join(baseDir, name as String)));
       },
-    ).toList() as List<File>;
-    final Duration duration = Duration(milliseconds: metadata[_durationMsKey] as int);
+    ).toList();
+    final Duration duration = Duration(milliseconds: metadata[_durationMsKey]! as int);
     return AnimationMetadata.fromData(
       metadataFile: metadataFile,
-      name: metadata[_nameKey] as String,
-      category: metadata[_categoryKey] as String,
+      name: metadata[_nameKey]! as String,
+      category: metadata[_categoryKey]! as String,
       duration: duration,
-      frameRate: metadata[_frameRateKey] as double,
+      frameRate: metadata[_frameRateKey]! as double,
       frameFiles: frameFiles,
     );
   }

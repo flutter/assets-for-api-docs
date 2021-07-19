@@ -14,7 +14,7 @@ import 'diagram_step.dart';
 const String _basic = 'dropdown_button';
 
 class DropdownButtonDiagram extends StatelessWidget implements DiagramMetadata {
-  const DropdownButtonDiagram(this.name, this.buttonKey);
+  const DropdownButtonDiagram(this.name, this.buttonKey, {Key? key}) : super(key: key);
 
   @override
   final String name;
@@ -72,6 +72,6 @@ class DropdownButtonDiagramStep extends DiagramStep<DropdownButtonDiagram> {
   @override
   Future<File> generateDiagram(DropdownButtonDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawDiagramToFile(File('${diagram.name}.png'));
+    return controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }

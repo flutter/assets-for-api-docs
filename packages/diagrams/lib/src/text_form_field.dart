@@ -14,7 +14,7 @@ const String _textFormField = 'text_form_field';
 const String _textFormFieldError = 'text_form_field_error';
 
 class TextFormFieldDiagram extends StatelessWidget implements DiagramMetadata {
-  const TextFormFieldDiagram(this.name);
+  const TextFormFieldDiagram(this.name, {Key? key}) : super(key: key);
 
   @override
   final String name;
@@ -83,6 +83,6 @@ class TextFormFieldDiagramStep extends DiagramStep<TextFormFieldDiagram> {
   @override
   Future<File> generateDiagram(TextFormFieldDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawDiagramToFile(File('${diagram.name}.png'));
+    return controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }

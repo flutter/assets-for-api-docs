@@ -14,7 +14,7 @@ const String _column = 'expanded_column';
 const String _row = 'expanded_row';
 
 class ExpandedDiagram extends StatelessWidget implements DiagramMetadata {
-  const ExpandedDiagram(this.name);
+  const ExpandedDiagram(this.name, {Key? key}) : super(key: key);
 
   @override
   final String name;
@@ -117,6 +117,6 @@ class ExpandedDiagramStep extends DiagramStep<ExpandedDiagram> {
   @override
   Future<File> generateDiagram(ExpandedDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawDiagramToFile(File('${diagram.name}.png'));
+    return controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }

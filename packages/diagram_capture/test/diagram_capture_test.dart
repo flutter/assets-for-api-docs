@@ -42,8 +42,10 @@ class TestAnimatedDiagram extends StatelessWidget {
 }
 
 class TestTappableDiagram extends StatefulWidget {
+  const TestTappableDiagram({Key? key}) : super(key: key);
+
   @override
-  _TestTappableDiagramState createState() => _TestTappableDiagramState();
+  State<TestTappableDiagram> createState() => _TestTappableDiagramState();
 }
 
 class _TestTappableDiagramState extends State<TestTappableDiagram> {
@@ -172,8 +174,8 @@ void main() {
       Map<String, dynamic> _loadMetadata(File metadataFile) {
         final Map<String, dynamic> metadata = json.decode(metadataFile.readAsStringSync()) as Map<String, dynamic>;
         final String baseDir = path.dirname(metadataFile.absolute.path);
-        final List<File> frameFiles = metadata['frame_files']
-            .map<File>((dynamic name) => File(path.normalize(path.join(baseDir, name as String)))).toList() as List<File>;
+        final List<File> frameFiles = (metadata['frame_files']! as List<dynamic>)
+            .map<File>((dynamic name) => File(path.normalize(path.join(baseDir, name as String)))).toList();
         metadata['frame_files'] = frameFiles;
         return metadata;
       }
@@ -214,7 +216,7 @@ void main() {
 
     test('can inject gestures', () async {
       final DiagramController controller = DiagramController(
-        builder: (BuildContext context) => TestTappableDiagram(),
+        builder: (BuildContext context) => const TestTappableDiagram(),
         outputDirectory: outputDir,
         pixelRatio: 1.0,
         screenDimensions: const Size(100.0, 100.0),

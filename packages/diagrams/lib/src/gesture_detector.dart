@@ -17,13 +17,13 @@ final Duration _totalDuration = _pauseDuration + _pauseDuration;
 final GlobalKey _gestureDetectorKey = GlobalKey();
 
 class GestureDetectorDiagram extends StatefulWidget implements DiagramMetadata {
-  const GestureDetectorDiagram(this.name);
+  const GestureDetectorDiagram(this.name, {Key? key}) : super(key: key);
 
   @override
   final String name;
 
   @override
-  _GestureDetectorDiagramState createState() => _GestureDetectorDiagramState();
+  State<GestureDetectorDiagram> createState() => _GestureDetectorDiagramState();
 }
 
 class _GestureDetectorDiagramState extends State<GestureDetectorDiagram> {
@@ -95,7 +95,7 @@ class GestureDetectorDiagramStep extends DiagramStep<GestureDetectorDiagram> {
 
     await Future<void>.delayed(_pauseDuration);
 
-    final RenderBox target = _gestureDetectorKey.currentContext!.findRenderObject() as RenderBox;
+    final RenderBox target = _gestureDetectorKey.currentContext!.findRenderObject()! as RenderBox;
     final Offset targetOffset = target.localToGlobal(target.size.center(Offset.zero));
     final TestGesture gesture = await controller.startGesture(targetOffset);
     await gesture.up();

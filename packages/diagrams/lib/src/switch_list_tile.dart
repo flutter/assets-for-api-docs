@@ -15,12 +15,13 @@ class LinkedLabelSwitch extends StatelessWidget {
     required this.padding,
     required this.value,
     required this.onChanged,
-  });
+    Key? key,
+  }) : super(key: key);
 
   final String label;
   final EdgeInsets padding;
   final bool value;
-  final Function onChanged;
+  final ValueChanged<bool> onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -62,13 +63,14 @@ class LabeledSwitch extends StatelessWidget {
     this.groupValue = false,
     required this.value,
     required this.onChanged,
-  });
+    Key? key,
+  }) : super(key: key);
 
   final String label;
   final EdgeInsets padding;
   final bool groupValue;
   final bool value;
-  final Function onChanged;
+  final ValueChanged<bool> onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -95,13 +97,13 @@ class LabeledSwitch extends StatelessWidget {
 }
 
 class SwitchListTileDiagram extends StatefulWidget implements DiagramMetadata {
-  const SwitchListTileDiagram(this.name);
+  const SwitchListTileDiagram(this.name, {Key? key}) : super(key: key);
 
   @override
   final String name;
 
   @override
-  _SwitchListTileDiagramState createState() => _SwitchListTileDiagramState();
+  State<SwitchListTileDiagram> createState() => _SwitchListTileDiagramState();
 }
 
 class _SwitchListTileDiagramState extends State<SwitchListTileDiagram> {
@@ -189,6 +191,6 @@ class SwitchListTileDiagramStep extends DiagramStep<SwitchListTileDiagram> {
   @override
   Future<File> generateDiagram(SwitchListTileDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawDiagramToFile(File('${diagram.name}.png'));
+    return controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }

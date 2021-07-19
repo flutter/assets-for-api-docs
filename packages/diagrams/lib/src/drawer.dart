@@ -18,7 +18,7 @@ final Duration _totalDuration =
 final GlobalKey _menuKey = GlobalKey();
 
 class DrawerDiagram extends StatelessWidget implements DiagramMetadata {
-  const DrawerDiagram(this.name);
+  const DrawerDiagram(this.name, {Key? key}) : super(key: key);
 
   @override
   final String name;
@@ -123,7 +123,7 @@ class DrawerDiagramStep extends DiagramStep<DrawerDiagram> {
 
     await Future<void>.delayed(_pauseDuration);
 
-    final RenderBox target = _menuKey.currentContext!.findRenderObject() as RenderBox;
+    final RenderBox target = _menuKey.currentContext!.findRenderObject()! as RenderBox;
     final Offset targetOffset = target.localToGlobal(target.size.center(Offset.zero));
     final TestGesture gesture = await controller.startGesture(targetOffset);
     await gesture.up();

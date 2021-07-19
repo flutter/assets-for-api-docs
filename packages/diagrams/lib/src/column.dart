@@ -14,7 +14,7 @@ const String _column = 'column';
 const String _columnWithProperties = 'column_properties';
 
 class ColumnDiagram extends StatelessWidget implements DiagramMetadata {
-  const ColumnDiagram(this.name);
+  const ColumnDiagram(this.name, {Key? key}) : super(key: key);
 
   @override
   final String name;
@@ -87,6 +87,6 @@ class ColumnDiagramStep extends DiagramStep<ColumnDiagram> {
   @override
   Future<File> generateDiagram(ColumnDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawDiagramToFile(File('${diagram.name}.png'));
+    return controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }

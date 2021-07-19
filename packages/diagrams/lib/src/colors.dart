@@ -15,12 +15,14 @@ const double _kFontSize = 19.0;
 const double _kPadding = 10.0;
 
 abstract class ColorDiagram extends StatelessWidget implements DiagramMetadata {
+  const ColorDiagram({Key? key}) : super(key: key);
+
   @override
   String get name;
 }
 
 class ColorSwatchDiagram extends ColorDiagram {
-  ColorSwatchDiagram(this.name, this.swatch, this.keys);
+  const ColorSwatchDiagram(this.name, this.swatch, this.keys, {Key? key}) : super(key: key);
 
   @override
   final String name;
@@ -75,7 +77,7 @@ class ColorSwatchDiagram extends ColorDiagram {
 }
 
 class ColorListDiagram extends ColorDiagram {
-  ColorListDiagram(this.name, this.background, this.colors);
+  const ColorListDiagram(this.name, this.background, this.colors, {Key? key}) : super(key: key);
 
   @override
   final String name;
@@ -122,42 +124,42 @@ class ColorsDiagramStep extends DiagramStep<ColorDiagram> {
     const List<int> accentPalette = <int>[100, 200, 400, 700];
     const List<int> greyPalette = <int>[50, 100, 200, 300, 350, 400, 500, 600, 700, 800, 850, 900];
     _diagrams.addAll(<ColorDiagram>[
-      ColorSwatchDiagram('Colors.red', Colors.red, palette),
-      ColorSwatchDiagram('Colors.pink', Colors.pink, palette),
-      ColorSwatchDiagram('Colors.purple', Colors.purple, palette),
-      ColorSwatchDiagram('Colors.deepPurple', Colors.deepPurple, palette),
-      ColorSwatchDiagram('Colors.indigo', Colors.indigo, palette),
-      ColorSwatchDiagram('Colors.blue', Colors.blue, palette),
-      ColorSwatchDiagram('Colors.lightBlue', Colors.lightBlue, palette),
-      ColorSwatchDiagram('Colors.cyan', Colors.cyan, palette),
-      ColorSwatchDiagram('Colors.teal', Colors.teal, palette),
-      ColorSwatchDiagram('Colors.green', Colors.green, palette),
-      ColorSwatchDiagram('Colors.lightGreen', Colors.lightGreen, palette),
-      ColorSwatchDiagram('Colors.lime', Colors.lime, palette),
-      ColorSwatchDiagram('Colors.yellow', Colors.yellow, palette),
-      ColorSwatchDiagram('Colors.amber', Colors.amber, palette),
-      ColorSwatchDiagram('Colors.orange', Colors.orange, palette),
-      ColorSwatchDiagram('Colors.deepOrange', Colors.deepOrange, palette),
-      ColorSwatchDiagram('Colors.brown', Colors.brown, palette),
-      ColorSwatchDiagram('Colors.blueGrey', Colors.blueGrey, palette),
-      ColorSwatchDiagram('Colors.redAccent', Colors.redAccent, accentPalette),
-      ColorSwatchDiagram('Colors.pinkAccent', Colors.pinkAccent, accentPalette),
-      ColorSwatchDiagram('Colors.purpleAccent', Colors.purpleAccent, accentPalette),
-      ColorSwatchDiagram('Colors.deepPurpleAccent', Colors.deepPurpleAccent, accentPalette),
-      ColorSwatchDiagram('Colors.indigoAccent', Colors.indigoAccent, accentPalette),
-      ColorSwatchDiagram('Colors.blueAccent', Colors.blueAccent, accentPalette),
-      ColorSwatchDiagram('Colors.lightBlueAccent', Colors.lightBlueAccent, accentPalette),
-      ColorSwatchDiagram('Colors.cyanAccent', Colors.cyanAccent, accentPalette),
-      ColorSwatchDiagram('Colors.tealAccent', Colors.tealAccent, accentPalette),
-      ColorSwatchDiagram('Colors.greenAccent', Colors.greenAccent, accentPalette),
-      ColorSwatchDiagram('Colors.lightGreenAccent', Colors.lightGreenAccent, accentPalette),
-      ColorSwatchDiagram('Colors.limeAccent', Colors.limeAccent, accentPalette),
-      ColorSwatchDiagram('Colors.yellowAccent', Colors.yellowAccent, accentPalette),
-      ColorSwatchDiagram('Colors.amberAccent', Colors.amberAccent, accentPalette),
-      ColorSwatchDiagram('Colors.orangeAccent', Colors.orangeAccent, accentPalette),
-      ColorSwatchDiagram('Colors.deepOrangeAccent', Colors.deepOrangeAccent, accentPalette),
-      ColorSwatchDiagram('Colors.grey', Colors.grey, greyPalette),
-      ColorListDiagram('Colors.blacks', Colors.white, const <String, Color>{
+      const ColorSwatchDiagram('Colors.red', Colors.red, palette),
+      const ColorSwatchDiagram('Colors.pink', Colors.pink, palette),
+      const ColorSwatchDiagram('Colors.purple', Colors.purple, palette),
+      const ColorSwatchDiagram('Colors.deepPurple', Colors.deepPurple, palette),
+      const ColorSwatchDiagram('Colors.indigo', Colors.indigo, palette),
+      const ColorSwatchDiagram('Colors.blue', Colors.blue, palette),
+      const ColorSwatchDiagram('Colors.lightBlue', Colors.lightBlue, palette),
+      const ColorSwatchDiagram('Colors.cyan', Colors.cyan, palette),
+      const ColorSwatchDiagram('Colors.teal', Colors.teal, palette),
+      const ColorSwatchDiagram('Colors.green', Colors.green, palette),
+      const ColorSwatchDiagram('Colors.lightGreen', Colors.lightGreen, palette),
+      const ColorSwatchDiagram('Colors.lime', Colors.lime, palette),
+      const ColorSwatchDiagram('Colors.yellow', Colors.yellow, palette),
+      const ColorSwatchDiagram('Colors.amber', Colors.amber, palette),
+      const ColorSwatchDiagram('Colors.orange', Colors.orange, palette),
+      const ColorSwatchDiagram('Colors.deepOrange', Colors.deepOrange, palette),
+      const ColorSwatchDiagram('Colors.brown', Colors.brown, palette),
+      const ColorSwatchDiagram('Colors.blueGrey', Colors.blueGrey, palette),
+      const ColorSwatchDiagram('Colors.redAccent', Colors.redAccent, accentPalette),
+      const ColorSwatchDiagram('Colors.pinkAccent', Colors.pinkAccent, accentPalette),
+      const ColorSwatchDiagram('Colors.purpleAccent', Colors.purpleAccent, accentPalette),
+      const ColorSwatchDiagram('Colors.deepPurpleAccent', Colors.deepPurpleAccent, accentPalette),
+      const ColorSwatchDiagram('Colors.indigoAccent', Colors.indigoAccent, accentPalette),
+      const ColorSwatchDiagram('Colors.blueAccent', Colors.blueAccent, accentPalette),
+      const ColorSwatchDiagram('Colors.lightBlueAccent', Colors.lightBlueAccent, accentPalette),
+      const ColorSwatchDiagram('Colors.cyanAccent', Colors.cyanAccent, accentPalette),
+      const ColorSwatchDiagram('Colors.tealAccent', Colors.tealAccent, accentPalette),
+      const ColorSwatchDiagram('Colors.greenAccent', Colors.greenAccent, accentPalette),
+      const ColorSwatchDiagram('Colors.lightGreenAccent', Colors.lightGreenAccent, accentPalette),
+      const ColorSwatchDiagram('Colors.limeAccent', Colors.limeAccent, accentPalette),
+      const ColorSwatchDiagram('Colors.yellowAccent', Colors.yellowAccent, accentPalette),
+      const ColorSwatchDiagram('Colors.amberAccent', Colors.amberAccent, accentPalette),
+      const ColorSwatchDiagram('Colors.orangeAccent', Colors.orangeAccent, accentPalette),
+      const ColorSwatchDiagram('Colors.deepOrangeAccent', Colors.deepOrangeAccent, accentPalette),
+      const ColorSwatchDiagram('Colors.grey', Colors.grey, greyPalette),
+      const ColorListDiagram('Colors.blacks', Colors.white, <String, Color>{
         'black': Colors.black,
         'black12': Colors.black12,
         'black26': Colors.black26,
@@ -166,7 +168,7 @@ class ColorsDiagramStep extends DiagramStep<ColorDiagram> {
         'black54': Colors.black54,
         'black87': Colors.black87,
       }),
-      ColorListDiagram('Colors.whites', Colors.black, const <String, Color>{
+      const ColorListDiagram('Colors.whites', Colors.black, <String, Color>{
         'white': Colors.white,
         'white10': Colors.white10,
         'white12': Colors.white12,
@@ -191,6 +193,6 @@ class ColorsDiagramStep extends DiagramStep<ColorDiagram> {
   @override
   Future<File> generateDiagram(ColorDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawDiagramToFile(File('${diagram.name}.png'));
+    return controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }

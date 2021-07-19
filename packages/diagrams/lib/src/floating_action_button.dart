@@ -14,7 +14,7 @@ const String _basic = 'floating_action_button';
 const String _labeled = 'floating_action_button_label';
 
 class FloatingActionButtonDiagram extends StatelessWidget implements DiagramMetadata {
-  const FloatingActionButtonDiagram(this.name);
+  const FloatingActionButtonDiagram(this.name, {Key? key}) : super(key: key);
 
   @override
   final String name;
@@ -84,6 +84,6 @@ class FloatingActionButtonDiagramStep extends DiagramStep<FloatingActionButtonDi
   @override
   Future<File> generateDiagram(FloatingActionButtonDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawDiagramToFile(File('${diagram.name}.png'));
+    return controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }

@@ -12,16 +12,17 @@ import 'diagram_step.dart';
 
 class LinkedLabelCheckbox extends StatelessWidget {
   const LinkedLabelCheckbox({
+    Key? key,
     required this.label,
     required this.padding,
     required this.value,
     required this.onChanged,
-  });
+  }) : super(key: key);
 
   final String label;
   final EdgeInsets padding;
   final bool value;
-  final Function onChanged;
+  final ValueChanged<bool?> onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -58,16 +59,17 @@ class LinkedLabelCheckbox extends StatelessWidget {
 
 class LabeledCheckbox extends StatelessWidget {
   const LabeledCheckbox({
+    Key? key,
     required this.label,
     required this.padding,
     required this.value,
     required this.onChanged,
-  });
+  }) : super(key: key);
 
   final String label;
   final EdgeInsets padding;
   final bool value;
-  final Function onChanged;
+  final ValueChanged<bool> onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +85,7 @@ class LabeledCheckbox extends StatelessWidget {
             Checkbox(
               value: value,
               onChanged: (bool? newValue) {
-                onChanged(newValue);
+                onChanged(newValue!);
               },
             ),
           ],
@@ -94,13 +96,13 @@ class LabeledCheckbox extends StatelessWidget {
 }
 
 class CheckboxListTileDiagram extends StatefulWidget implements DiagramMetadata {
-  const CheckboxListTileDiagram(this.name);
+  const CheckboxListTileDiagram(this.name, {Key? key}) : super(key: key);
 
   @override
   final String name;
 
   @override
-  _CheckboxListTileDiagramState createState() => _CheckboxListTileDiagramState();
+  State<CheckboxListTileDiagram> createState() => _CheckboxListTileDiagramState();
 }
 
 class _CheckboxListTileDiagramState extends State<CheckboxListTileDiagram> {
@@ -139,9 +141,9 @@ class _CheckboxListTileDiagramState extends State<CheckboxListTileDiagram> {
               label: 'Linked, tappable label text',
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               value: _isSelected,
-              onChanged: (bool newValue) {
+              onChanged: (bool? newValue) {
                 setState(() {
-                  _isSelected = newValue;
+                  _isSelected = newValue!;
                 });
               }),
             ),
@@ -188,6 +190,6 @@ class CheckboxListTileDiagramStep extends DiagramStep<CheckboxListTileDiagram> {
   @override
   Future<File> generateDiagram(CheckboxListTileDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawDiagramToFile(File('${diagram.name}.png'));
+    return controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }

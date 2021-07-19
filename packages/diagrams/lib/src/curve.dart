@@ -223,7 +223,7 @@ class TranslateSampleTile extends StatelessWidget {
           padding: const EdgeInsets.all(6.0),
           child: ClipRRect(
             borderRadius: outerRadius,
-            child: Container(
+            child: Container( // ignore: avoid_unnecessary_containers
               width: containerSize,
               height: containerSize,
               alignment: Alignment.center,
@@ -321,7 +321,8 @@ class CurveDiagram extends StatefulWidget implements DiagramMetadata {
     required this.caption,
     this.duration = _kCurveAnimationDuration,
     required this.curve,
-  }) : name = 'curve_$name';
+    Key? key,
+  }) : name = 'curve_$name', super(key: key);
 
   @override
   final String name;
@@ -488,7 +489,7 @@ class CurveDiagramStep extends DiagramStep<CurveDiagram> {
   @override
   Future<File> generateDiagram(CurveDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawAnimatedDiagramToFiles(
+    return controller.drawAnimatedDiagramToFiles(
       end: _kCurveAnimationDuration,
       frameRate: _kCurveAnimationFrameRate,
       name: diagram.name,

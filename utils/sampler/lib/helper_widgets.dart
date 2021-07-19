@@ -236,7 +236,7 @@ class CodePanel extends StatefulWidget {
   final Color? color;
 
   @override
-  _CodePanelState createState() => _CodePanelState();
+  State<CodePanel> createState() => _CodePanelState();
 }
 
 class _CodePanelState extends State<CodePanel> {

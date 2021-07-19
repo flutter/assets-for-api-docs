@@ -26,7 +26,7 @@ int pageIndex = 0;
 
 Future<Image> getImage(ImageProvider provider) {
   final Completer<Image> completer = Completer<Image>();
-  final ImageStream stream = provider.resolve(const ImageConfiguration());
+  final ImageStream stream = provider.resolve(ImageConfiguration.empty);
   late final ImageStreamListener listener;
   listener = ImageStreamListener(
     (ImageInfo image, bool sync) {
@@ -44,7 +44,7 @@ Future<Image> getImage(ImageProvider provider) {
 }
 
 class BlendModeDiagram extends StatelessWidget implements DiagramMetadata {
-  const BlendModeDiagram(this.mode);
+  const BlendModeDiagram(this.mode, {Key? key}) : super(key: key);
 
   final BlendMode mode;
 
@@ -265,6 +265,6 @@ class BlendModeDiagramStep extends DiagramStep<BlendModeDiagram> {
   @override
   Future<File> generateDiagram(BlendModeDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawDiagramToFile(File('${diagram.name}.png'));
+    return controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }

@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'diagram_step.dart';
 
 class DividerDiagram extends StatelessWidget implements DiagramMetadata {
-  const DividerDiagram(this.name);
+  const DividerDiagram(this.name, {Key? key}) : super(key: key);
 
   @override
   final String name;
@@ -72,6 +72,6 @@ class DividerDiagramStep extends DiagramStep<DividerDiagram> {
   @override
   Future<File> generateDiagram(DividerDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawDiagramToFile(File('${diagram.name}.png'));
+    return controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }

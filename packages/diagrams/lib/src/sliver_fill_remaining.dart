@@ -20,7 +20,7 @@ final Duration _kTotalDuration = _kScrollPauseDuration + _kScrollUpDuration + _k
 const double _kCurveAnimationFrameRate = 60.0;
 
 class SliverFillRemainingDiagram extends StatefulWidget implements DiagramMetadata {
-  const SliverFillRemainingDiagram();
+  const SliverFillRemainingDiagram({Key? key}) : super(key: key);
 
   @override
   String get name => 'sliver_fill_remaining_fill_overscroll';
@@ -135,7 +135,7 @@ class SliverFillRemainingDiagramStep extends DiagramStep<SliverFillRemainingDiag
   @override
   Future<File> generateDiagram(SliverFillRemainingDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawAnimatedDiagramToFiles(
+    return controller.drawAnimatedDiagramToFiles(
       end: _kTotalDuration,
       frameRate: _kCurveAnimationFrameRate,
       name: diagram.name,

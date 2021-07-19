@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'diagram_step.dart';
 
 class ContainerDiagram extends StatelessWidget implements DiagramMetadata {
-  const ContainerDiagram(this.name);
+  const ContainerDiagram(this.name, {Key? key}) : super(key: key);
 
   @override
   final String name;
@@ -73,6 +73,6 @@ class ContainerDiagramStep extends DiagramStep<ContainerDiagram> {
   @override
   Future<File> generateDiagram(ContainerDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawDiagramToFile(File('${diagram.name}.png'));
+    return controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }

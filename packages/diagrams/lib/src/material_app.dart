@@ -14,7 +14,7 @@ const String _basic = 'basic_material_app';
 const String _theme = 'theme_material_app';
 
 class MaterialAppDiagram extends StatelessWidget implements DiagramMetadata {
-  const MaterialAppDiagram(this.name);
+  const MaterialAppDiagram(this.name, {Key? key}) : super(key: key);
 
   @override
   final String name;
@@ -77,6 +77,6 @@ class MaterialAppDiagramStep extends DiagramStep<MaterialAppDiagram> {
   @override
   Future<File> generateDiagram(MaterialAppDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawDiagramToFile(File('${diagram.name}.png'));
+    return controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }

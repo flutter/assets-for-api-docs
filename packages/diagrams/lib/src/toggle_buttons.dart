@@ -36,7 +36,7 @@ class ToggleButtonsDiagram extends StatefulWidget implements DiagramMetadata {
   final String name;
 
   @override
-  _ToggleButtonsDiagramState createState() => _ToggleButtonsDiagramState();
+  State<ToggleButtonsDiagram> createState() => _ToggleButtonsDiagramState();
 }
 
 class _ToggleButtonsDiagramState extends State<ToggleButtonsDiagram> {
@@ -167,7 +167,7 @@ class ToggleButtonsDiagramStep extends DiagramStep<ToggleButtonsDiagram> {
       final List<int> steps = tapSteps[_testName]!;
       if (_stepCount < steps.length) {
         final int targetIcon = steps[_stepCount];
-        target = _iconKeys[targetIcon].currentContext!.findRenderObject() as RenderBox;
+        target = _iconKeys[targetIcon].currentContext!.findRenderObject()! as RenderBox;
         final Offset targetOffset = target.localToGlobal(target.size.center(Offset.zero));
         final TestGesture gesture = await controller.startGesture(targetOffset);
         Future<void>.delayed(const Duration(milliseconds: 500), gesture.up);
@@ -181,7 +181,7 @@ class ToggleButtonsDiagramStep extends DiagramStep<ToggleButtonsDiagram> {
     _stepCount = 0;
     _testName = diagram.name;
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawAnimatedDiagramToFiles(
+    return controller.drawAnimatedDiagramToFiles(
       end: Duration(seconds: tapSteps[_testName]!.length * 2),
       frameRate: _kAnimationFrameRate,
       name: _testName,

@@ -17,7 +17,7 @@ final Duration _totalDuration = _pauseDuration + _openDuration + _pauseDuration;
 final GlobalKey _openDialogKey = GlobalKey();
 
 class AlertDialogDiagram extends StatelessWidget implements DiagramMetadata {
-  const AlertDialogDiagram(this.name);
+  const AlertDialogDiagram(this.name, {Key? key}) : super(key: key);
 
   @override
   final String name;
@@ -113,7 +113,7 @@ class AlertDialogDiagramStep extends DiagramStep<AlertDialogDiagram> {
 
     await Future<void>.delayed(_pauseDuration);
 
-    final RenderBox target = _openDialogKey.currentContext!.findRenderObject() as RenderBox;
+    final RenderBox target = _openDialogKey.currentContext!.findRenderObject()! as RenderBox;
     final Offset targetOffset =
         target.localToGlobal(target.size.center(Offset.zero));
     final TestGesture gesture = await controller.startGesture(targetOffset);

@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'diagram_step.dart';
 
 class FormDiagram extends StatelessWidget implements DiagramMetadata {
-  const FormDiagram(this.name);
+  const FormDiagram(this.name, {Key? key}) : super(key: key);
 
   @override
   final String name;
@@ -66,6 +66,6 @@ class FormDiagramStep extends DiagramStep<FormDiagram> {
   @override
   Future<File> generateDiagram(FormDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawDiagramToFile(File('${diagram.name}.png'));
+    return controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }

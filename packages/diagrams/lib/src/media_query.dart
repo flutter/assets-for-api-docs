@@ -17,10 +17,10 @@ class MediaQueryDiagram extends StatefulWidget implements DiagramMetadata {
   final String name;
 
   @override
-  _DiagramState createState() => _DiagramState();
+  State<MediaQueryDiagram> createState() => _MediaQueryDiagramState();
 }
 
-class _DiagramState extends State<MediaQueryDiagram> {
+class _MediaQueryDiagramState extends State<MediaQueryDiagram> {
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +38,7 @@ class _DiagramState extends State<MediaQueryDiagram> {
           color: const Color(0xFFFFFFFF),
           child: MediaQuery(
             data: const MediaQueryData(
-              padding: EdgeInsets.all(0.0),
+              padding: EdgeInsets.zero,
             ),
             child: Center(
               child: Stack(
@@ -137,6 +137,6 @@ class MediaQueryDiagramStep extends DiagramStep<MediaQueryDiagram> {
   @override
   Future<File> generateDiagram(MediaQueryDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawDiagramToFile(File('${diagram.name}.png'));
+    return controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }

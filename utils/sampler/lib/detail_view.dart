@@ -19,7 +19,7 @@ class DetailView extends StatefulWidget {
   const DetailView({Key? key}) : super(key: key);
 
   @override
-  _DetailViewState createState() => _DetailViewState();
+  State<DetailView> createState() => _DetailViewState();
 }
 
 // Used to run export in another isolate.

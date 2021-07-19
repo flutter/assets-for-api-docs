@@ -29,7 +29,7 @@ const double _kCurveAnimationFrameRate = 60.0;
 const String _customScrollView = 'custom_scroll_view';
 
 class CustomScrollViewDiagram extends StatefulWidget implements DiagramMetadata {
-  const CustomScrollViewDiagram(this.name);
+  const CustomScrollViewDiagram(this.name, {Key? key}) : super(key: key);
 
   @override
   final String name;
@@ -156,7 +156,7 @@ class CustomScrollViewDiagramStep extends DiagramStep<CustomScrollViewDiagram> {
   @override
   Future<File> generateDiagram(CustomScrollViewDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawAnimatedDiagramToFiles(
+    return controller.drawAnimatedDiagramToFiles(
       end: _kTotalDuration,
       frameRate: _kCurveAnimationFrameRate,
       name: diagram.name,

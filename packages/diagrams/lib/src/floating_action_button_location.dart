@@ -37,7 +37,7 @@ const String _startFloat = '_start_float';
 const String _startTop = '_start_top';
 
 class FloatingActionButtonLocationDiagram extends StatelessWidget implements DiagramMetadata {
-  const FloatingActionButtonLocationDiagram(this.nameSuffix);
+  const FloatingActionButtonLocationDiagram(this.nameSuffix, {Key? key}) : super(key: key);
 
   final String nameSuffix;
 
@@ -195,6 +195,6 @@ class FloatingActionButtonLocationDiagramStep extends DiagramStep<FloatingAction
   @override
   Future<File> generateDiagram(FloatingActionButtonLocationDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawDiagramToFile(File('${diagram.name}.png'));
+    return controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }

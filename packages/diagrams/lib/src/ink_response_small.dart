@@ -43,7 +43,7 @@ class InkResponseSmallDiagram extends StatelessWidget implements DiagramMetadata
                   width: 150.0,
                   height: 100.0,
                   alignment: FractionalOffset.center,
-                  child: Container(
+                  child: SizedBox(
                     height: 45.0,
                     width: 100.0,
                     child: InkResponse(
@@ -57,7 +57,7 @@ class InkResponseSmallDiagram extends StatelessWidget implements DiagramMetadata
                 ),
               ),
               Center(
-                child: Container(
+                child: SizedBox(
                   key: _splashKey,
                   width: 90.0,
                   height: 20.0,
@@ -99,7 +99,7 @@ class InkResponseSmallDiagramStep extends DiagramStep<InkResponseSmallDiagram> {
   Future<File> generateDiagram(InkResponseSmallDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
     controller.advanceTime(Duration.zero);
-    final RenderBox target = _splashKey.currentContext!.findRenderObject() as RenderBox;
+    final RenderBox target = _splashKey.currentContext!.findRenderObject()! as RenderBox;
     final Offset targetOffset = target.localToGlobal(target.size.bottomRight(Offset.zero));
     final TestGesture gesture = await controller.startGesture(targetOffset);
     final File result = await controller.drawDiagramToFile(

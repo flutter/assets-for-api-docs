@@ -237,12 +237,12 @@ class SnippetGenerator {
         // If we saw the start or end of a code block
         inCodeBlock = !inCodeBlock;
         if (match.namedGroup('language') != null) {
-          language = match[1]!;
+          language = match[1];
           if (match.namedGroup('section') != null) {
             components.add(TemplateInjection('code-${match.namedGroup('section')}', <SourceLine>[],
-                language: language));
+                language: language!));
           } else {
-            components.add(TemplateInjection('code', <SourceLine>[], language: language));
+            components.add(TemplateInjection('code', <SourceLine>[], language: language!));
           }
         } else {
           language = null;

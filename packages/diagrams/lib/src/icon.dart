@@ -13,7 +13,7 @@ import 'diagram_step.dart';
 const String _icon = 'icon';
 
 class IconDiagram extends StatelessWidget implements DiagramMetadata {
-  const IconDiagram(this.name);
+  const IconDiagram(this.name, {Key? key}) : super(key: key);
 
   @override
   final String name;
@@ -67,6 +67,6 @@ class IconDiagramStep extends DiagramStep<IconDiagram> {
   @override
   Future<File> generateDiagram(IconDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawDiagramToFile(File('${diagram.name}.png'));
+    return controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }

@@ -24,7 +24,7 @@ class _LineNumberInterval extends PayloadInterval<num, int> {
   @override
   _LineNumberInterval copyWith(int? start, int? end, int? payload) {
     return _LineNumberInterval(
-        start ?? this.start as int, end ?? this.end as int, payload ?? this.payload as int);
+        start ?? this.start as int, end ?? this.end as int, payload ?? this.payload!);
   }
 
   @override

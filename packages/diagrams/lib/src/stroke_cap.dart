@@ -106,7 +106,7 @@ class StrokeCapDescription extends CustomPainter {
 }
 
 class StrokeCapDiagram extends StatelessWidget implements DiagramMetadata {
-  const StrokeCapDiagram({required this.name, this.cap = StrokeCap.round});
+  const StrokeCapDiagram({required this.name, this.cap = StrokeCap.round, Key? key}) : super(key: key);
 
   @override
   final String name;
@@ -159,6 +159,6 @@ class StrokeCapDiagramStep extends DiagramStep<StrokeCapDiagram> {
   @override
   Future<File> generateDiagram(StrokeCapDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawDiagramToFile(File('${diagram.name}.png'));
+    return controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }

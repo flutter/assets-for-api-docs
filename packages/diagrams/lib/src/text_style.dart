@@ -18,7 +18,7 @@ const String _wavyUnderline = 'text_style_wavy_red_underline';
 const String _customFonts = 'text_style_custom_fonts';
 
 class TextStyleDiagram extends StatelessWidget implements DiagramMetadata {
-  const TextStyleDiagram(this.name);
+  const TextStyleDiagram(this.name, {Key? key}) : super(key: key);
 
   @override
   final String name;
@@ -36,7 +36,7 @@ class TextStyleDiagram extends StatelessWidget implements DiagramMetadata {
         break;
       case _italics:
         returnWidget = const Text(
-          'Welcome to the present, we\'re running a real nation.',
+          "Welcome to the present, we're running a real nation.",
           style: TextStyle(fontStyle: FontStyle.italic),
         );
         break;
@@ -46,15 +46,15 @@ class TextStyleDiagram extends StatelessWidget implements DiagramMetadata {
             style: DefaultTextStyle.of(context).style,
             children: <TextSpan>[
               TextSpan(
-                text: 'You don\'t have the votes.\n',
+                text: "You don't have the votes.\n",
                 style: TextStyle(color: Colors.black.withOpacity(0.6)),
               ),
               TextSpan(
-                text: 'You don\'t have the votes!\n',
+                text: "You don't have the votes!\n",
                 style: TextStyle(color: Colors.black.withOpacity(0.8)),
               ),
               TextSpan(
-                text: 'You\'re gonna need congressional approval and you don\'t have the votes!\n',
+                text: "You're gonna need congressional approval and you don't have the votes!\n",
                 style: TextStyle(color: Colors.black.withOpacity(1.0)),
               ),
             ],
@@ -63,14 +63,14 @@ class TextStyleDiagram extends StatelessWidget implements DiagramMetadata {
         break;
       case _size:
         returnWidget = Text(
-          'These are wise words, enterprising men quote \'em.',
+          "These are wise words, enterprising men quote 'em.",
           style: DefaultTextStyle.of(context).style.apply(fontSizeFactor: 2.0),
         );
         break;
       case _wavyUnderline:
         returnWidget = RichText(
           text: const TextSpan(
-            text: 'Don\'t tax the South ',
+            text: "Don't tax the South ",
             style: TextStyle(color: Colors.black),
             children: <TextSpan>[
               TextSpan(
@@ -128,6 +128,6 @@ class TextStyleDiagramStep extends DiagramStep<TextStyleDiagram> {
   @override
   Future<File> generateDiagram(TextStyleDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    return await controller.drawDiagramToFile(File('${diagram.name}.png'));
+    return controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }

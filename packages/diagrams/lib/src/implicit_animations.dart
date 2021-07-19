@@ -46,13 +46,13 @@ class ImplicitAnimationDiagramStep extends DiagramStep<ImplicitAnimationDiagram<
 
     final Map<Duration, DiagramKeyframe> keyframes = <Duration, DiagramKeyframe>{
       Duration.zero: (Duration now) async {
-        final RenderBox target = _transitionKey.currentContext!.findRenderObject() as RenderBox;
+        final RenderBox target = _transitionKey.currentContext!.findRenderObject()! as RenderBox;
         final Offset targetOffset = target.localToGlobal(target.size.center(Offset.zero));
         final TestGesture gesture = await controller.startGesture(targetOffset);
         await gesture.up();
       },
       const Duration(seconds: 3): (Duration now) async {
-        final RenderBox target = _transitionKey.currentContext!.findRenderObject() as RenderBox;
+        final RenderBox target = _transitionKey.currentContext!.findRenderObject()! as RenderBox;
         final Offset targetOffset = target.localToGlobal(target.size.center(Offset.zero));
         final TestGesture gesture = await controller.startGesture(targetOffset);
         await gesture.up();
@@ -233,7 +233,7 @@ class AnimatedPositionedDiagram extends ImplicitAnimationDiagram<AlignmentGeomet
     return Center(
       child: Stack(
         children: <Widget>[
-          Container(width: 250.0, height: 250.0),
+          const SizedBox(width: 250.0, height: 250.0),
           AnimatedPositioned(
             key: _transitionKey,
             width: selected ? 150.0 : 50.0,
@@ -264,7 +264,7 @@ class AnimatedPositionedDirectionalDiagram extends ImplicitAnimationDiagram<Alig
     return Center(
       child: Stack(
         children: <Widget>[
-          Container(width: 250.0, height: 250.0),
+          const SizedBox(width: 250.0, height: 250.0),
           Directionality(
             textDirection: TextDirection.rtl,
             child: AnimatedPositionedDirectional(
@@ -363,7 +363,7 @@ class WindowPaddingDiagram extends ImplicitAnimationDiagram<AlignmentGeometry> {
         // "Keyboard"
         Align(
           alignment: AlignmentDirectional.bottomCenter,
-          child: Container(
+          child: SizedBox(
             height: selected ? size.height * .4 : 0,
             width: size.width,
             child: Container(
@@ -383,7 +383,7 @@ class WindowPaddingDiagram extends ImplicitAnimationDiagram<AlignmentGeometry> {
         // "Bottom button"
         Align(
           alignment: AlignmentDirectional.bottomCenter,
-          child: Container(
+          child: SizedBox(
             height: 20,
             child: Align(
               alignment: AlignmentDirectional.topCenter,
