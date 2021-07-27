@@ -56,7 +56,12 @@ class FlutterInformation {
   @visibleForTesting
   static set instance(FlutterInformation? value) => _instance = value;
 
-  Directory getFlutterRoot() => getFlutterInformation()['flutterRoot'] as Directory;
+  Directory getFlutterRoot() {
+    if (platform.environment['FLUTTER_ROOT'] != null) {
+      return filesystem.directory(platform.environment['FLUTTER_ROOT']);
+    }
+    return getFlutterInformation()['flutterRoot'] as Directory;
+  }
 
   Version getFlutterVersion() => getFlutterInformation()['frameworkVersion'] as Version;
 
@@ -80,33 +85,40 @@ class FlutterInformation {
       flutterCommand = 'flutter';
     }
     io.ProcessResult result;
-    try {
-      result = processManager
-          .runSync(<String>[flutterCommand, '--version', '--machine'], stdoutEncoding: utf8);
-    } on io.ProcessException catch (e) {
-      throw SnippetException(
-          'Unable to determine Flutter information. Either set FLUTTER_ROOT, or place flutter command in your path.\n$e');
+    String flutterVersionJson;
+    if (platform.environment['FLUTTER_VERSION'] != null) {
+      flutterVersionJson = platform.environment['FLUTTER_VERSION']!;
+    } else {
+      try {
+        result = processManager
+            .runSync(<String>[flutterCommand, '--version', '--machine'], stdoutEncoding: utf8);
+      } on io.ProcessException catch (e) {
+        throw SnippetException(
+            'Unable to determine Flutter information. Either set FLUTTER_ROOT, or place flutter command in your path.\n$e');
+      }
+      if (result.exitCode != 0) {
+        throw SnippetException(
+            'Unable to determine Flutter information, because of abnormal exit to flutter command.');
+      }
+      flutterVersionJson = (result.stdout as String).replaceAll(
+          'Waiting for another flutter command to release the startup lock...', '');
     }
-    if (result.exitCode != 0) {
-      throw SnippetException(
-          'Unable to determine Flutter information, because of abnormal exit to flutter command.');
-    }
-    final Map<String, dynamic> map = json.decode(result.stdout as String) as Map<String, dynamic>;
-    if (map['flutterRoot'] == null ||
-        map['frameworkVersion'] == null ||
-        map['dartSdkVersion'] == null) {
+    final Map<String, dynamic> flutterVersion = json.decode(flutterVersionJson) as Map<String, dynamic>;
+    if (flutterVersion['flutterRoot'] == null ||
+        flutterVersion['frameworkVersion'] == null ||
+        flutterVersion['dartSdkVersion'] == null) {
       throw SnippetException(
           'Flutter command output has unexpected format, unable to determine flutter root location.');
     }
     final Map<String, dynamic> info = <String, dynamic>{};
-    info['flutterRoot'] = filesystem.directory(map['flutterRoot']! as String);
-    info['frameworkVersion'] = Version.parse(map['frameworkVersion'] as String);
+    info['flutterRoot'] = filesystem.directory(flutterVersion['flutterRoot']! as String);
+    info['frameworkVersion'] = Version.parse(flutterVersion['frameworkVersion'] as String);
     final RegExpMatch? dartVersionRegex =
         RegExp(r'(?<base>[\d.]+)(?:\s+\(build (?<detail>[-.\w]+)\))?')
-            .firstMatch(map['dartSdkVersion'] as String);
+            .firstMatch(flutterVersion['dartSdkVersion'] as String);
     if (dartVersionRegex == null) {
       throw SnippetException(
-          'Flutter command output has unexpected format, unable to parse dart SDK version ${map['dartSdkVersion']}.');
+          'Flutter command output has unexpected format, unable to parse dart SDK version ${flutterVersion['dartSdkVersion']}.');
     }
     info['dartSdkVersion'] = Version.parse(
         dartVersionRegex.namedGroup('detail') ?? dartVersionRegex.namedGroup('base')!);

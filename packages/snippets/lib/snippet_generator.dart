@@ -75,21 +75,21 @@ class SnippetGenerator {
     CodeSample sample,
     String skeleton,
   ) {
-    final List<String> result = <String>[];
+    final List<String> codeParts = <String>[];
     const HtmlEscape htmlEscape = HtmlEscape();
     String? language;
     for (final TemplateInjection injection in sample.parts) {
       if (!injection.name.startsWith('code')) {
         continue;
       }
-      result.addAll(injection.stringContents);
+      codeParts.addAll(injection.stringContents);
       if (injection.language.isNotEmpty) {
         language = injection.language;
       }
-      result.addAll(<String>['', '// ...', '']);
+      codeParts.addAll(<String>['', '// ...', '']);
     }
-    if (result.length > 3) {
-      result.removeRange(result.length - 3, result.length);
+    if (codeParts.length > 3) {
+      codeParts.removeRange(codeParts.length - 3, codeParts.length);
     }
     // Only insert a div for the description if there actually is some text there.
     // This means that the {{description}} marker in the skeleton needs to
@@ -105,7 +105,7 @@ class SnippetGenerator {
 
     final Map<String, String> substitutions = <String, String>{
       'description': description,
-      'code': htmlEscape.convert(result.join('\n')),
+      'code': htmlEscape.convert(codeParts.join('\n')),
       'language': language ?? 'dart',
       'serial': '',
       'id': sample.metadata['id']! as String,

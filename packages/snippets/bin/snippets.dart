@@ -2,12 +2,15 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'dart:io' show Process, ProcessResult, Platform, stderr, exit;
+import 'dart:io' show ProcessResult, stderr, stdout, exit;
 
 import 'package:args/args.dart';
 import 'package:file/file.dart';
 import 'package:file/local.dart';
+import 'package:meta/meta.dart';
 import 'package:path/path.dart' as path;
+import 'package:platform/platform.dart';
+import 'package:process/process.dart';
 import 'package:snippets/snippets.dart';
 
 const String _kSerialOption = 'serial';
@@ -22,17 +25,40 @@ const String _kTypeOption = 'type';
 
 const LocalFileSystem filesystem = LocalFileSystem();
 
-String getChannelName() {
+class GitStatusFailed implements Exception {
+  GitStatusFailed(this.gitResult);
+  final ProcessResult gitResult;
+  @override
+  String toString() => 'git status exited with a non-zero exit code: ${gitResult.exitCode}:\n${gitResult.stderr}\n${gitResult.stdout}';
+}
+
+/// Get the name of the channel these docs are from.
+///
+/// First check env variable LUCI_BRANCH, then refer to the currently
+/// checked out git branch.
+String getChannelName({
+  @visibleForTesting
+  Platform platform = const LocalPlatform(),
+  @visibleForTesting
+  ProcessManager processManager = const LocalProcessManager(),
+}) {
+  final String? envReleaseChannel = platform.environment['LUCI_BRANCH']?.trim();
+  if (<String>['master', 'stable'].contains(envReleaseChannel)) {
+    return envReleaseChannel!;
+  }
   final RegExp gitBranchRegexp = RegExp(r'^## (?<branch>.*)');
-  final ProcessResult gitResult =
-      Process.runSync('git', <String>['status', '-b', '--porcelain']);
-  if (gitResult.exitCode != 0)
-    throw 'git status exit with non-zero exit code: ${gitResult.exitCode}';
-  final RegExpMatch? gitBranchMatch = gitBranchRegexp
-      .firstMatch((gitResult.stdout as String).trim().split('\n').first);
-  return gitBranchMatch == null
-      ? '<unknown>'
-      : gitBranchMatch.namedGroup('branch')!.split('...').first;
+  final ProcessResult gitResult = processManager.runSync(<String>['git', 'status', '-b', '--porcelain'],
+      environment: <String, String>{
+        'GIT_TRACE': '2',
+        'GIT_TRACE_SETUP': '2'
+      },
+      includeParentEnvironment: true
+  );
+  if (gitResult.exitCode != 0) {
+    throw GitStatusFailed(gitResult);
+  }
+  final RegExpMatch? gitBranchMatch = gitBranchRegexp.firstMatch((gitResult.stdout as String).trim().split('\n').first);
+  return gitBranchMatch == null ? '<unknown>' : gitBranchMatch.namedGroup('branch')!.split('...').first;
 }
 
 const List<String> sampleTypes = <String>[
@@ -41,10 +67,26 @@ const List<String> sampleTypes = <String>[
   'dartpad',
 ];
 
+// This is a hack to workaround the fact that git status inexplicably fails
+// (with random non-zero error code) about 2% of the time.
+String getChannelNameWithRetries() {
+  int retryCount = 0;
+  while(retryCount < 2) {
+    try {
+      return getChannelName();
+    } on GitStatusFailed catch (e) {
+      retryCount += 1;
+      stderr.write('git status failed, retrying ($retryCount)\nError report:\n$e');
+    }
+  }
+  return getChannelName();
+}
+
 /// Generates snippet dartdoc output for a given input, and creates any sample
 /// applications needed by the snippet.
 void main(List<String> argList) {
-  final Map<String, String> environment = Platform.environment;
+  const Platform platform = LocalPlatform();
+  final Map<String, String> environment = platform.environment;
   final ArgParser parser = ArgParser();
   parser.addOption(
     _kTypeOption,
@@ -131,7 +173,10 @@ void main(List<String> argList) {
 
   String? template;
   if (sampleType == 'sample' || sampleType == 'dartpad') {
-    final String templateArg = args[_kTemplateOption] as String;
+    if (args[_kTemplateOption] == null) {
+      errorExit('The --template option must be specified for "sample" and "dartpad" sample types.');
+    }
+    final String templateArg = args[_kTemplateOption]! as String;
     if (templateArg.isEmpty) {
       stderr.writeln(parser.usage);
       errorExit(
@@ -181,12 +226,12 @@ void main(List<String> argList) {
     startLine: sourceLine,
     element: elementName,
     sourceFile: filesystem.file(sourcePath),
-    template: template!,
+    template: template ?? '',
     type: sampleType,
   );
   final SnippetGenerator generator = SnippetGenerator();
   final Map<String, Object?> metadata = <String, Object?>{
-    'channel': getChannelName(),
+    'channel': getChannelNameWithRetries(),
     'serial': serial,
     'package': packageName,
     'library': libraryName,
