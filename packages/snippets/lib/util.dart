@@ -73,22 +73,23 @@ class FlutterInformation {
     if (_cachedFlutterInformation != null) {
       return _cachedFlutterInformation!;
     }
-    String flutterCommand;
-    if (platform.environment['FLUTTER_ROOT'] != null) {
-      flutterCommand = filesystem
-          .directory(platform.environment['FLUTTER_ROOT'])
-          .childDirectory('bin')
-          .childFile('flutter')
-          .absolute
-          .path;
-    } else {
-      flutterCommand = 'flutter';
-    }
-    io.ProcessResult result;
+
     String flutterVersionJson;
     if (platform.environment['FLUTTER_VERSION'] != null) {
       flutterVersionJson = platform.environment['FLUTTER_VERSION']!;
     } else {
+      String flutterCommand;
+      if (platform.environment['FLUTTER_ROOT'] != null) {
+        flutterCommand = filesystem
+            .directory(platform.environment['FLUTTER_ROOT'])
+            .childDirectory('bin')
+            .childFile('flutter')
+            .absolute
+            .path;
+      } else {
+        flutterCommand = 'flutter';
+      }
+      io.ProcessResult result;
       try {
         result = processManager
             .runSync(<String>[flutterCommand, '--version', '--machine'], stdoutEncoding: utf8);
@@ -103,6 +104,7 @@ class FlutterInformation {
       flutterVersionJson = (result.stdout as String).replaceAll(
           'Waiting for another flutter command to release the startup lock...', '');
     }
+
     final Map<String, dynamic> flutterVersion = json.decode(flutterVersionJson) as Map<String, dynamic>;
     if (flutterVersion['flutterRoot'] == null ||
         flutterVersion['frameworkVersion'] == null ||
@@ -110,9 +112,11 @@ class FlutterInformation {
       throw SnippetException(
           'Flutter command output has unexpected format, unable to determine flutter root location.');
     }
+
     final Map<String, dynamic> info = <String, dynamic>{};
     info['flutterRoot'] = filesystem.directory(flutterVersion['flutterRoot']! as String);
     info['frameworkVersion'] = Version.parse(flutterVersion['frameworkVersion'] as String);
+
     final RegExpMatch? dartVersionRegex =
         RegExp(r'(?<base>[\d.]+)(?:\s+\(build (?<detail>[-.\w]+)\))?')
             .firstMatch(flutterVersion['dartSdkVersion'] as String);
@@ -123,6 +127,7 @@ class FlutterInformation {
     info['dartSdkVersion'] = Version.parse(
         dartVersionRegex.namedGroup('detail') ?? dartVersionRegex.namedGroup('base')!);
     _cachedFlutterInformation = info;
+
     return info;
   }
 }

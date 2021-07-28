@@ -7,7 +7,6 @@ import 'dart:io' show ProcessResult, stderr, exit;
 import 'package:args/args.dart';
 import 'package:file/file.dart';
 import 'package:file/local.dart';
-import 'package:meta/meta.dart';
 import 'package:path/path.dart' as path;
 import 'package:platform/platform.dart';
 import 'package:process/process.dart';
@@ -28,9 +27,14 @@ const LocalFileSystem filesystem = LocalFileSystem();
 
 class GitStatusFailed implements Exception {
   GitStatusFailed(this.gitResult);
+
   final ProcessResult gitResult;
+
   @override
-  String toString() => 'git status exited with a non-zero exit code: ${gitResult.exitCode}:\n${gitResult.stderr}\n${gitResult.stdout}';
+  String toString() {
+    return 'git status exited with a non-zero exit code: '
+        '${gitResult.exitCode}:\n${gitResult.stderr}\n${gitResult.stdout}';
+  }
 }
 
 /// Get the name of the channel these docs are from.
@@ -38,28 +42,30 @@ class GitStatusFailed implements Exception {
 /// First check env variable LUCI_BRANCH, then refer to the currently
 /// checked out git branch.
 String getChannelName({
-  @visibleForTesting
   Platform platform = const LocalPlatform(),
-  @visibleForTesting
   ProcessManager processManager = const LocalProcessManager(),
 }) {
   final String? envReleaseChannel = platform.environment['LUCI_BRANCH']?.trim();
   if (<String>['master', 'stable'].contains(envReleaseChannel)) {
     return envReleaseChannel!;
   }
+
   final RegExp gitBranchRegexp = RegExp(r'^## (?<branch>.*)');
-  final ProcessResult gitResult = processManager.runSync(<String>['git', 'status', '-b', '--porcelain'],
-      environment: <String, String>{
-        'GIT_TRACE': '2',
-        'GIT_TRACE_SETUP': '2'
-      },
-      includeParentEnvironment: true
-  );
+  // Adding extra debugging output to help debug why git status inexplicably fails
+  // (random non-zero error code) about 2% of the time.
+  final ProcessResult gitResult = processManager.runSync(
+      <String>['git', 'status', '-b', '--porcelain'],
+      environment: <String, String>{'GIT_TRACE': '2', 'GIT_TRACE_SETUP': '2'},
+      includeParentEnvironment: true);
   if (gitResult.exitCode != 0) {
     throw GitStatusFailed(gitResult);
   }
-  final RegExpMatch? gitBranchMatch = gitBranchRegexp.firstMatch((gitResult.stdout as String).trim().split('\n').first);
-  return gitBranchMatch == null ? '<unknown>' : gitBranchMatch.namedGroup('branch')!.split('...').first;
+
+  final RegExpMatch? gitBranchMatch =
+      gitBranchRegexp.firstMatch((gitResult.stdout as String).trim().split('\n').first);
+  return gitBranchMatch == null
+      ? '<unknown>'
+      : gitBranchMatch.namedGroup('branch')!.split('...').first;
 }
 
 const List<String> sampleTypes = <String>[
@@ -72,7 +78,8 @@ const List<String> sampleTypes = <String>[
 // (with random non-zero error code) about 2% of the time.
 String getChannelNameWithRetries() {
   int retryCount = 0;
-  while(retryCount < 2) {
+
+  while (retryCount < 2) {
     try {
       return getChannelName();
     } on GitStatusFailed catch (e) {
@@ -80,30 +87,28 @@ String getChannelNameWithRetries() {
       stderr.write('git status failed, retrying ($retryCount)\nError report:\n$e');
     }
   }
+
   return getChannelName();
 }
 
 /// Generates snippet dartdoc output for a given input, and creates any sample
 /// applications needed by the snippet.
 void main(List<String> argList) {
-  stderr.writeln('Invoked as: snippets ${argList.join(' ')}');
   const Platform platform = LocalPlatform();
   final Map<String, String> environment = platform.environment;
   final ArgParser parser = ArgParser();
+
   parser.addOption(
     _kTypeOption,
     defaultsTo: 'dartpad',
     allowed: sampleTypes,
     allowedHelp: <String, String>{
-      'dartpad':
-          'Produce a code sample application complete with embedding the sample in an '
-              'application template for using in Dartpad.',
-      'sample':
-          'Produce a code sample application complete with embedding the sample in an '
-              'application template.',
-      'snippet':
-          'Produce a nicely formatted piece of sample code. Does not embed the '
-              'sample into an application template.',
+      'dartpad': 'Produce a code sample application complete with embedding the sample in an '
+          'application template for using in Dartpad.',
+      'sample': 'Produce a code sample application complete with embedding the sample in an '
+          'application template.',
+      'snippet': 'Produce a nicely formatted piece of sample code. Does not embed the '
+          'sample into an application template.',
     },
     help: 'The type of snippet to produce.',
   );
@@ -169,8 +174,7 @@ void main(List<String> argList) {
 
   if (args[_kInputOption] == null) {
     stderr.writeln(parser.usage);
-    errorExit(
-        'The --$_kInputOption option must be specified, either on the command '
+    errorExit('The --$_kInputOption option must be specified, either on the command '
         'line, or in the INPUT environment variable.');
   }
 
@@ -187,8 +191,7 @@ void main(List<String> argList) {
     final String templateArg = args[_kTemplateOption]! as String;
     if (templateArg.isEmpty) {
       stderr.writeln(parser.usage);
-      errorExit(
-          'The --$_kTemplateOption option must be specified on the command '
+      errorExit('The --$_kTemplateOption option must be specified on the command '
           'line for application samples.');
     }
     template = templateArg.replaceAll(RegExp(r'.tmpl$'), '');
@@ -200,7 +203,9 @@ void main(List<String> argList) {
   final String serial = args[_kSerialOption] as String? ?? '';
   late String id;
   File? output;
-  final Directory outputDirectory = filesystem.directory(args[_kOutputDirectoryOption] as String).absolute;
+  final Directory outputDirectory =
+      filesystem.directory(args[_kOutputDirectoryOption] as String).absolute;
+
   if (args[_kOutputOption] != null) {
     id = path.basenameWithoutExtension(args[_kOutputOption] as String);
     final File outputPath = filesystem.file(args[_kOutputOption] as String);
@@ -232,9 +237,8 @@ void main(List<String> argList) {
     output = filesystem.file(outputDirectory.childFile('$id.dart'));
   }
 
-  final int? sourceLine = environment['SOURCE_LINE'] != null
-      ? int.tryParse(environment['SOURCE_LINE']!)
-      : null;
+  final int? sourceLine =
+      environment['SOURCE_LINE'] != null ? int.tryParse(environment['SOURCE_LINE']!) : null;
   final String sourcePath = environment['SOURCE_PATH'] ?? 'unknown.dart';
   final SnippetDartdocParser sampleParser = SnippetDartdocParser();
   final SourceElement element = sampleParser.parseFromDartdocToolFile(
@@ -254,6 +258,7 @@ void main(List<String> argList) {
     'library': libraryName,
     'element': elementName,
   };
+
   for (final CodeSample sample in element.samples) {
     sample.metadata.addAll(metadata);
     generator.generateCode(
