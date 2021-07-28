@@ -12,8 +12,10 @@ void main() {
     late SnippetConfiguration config;
 
     setUp(() {
-      config =
-          FlutterRepoSnippetConfiguration(flutterRoot: memoryFileSystem.directory('/flutter sdk'));
+      config = FlutterRepoSnippetConfiguration(
+        flutterRoot: memoryFileSystem.directory('/flutter sdk'),
+        filesystem: memoryFileSystem,
+      );
     });
     test('config directory is correct', () async {
       expect(config.configDirectory.path,
