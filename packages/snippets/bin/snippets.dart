@@ -165,12 +165,12 @@ void main(List<String> argList) {
 
   final ArgResults args = parser.parse(argList);
 
-  if (args[_kHelpOption] as bool) {
+  if (args[_kHelpOption]! as bool) {
     stderr.writeln(parser.usage);
     exit(0);
   }
 
-  final String sampleType = args[_kTypeOption] as String;
+  final String sampleType = args[_kTypeOption]! as String;
 
   if (args[_kInputOption] == null) {
     stderr.writeln(parser.usage);
@@ -178,7 +178,7 @@ void main(List<String> argList) {
         'line, or in the INPUT environment variable.');
   }
 
-  final File input = filesystem.file(args['input'] as String);
+  final File input = filesystem.file(args['input']! as String);
   if (!input.existsSync()) {
     errorExit('The input file ${input.path} does not exist.');
   }
@@ -204,11 +204,11 @@ void main(List<String> argList) {
   late String id;
   File? output;
   final Directory outputDirectory =
-      filesystem.directory(args[_kOutputDirectoryOption] as String).absolute;
+      filesystem.directory(args[_kOutputDirectoryOption]! as String).absolute;
 
   if (args[_kOutputOption] != null) {
-    id = path.basenameWithoutExtension(args[_kOutputOption] as String);
-    final File outputPath = filesystem.file(args[_kOutputOption] as String);
+    id = path.basenameWithoutExtension(args[_kOutputOption]! as String);
+    final File outputPath = filesystem.file(args[_kOutputOption]! as String);
     if (outputPath.isAbsolute) {
       output = outputPath;
     } else {
