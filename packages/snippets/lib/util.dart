@@ -160,7 +160,8 @@ String interpolateTemplate(
       ...contents,
       if (addSectionMarkers) sectionArrows(name, start: false),
     ].join('\n');
-    return result.isEmpty ? result : '$result\n';
+    final RegExp wrappingNewlines = RegExp(r'^\n*(.*)\n*$', dotAll: true);
+    return result.replaceAllMapped(wrappingNewlines, (Match match) => match.group(1)!);
   }
 
   return '${addCopyright ? '{{copyright}}\n\n' : ''}$template'

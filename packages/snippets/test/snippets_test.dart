@@ -120,9 +120,9 @@ void main() {
       expect(html, isNot(contains('sample_channel=stable')));
       expect(
           html,
-          contains('&#47;&#47; A description of the snippet.\n'
-              '&#47;&#47;\n'
-              '&#47;&#47; On several lines.\n'));
+          contains('A description of the snippet.\n'
+              '\n'
+              'On several lines.{@inject-html}</div>'));
       expect(html, contains('void main() {'));
 
       final String outputContents = outputFile.readAsStringSync();
@@ -172,7 +172,7 @@ void main() {
           html,
           contains(
               '<div class="snippet-description">{@end-inject-html}A description of the snippet.\n\n'
-              'On several lines.\n{@inject-html}</div>\n'));
+              'On several lines.{@inject-html}</div>\n'));
       expect(html, contains('main() {'));
     });
 
@@ -259,7 +259,7 @@ void main() {
       expect(json['id'], equals('MyElement.0'));
       expect(json['channel'], equals('stable'));
       expect(json['file'], equals('snippet_out.dart'));
-      expect(json['description'], equals('A description of the snippet.\n\nOn several lines.\n'));
+      expect(json['description'], equals('A description of the snippet.\n\nOn several lines.'));
       expect(json['sourcePath'], equals('packages/flutter/lib/src/widgets/foo.dart'));
     });
   });
