@@ -301,7 +301,7 @@ class SnippetGenerator {
     return sample.description.splitMapJoin(
       '\n',
       onMatch: (Match match) => match.group(0)!,
-      onNonMatch: (String nonmatch) => '// ${nonmatch.trimRight()}',
+      onNonMatch: (String nonmatch) => nonmatch.trimRight().isEmpty ? '//' : '// ${nonmatch.trimRight()}',
     );
   }
 
@@ -358,7 +358,28 @@ class SnippetGenerator {
           addSectionMarkers: addSectionMarkers,
           addCopyright: copyright != null,
         );
-        sample.output = sortImports(app);
+        sample.output = app;
+        final DartFormatter formatter = DartFormatter(pageWidth: 80, fixes: StyleFix.all);
+        try {
+          sample.output = formatter.format(sample.output);
+        } on FormatterException catch (exception) {
+          io.stderr.write('Code to format:\n${_addLineNumbers(sample.output)}\n');
+          errorExit('Unable to format sample code: $exception');
+        }
+        sample.output = sortImports(sample.output);
+        if (output != null) {
+          output.writeAsStringSync(sample.output);
+
+          final File metadataFile = configuration.filesystem.file(path.join(
+              path.dirname(output.path), '${path.basenameWithoutExtension(output.path)}.json'));
+          sample.metadata['file'] = path.basename(output.path);
+          final Map<String, Object?> metadata = sample.metadata;
+          if (metadata.containsKey('description')) {
+            metadata['description'] = (metadata['description']! as String)
+                .replaceAll(RegExp(r'^// ?', multiLine: true), '');
+          }
+          metadataFile.writeAsStringSync(jsonEncoder.convert(metadata));
+        }
         break;
       case SnippetSample:
         if (sample is SnippetSample) {
@@ -380,15 +401,17 @@ class SnippetGenerator {
         }
         break;
     }
-    if (output != null) {
-      output.writeAsStringSync(sample.output);
-
-      final File metadataFile = configuration.filesystem.file(path.join(
-          path.dirname(output.path), '${path.basenameWithoutExtension(output.path)}.json'));
-      sample.metadata['file'] = path.basename(output.path);
-      metadataFile.writeAsStringSync(jsonEncoder.convert(sample.metadata));
-    }
     return sample.output;
+  }
+
+  String _addLineNumbers(String code) {
+    final StringBuffer buffer = StringBuffer();
+    int count = 0;
+    for (final String line in code.split('\n')) {
+      count++;
+      buffer.writeln('${count.toString().padLeft(5, ' ')}: $line');
+    }
+    return buffer.toString();
   }
 
   /// Computes the headers needed for each snippet file.
