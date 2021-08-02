@@ -1,5 +1,5 @@
 name: snippets
-version: 0.2.0
+version: 0.2.1
 description: A package for parsing and manipulating code samples in Flutter repo dartdoc comments.
 homepage: https://github.com/flutter/flutter
 
