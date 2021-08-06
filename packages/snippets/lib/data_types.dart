@@ -4,6 +4,7 @@
 
 import 'package:args/args.dart';
 import 'package:file/file.dart';
+import 'package:snippets/snippets.dart';
 
 /// A class to represent a line of input code, with associated line number, file
 /// and element name.
@@ -74,16 +75,53 @@ abstract class CodeSample {
     required this.index,
     required SourceLine lineProto,
   })  : assert(args.isNotEmpty),
+        _lineProto = lineProto,
+        sourceFile = null;
+
+  CodeSample.fromFile(
+    this.args,
+    this.input,
+    this.sourceFile, {
+    required this.index,
+    required SourceLine lineProto,
+  })  : assert(args.isNotEmpty),
         _lineProto = lineProto;
 
+  final File? sourceFile;
   final List<String> args;
   final List<SourceLine> input;
   final SourceLine _lineProto;
+  String? _sourceFileContents;
+  String get sourceFileContents {
+    if (sourceFile != null && _sourceFileContents == null) {
+      // Strip lines until the first non-comment line. This gets rid of the
+      // copyright and comment directing the reader to the original source file.
+      final List<String> stripped = <String>[];
+      bool doneStrippingHeaders = false;
+      try {
+        for (final String line in sourceFile!.readAsLinesSync()) {
+          if (!doneStrippingHeaders && RegExp(r'^\s*(\/\/.*)?$').hasMatch(line)) {
+            continue;
+          }
+          // Stop at the first line that isn't stripped.
+          doneStrippingHeaders = true;
+          stripped.add(line);
+        }
+      } on FileSystemException catch (e) {
+        throw SnippetException(
+          'Unable to read linked source file ${sourceFile!}: $e',
+          file: _lineProto.file?.absolute.path,
+        );
+      }
+      _sourceFileContents = stripped.join('\n');
+    }
+    return _sourceFileContents ?? '';
+  }
 
   Iterable<String> get inputStrings => input.map<String>((SourceLine line) => line.text);
   String get inputAsString => inputStrings.join('\n');
 
-  /// The index of this sample within the dardoc comment it came from.
+  /// The index of this sample within the dartdoc comment it came from.
   final int index;
   String description = '';
   String get element => start.element ?? '';
@@ -206,6 +244,15 @@ class ApplicationSample extends CodeSample {
   })  : assert(args.isNotEmpty),
         super(args, input, index: index, lineProto: lineProto);
 
+  ApplicationSample.fromFile({
+    List<SourceLine> input = const <SourceLine>[],
+    required List<String> args,
+    required File sourceFile,
+    required int index,
+    required SourceLine lineProto,
+  })  : assert(args.isNotEmpty),
+        super.fromFile(args, input, sourceFile, index: index, lineProto: lineProto);
+
   @override
   String get type => 'sample';
 }
@@ -225,6 +272,15 @@ class DartpadSample extends ApplicationSample {
     required SourceLine lineProto,
   })  : assert(args.isNotEmpty),
         super(input: input, args: args, index: index, lineProto: lineProto);
+
+  DartpadSample.fromFile({
+    List<SourceLine> input = const <SourceLine>[],
+    required List<String> args,
+    required File sourceFile,
+    required int index,
+    required SourceLine lineProto,
+  })  : assert(args.isNotEmpty),
+        super.fromFile(input: input, args: args, sourceFile: sourceFile, index: index, lineProto: lineProto);
 
   @override
   String get type => 'dartpad';

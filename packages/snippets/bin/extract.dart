@@ -77,65 +77,77 @@ Future<void> main(List<String> argList) async {
     errorExit('Input file must be under the $flutterSource directory: ${input.absolute.path} is not.');
   }
 
-  final Iterable<SourceElement> fileElements = getFileElements(input);
-  final SnippetDartdocParser dartdocParser = SnippetDartdocParser();
-  final SnippetGenerator snippetGenerator = SnippetGenerator();
-  dartdocParser.parseFromComments(fileElements);
-  dartdocParser.parseAndAddAssumptions(fileElements, input, silent: true);
+  try {
+    final Iterable<SourceElement> fileElements = getFileElements(input);
+    final SnippetDartdocParser dartdocParser = SnippetDartdocParser(filesystem);
+    final SnippetGenerator snippetGenerator = SnippetGenerator();
+    dartdocParser.parseFromComments(fileElements);
+    dartdocParser.parseAndAddAssumptions(fileElements, input, silent: true);
 
-  final String srcPath = path.relative(input.absolute.path, from: flutterSource);
-  final String dstPath = path.join(
-    flutterInformation.getFlutterRoot().absolute.path,
-    'examples',
-    'api',
-  );
-  for (final SourceElement element in fileElements.where((SourceElement element) {
-    return element.sampleCount > 0;
-  })) {
-    for (final CodeSample sample in element.samples) {
-      // Ignore anything else, because those are not full apps.
-      if (sample.type != 'dartpad' && sample.type != 'sample') {
-        continue;
+    final String srcPath = path.relative(input.absolute.path, from: flutterSource);
+    final String dstPath = path.join(
+      flutterInformation
+          .getFlutterRoot()
+          .absolute
+          .path,
+      'examples',
+      'api',
+    );
+    for (final SourceElement element in fileElements.where((SourceElement element) {
+      return element.sampleCount > 0;
+    })) {
+      for (final CodeSample sample in element.samples) {
+        // Ignore anything else, because those are not full apps.
+        if (sample.type != 'dartpad' && sample.type != 'sample') {
+          continue;
+        }
+        snippetGenerator.generateCode(
+          sample,
+          includeAssumptions: false,
+          addSectionMarkers: true,
+          copyright: _kCopyrightNotice,
+        );
+        final File outputFile = filesystem.file(
+          path.joinAll(<String>[
+            dstPath,
+            'lib',
+            path.withoutExtension(srcPath), // e.g. material/app_bar
+            <String>[
+              if (element.className.isNotEmpty) element.className.snakeCase,
+              element.name.snakeCase,
+              sample.index.toString(),
+              'dart',
+            ].join('.'),
+          ]),
+        );
+        await outputFile.absolute.parent.create(recursive: true);
+        if (outputFile.existsSync()) {
+          errorExit('File $outputFile already exists!');
+        }
+        final FlutterSampleLiberator liberator = FlutterSampleLiberator(
+          element,
+          sample,
+          location: filesystem.directory(dstPath),
+        );
+        if (!filesystem.file(path.join(dstPath, 'pubspec.yaml')).existsSync()) {
+          print('Publishing ${outputFile.absolute.path}');
+          await liberator.extract(overwrite: true, mainDart: outputFile, includeMobile: true);
+        } else {
+          await outputFile.absolute.writeAsString(sample.output);
+        }
+        await liberator.reinsertAsReference(outputFile);
+        print('${outputFile.path}: ${getSampleStats(element)}');
       }
-      final String relativePath = path.relative(sample.start.file!.path,
-          from: flutterInformation.getFlutterRoot().absolute.path);
-      snippetGenerator.generateCode(
-        sample,
-        includeAssumptions: false,
-        copyright: _kCopyrightNotice,
-        description: 'See description in the comments in the file:\n  $relativePath',
-      );
-      final File outputFile = filesystem.file(
-        path.joinAll(<String>[
-          dstPath,
-          'lib',
-          path.withoutExtension(srcPath), // e.g. material/app_bar
-          <String>[
-            if (element.className.isNotEmpty) element.className.snakeCase,
-            element.name.snakeCase,
-            sample.index.toString(),
-            'dart',
-          ].join('.'),
-        ]),
-      );
-      await outputFile.absolute.parent.create(recursive: true);
-      if (outputFile.existsSync()) {
-        errorExit('File $outputFile already exists!');
-      }
-      final FlutterSampleLiberator liberator = FlutterSampleLiberator(
-        element,
-        sample,
-        location: filesystem.directory(dstPath),
-      );
-      if (!filesystem.file(path.join(dstPath, 'pubspec.yaml')).existsSync()) {
-        print('Publishing ${outputFile.absolute.path}');
-        await liberator.extract(overwrite: true, mainDart: outputFile, includeMobile: true);
-      } else {
-        await outputFile.absolute.writeAsString(sample.output);
-      }
-      await liberator.reinsertAsReference(outputFile);
-      print('${outputFile.path}: ${getSampleStats(element)}');
     }
+  } on SnippetException catch (e, s) {
+    print('Failed: $e\n$s');
+    exit(1);
+  } on FileSystemException catch (e, s) {
+    print('Failed with file system exception: $e\n$s');
+    exit(2);
+  } catch (e, s) {
+    print('Failed with exception: $e\n$s');
+    exit(2);
   }
   exit(0);
 }

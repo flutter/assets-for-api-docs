@@ -89,7 +89,7 @@ void main() {
 ''');
       final File outputFile =
           memoryFileSystem.file(path.join(tmpDir.absolute.path, 'snippet_out.txt'));
-      final SnippetDartdocParser sampleParser = SnippetDartdocParser();
+      final SnippetDartdocParser sampleParser = SnippetDartdocParser(memoryFileSystem);
       const String sourcePath = 'packages/flutter/lib/src/widgets/foo.dart';
       const int sourceLine = 222;
       final SourceElement element = sampleParser.parseFromDartdocToolFile(
@@ -148,7 +148,7 @@ void main() {
 ```
 ''');
 
-      final SnippetDartdocParser sampleParser = SnippetDartdocParser();
+      final SnippetDartdocParser sampleParser = SnippetDartdocParser(memoryFileSystem);
       const String sourcePath = 'packages/flutter/lib/src/widgets/foo.dart';
       const int sourceLine = 222;
       final SourceElement element = sampleParser.parseFromDartdocToolFile(
@@ -192,7 +192,7 @@ void main() {
 ```
 ''');
 
-      final SnippetDartdocParser sampleParser = SnippetDartdocParser();
+      final SnippetDartdocParser sampleParser = SnippetDartdocParser(memoryFileSystem);
       const String sourcePath = 'packages/flutter/lib/src/widgets/foo.dart';
       const int sourceLine = 222;
       final SourceElement element = sampleParser.parseFromDartdocToolFile(
@@ -239,7 +239,7 @@ void main() {
       final File expectedMetadataFile =
           memoryFileSystem.file(path.join(tmpDir.absolute.path, 'snippet_out.json'));
 
-      final SnippetDartdocParser sampleParser = SnippetDartdocParser();
+      final SnippetDartdocParser sampleParser = SnippetDartdocParser(memoryFileSystem);
       const String sourcePath = 'packages/flutter/lib/src/widgets/foo.dart';
       const int sourceLine = 222;
       final SourceElement element = sampleParser.parseFromDartdocToolFile(

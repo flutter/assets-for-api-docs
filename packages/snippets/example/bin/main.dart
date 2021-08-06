@@ -25,7 +25,7 @@ void main(List<String> argList) {
     exit(-1);
   }
 
-  final SnippetDartdocParser snippetParser = SnippetDartdocParser();
+  final SnippetDartdocParser snippetParser = SnippetDartdocParser(filesystem);
 
   final File file = filesystem.file(args['file']! as String);
   final List<SourceElement> elements = getFileElements(file).toList();

@@ -22,7 +22,7 @@ class Model extends ChangeNotifier {
   })  : _workingFile = workingFile,
         flutterRoot = flutterRoot ?? _findFlutterRoot(),
         dartUiRoot = dartUiRoot ?? _findDartUiRoot(),
-        _dartdocParser = SnippetDartdocParser(),
+        _dartdocParser = SnippetDartdocParser(filesystem),
         _snippetGenerator = SnippetGenerator();
 
   static Model? _instance;

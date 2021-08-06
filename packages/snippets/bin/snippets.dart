@@ -67,7 +67,6 @@ String getChannelName({
       ? '<unknown>'
       : gitBranchMatch.namedGroup('branch')!.split('...').first;
 }
-
 const List<String> sampleTypes = <String>[
   'snippet',
   'sample',
@@ -96,6 +95,7 @@ String getChannelNameWithRetries() {
 void main(List<String> argList) {
   const Platform platform = LocalPlatform();
   final Map<String, String> environment = platform.environment;
+
   final ArgParser parser = ArgParser();
 
   parser.addOption(
@@ -240,7 +240,7 @@ void main(List<String> argList) {
   final int? sourceLine =
       environment['SOURCE_LINE'] != null ? int.tryParse(environment['SOURCE_LINE']!) : null;
   final String sourcePath = environment['SOURCE_PATH'] ?? 'unknown.dart';
-  final SnippetDartdocParser sampleParser = SnippetDartdocParser();
+  final SnippetDartdocParser sampleParser = SnippetDartdocParser(filesystem);
   final SourceElement element = sampleParser.parseFromDartdocToolFile(
     input,
     startLine: sourceLine,

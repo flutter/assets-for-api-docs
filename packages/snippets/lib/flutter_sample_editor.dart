@@ -79,7 +79,7 @@ class FlutterSampleLiberator {
       throw SnippetException(
           'Unable to find original location for sample ${sample.index} on ${sample.element} in ${element.file}');
     }
-    final SnippetDartdocParser parser = SnippetDartdocParser();
+    final SnippetDartdocParser parser = SnippetDartdocParser(filesystem);
     final SourceElement matchingElement = matchingElements.first;
     parser.parseComment(matchingElement);
     final List<CodeSample> foundBlocks = matchingElement.samples.where((CodeSample foundSample) {
@@ -342,14 +342,14 @@ include: ${flutterRoot.absolute.path}/analysis_options.yaml
     String frameworkContents = await frameworkFile.readAsString();
 
     final SnippetGenerator generator = SnippetGenerator();
-    generator.parseInput(matchingSample);
+    generator.parseInput(matchingSample); // Just to get the description.
 
     // Create a substitute example that only contains a reference to the
     // output file, and the description.
     final String linkPath = path.relative(mainDart.path, from: flutterRoot.absolute.path);
     final String replacement = _buildSampleReplacement(<String, List<String>>{
       'description': matchingSample.description.split('\n'),
-      'sampleLink': <String>['[See code in $linkPath]'],
+      'sampleLink': <String>['** See code in $linkPath **'],
     }, <String>['description', 'sampleLink'], rangesAndIndents['firstIndent']!);
     // Rewrite the original framework file.
     frameworkContents = frameworkContents.replaceRange(

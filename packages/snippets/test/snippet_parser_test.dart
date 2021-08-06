@@ -91,7 +91,7 @@ void main() {
       final Iterable<SourceElement> elements = getFileElements(inputFile,
           resourceProvider: FileSystemResourceProvider(memoryFileSystem));
       expect(elements, isNotEmpty);
-      final SnippetDartdocParser sampleParser = SnippetDartdocParser();
+      final SnippetDartdocParser sampleParser = SnippetDartdocParser(memoryFileSystem);
       sampleParser.parseFromComments(elements);
       sampleParser.parseAndAddAssumptions(elements, inputFile);
       expect(elements.length, equals(7));
@@ -114,7 +114,7 @@ void main() {
     });
     test('parses assumptions', () async {
       final File inputFile = _createSourceFile(tmpDir, memoryFileSystem);
-      final SnippetDartdocParser sampleParser = SnippetDartdocParser();
+      final SnippetDartdocParser sampleParser = SnippetDartdocParser(memoryFileSystem);
       final List<SourceLine> assumptions = sampleParser.parseAssumptions(inputFile);
       expect(assumptions.length, equals(1));
       expect(assumptions.first.text, equals('int integer = 3;'));
