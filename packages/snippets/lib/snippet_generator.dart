@@ -325,6 +325,7 @@ class SnippetGenerator {
     File? output,
     String? copyright,
     String? description,
+    bool formatOutput = true,
     bool addSectionMarkers = false,
     bool includeAssumptions = false,
   }) {
@@ -369,14 +370,16 @@ class SnippetGenerator {
           app = sample.sourceFileContents;
         }
         sample.output = app;
-        final DartFormatter formatter = DartFormatter(pageWidth: 80, fixes: StyleFix.all);
-        try {
-          sample.output = formatter.format(sample.output);
-        } on FormatterException catch (exception) {
-          io.stderr.write('Code to format:\n${_addLineNumbers(sample.output)}\n');
-          errorExit('Unable to format sample code: $exception');
+        if (formatOutput) {
+          final DartFormatter formatter = DartFormatter(pageWidth: 80, fixes: StyleFix.all);
+          try {
+            sample.output = formatter.format(sample.output);
+          } on FormatterException catch (exception) {
+            io.stderr.write('Code to format:\n${_addLineNumbers(sample.output)}\n');
+            errorExit('Unable to format sample code: $exception');
+          }
+          sample.output = sortImports(sample.output);
         }
-        sample.output = sortImports(sample.output);
         if (output != null) {
           output.writeAsStringSync(sample.output);
 

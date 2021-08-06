@@ -12,14 +12,15 @@ import 'package:platform/platform.dart';
 import 'package:process/process.dart';
 import 'package:snippets/snippets.dart';
 
-const String _kSerialOption = 'serial';
 const String _kElementOption = 'element';
+const String _kFormatOutputOption = 'format-output';
 const String _kHelpOption = 'help';
 const String _kInputOption = 'input';
 const String _kLibraryOption = 'library';
-const String _kOutputOption = 'output';
 const String _kOutputDirectoryOption = 'output-directory';
+const String _kOutputOption = 'output';
 const String _kPackageOption = 'package';
+const String _kSerialOption = 'serial';
 const String _kTemplateOption = 'template';
 const String _kTypeOption = 'type';
 
@@ -157,6 +158,12 @@ void main(List<String> argList) {
     help: 'A unique serial number for this snippet tool invocation.',
   );
   parser.addFlag(
+    _kFormatOutputOption,
+    defaultsTo: true,
+    negatable: true,
+    help: 'Prints help documentation for this command',
+  );
+  parser.addFlag(
     _kHelpOption,
     defaultsTo: false,
     negatable: false,
@@ -197,6 +204,7 @@ void main(List<String> argList) {
     template = templateArg.replaceAll(RegExp(r'.tmpl$'), '');
   }
 
+  final bool formatOutput = args[_kFormatOutputOption]! as bool;
   final String packageName = args[_kPackageOption] as String? ?? '';
   final String libraryName = args[_kLibraryOption] as String? ?? '';
   final String elementName = args[_kElementOption] as String? ?? '';
@@ -264,6 +272,7 @@ void main(List<String> argList) {
     generator.generateCode(
       sample,
       output: output,
+      formatOutput: formatOutput,
     );
     print(generator.generateHtml(sample));
   }
