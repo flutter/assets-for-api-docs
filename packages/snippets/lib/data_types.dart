@@ -103,7 +103,7 @@ abstract class CodeSample {
           if (!doneStrippingHeaders && RegExp(r'^\s*(\/\/.*)?$').hasMatch(line)) {
             continue;
           }
-          // Stop at the first line that isn't stripped.
+          // Stop skipping lines after the first line that isn't stripped.
           doneStrippingHeaders = true;
           stripped.add(line);
         }
@@ -113,7 +113,12 @@ abstract class CodeSample {
           file: _lineProto.file?.absolute.path,
         );
       }
-      _sourceFileContents = stripped.join('\n');
+      // Remove any section markers
+      final RegExp sectionMarkerRegExp = RegExp(
+        r'(\/\/\*\*+\n)?\/\/\* [▼▲]+.*$(\n\/\/\*\*+)?\n\n?',
+        multiLine: true,
+      );
+      _sourceFileContents = stripped.join('\n').replaceAll(sectionMarkerRegExp, '');
     }
     return _sourceFileContents ?? '';
   }
@@ -280,7 +285,8 @@ class DartpadSample extends ApplicationSample {
     required int index,
     required SourceLine lineProto,
   })  : assert(args.isNotEmpty),
-        super.fromFile(input: input, args: args, sourceFile: sourceFile, index: index, lineProto: lineProto);
+        super.fromFile(
+            input: input, args: args, sourceFile: sourceFile, index: index, lineProto: lineProto);
 
   @override
   String get type => 'dartpad';

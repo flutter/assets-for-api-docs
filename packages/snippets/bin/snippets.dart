@@ -161,7 +161,7 @@ void main(List<String> argList) {
     _kFormatOutputOption,
     defaultsTo: true,
     negatable: true,
-    help: 'Prints help documentation for this command',
+    help: 'Applies the Dart formatter to the published/extracted sample code.',
   );
   parser.addFlag(
     _kHelpOption,
