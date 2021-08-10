@@ -4,7 +4,8 @@
 
 import 'package:args/args.dart';
 import 'package:file/file.dart';
-import 'package:snippets/snippets.dart';
+
+import 'util.dart';
 
 /// A class to represent a line of input code, with associated line number, file
 /// and element name.

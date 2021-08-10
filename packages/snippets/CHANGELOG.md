@@ -1,6 +1,6 @@
 # Change Log for `snippets`
 
-## 0.2.1
+## 0.2.2
 
 * Enable parsing of linked samples, add section markers to extracted samples.
 

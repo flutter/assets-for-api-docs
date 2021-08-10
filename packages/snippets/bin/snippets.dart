@@ -96,7 +96,6 @@ String getChannelNameWithRetries() {
 void main(List<String> argList) {
   const Platform platform = LocalPlatform();
   final Map<String, String> environment = platform.environment;
-
   final ArgParser parser = ArgParser();
 
   parser.addOption(
