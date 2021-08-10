@@ -224,10 +224,10 @@ void main(List<String> argList) {
   } else {
     final List<String> idParts = <String>[];
     if (packageName.isNotEmpty && packageName != 'flutter') {
-      idParts.add(packageName);
+      idParts.add(packageName.replaceAll(RegExp(r'\W'), '_').toLowerCase());
     }
     if (libraryName.isNotEmpty) {
-      idParts.add(libraryName);
+      idParts.add(libraryName.replaceAll(RegExp(r'\W'), '_').toLowerCase());
     }
     if (elementName.isNotEmpty) {
       idParts.add(elementName);
