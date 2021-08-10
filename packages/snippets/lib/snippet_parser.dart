@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:file/file.dart';
+import 'package:path/path.dart' as path;
 
 import 'data_types.dart';
 import 'util.dart';
@@ -17,7 +18,9 @@ import 'util.dart';
 ///   assume:" block at the top of the file and adds them to the code samples
 ///   contained in the given [SourceElement] iterable.
 class SnippetDartdocParser {
-  SnippetDartdocParser();
+  SnippetDartdocParser(this.filesystem);
+
+  final FileSystem filesystem;
 
   /// The prefix of each comment line
   static const String _dartDocPrefix = '///';
@@ -37,6 +40,9 @@ class SnippetDartdocParser {
 
   /// A RegExp that matches the end of a code block within dartdoc.
   static final RegExp _codeBlockEndRegex = RegExp(r'///\s+```\s*$');
+
+  /// A RegExp that matches a linked sample pointer.
+  static final RegExp _filePointerRegex = RegExp(r'\*\* See code in (?<file>[^\]]+) \*\*');
 
   /// Parses the assumptions in the "Examples can assume:" block at the top of
   /// the `assumptionsFile` and adds them to the code samples contained in the
@@ -196,9 +202,13 @@ class SnippetDartdocParser {
     bool inSnippet = false;
     // Whether or not we're in a '```dart' segment.
     bool inDart = false;
+    bool foundSourceLink = false;
+    bool foundDartSection = false;
+    File? linkedFile;
     List<SourceLine> block = <SourceLine>[];
     List<String> snippetArgs = <String>[];
     final List<CodeSample> samples = <CodeSample>[];
+    final Directory flutterRoot = FlutterInformation.instance.getFlutterRoot();
 
     int index = 0;
     for (final SourceLine line in element.comment) {
@@ -220,6 +230,18 @@ class SnippetDartdocParser {
               );
               break;
             case 'sample':
+              if (linkedFile != null) {
+                samples.add(
+                  ApplicationSample.fromFile(
+                    input: block,
+                    args: snippetArgs,
+                    sourceFile: linkedFile,
+                    index: index++,
+                    lineProto: line,
+                  ),
+                );
+                break;
+              }
               samples.add(
                 ApplicationSample(
                   input: block,
@@ -230,6 +252,18 @@ class SnippetDartdocParser {
               );
               break;
             case 'dartpad':
+              if (linkedFile != null) {
+                samples.add(
+                  DartpadSample.fromFile(
+                    input: block,
+                    args: snippetArgs,
+                    sourceFile: linkedFile,
+                    index: index++,
+                    lineProto: line,
+                  ),
+                );
+                break;
+              }
               samples.add(
                 DartpadSample(
                   input: block,
@@ -245,6 +279,25 @@ class SnippetDartdocParser {
           snippetArgs = <String>[];
           block = <SourceLine>[];
           inSnippet = false;
+          foundSourceLink = false;
+          foundDartSection = false;
+          linkedFile = null;
+        } else if (_filePointerRegex.hasMatch(trimmedLine)) {
+          foundSourceLink = true;
+          if (foundDartSection) {
+            throw SnippetException('Snippet contains a source link and a dart section. Cannot contain both.',
+              file: line.file?.path,
+              line: line.line,
+            );
+          }
+          if (linkedFile != null) {
+            throw SnippetException('Found more than one linked sample. Only one linked file per sample is allowed.',
+              file: line.file?.path,
+              line: line.line,
+            );
+          }
+          final RegExpMatch match = _filePointerRegex.firstMatch(trimmedLine)!;
+          linkedFile = filesystem.file(path.join(flutterRoot.absolute.path, match.namedGroup('file')));
         } else {
           block.add(line.copyWith(text: line.text.replaceFirst(RegExp(r'\s*/// ?'), '')));
         }
@@ -273,8 +326,15 @@ class SnippetDartdocParser {
             block.add(line.copyWith(text: line.text.substring(index + 4)));
           }
         } else if (_codeBlockStartRegex.hasMatch(trimmedLine)) {
+          if (foundSourceLink) {
+            throw SnippetException('Snippet contains a source link and a dart section. Cannot contain both.',
+              file: line.file?.path,
+              line: line.line,
+            );
+          }
           assert(block.isEmpty);
           inDart = true;
+          foundDartSection = true;
         }
       }
       if (!inSnippet && !inDart) {

@@ -6,8 +6,6 @@
     </option>
     <option name="filePath" value="$PROJECT_DIR$/packages/snippets/bin/extract.dart" />
     <option name="workingDirectory" value="$PROJECT_DIR$/../flutter" />
-    <method v="2">
-      <option name="ToolBeforeRunTask" enabled="true" actionId="Tool_External Tools_Remove API" />
-    </method>
+    <method v="2" />
   </configuration>
 </component>

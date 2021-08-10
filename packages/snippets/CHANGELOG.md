@@ -1,5 +1,9 @@
 # Change Log for `snippets`
 
+## 0.2.2
+
+* Enable parsing of linked samples, add section markers to extracted samples.
+
 ## 0.2.1
 
 * Format the sample output, so that it matches the existing tool in the Flutter repo.

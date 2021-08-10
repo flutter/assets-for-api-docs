@@ -301,7 +301,8 @@ class SnippetGenerator {
     return sample.description.splitMapJoin(
       '\n',
       onMatch: (Match match) => match.group(0)!,
-      onNonMatch: (String nonmatch) => nonmatch.trimRight().isEmpty ? '//' : '// ${nonmatch.trimRight()}',
+      onNonMatch: (String nonmatch) =>
+          nonmatch.trimRight().isEmpty ? '//' : '// ${nonmatch.trimRight()}',
     );
   }
 
@@ -324,6 +325,7 @@ class SnippetGenerator {
     File? output,
     String? copyright,
     String? description,
+    bool formatOutput = true,
     bool addSectionMarkers = false,
     bool includeAssumptions = false,
   }) {
@@ -336,37 +338,48 @@ class SnippetGenerator {
     switch (sample.runtimeType) {
       case DartpadSample:
       case ApplicationSample:
-        final Directory templatesDir = configuration.templatesDirectory;
-        final String templateName = sample.template;
-        final File? templateFile = getTemplatePath(templateName, templatesDir: templatesDir);
-        if (templateFile == null) {
-          io.stderr.writeln('The template $templateName was not found in the templates '
-              'directory ${templatesDir.path}');
-          io.exit(1);
+        String app;
+        if (sample.sourceFile == null) {
+          final Directory templatesDir = configuration.templatesDirectory;
+          final String templateName = sample.template;
+          final File? templateFile = getTemplatePath(templateName, templatesDir: templatesDir);
+          if (templateFile == null) {
+            io.stderr.writeln('The template $templateName was not found in the templates '
+                'directory ${templatesDir.path}');
+            io.exit(1);
+          }
+          final String templateContents = _loadFileAsUtf8(templateFile);
+          final String templateRelativePath =
+              templateFile.absolute.path.contains(flutterRoot.absolute.path)
+                  ? path.relative(templateFile.absolute.path, from: flutterRoot.absolute.path)
+                  : templateFile.absolute.path;
+          final String templateHeader = '''
+// Template: $templateRelativePath
+//
+// Comment lines marked with "▼▼▼" and "▲▲▲" are used for authoring
+// of samples, and may be ignored if you are just exploring the sample.
+''';
+          app = interpolateTemplate(
+            snippetData,
+            addSectionMarkers ? '$templateHeader\n$templateContents' : templateContents,
+            sample.metadata,
+            addSectionMarkers: addSectionMarkers,
+            addCopyright: copyright != null,
+          );
+        } else {
+          app = sample.sourceFileContents;
         }
-        final String templateContents = _loadFileAsUtf8(templateFile);
-        final String templateRelativePath =
-            templateFile.absolute.path.contains(flutterRoot.absolute.path)
-                ? path.relative(templateFile.absolute.path, from: flutterRoot.absolute.path)
-                : templateFile.absolute.path;
-        final String app = interpolateTemplate(
-          snippetData,
-          addSectionMarkers
-              ? '/// Template: $templateRelativePath\n$templateContents'
-              : templateContents,
-          sample.metadata,
-          addSectionMarkers: addSectionMarkers,
-          addCopyright: copyright != null,
-        );
         sample.output = app;
-        final DartFormatter formatter = DartFormatter(pageWidth: 80, fixes: StyleFix.all);
-        try {
-          sample.output = formatter.format(sample.output);
-        } on FormatterException catch (exception) {
-          io.stderr.write('Code to format:\n${_addLineNumbers(sample.output)}\n');
-          errorExit('Unable to format sample code: $exception');
+        if (formatOutput) {
+          final DartFormatter formatter = DartFormatter(pageWidth: 80, fixes: StyleFix.all);
+          try {
+            sample.output = formatter.format(sample.output);
+          } on FormatterException catch (exception) {
+            io.stderr.write('Code to format:\n${_addLineNumbers(sample.output)}\n');
+            errorExit('Unable to format sample code: $exception');
+          }
+          sample.output = sortImports(sample.output);
         }
-        sample.output = sortImports(sample.output);
         if (output != null) {
           output.writeAsStringSync(sample.output);
 
@@ -383,20 +396,25 @@ class SnippetGenerator {
         break;
       case SnippetSample:
         if (sample is SnippetSample) {
-          String templateContents;
-          if (includeAssumptions) {
-            templateContents =
-                '${headers.map<String>((SourceLine line) => line.text).join('\n')}\n{{#assumptions}}\n{{description}}\n{{code}}';
+          String app;
+          if (sample.sourceFile == null) {
+            String templateContents;
+            if (includeAssumptions) {
+              templateContents =
+                  '${headers.map<String>((SourceLine line) => line.text).join('\n')}\n{{#assumptions}}\n{{description}}\n{{code}}';
+            } else {
+              templateContents = '{{description}}\n{{code}}';
+            }
+            app = interpolateTemplate(
+              snippetData,
+              templateContents,
+              sample.metadata,
+              addSectionMarkers: addSectionMarkers,
+              addCopyright: copyright != null,
+            );
           } else {
-            templateContents = '{{description}}\n{{code}}';
+            app = sample.inputAsString;
           }
-          final String app = interpolateTemplate(
-            snippetData,
-            templateContents,
-            sample.metadata,
-            addSectionMarkers: addSectionMarkers,
-            addCopyright: copyright != null,
-          );
           sample.output = app;
         }
         break;

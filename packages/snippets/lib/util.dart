@@ -155,10 +155,17 @@ String interpolateTemplate(
   bool addCopyright = false,
 }) {
   String wrapSectionMarker(Iterable<String> contents, {required String name}) {
+    if (contents.join('').trim().isEmpty) {
+      // Skip empty sections.
+      return '';
+    }
+    // We don't wrap some sections, because otherwise they generate invalid files.
+    const Set<String> skippedSections = <String>{'element', 'copyright'};
+    final bool addMarkers = addSectionMarkers && !skippedSections.contains(name);
     final String result = <String>[
-      if (addSectionMarkers) sectionArrows(name, start: true),
+      if (addMarkers) sectionArrows(name, start: true),
       ...contents,
-      if (addSectionMarkers) sectionArrows(name, start: false),
+      if (addMarkers) sectionArrows(name, start: false),
     ].join('\n');
     final RegExp wrappingNewlines = RegExp(r'^\n*(.*)\n*$', dotAll: true);
     return result.replaceAllMapped(wrappingNewlines, (Match match) => match.group(1)!);

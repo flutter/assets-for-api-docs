@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Snippets" type="DartCommandLineRunConfigurationType" factoryName="Dart Command Line Application">
+    <option name="arguments" value="--type dartpad --template=stateful_widget_scaffold_center --input=sample.input --package=package --library=library --element=element --serial=0 --output=/tmp/sample.out" />
+    <option name="envs">
+      <entry key="FLUTTER_ROOT" value="$PROJECT_DIR$/../flutter" />
+    </option>
+    <option name="filePath" value="$PROJECT_DIR$/packages/snippets/bin/snippets.dart" />
+    <option name="workingDirectory" value="$PROJECT_DIR$/../flutter" />
+    <method v="2" />
+  </configuration>
+</component>
