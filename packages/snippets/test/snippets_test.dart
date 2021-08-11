@@ -7,8 +7,12 @@ import 'dart:convert';
 import 'package:file/file.dart';
 import 'package:file/memory.dart';
 import 'package:path/path.dart' as path;
+import 'package:platform/platform.dart';
 import 'package:snippets/snippets.dart';
 import 'package:test/test.dart' hide TypeMatcher, isInstanceOf;
+
+import '../bin/snippets.dart' as snippets_main;
+import 'fake_process_manager.dart';
 
 void main() {
   group('Generator', () {
@@ -263,4 +267,130 @@ void main() {
       expect(json['sourcePath'], equals('packages/flutter/lib/src/widgets/foo.dart'));
     });
   });
+
+  group('snippets command line argument test', () {
+    late MemoryFileSystem memoryFileSystem = MemoryFileSystem();
+    late Directory tmpDir;
+    late Directory flutterRoot;
+    late FakeProcessManager fakeProcessManager;
+
+    setUp(() {
+      fakeProcessManager = FakeProcessManager();
+      memoryFileSystem = MemoryFileSystem();
+      tmpDir = memoryFileSystem.systemTempDirectory.createTempSync('flutter_snippets_test.');
+      flutterRoot = memoryFileSystem.directory(path.join(tmpDir.absolute.path, 'flutter'))
+        ..createSync(recursive: true);
+    });
+
+    test('command line arguments are parsed and passed to generator', () {
+      final FakePlatform platform = FakePlatform(environment: <String, String>{
+        'PACKAGE_NAME': 'dart:ui',
+        'LIBRARY_NAME': 'library',
+        'ELEMENT_NAME': 'element',
+        'FLUTTER_ROOT': flutterRoot.absolute.path,
+        // The details here don't really matter other than the flutter root.
+        'FLUTTER_VERSION': '''
+      {
+        "frameworkVersion": "2.5.0-6.0.pre.55",
+        "channel": "use_snippets_pkg",
+        "repositoryUrl": "git@github.com:flutter/flutter.git",
+        "frameworkRevision": "fec4641e1c88923ecd6c969e2ff8a0dd12dc0875",
+        "frameworkCommitDate": "2021-08-11 15:19:48 -0700",
+        "engineRevision": "d8bbebed60a77b3d4fe9c840dc94dfbce159d951",
+        "dartSdkVersion": "2.14.0 (build 2.14.0-393.0.dev)",
+        "flutterRoot": "${flutterRoot.absolute.path}"
+      }''',
+      });
+      final FlutterInformation flutterInformation = FlutterInformation(
+        filesystem: memoryFileSystem,
+        processManager: fakeProcessManager,
+        platform: platform,
+      );
+      FlutterInformation.instance = flutterInformation;
+      MockSnippetGenerator mockSnippetGenerator = MockSnippetGenerator();
+      snippets_main.snippetGenerator = mockSnippetGenerator;
+      String errorMessage = '';
+      errorExit = (String message) {
+        errorMessage = message;
+      };
+
+      snippets_main.platform = platform;
+      snippets_main.filesystem = memoryFileSystem;
+      final File input = memoryFileSystem.file(tmpDir.childFile('input.snippet'))
+        ..writeAsString('/// Test file');
+      snippets_main.main(<String>['--input=${input.absolute.path}', '--template=template']);
+
+      expect(
+          mockSnippetGenerator.sample.metadata,
+          equals(<String, dynamic>{
+            'id': 'dart_ui.library.element',
+            'element': 'element',
+            'sourcePath': 'unknown.dart',
+            'sourceLine': 1,
+            'channel': 'fix_ids',
+            'serial': '',
+            'package': 'dart:ui',
+            'library': 'library',
+          }));
+
+      snippets_main.main(<String>[]);
+      expect(errorMessage, equals('The --input option must be specified, either on the command line, or in the INPUT environment variable.'));
+      errorMessage = '';
+
+      snippets_main.main(<String>['--input=${input.absolute.path}']);
+      expect(errorMessage, equals('The --template option must be specified for "sample" and "dartpad" sample types.'));
+      errorMessage = '';
+
+      snippets_main.main(<String>['--input=${input.absolute.path}', '--type=snippet']);
+      expect(errorMessage, equals(''));
+      errorMessage = '';
+
+      mockSnippetGenerator = MockSnippetGenerator();
+      snippets_main.snippetGenerator = mockSnippetGenerator;
+      snippets_main.main(<String>['--input=${input.absolute.path}', '--type=snippet', '--no-format-output']);
+      expect(mockSnippetGenerator.formatOutput, equals(false));
+      errorMessage = '';
+
+      input.deleteSync();
+      snippets_main.main(<String>['--input=${input.absolute.path}', '--template=template']);
+      expect(errorMessage, equals('The input file ${input.absolute.path} does not exist.'));
+      errorMessage = '';
+    });
+  });
+}
+
+class MockSnippetGenerator extends SnippetGenerator {
+  late CodeSample sample;
+  File? output;
+  String? copyright;
+  String? description;
+  late bool formatOutput;
+  late bool addSectionMarkers;
+  late bool includeAssumptions;
+
+  @override
+  String generateCode(
+    CodeSample sample, {
+    File? output,
+    String? copyright,
+    String? description,
+    bool formatOutput = true,
+    bool addSectionMarkers = false,
+    bool includeAssumptions = false,
+  }) {
+    this.sample = sample;
+    this.output = output;
+    this.copyright = copyright;
+    this.description = description;
+    this.formatOutput = formatOutput;
+    this.addSectionMarkers = addSectionMarkers;
+    this.includeAssumptions = includeAssumptions;
+
+    return '';
+  }
+
+  @override
+  String generateHtml(CodeSample sample) {
+    return '';
+  }
 }
