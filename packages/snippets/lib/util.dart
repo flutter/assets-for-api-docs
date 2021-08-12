@@ -266,7 +266,9 @@ SampleStats getSampleStats(SourceElement element) {
 }
 
 /// Exit the app with a message to stderr.
-void errorExit(String message) {
+/// Can be overridden by tests to avoid exits.
+// ignore: prefer_function_declarations_over_variables
+void Function(String message) errorExit = (String message) {
   io.stderr.writeln(message);
   io.exit(1);
-}
+};

@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'dart:io' show ProcessResult, stderr, exit;
+import 'dart:io' show ProcessResult, stderr, exitCode;
 
 import 'package:args/args.dart';
 import 'package:file/file.dart';
@@ -24,8 +24,6 @@ const String _kSerialOption = 'serial';
 const String _kTemplateOption = 'template';
 const String _kTypeOption = 'type';
 
-const LocalFileSystem filesystem = LocalFileSystem();
-
 class GitStatusFailed implements Exception {
   GitStatusFailed(this.gitResult);
 
@@ -37,6 +35,17 @@ class GitStatusFailed implements Exception {
         '${gitResult.exitCode}:\n${gitResult.stderr}\n${gitResult.stdout}';
   }
 }
+
+/// A singleton filesystem that can be set by tests to a memory filesystem.
+FileSystem filesystem = const LocalFileSystem();
+
+/// A singleton snippet generator that can be set by tests to a mock, so that
+/// we can test the command line parsing.
+SnippetGenerator snippetGenerator = SnippetGenerator();
+
+/// A singleton platform that can be set by tests for use in testing command line
+/// parsing.
+Platform platform = const LocalPlatform();
 
 /// Get the name of the channel these docs are from.
 ///
@@ -94,7 +103,6 @@ String getChannelNameWithRetries() {
 /// Generates snippet dartdoc output for a given input, and creates any sample
 /// applications needed by the snippet.
 void main(List<String> argList) {
-  const Platform platform = LocalPlatform();
   final Map<String, String> environment = platform.environment;
   final ArgParser parser = ArgParser();
 
@@ -173,7 +181,8 @@ void main(List<String> argList) {
 
   if (args[_kHelpOption]! as bool) {
     stderr.writeln(parser.usage);
-    exit(0);
+    exitCode = 0;
+    return;
   }
 
   final String sampleType = args[_kTypeOption]! as String;
@@ -182,23 +191,27 @@ void main(List<String> argList) {
     stderr.writeln(parser.usage);
     errorExit('The --$_kInputOption option must be specified, either on the command '
         'line, or in the INPUT environment variable.');
+    return;
   }
 
   final File input = filesystem.file(args['input']! as String);
   if (!input.existsSync()) {
     errorExit('The input file ${input.path} does not exist.');
+    return;
   }
 
   String? template;
   if (sampleType == 'sample' || sampleType == 'dartpad') {
+    const String errorMessage = 'The --$_kTemplateOption option must be specified for "sample" and "dartpad" sample types.';
     if (args[_kTemplateOption] == null) {
-      errorExit('The --template option must be specified for "sample" and "dartpad" sample types.');
+      errorExit(errorMessage);
+      return;
     }
     final String templateArg = args[_kTemplateOption]! as String;
     if (templateArg.isEmpty) {
       stderr.writeln(parser.usage);
-      errorExit('The --$_kTemplateOption option must be specified on the command '
-          'line for application samples.');
+      errorExit(errorMessage);
+      return;
     }
     template = templateArg.replaceAll(RegExp(r'.tmpl$'), '');
   }
@@ -224,10 +237,10 @@ void main(List<String> argList) {
   } else {
     final List<String> idParts = <String>[];
     if (packageName.isNotEmpty && packageName != 'flutter') {
-      idParts.add(packageName);
+      idParts.add(packageName.replaceAll(RegExp(r'\W'), '_').toLowerCase());
     }
     if (libraryName.isNotEmpty) {
-      idParts.add(libraryName);
+      idParts.add(libraryName.replaceAll(RegExp(r'\W'), '_').toLowerCase());
     }
     if (elementName.isNotEmpty) {
       idParts.add(elementName);
@@ -239,6 +252,7 @@ void main(List<String> argList) {
       errorExit('Unable to determine ID. At least one of --$_kPackageOption, '
           '--$_kLibraryOption, --$_kElementOption, -$_kSerialOption, or the environment variables '
           'PACKAGE_NAME, LIBRARY_NAME, ELEMENT_NAME, or INVOCATION_INDEX must be non-empty.');
+      return;
     }
     id = idParts.join('.');
     output = filesystem.file(outputDirectory.childFile('$id.dart'));
@@ -256,7 +270,6 @@ void main(List<String> argList) {
     template: template ?? '',
     type: sampleType,
   );
-  final SnippetGenerator generator = SnippetGenerator();
   final Map<String, Object?> metadata = <String, Object?>{
     'channel': getChannelNameWithRetries(),
     'serial': serial,
@@ -268,13 +281,13 @@ void main(List<String> argList) {
 
   for (final CodeSample sample in element.samples) {
     sample.metadata.addAll(metadata);
-    generator.generateCode(
+    snippetGenerator.generateCode(
       sample,
       output: output,
       formatOutput: formatOutput,
     );
-    print(generator.generateHtml(sample));
+    print(snippetGenerator.generateHtml(sample));
   }
 
-  exit(0);
+  exitCode = 0;
 }

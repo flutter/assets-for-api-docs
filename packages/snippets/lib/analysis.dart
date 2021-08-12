@@ -10,28 +10,12 @@ import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/file_system/file_system.dart' as afs;
 import 'package:analyzer/file_system/physical_file_system.dart' as afs;
+import 'package:analyzer/source/line_info.dart';
 import 'package:file/file.dart';
-import 'package:interval_tree/interval_tree.dart';
 import 'package:snippets/snippets.dart';
 
 import 'data_types.dart';
-import 'interval_tree.dart';
 import 'util.dart';
-
-class _LineNumberInterval extends PayloadInterval<num, int> {
-  _LineNumberInterval(int start, int end, int line) : super(start, end, line);
-
-  @override
-  _LineNumberInterval copyWith(int? start, int? end, int? payload) {
-    return _LineNumberInterval(
-        start ?? this.start as int, end ?? this.end as int, payload ?? this.payload!);
-  }
-
-  @override
-  int? mergePayload(PayloadInterval<num, int> other) {
-    return other.payload == -1 ? payload : other.payload;
-  }
-}
 
 /// Gets an iterable over all of the blocks of documentation comments in a file
 /// using the analyzer.
@@ -106,41 +90,17 @@ class _SourceVisitor<T> extends RecursiveAstVisitor<T> {
 
   void assignLineNumbers() {
     final String contents = file.readAsStringSync();
-    int lineNumber = 0;
-    int startRange = 0;
-    final IntervalTree itree = IntervalTree();
-    for (int i = 0; i < contents.length; ++i) {
-      if (contents[i] == '\n') {
-        itree.add(_LineNumberInterval(startRange, i, lineNumber + 1));
-        lineNumber++;
-        startRange = i + 1;
-      }
-    }
-
-    int getLineForPosition(int startChar, int endChar) {
-      final IntervalTree resultTree = IntervalTree()
-        ..add(_LineNumberInterval(startChar, endChar, -1));
-      final IntervalTree intersection = itree.intersection(resultTree);
-      if (intersection.isNotEmpty) {
-        return (intersection.single as _LineNumberInterval).payload!;
-      } else {
-        return -1;
-      }
-    }
+    final LineInfo lineInfo = LineInfo.fromContent(contents);
 
     final Set<SourceElement> removedElements = <SourceElement>{};
     final Set<SourceElement> replacedElements = <SourceElement>{};
     for (final SourceElement element in elements) {
       final List<SourceLine> newLines = <SourceLine>[];
       for (final SourceLine line in element.comment) {
-        final int intervalLine = getLineForPosition(line.startChar, line.endChar);
-        if (intervalLine != -1) {
-          newLines.add(line.copyWith(line: intervalLine));
-        } else {
-          newLines.add(line);
-        }
+        final CharacterLocation intervalLine = lineInfo.getLocation(line.startChar);
+        newLines.add(line.copyWith(line: intervalLine.lineNumber));
       }
-      final int elementLine = getLineForPosition(element.startPos, element.startPos);
+      final int elementLine = lineInfo.getLocation(element.startPos).lineNumber;
       replacedElements.add(element.copyWith(comment: newLines, startLine: elementLine));
       removedElements.add(element);
     }

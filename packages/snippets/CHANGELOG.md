@@ -1,5 +1,9 @@
 # Change Log for `snippets`
 
+## 0.2.3
+
+* Fix sample ID generation to not generate IDs with invalid characters in them (e.g. a ":" in "dart:ui").
+
 ## 0.2.2
 
 * Enable parsing of linked samples, add section markers to extracted samples.
