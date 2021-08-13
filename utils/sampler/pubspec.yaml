@@ -1,7 +1,7 @@
 name: sampler
-description: A new Flutter project.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
-version: 1.0.0+1
+description: A specialized utility for managing sample code in the Flutter repo.
+version: 0.1.0
+homepage: https://github.com/flutter/flutter
 
 binaries:
   sampler
@@ -22,8 +22,7 @@ dependencies:
   process: ^4.2.1
   process_runner: ^4.0.0
   recase: ^4.0.0
-  snippets:
-    path: ../../packages/snippets
+  snippets: ^0.2.3
   watcher: ^1.0.0
 
 dev_dependencies:
