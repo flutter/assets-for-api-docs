@@ -4,27 +4,33 @@ This directory contains a Flutter app meant to help Flutter framework developers
 (the developers that work on the framework itself) create sample applications
 for the [API documentation](https://api.flutter.dev) for Flutter.
 
-The easiest way to run the app, is to run the [`sampler`
-script](../../bin/sampler), which will run the app in release mode on your
-platform. The application only runs on Linux, macOS, and Windows (mobile OSs
-don't have access to the Flutter repo, and who would want to code there
-anyhow!).
-
-This will run a Flutter app that will automatically load the list of files in
-the framework, and let you pick one.
-
-If the the `flutter` command is on your `PATH`, the app should be able to find the
-repo automatically, but if not, or if you'd rather specify the location yourself,
-you can either set the `FLUTTER_ROOT` environment variable, or supply the
-`--flutter-root` argument to the executable with the absolute path to the
-flutter repo you wish to use.
-
-Be *sure* you have your Flutter git repo in the correct branch/state for
-editing the files you want to edit.
+The easiest way to run the app, is to do this:
 
 ```
-Hint: Before you select a file in the app, if you want to change the template you
-are inserting into, change it in the original dartdoc comments before you
+% pub global activate sampler  # Just need to do this the first time.
+% pub global run sampler
+```
+
+Which will build and run the app in release mode on your platform. The
+application only runs on Linux, macOS, and Windows (mobile OSs don't have access
+to the Flutter repo, and who would want to code there anyhow!). The first time
+you run it, it will build the Flutter app, and will run that app thereafter.
+
+This Flutter app that will automatically load the list of files in the
+framework, and let you pick one.
+
+If the the `flutter` command is on your `PATH`, the app should be able to find
+the repo automatically, but if not, or if you'd rather specify the location
+yourself, you can either set the `FLUTTER_ROOT` environment variable, or supply
+the `--flutter-root` argument to the executable with the absolute path to the
+flutter repo you wish to use.
+
+Be *sure* you have your Flutter git repo in the correct branch/state for editing
+the files you want to edit.
+
+```
+Hint: Before you select a file in the app, if you want to change the template
+you are inserting into, change it in the original dartdoc comments before you
 extract.
 ```
 
@@ -54,7 +60,7 @@ Once you have extracted the sample, you can copy the path to its main and open
 that in your editor, or use the `OPEN IN VS CODE` or `OPEN IN INTELLIJ` buttons
 to open then project in an IDE.
 
-Now edit the selected sample.  Be careful to only edit the sections inside the
+Now edit the selected sample. Be careful to only edit the sections inside the
 section markers: any editing occurring outside the section markers will be lost
 when the code is reinserted. If you mangle the section markers themselves, it
 probably will fail to re-insert. If you need to make a change to code that is

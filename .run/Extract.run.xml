@@ -4,7 +4,7 @@
     <option name="envs">
       <entry key="FLUTTER_ROOT" value="$PROJECT_DIR$/../flutter" />
     </option>
-    <option name="filePath" value="$PROJECT_DIR$/packages/snippets/bin/extract.dart" />
+    <option name="filePath" value="$PROJECT_DIR$/packages/snippets/bin/extract_sample.dart" />
     <option name="workingDirectory" value="$PROJECT_DIR$/../flutter" />
     <method v="2" />
   </configuration>
