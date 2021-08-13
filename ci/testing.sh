@@ -16,8 +16,26 @@ fi
 # Default to the first arg if SHARD isn't set, and to "test" if neither are set.
 SHARD="${SHARD:-${1:-test}}"
 
+function test_packages() {
+  for dir in "$REPO_DIR/packages/"* "$REPO_DIR/utils/"*; do
+    if [[ -e "$dir/pubspec.yaml" && -e "$dir/test" ]]; then
+      (cd "$dir" && flutter test)
+    fi
+  done
+}
+
+function test_publishable() {
+  for dir in "$REPO_DIR/packages/"* "$REPO_DIR/utils/"*; do
+    if [[ -e "$dir/CHANGELOG.md" ]]; then
+      (cd "$dir" && pub publish --dry-run)
+    fi
+  done
+}
+
 if [[ "$SHARD" == "test" ]]; then
   echo "Running tests."
   (cd "$REPO_DIR/bin" && pub run test)
-  (cd "$REPO_DIR/packages/diagram_capture" && flutter test)
+  test_packages
+  echo "Checking publishability."
+  test_publishable
 fi

@@ -17,6 +17,11 @@ class FakeFlutterInformation extends FlutterInformation {
   final Directory flutterRoot;
 
   @override
+  Directory getFlutterRoot() {
+    return flutterRoot;
+  }
+
+  @override
   Map<String, dynamic> getFlutterInformation() {
     return <String, dynamic>{
       'flutterRoot': flutterRoot,
