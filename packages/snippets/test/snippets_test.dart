@@ -320,14 +320,17 @@ void main() {
         ..writeAsString('/// Test file');
       snippets_main.main(<String>['--input=${input.absolute.path}', '--template=template']);
 
+      final Map<String, dynamic> metadata = mockSnippetGenerator.sample.metadata;
+      // Ignore the channel, because channel is really just the branch, and will be
+      // different on development workstations.
+      metadata.remove('channel');
       expect(
-          mockSnippetGenerator.sample.metadata,
+          metadata,
           equals(<String, dynamic>{
             'id': 'dart_ui.library.element',
             'element': 'element',
             'sourcePath': 'unknown.dart',
             'sourceLine': 1,
-            'channel': 'fix_ids',
             'serial': '',
             'package': 'dart:ui',
             'library': 'library',
