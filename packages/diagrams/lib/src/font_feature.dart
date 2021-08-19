@@ -13,9 +13,9 @@ import 'package:flutter/rendering.dart';
 import 'diagram_step.dart';
 
 // When adding a new font here, add it to:
-//    /utils/diagram_generator/pubspec.yaml
+//    /packages/diagram_generator/pubspec.yaml
 // ...and put the binary and license file in:
-//    /utils/diagram_generator/fonts
+//    /packages/diagram_generator/fonts
 
 const double _margin = 5.0;
 const double _gap = _margin * 5;

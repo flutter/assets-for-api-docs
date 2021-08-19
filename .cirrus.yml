@@ -49,7 +49,6 @@ task:
       depends_on:
         - format+analyze
     - name: test
-      # Exclude flutter_image; its tests need a test server, so are run via local_tests.sh
       script: ./ci/tool_runner.sh test
       depends_on:
         - format+analyze
