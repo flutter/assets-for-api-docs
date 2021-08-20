@@ -16,8 +16,3 @@ RUN wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add - &&
     sudo apt-get install --yes --allow-unauthenticated clang-format-12 && \
     sudo apt-get clean --yes
 
-RUN yes | sdkmanager \
-    "platforms;android-27" \
-    "build-tools;27.0.3" \
-    "extras;google;m2repository" \
-    "extras;android;m2repository"
