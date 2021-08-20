@@ -4,11 +4,8 @@
 # found in the LICENSE file.
 
 # A script that will run pub upgrade for each package in the repo.
-set -e
 
-if [[ -n '$CIRRUS_CI' ]]; then
-  export PATH="$FLUTTER_DIR/bin:$FLUTTER_DIR/bin/cache/dart-sdk/bin:$PATH"
-fi
+set -e
 
 # So that users can run this script from anywhere and it will work as expected.
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null && pwd)"
@@ -18,11 +15,18 @@ function pub_upgrade() {
   local dir="$1"
   if [[ -e "$dir/pubspec.yaml" ]]; then
     echo "Running 'flutter pub upgrade' in $dir"
-    (cd $dir; flutter pub upgrade)
+    output=$(cd "$dir"; flutter pub upgrade)
+    if [[ $? != 0 ]]; then
+      echo "$output"
+    fi
   fi
 }
 
-for dir in $(find "$REPO_DIR" -type d); do
-  pub_upgrade "$dir"
-done
+function main() {
+  local dir
+  for dir in $(find "$REPO_DIR" -type d); do
+    pub_upgrade "$dir"
+  done
+}
 
+main

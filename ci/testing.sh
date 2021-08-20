@@ -8,38 +8,59 @@ set -e
 # So that users can run this script from anywhere and it will work as expected.
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null && pwd)"
 REPO_DIR="$(dirname "$SCRIPT_DIR")"
+ALLOWED_CHECKS=(license-check analyze pubspec-check version-check publish-check test)
 
-if [[ -n "$CIRRUS_CI" ]]; then
-  echo "Updating PATH."
-  export PATH="$FLUTTER_DIR/bin:$FLUTTER_DIR/bin/cache/dart-sdk/bin:$PATH"
-else
-  echo "Updating packages."
-  "$SCRIPT_DIR/pub_upgrade.sh"
-fi
+function usage() {
+  echo "Usage: testing.sh [--help] [--no-upgrade] [--no-activate] [<checks>]"
+  echo "  --no-activate - Don't activate flutter_plugin_tools"
+  echo "  <checks>      - The checks to run. If not specified, all checks are run."
+  echo "                  Available checks are:"
+  echo "                    ${ALLOWED_CHECKS[*]}"
+}
 
-# Default to the first arg if SHARD isn't set, and to "test" if neither are set.
-SHARD="${SHARD:-${1:-test}}"
-
-function test_packages() {
-  for dir in "$REPO_DIR/packages/"* "$REPO_DIR/utils/"*; do
-    if [[ -e "$dir/pubspec.yaml" && -e "$dir/test" ]]; then
-      (cd "$dir" && flutter test)
-    fi
+function parse_args() {
+  while (( "$#" )); do
+    case "$1" in
+      --help)
+        usage
+        exit 0
+        ;;
+      --no-activate)
+        ACTIVATE=0
+        shift
+        ;;
+      --)
+        shift
+        break
+        ;;
+      *)
+        if [[ " ${ALLOWED_CHECKS[*]} " =~ " $1 " ]]; then
+          CHECKS=("${CHECKS[@]}" "$1")
+        else
+          echo "$1 is not a valid check"
+          usage
+          exit 1
+        fi
+        shift
+        ;;
+    esac
   done
 }
 
-function test_publishable() {
-  for dir in "$REPO_DIR/packages/"* "$REPO_DIR/utils/"*; do
-    if [[ -e "$dir/CHANGELOG.md" ]]; then
-      (cd "$dir" && pub publish --dry-run)
-    fi
-  done
-}
-
-if [[ "$SHARD" == "test" ]]; then
-  echo "Running tests."
-  (cd "$REPO_DIR/bin" && pub run test)
-  test_packages
-  echo "Checking publishability."
-  test_publishable
+ACTIVATE=1
+CHECKS=()
+parse_args "$@"
+if [[ ${#CHECKS[@]} == 0 ]]; then
+  CHECKS=("${ALLOWED_CHECKS[@]}")
 fi
+
+cd "$REPO_DIR"
+if [[ $ACTIVATE == 1 ]]; then
+  echo "Activating plugin tools"
+  pub global activate flutter_plugin_tools
+fi
+
+for check in "${CHECKS[@]}"; do
+  echo "Running $check"
+  dart pub global run flutter_plugin_tools "$check" --run-on-changed-packages
+done
