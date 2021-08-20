@@ -35,7 +35,8 @@ String getName(Type type) {
 
 /// A base class for diagrams that show explicit animation transitions, like
 /// [FadeTransition]. See transitions.dart for more examples.
-abstract class TransitionDiagram<T> extends StatefulWidget implements DiagramMetadata {
+abstract class TransitionDiagram<T> extends StatefulWidget
+    implements DiagramMetadata {
   const TransitionDiagram({
     Key? key,
     this.decorate = true,
@@ -155,7 +156,8 @@ class TransitionDiagramState<T> extends State<TransitionDiagram<T>>
   }
 }
 
-abstract class ImplicitAnimationDiagram<T> extends StatefulWidget implements DiagramMetadata {
+abstract class ImplicitAnimationDiagram<T> extends StatefulWidget
+    implements DiagramMetadata {
   const ImplicitAnimationDiagram({Key? key}) : super(key: key);
 
   /// The animation curve for the animation to use.
@@ -170,10 +172,12 @@ abstract class ImplicitAnimationDiagram<T> extends StatefulWidget implements Dia
   Size get size => const Size(250.0, 250.0);
 
   @override
-  ImplicitAnimationDiagramState<T> createState() => ImplicitAnimationDiagramState<T>();
+  ImplicitAnimationDiagramState<T> createState() =>
+      ImplicitAnimationDiagramState<T>();
 }
 
-class ImplicitAnimationDiagramState<T> extends State<ImplicitAnimationDiagram<T>> {
+class ImplicitAnimationDiagramState<T>
+    extends State<ImplicitAnimationDiagram<T>> {
   bool selected = false;
 
   @override
@@ -277,12 +281,13 @@ class SparklinePainter extends CustomPainter {
     // The sparkline itself.
     final Path sparkline = Path()..moveTo(area.left, area.bottom);
     final double stepSize = 1.0 / (area.width * ui.window.devicePixelRatio);
-    
+
     void lineToPoint(Path path, double t) {
-      final Offset point = FractionalOffset(t, 1.0 - curve.transform(t)).withinRect(area);
+      final Offset point =
+          FractionalOffset(t, 1.0 - curve.transform(t)).withinRect(area);
       path.lineTo(point.dx, point.dy);
     }
-    
+
     for (double t = 0.0; t <= position; t += stepSize) {
       lineToPoint(sparkline, t);
     }
@@ -301,7 +306,8 @@ class SparklinePainter extends CustomPainter {
     // In case the last value wasn't at 1.0 due to rounding.
     lineToPoint(graphProgress, 1.0);
     canvas.drawPath(graphProgress, _graphProgressPaint);
-    canvas.drawCircle(Offset(activePoint.dx, activePoint.dy), 4.0, _positionCirclePaint);
+    canvas.drawCircle(
+        Offset(activePoint.dx, activePoint.dy), 4.0, _positionCirclePaint);
   }
 
   @override
@@ -311,7 +317,8 @@ class SparklinePainter extends CustomPainter {
 }
 
 class Sparkline extends StatelessWidget {
-  const Sparkline({Key? key, required this.curve, required this.position}) : super(key: key);
+  const Sparkline({Key? key, required this.curve, required this.position})
+      : super(key: key);
 
   final Curve curve;
   final double position;

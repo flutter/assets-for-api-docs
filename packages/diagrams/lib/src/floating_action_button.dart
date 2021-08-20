@@ -13,7 +13,8 @@ import 'diagram_step.dart';
 const String _basic = 'floating_action_button';
 const String _labeled = 'floating_action_button_label';
 
-class FloatingActionButtonDiagram extends StatelessWidget implements DiagramMetadata {
+class FloatingActionButtonDiagram extends StatelessWidget
+    implements DiagramMetadata {
   const FloatingActionButtonDiagram(this.name, {Key? key}) : super(key: key);
 
   @override
@@ -29,9 +30,7 @@ class FloatingActionButtonDiagram extends StatelessWidget implements DiagramMeta
           appBar: AppBar(
             title: const Text('Floating Action Button'),
           ),
-          body: const Center(
-              child: Text('Press the button below!')
-          ),
+          body: const Center(child: Text('Press the button below!')),
           floatingActionButton: FloatingActionButton(
             onPressed: () {},
             child: const Icon(Icons.navigation),
@@ -69,14 +68,17 @@ class FloatingActionButtonDiagram extends StatelessWidget implements DiagramMeta
   }
 }
 
-class FloatingActionButtonDiagramStep extends DiagramStep<FloatingActionButtonDiagram> {
-  FloatingActionButtonDiagramStep(DiagramController controller) : super(controller);
+class FloatingActionButtonDiagramStep
+    extends DiagramStep<FloatingActionButtonDiagram> {
+  FloatingActionButtonDiagramStep(DiagramController controller)
+      : super(controller);
 
   @override
   final String category = 'material';
 
   @override
-  Future<List<FloatingActionButtonDiagram>> get diagrams async => <FloatingActionButtonDiagram>[
+  Future<List<FloatingActionButtonDiagram>> get diagrams async =>
+      <FloatingActionButtonDiagram>[
         const FloatingActionButtonDiagram(_basic),
         const FloatingActionButtonDiagram(_labeled),
       ];

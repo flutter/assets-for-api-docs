@@ -53,7 +53,8 @@ class StrokeJoinDescription extends CustomPainter {
     );
   }
 
-  static TextPainter _createLabelPainter(String label, {FontStyle style = FontStyle.normal}) {
+  static TextPainter _createLabelPainter(String label,
+      {FontStyle style = FontStyle.normal}) {
     final TextPainter result = TextPainter(
       textDirection: TextDirection.ltr,
       text: TextSpan(

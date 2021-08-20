@@ -13,13 +13,12 @@ import 'package:flutter/scheduler.dart';
 import 'diagram_step.dart';
 import 'fake_drag_scroll_activity.dart';
 
-final Duration _kTotalDuration =
-      _kScrollUpDuration
-    + _kScrollPauseDuration
-    + _kScrollDownDurationPartOne
-    + _kScrollPauseDuration
-    + _kScrollDownDurationPartTwo
-    + _kScrollPauseDuration;
+final Duration _kTotalDuration = _kScrollUpDuration +
+    _kScrollPauseDuration +
+    _kScrollDownDurationPartOne +
+    _kScrollPauseDuration +
+    _kScrollDownDurationPartTwo +
+    _kScrollPauseDuration;
 const Duration _kScrollUpDuration = Duration(seconds: 1, milliseconds: 500);
 const Duration _kScrollDownDurationPartOne = Duration(milliseconds: 800);
 const Duration _kScrollDownDurationPartTwo = Duration(seconds: 1);
@@ -28,7 +27,6 @@ const Duration _kScrollPauseDuration = Duration(milliseconds: 900);
 const double _kCurveAnimationFrameRate = 60.0;
 
 class SliverAppBarDiagram extends StatefulWidget implements DiagramMetadata {
-
   const SliverAppBarDiagram({
     this.pinned = false,
     this.floating = false,
@@ -61,8 +59,8 @@ class SliverAppBarDiagram extends StatefulWidget implements DiagramMetadata {
   }
 }
 
-class SliverAppBarDiagramState extends State<SliverAppBarDiagram> with TickerProviderStateMixin<SliverAppBarDiagram> {
-
+class SliverAppBarDiagramState extends State<SliverAppBarDiagram>
+    with TickerProviderStateMixin<SliverAppBarDiagram> {
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -84,22 +82,19 @@ class SliverAppBarDiagramState extends State<SliverAppBarDiagram> with TickerPro
 
   Future<void> _play() async {
     await Future<void>.delayed(_kScrollPauseDuration);
-    if (!mounted)
-      return;
+    if (!mounted) return;
     await _animate(
       to: 600.0,
       duration: _kScrollUpDuration,
     );
     await Future<void>.delayed(_kScrollPauseDuration);
-    if (!mounted)
-      return;
+    if (!mounted) return;
     await _animate(
       to: 490.0,
       duration: _kScrollDownDurationPartOne,
     );
     await Future<void>.delayed(_kScrollPauseDuration);
-    if (!mounted)
-      return;
+    if (!mounted) return;
     await _animate(
       to: 0.0,
       duration: _kScrollDownDurationPartTwo,
@@ -110,7 +105,8 @@ class SliverAppBarDiagramState extends State<SliverAppBarDiagram> with TickerPro
   }
 
   Future<void> _animate({required double to, required Duration duration}) {
-    final ScrollPositionWithSingleContext position = _scrollController.position as ScrollPositionWithSingleContext;
+    final ScrollPositionWithSingleContext position =
+        _scrollController.position as ScrollPositionWithSingleContext;
     final FakeDragScrollActivity activity = FakeDragScrollActivity(
       position,
       from: _scrollController.offset,
@@ -142,7 +138,8 @@ class SliverAppBarDiagramState extends State<SliverAppBarDiagram> with TickerPro
             leading: const Icon(Icons.menu),
           ),
           SliverList(
-            delegate: SliverChildListDelegate(List<Widget>.generate(20, (int i) {
+            delegate:
+                SliverChildListDelegate(List<Widget>.generate(20, (int i) {
               return Container(
                 color: i.isEven ? Colors.white : Colors.black12,
                 height: 100.0,
@@ -163,7 +160,8 @@ class SliverAppBarDiagramStep extends DiagramStep<SliverAppBarDiagram> {
     for (final bool pinned in <bool>[false, true]) {
       for (final bool floating in <bool>[false, true]) {
         // snap is only a legal option if floating is true.
-        for (final bool snap in floating ? <bool>[false, true] : <bool>[false]) {
+        for (final bool snap
+            in floating ? <bool>[false, true] : <bool>[false]) {
           _diagrams.add(SliverAppBarDiagram(
             pinned: pinned,
             floating: floating,
@@ -193,5 +191,3 @@ class SliverAppBarDiagramStep extends DiagramStep<SliverAppBarDiagram> {
     );
   }
 }
-
-

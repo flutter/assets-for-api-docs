@@ -1,4 +1,4 @@
-// Copyright 2017 The Chromium Authors. All rights reserved.
+// Copyright 2013 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -14,7 +14,8 @@ import 'utils.dart';
 
 final GlobalKey _splashKey = GlobalKey();
 
-class InkResponseSmallDiagram extends StatelessWidget implements DiagramMetadata {
+class InkResponseSmallDiagram extends StatelessWidget
+    implements DiagramMetadata {
   InkResponseSmallDiagram({Key? key}) : super(key: key);
 
   final GlobalKey canvasKey = GlobalKey();
@@ -68,8 +69,10 @@ class InkResponseSmallDiagram extends StatelessWidget implements DiagramMetadata
                   key: canvasKey,
                   labels: <Label>[
                     Label(childKey, 'child', const FractionalOffset(0.1, 0.85)),
-                    Label(_splashKey, 'splash', const FractionalOffset(0.8, 0.6)),
-                    Label(heroKey, 'highlight', const FractionalOffset(0.45, 0.25)),
+                    Label(
+                        _splashKey, 'splash', const FractionalOffset(0.8, 0.6)),
+                    Label(heroKey, 'highlight',
+                        const FractionalOffset(0.45, 0.25)),
                   ],
                   heroKey: heroKey,
                 ),
@@ -83,7 +86,8 @@ class InkResponseSmallDiagram extends StatelessWidget implements DiagramMetadata
 }
 
 class InkResponseSmallDiagramStep extends DiagramStep<InkResponseSmallDiagram> {
-  InkResponseSmallDiagramStep(DiagramController controller) : super(controller) {
+  InkResponseSmallDiagramStep(DiagramController controller)
+      : super(controller) {
     _diagrams.add(InkResponseSmallDiagram());
   }
 
@@ -99,8 +103,10 @@ class InkResponseSmallDiagramStep extends DiagramStep<InkResponseSmallDiagram> {
   Future<File> generateDiagram(InkResponseSmallDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
     controller.advanceTime(Duration.zero);
-    final RenderBox target = _splashKey.currentContext!.findRenderObject()! as RenderBox;
-    final Offset targetOffset = target.localToGlobal(target.size.bottomRight(Offset.zero));
+    final RenderBox target =
+        _splashKey.currentContext!.findRenderObject()! as RenderBox;
+    final Offset targetOffset =
+        target.localToGlobal(target.size.bottomRight(Offset.zero));
     final TestGesture gesture = await controller.startGesture(targetOffset);
     final File result = await controller.drawDiagramToFile(
       File('${diagram.name}.png'),

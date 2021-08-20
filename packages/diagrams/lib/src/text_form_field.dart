@@ -33,7 +33,9 @@ class TextFormFieldDiagram extends StatelessWidget implements DiagramMetadata {
           ),
           onSaved: (String? value) {},
           validator: (String? value) {
-            return (value ?? '').contains('@') ? 'Do not use the @ char.' : null;
+            return (value ?? '').contains('@')
+                ? 'Do not use the @ char.'
+                : null;
           },
         );
         break;
@@ -48,7 +50,9 @@ class TextFormFieldDiagram extends StatelessWidget implements DiagramMetadata {
           ),
           onSaved: (String? value) {},
           validator: (String? value) {
-            return (value ?? '').contains('@') ? 'Do not use the @ char.' : null;
+            return (value ?? '').contains('@')
+                ? 'Do not use the @ char.'
+                : null;
           },
         );
         break;

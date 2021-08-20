@@ -15,9 +15,9 @@ const Duration _kBreakDuration = Duration(seconds: 1, milliseconds: 500);
 const Duration _kAnimationDuration = Duration(seconds: 3);
 
 final Duration _kTotalDuration = _kBreakDuration +
-                                 _kAnimationDuration +
-                                 _kBreakDuration +
-                                 _kAnimationDuration;
+    _kAnimationDuration +
+    _kBreakDuration +
+    _kAnimationDuration;
 
 const double _kCurveAnimationFrameRate = 60.0;
 
@@ -31,7 +31,8 @@ class TweensDiagram extends StatefulWidget implements DiagramMetadata {
   String get name => 'tweens';
 }
 
-class TweensDiagramState extends State<TweensDiagram> with TickerProviderStateMixin<TweensDiagram> {
+class TweensDiagramState extends State<TweensDiagram>
+    with TickerProviderStateMixin<TweensDiagram> {
   late AnimationController _controller;
   Timer? _timer;
 
@@ -176,8 +177,8 @@ class TweensDiagramStep extends DiagramStep<TweensDiagram> {
 
   @override
   Future<List<TweensDiagram>> get diagrams async => <TweensDiagram>[
-    const TweensDiagram(),
-  ];
+        const TweensDiagram(),
+      ];
 
   @override
   Future<File> generateDiagram(TweensDiagram diagram) async {

@@ -14,7 +14,8 @@ import 'animation_diagram.dart';
 import 'diagram_step.dart';
 
 @immutable
-class DiagramImage extends ImageProvider<DiagramImage> implements ui.Codec, ui.FrameInfo {
+class DiagramImage extends ImageProvider<DiagramImage>
+    implements ui.Codec, ui.FrameInfo {
   DiagramImage(
     this.image, {
     required this.vsync,
@@ -28,7 +29,8 @@ class DiagramImage extends ImageProvider<DiagramImage> implements ui.Codec, ui.F
   final Duration? loadingDuration;
   final TickerProvider vsync;
   final double scale;
-  final StreamController<ImageChunkEvent> chunkEvents = StreamController<ImageChunkEvent>();
+  final StreamController<ImageChunkEvent> chunkEvents =
+      StreamController<ImageChunkEvent>();
 
   static const int _totalBytes = 1024;
 
@@ -94,12 +96,10 @@ class DiagramImage extends ImageProvider<DiagramImage> implements ui.Codec, ui.F
 
   @override
   bool operator ==(dynamic other) {
-    if (other.runtimeType != runtimeType)
-      return false;
+    if (other.runtimeType != runtimeType) return false;
     // ignore: test_types_in_equals
     final DiagramImage typedOther = other as DiagramImage;
-    return image == typedOther.image
-        && scale == typedOther.scale;
+    return image == typedOther.image && scale == typedOther.scale;
   }
 
   @override
@@ -129,7 +129,8 @@ class FrameBuilderImageDiagram extends ImageDiagram {
           ),
           child: Image(
             image: image,
-            frameBuilder: (BuildContext context, Widget child, int? frame, bool wasSynchronouslyLoaded) {
+            frameBuilder: (BuildContext context, Widget child, int? frame,
+                bool wasSynchronouslyLoaded) {
               if (wasSynchronouslyLoaded) {
                 return child;
               }
@@ -148,7 +149,8 @@ class FrameBuilderImageDiagram extends ImageDiagram {
 }
 
 class LoadingProgressImageDiagram extends ImageDiagram {
-  const LoadingProgressImageDiagram(DiagramController controller) : super(controller);
+  const LoadingProgressImageDiagram(DiagramController controller)
+      : super(controller);
 
   @override
   Widget build(BuildContext context, ImageProvider image) {
@@ -164,13 +166,15 @@ class LoadingProgressImageDiagram extends ImageDiagram {
           ),
           child: Image(
             image: image,
-            loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+            loadingBuilder: (BuildContext context, Widget child,
+                ImageChunkEvent? loadingProgress) {
               if (loadingProgress == null) {
                 return child;
               }
               return Center(
                 child: CircularProgressIndicator(
-                  value: loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!,
+                  value: loadingProgress.cumulativeBytesLoaded /
+                      loadingProgress.expectedTotalBytes!,
                 ),
               );
             },
@@ -189,9 +193,9 @@ class ImageDiagramsStep extends DiagramStep<ImageDiagram> {
 
   @override
   Future<List<ImageDiagram>> get diagrams async => <ImageDiagram>[
-    FrameBuilderImageDiagram(controller),
-    LoadingProgressImageDiagram(controller),
-  ];
+        FrameBuilderImageDiagram(controller),
+        LoadingProgressImageDiagram(controller),
+      ];
 
   @override
   Future<File> generateDiagram(ImageDiagram diagram) async {
@@ -210,7 +214,8 @@ class ImageDiagramsStep extends DiagramStep<ImageDiagram> {
       loadingDuration: diagram.imageLoadingDuration,
     );
 
-    controller.builder = (BuildContext context) => diagram.build(context, imageProvider);
+    controller.builder =
+        (BuildContext context) => diagram.build(context, imageProvider);
     final File result = await controller.drawAnimatedDiagramToFiles(
       end: diagram.animationDuration,
       frameRate: diagram.frameRate,
@@ -246,4 +251,3 @@ abstract class ImageDiagram implements DiagramMetadata {
   @mustCallSuper
   void dispose() {}
 }
-

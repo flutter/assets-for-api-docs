@@ -58,8 +58,7 @@ class FormDiagramStep extends DiagramStep<FormDiagram> {
   final String category = 'widgets';
 
   @override
-  Future<List<FormDiagram>> get diagrams async =>
-      <FormDiagram>[
+  Future<List<FormDiagram>> get diagrams async => <FormDiagram>[
         const FormDiagram('form'),
       ];
 

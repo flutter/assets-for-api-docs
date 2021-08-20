@@ -27,22 +27,35 @@ typedef _Painter = void Function(ui.Canvas canvas);
 Future<void> _generateSamples() async {
   _originalImage = await _paint((ui.Canvas canvas) {
     const FlutterLogoDecoration flutterLogoDecoration = FlutterLogoDecoration();
-    final BoxPainter flutterLogoPainter = flutterLogoDecoration.createBoxPainter();
-    flutterLogoPainter.paint(canvas, Offset.zero, const ImageConfiguration(
-      size: Size(60, 60),
-    ));
+    final BoxPainter flutterLogoPainter =
+        flutterLogoDecoration.createBoxPainter();
+    flutterLogoPainter.paint(
+        canvas,
+        Offset.zero,
+        const ImageConfiguration(
+          size: Size(60, 60),
+        ));
   }).toImage(_originalWidth, _originalHeight);
 
-  _scaledSamples.add(await _paintScaledSample(1.0, 'original', FilterQuality.none));
-  _scaledSamples.add(await _paintScaledSample(0.3, '0.3x @ none', FilterQuality.none));
-  _scaledSamples.add(await _paintScaledSample(0.3, '0.3x @ low', FilterQuality.low));
-  _scaledSamples.add(await _paintScaledSample(0.3, '0.3x @ medium', FilterQuality.medium));
-  _scaledSamples.add(await _paintScaledSample(0.3, '0.3x @ high', FilterQuality.high));
+  _scaledSamples
+      .add(await _paintScaledSample(1.0, 'original', FilterQuality.none));
+  _scaledSamples
+      .add(await _paintScaledSample(0.3, '0.3x @ none', FilterQuality.none));
+  _scaledSamples
+      .add(await _paintScaledSample(0.3, '0.3x @ low', FilterQuality.low));
+  _scaledSamples.add(
+      await _paintScaledSample(0.3, '0.3x @ medium', FilterQuality.medium));
+  _scaledSamples
+      .add(await _paintScaledSample(0.3, '0.3x @ high', FilterQuality.high));
 
-  _scaledSamples.add(await _paintScaledSample(2.3, '2.3x @ none', FilterQuality.none));
-  _scaledSamples.add(await _paintScaledSample(2.3, '2.3x @ low', FilterQuality.low));
-  _scaledSamples.add(await _paintScaledSample(2.3, '2.3x @ medium', FilterQuality.medium));
-  _scaledSamples.add(await _paintScaledSample(2.3, '2.3x @ high', FilterQuality.high));
+  _scaledSamples
+      .add(await _paintScaledSample(2.3, '2.3x @ none', FilterQuality.none));
+  _scaledSamples
+      .add(await _paintScaledSample(2.3, '2.3x @ low', FilterQuality.low));
+  _scaledSamples.add(
+      await _paintScaledSample(2.3, '2.3x @ medium', FilterQuality.medium));
+  _scaledSamples
+      .add(await _paintScaledSample(2.3, '2.3x @ high', FilterQuality.high));
 }
 
 ui.Picture _paint(_Painter painter) {
@@ -52,7 +65,8 @@ ui.Picture _paint(_Painter painter) {
   return recorder.endRecording();
 }
 
-Future<ui.Picture> _paintScaledSample(double scale, String label, FilterQuality quality) async {
+Future<ui.Picture> _paintScaledSample(
+    double scale, String label, FilterQuality quality) async {
   final ui.PictureRecorder recorder = ui.PictureRecorder();
   final ui.Canvas canvas = ui.Canvas(recorder);
 
@@ -69,11 +83,13 @@ Future<ui.Picture> _paintScaledSample(double scale, String label, FilterQuality 
 
   if (scale == 1.0) {
     // Don't scale. We want the original look of the image.
-    canvas.drawImage(_originalImage, Offset.zero, Paint()..filterQuality = quality);
+    canvas.drawImage(
+        _originalImage, Offset.zero, Paint()..filterQuality = quality);
   } else {
     final ui.Picture pictureOfImage = _paint((ui.Canvas canvas) {
       canvas.scale(scale);
-      canvas.drawImage(_originalImage, Offset.zero, Paint()..filterQuality = quality);
+      canvas.drawImage(
+          _originalImage, Offset.zero, Paint()..filterQuality = quality);
     });
     final ui.Image scaledImage = await pictureOfImage.toImage(
       (_originalWidth * scale).toInt(),
@@ -89,7 +105,8 @@ Future<ui.Picture> _paintScaledSample(double scale, String label, FilterQuality 
 
     // The scaled image already applies the filter. Here we want to see the
     // pixels exactly like in the bitmap.
-    canvas.drawImage(scaledImage, Offset.zero, Paint()..filterQuality = FilterQuality.none);
+    canvas.drawImage(
+        scaledImage, Offset.zero, Paint()..filterQuality = FilterQuality.none);
     canvas.restore();
   }
 
@@ -145,7 +162,8 @@ class FilterQualityDiagramStep extends DiagramStep<FilterQualityDiagram> {
   final String category = 'dart-ui';
 
   @override
-  Future<List<FilterQualityDiagram>> get diagrams async => <FilterQualityDiagram>[const FilterQualityDiagram()];
+  Future<List<FilterQualityDiagram>> get diagrams async =>
+      <FilterQualityDiagram>[const FilterQualityDiagram()];
 
   @override
   Future<File> generateDiagram(FilterQualityDiagram diagram) async {

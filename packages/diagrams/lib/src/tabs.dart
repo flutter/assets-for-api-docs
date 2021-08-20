@@ -13,11 +13,10 @@ import 'diagram_step.dart';
 
 const Duration _kTabAnimationDuration = Duration(milliseconds: 300);
 const Duration _kPauseDuration = Duration(seconds: 2);
-final Duration _kTotalAnimationTime =
-    _kTabAnimationDuration
-  + _kPauseDuration
-  + _kTabAnimationDuration
-  + _kPauseDuration;
+final Duration _kTotalAnimationTime = _kTabAnimationDuration +
+    _kPauseDuration +
+    _kTabAnimationDuration +
+    _kPauseDuration;
 const double _kAnimationFrameRate = 60.0;
 final List<GlobalKey> _tabKeys = <GlobalKey>[
   GlobalKey(),
@@ -34,7 +33,8 @@ class TabsDiagram extends StatefulWidget implements DiagramMetadata {
   State<TabsDiagram> createState() => TabsDiagramState();
 }
 
-class TabsDiagramState extends State<TabsDiagram> with SingleTickerProviderStateMixin {
+class TabsDiagramState extends State<TabsDiagram>
+    with SingleTickerProviderStateMixin {
   final List<Tab> myTabs = <Tab>[
     Tab(key: _tabKeys[0], text: 'LEFT'),
     Tab(key: _tabKeys[1], text: 'RIGHT'),
@@ -86,8 +86,6 @@ class TabsDiagramState extends State<TabsDiagram> with SingleTickerProviderState
   }
 }
 
-
-
 class TabsDiagramStep extends DiagramStep<TabsDiagram> {
   TabsDiagramStep(DiagramController controller) : super(controller);
 
@@ -96,12 +94,12 @@ class TabsDiagramStep extends DiagramStep<TabsDiagram> {
 
   @override
   Future<List<TabsDiagram>> get diagrams async => <TabsDiagram>[
-    const TabsDiagram('tabs'),
-  ];
+        const TabsDiagram('tabs'),
+      ];
 
   Future<void> tapTabs(DiagramController controller, Duration now) async {
     RenderBox target;
-    switch(now.inMilliseconds) {
+    switch (now.inMilliseconds) {
       case 0:
         target = _tabKeys[1].currentContext!.findRenderObject()! as RenderBox;
         break;
@@ -111,7 +109,8 @@ class TabsDiagramStep extends DiagramStep<TabsDiagram> {
       default:
         return;
     }
-    final Offset targetOffset = target.localToGlobal(target.size.center(Offset.zero));
+    final Offset targetOffset =
+        target.localToGlobal(target.size.center(Offset.zero));
     final TestGesture gesture = await controller.startGesture(targetOffset);
     gesture.up();
   }

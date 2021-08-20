@@ -113,7 +113,8 @@ class AlertDialogDiagramStep extends DiagramStep<AlertDialogDiagram> {
 
     await Future<void>.delayed(_pauseDuration);
 
-    final RenderBox target = _openDialogKey.currentContext!.findRenderObject()! as RenderBox;
+    final RenderBox target =
+        _openDialogKey.currentContext!.findRenderObject()! as RenderBox;
     final Offset targetOffset =
         target.localToGlobal(target.size.center(Offset.zero));
     final TestGesture gesture = await controller.startGesture(targetOffset);

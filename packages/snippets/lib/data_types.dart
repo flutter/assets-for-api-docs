@@ -27,7 +27,8 @@ class SourceLine {
   final int indent;
   final String text;
 
-  String toStringWithColumn(int column) => '$file:$line:${column + indent}: $text';
+  String toStringWithColumn(int column) =>
+      '$file:$line:${column + indent}: $text';
 
   SourceLine copyWith({
     String? element,
@@ -101,7 +102,8 @@ abstract class CodeSample {
       bool doneStrippingHeaders = false;
       try {
         for (final String line in sourceFile!.readAsLinesSync()) {
-          if (!doneStrippingHeaders && RegExp(r'^\s*(\/\/.*)?$').hasMatch(line)) {
+          if (!doneStrippingHeaders &&
+              RegExp(r'^\s*(\/\/.*)?$').hasMatch(line)) {
             continue;
           }
           // Stop skipping lines after the first line that isn't stripped.
@@ -119,12 +121,14 @@ abstract class CodeSample {
         r'(\/\/\*\*+\n)?\/\/\* [▼▲]+.*$(\n\/\/\*\*+)?\n\n?',
         multiLine: true,
       );
-      _sourceFileContents = stripped.join('\n').replaceAll(sectionMarkerRegExp, '');
+      _sourceFileContents =
+          stripped.join('\n').replaceAll(sectionMarkerRegExp, '');
     }
     return _sourceFileContents ?? '';
   }
 
-  Iterable<String> get inputStrings => input.map<String>((SourceLine line) => line.text);
+  Iterable<String> get inputStrings =>
+      input.map<String>((SourceLine line) => line.text);
   String get inputAsString => inputStrings.join('\n');
 
   /// The index of this sample within the dartdoc comment it came from.
@@ -185,7 +189,8 @@ class SnippetSample extends CodeSample {
     return SnippetSample(code, index: index, lineProto: lineProto);
   }
 
-  factory SnippetSample.fromStrings(SourceLine firstLine, List<String> code, {required int index}) {
+  factory SnippetSample.fromStrings(SourceLine firstLine, List<String> code,
+      {required int index}) {
     final List<SourceLine> codeLines = <SourceLine>[];
     int startPos = firstLine.startChar;
     for (int i = 0; i < code.length; ++i) {
@@ -228,7 +233,8 @@ class SnippetSample extends CodeSample {
   String get template => '';
 
   @override
-  SourceLine get start => input.firstWhere((SourceLine line) => line.file != null);
+  SourceLine get start =>
+      input.firstWhere((SourceLine line) => line.file != null);
 
   @override
   String get type => 'snippet';
@@ -257,7 +263,8 @@ class ApplicationSample extends CodeSample {
     required int index,
     required SourceLine lineProto,
   })  : assert(args.isNotEmpty),
-        super.fromFile(args, input, sourceFile, index: index, lineProto: lineProto);
+        super.fromFile(args, input, sourceFile,
+            index: index, lineProto: lineProto);
 
   @override
   String get type => 'sample';
@@ -287,7 +294,11 @@ class DartpadSample extends ApplicationSample {
     required SourceLine lineProto,
   })  : assert(args.isNotEmpty),
         super.fromFile(
-            input: input, args: args, sourceFile: sourceFile, index: index, lineProto: lineProto);
+            input: input,
+            args: args,
+            sourceFile: sourceFile,
+            index: index,
+            lineProto: lineProto);
 
   @override
   String get type => 'dartpad';
@@ -363,7 +374,8 @@ class SourceElement {
   }) {
     comment ??= <SourceLine>[];
     samples ??= <CodeSample>[];
-    final List<String> commentLines = comment.map<String>((SourceLine line) => line.text).toList();
+    final List<String> commentLines =
+        comment.map<String>((SourceLine line) => line.text).toList();
     final String commentString = commentLines.join('\n');
     return SourceElement._(
       type,
@@ -416,7 +428,8 @@ class SourceElement {
   // Includes the description text inside of an "@tool"-based sample, but not
   // the code itself, or any dartdoc tags.
   static String _getCommentStringWithoutCode(String string) {
-    return string.replaceAll(RegExp(r'([`]{3}.*?[`]{3}|\{@\w+[^}]*\}|/// ?)', dotAll: true), '');
+    return string.replaceAll(
+        RegExp(r'([`]{3}.*?[`]{3}|\{@\w+[^}]*\}|/// ?)', dotAll: true), '');
   }
 
   /// The type of the element
@@ -495,7 +508,8 @@ class SourceElement {
 
   /// Count of comment characters, not including any code samples in the
   /// comment, after collapsing each run of whitespace to a single space.
-  int get charCount => commentStringWithoutCode.replaceAll(RegExp(r'\s+'), ' ').length;
+  int get charCount =>
+      commentStringWithoutCode.replaceAll(RegExp(r'\s+'), ' ').length;
 
   /// Whether or not this element's documentation has a "See also:" section in it.
   bool get hasSeeAlso => commentStringWithoutTools.contains('See also:');

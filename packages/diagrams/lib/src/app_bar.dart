@@ -69,7 +69,10 @@ class _DiagramState extends State<AppBarDiagram> {
                           gradient: LinearGradient(
                             begin: FractionalOffset.topCenter,
                             end: const FractionalOffset(0.48, 1.0),
-                            colors: <Color>[Colors.blue.shade500, Colors.blue.shade800],
+                            colors: <Color>[
+                              Colors.blue.shade500,
+                              Colors.blue.shade800
+                            ],
                           ),
                         ),
                       ),
@@ -92,11 +95,15 @@ class _DiagramState extends State<AppBarDiagram> {
                   child: LabelPainterWidget(
                     key: canvasKey,
                     labels: <Label>[
-                      Label(leading, 'leading', const FractionalOffset(0.5, 0.25)),
-                      Label(actions, 'actions', const FractionalOffset(0.25, 0.5)),
+                      Label(leading, 'leading',
+                          const FractionalOffset(0.5, 0.25)),
+                      Label(actions, 'actions',
+                          const FractionalOffset(0.25, 0.5)),
                       Label(title, 'title', FractionalOffset.center),
-                      Label(flexibleSpace, 'flexibleSpace', const FractionalOffset(0.2, 0.5)),
-                      Label(bottom, 'bottom', const FractionalOffset(0.5, 0.75)),
+                      Label(flexibleSpace, 'flexibleSpace',
+                          const FractionalOffset(0.2, 0.5)),
+                      Label(
+                          bottom, 'bottom', const FractionalOffset(0.5, 0.75)),
                     ],
                     heroKey: heroKey,
                   ),
@@ -117,7 +124,8 @@ class AppBarDiagramStep extends DiagramStep<AppBarDiagram> {
   final String category = 'material';
 
   @override
-  Future<List<AppBarDiagram>> get diagrams async => <AppBarDiagram>[const AppBarDiagram(name: 'app_bar')];
+  Future<List<AppBarDiagram>> get diagrams async =>
+      <AppBarDiagram>[const AppBarDiagram(name: 'app_bar')];
 
   @override
   Future<File> generateDiagram(AppBarDiagram diagram) async {

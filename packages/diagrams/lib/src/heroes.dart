@@ -40,7 +40,7 @@ class _HeroesDiagramState extends State<HeroesDiagram> {
       textDirection: TextDirection.ltr,
       child: Container(
         color: Colors.white,
-        height:480.0,
+        height: 480.0,
         width: 900.0,
         child: Stack(
           children: <Widget>[
@@ -110,10 +110,12 @@ class _HeroesDiagramState extends State<HeroesDiagram> {
                                             child: Container(
                                               color: Colors.red[200],
                                               child: const Align(
-                                                alignment: Alignment.bottomCenter,
+                                                alignment:
+                                                    Alignment.bottomCenter,
                                                 child: Padding(
                                                   padding: EdgeInsets.all(8.0),
-                                                  child: Text('placeholderBuilder'),
+                                                  child: Text(
+                                                      'placeholderBuilder'),
                                                 ),
                                               ),
                                             ),
@@ -129,7 +131,8 @@ class _HeroesDiagramState extends State<HeroesDiagram> {
                           const Padding(
                             padding: EdgeInsets.all(10.0),
                             child: CustomPaint(
-                              painter: RightArrowPainter(fillColor: Colors.orange),
+                              painter:
+                                  RightArrowPainter(fillColor: Colors.orange),
                               child: SizedBox(
                                 height: 60.0,
                                 width: 400.0,
@@ -151,7 +154,8 @@ class _HeroesDiagramState extends State<HeroesDiagram> {
                           angle: -0.2,
                           child: CustomPaint(
                             size: const Size(320.0, 20.0),
-                            painter: RightArrowPainter(fillColor: Colors.blue[600]!),
+                            painter:
+                                RightArrowPainter(fillColor: Colors.blue[600]!),
                           ),
                         ),
                       ),
@@ -213,7 +217,7 @@ class _HeroesDiagramState extends State<HeroesDiagram> {
 }
 
 class RightArrowPainter extends CustomPainter {
-  const RightArrowPainter({ required this.fillColor });
+  const RightArrowPainter({required this.fillColor});
 
   final Color fillColor;
 
@@ -232,8 +236,7 @@ class RightArrowPainter extends CustomPainter {
 
     canvas.drawPath(
       arrowPath,
-      Paint()
-        ..color = fillColor,
+      Paint()..color = fillColor,
     );
 
     canvas.drawPath(
@@ -256,7 +259,8 @@ class HeroesDiagramStep extends DiagramStep<HeroesDiagram> {
   final String category = 'interaction';
 
   @override
-  Future<List<HeroesDiagram>> get diagrams async => <HeroesDiagram>[const HeroesDiagram()];
+  Future<List<HeroesDiagram>> get diagrams async =>
+      <HeroesDiagram>[const HeroesDiagram()];
 
   @override
   Future<File> generateDiagram(HeroesDiagram diagram) async {

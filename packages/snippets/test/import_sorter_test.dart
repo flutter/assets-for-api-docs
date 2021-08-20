@@ -32,7 +32,8 @@ void main() {
   setUp(() {
     // Create a new filesystem.
     memoryFileSystem = MemoryFileSystem();
-    tmpDir = memoryFileSystem.systemTempDirectory.createTempSync('flutter_snippets_test.');
+    tmpDir = memoryFileSystem.systemTempDirectory
+        .createTempSync('flutter_snippets_test.');
     final Directory flutterRoot =
         memoryFileSystem.directory(path.join(tmpDir.absolute.path, 'flutter'));
     FlutterInformation.instance = FakeFlutterInformation(flutterRoot);

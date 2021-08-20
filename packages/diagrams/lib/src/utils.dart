@@ -1,4 +1,4 @@
-// Copyright 2017 The Chromium Authors. All rights reserved.
+// Copyright 2013 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -48,7 +48,8 @@ class LabelPainterWidget extends StatelessWidget {
     required GlobalKey key,
     required List<Label> labels,
     required GlobalKey heroKey,
-  })  : painter = LabelPainter(labels: labels, heroKey: heroKey, canvasKey: key),
+  })  : painter =
+            LabelPainter(labels: labels, heroKey: heroKey, canvasKey: key),
         super(key: key);
 
   final LabelPainter painter;
@@ -87,16 +88,22 @@ class LabelPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final RenderBox hero = heroKey.currentContext!.findRenderObject()! as RenderBox;
-    final RenderBox diagram = canvasKey.currentContext!.findRenderObject()! as RenderBox;
+    final RenderBox hero =
+        heroKey.currentContext!.findRenderObject()! as RenderBox;
+    final RenderBox diagram =
+        canvasKey.currentContext!.findRenderObject()! as RenderBox;
     final Paint dotPaint = Paint();
     final Paint linePaint = Paint()..strokeWidth = 2.0;
-    final Offset heroTopLeft = diagram.globalToLocal(hero.localToGlobal(Offset.zero));
+    final Offset heroTopLeft =
+        diagram.globalToLocal(hero.localToGlobal(Offset.zero));
     for (final Label label in labels) {
-      final RenderBox box = label.key.currentContext!.findRenderObject()! as RenderBox;
-      final Offset anchor = diagram.globalToLocal(box.localToGlobal(label.anchor.alongSize(box.size)));
+      final RenderBox box =
+          label.key.currentContext!.findRenderObject()! as RenderBox;
+      final Offset anchor = diagram
+          .globalToLocal(box.localToGlobal(label.anchor.alongSize(box.size)));
       final Offset anchorOnHero = anchor - heroTopLeft;
-      final FractionalOffset relativeAnchor = FractionalOffset.fromOffsetAndSize(anchorOnHero, hero.size);
+      final FractionalOffset relativeAnchor =
+          FractionalOffset.fromOffsetAndSize(anchorOnHero, hero.size);
       final double distanceToTop = anchorOnHero.dy;
       final double distanceToBottom = hero.size.height - anchorOnHero.dy;
       final double distanceToLeft = anchorOnHero.dx;
@@ -104,21 +111,33 @@ class LabelPainter extends CustomPainter {
       Offset labelPosition;
       Offset textPosition = Offset.zero;
       final TextPainter painter = _painters[label]!;
-      if (distanceToTop <= distanceToLeft && distanceToTop <= distanceToRight && distanceToTop <= distanceToBottom) {
-        labelPosition = Offset(anchor.dx + (relativeAnchor.dx - 0.5) * margin, heroTopLeft.dy - margin);
-        textPosition = Offset(labelPosition.dx - painter.width / 2.0, labelPosition.dy - painter.height);
-      } else if (distanceToBottom < distanceToLeft && distanceToBottom < distanceToRight && distanceToTop > distanceToBottom) {
-        labelPosition = Offset(anchor.dx, heroTopLeft.dy + hero.size.height + margin);
-        textPosition = Offset(labelPosition.dx - painter.width / 2.0, labelPosition.dy);
+      if (distanceToTop <= distanceToLeft &&
+          distanceToTop <= distanceToRight &&
+          distanceToTop <= distanceToBottom) {
+        labelPosition = Offset(anchor.dx + (relativeAnchor.dx - 0.5) * margin,
+            heroTopLeft.dy - margin);
+        textPosition = Offset(labelPosition.dx - painter.width / 2.0,
+            labelPosition.dy - painter.height);
+      } else if (distanceToBottom < distanceToLeft &&
+          distanceToBottom < distanceToRight &&
+          distanceToTop > distanceToBottom) {
+        labelPosition =
+            Offset(anchor.dx, heroTopLeft.dy + hero.size.height + margin);
+        textPosition =
+            Offset(labelPosition.dx - painter.width / 2.0, labelPosition.dy);
       } else if (distanceToLeft < distanceToRight) {
         labelPosition = Offset(heroTopLeft.dx - margin, anchor.dy);
-        textPosition = Offset(labelPosition.dx - painter.width - 2.0, labelPosition.dy - painter.height / 2.0);
+        textPosition = Offset(labelPosition.dx - painter.width - 2.0,
+            labelPosition.dy - painter.height / 2.0);
       } else if (distanceToLeft > distanceToRight) {
-        labelPosition = Offset(heroTopLeft.dx + hero.size.width + margin, anchor.dy);
-        textPosition = Offset(labelPosition.dx, labelPosition.dy - painter.height / 2.0);
+        labelPosition =
+            Offset(heroTopLeft.dx + hero.size.width + margin, anchor.dy);
+        textPosition =
+            Offset(labelPosition.dx, labelPosition.dy - painter.height / 2.0);
       } else {
         labelPosition = Offset(anchor.dx, heroTopLeft.dy - margin * 2.0);
-        textPosition = Offset(anchor.dx - painter.width / 2.0, anchor.dy - margin - painter.height);
+        textPosition = Offset(anchor.dx - painter.width / 2.0,
+            anchor.dy - margin - painter.height);
       }
       canvas.drawCircle(anchor, 4.0, dotPaint);
       canvas.drawLine(anchor, labelPosition, linePaint);

@@ -21,7 +21,8 @@ const String _kDartUiRootOption = 'dart-ui-root';
 
 void main(List<String> argv) {
   final ArgParser parser = ArgParser();
-  parser.addOption(_kFileOption, help: 'Specifies the file to edit samples in.');
+  parser.addOption(_kFileOption,
+      help: 'Specifies the file to edit samples in.');
   parser.addOption(_kFlutterRootOption,
       help: 'Specifies the location of the Flutter root directory.');
   parser.addOption(_kDartUiRootOption,
@@ -136,19 +137,25 @@ class _SamplerState extends State<Sampler> {
       return;
     }
     if (editingController.text.isEmpty ||
-        !Model.instance.files!.contains(Model.instance.filesystem.file(editingController.text))) {
+        !Model.instance.files!
+            .contains(Model.instance.filesystem.file(editingController.text))) {
       Model.instance.clearWorkingFile();
     }
   }
 
-  DialogRoute<void> _createOptionDialog(BuildContext context, SourceElement element) {
+  DialogRoute<void> _createOptionDialog(
+      BuildContext context, SourceElement element) {
     return DialogRoute<void>(
       context: context,
       builder: (BuildContext context) {
-        return OptionDialog(onSubmitted: (Type sampleType, String? template) async {
+        return OptionDialog(
+            onSubmitted: (Type sampleType, String? template) async {
           Model.instance.currentElement = element;
-          await Model.instance.insertNewSample(sampleType: sampleType, template: template);
-          Navigator.of(context).popAndPushNamed(kDetailViewRoute).then((Object? result) {
+          await Model.instance
+              .insertNewSample(sampleType: sampleType, template: template);
+          Navigator.of(context)
+              .popAndPushNamed(kDetailViewRoute)
+              .then((Object? result) {
             // Clear the current element when returning from the detail view.
             Model.instance.currentElement = null;
           });
@@ -181,12 +188,14 @@ class _SamplerState extends State<Sampler> {
     final int dartpads = element.dartpadSampleCount;
     final int snippets = element.snippetCount;
     final int applications = element.applicationSampleCount;
-    final bool allOneKind = total == snippets || total == applications || total == dartpads;
+    final bool allOneKind =
+        total == snippets || total == applications || total == dartpads;
     final String sampleCount = <String>[
       if (!allOneKind)
         '${Model.instance.samples.length} sample${Model.instance.samples.length != 1 ? 's' : ''} total',
       if (snippets > 0) '$snippets snippet${snippets != 1 ? 's' : ''}',
-      if (applications > 0) '$applications application sample${applications != 1 ? 's' : ''}',
+      if (applications > 0)
+        '$applications application sample${applications != 1 ? 's' : ''}',
       if (dartpads > 0) '$dartpads dartpad sample${dartpads != 1 ? 's' : ''}'
     ].join(', ');
     final int wordCount = element.wordCount;
@@ -197,7 +206,8 @@ class _SamplerState extends State<Sampler> {
       '$lineCount ${lineCount == 1 ? 'line' : 'lines'}',
       if (linkCount > 0 && element.hasSeeAlso) ', ',
       if (linkCount > 0 && !element.hasSeeAlso) ' and ',
-      if (linkCount > 0) 'refers to $linkCount other ${linkCount == 1 ? 'symbol' : 'symbols'}',
+      if (linkCount > 0)
+        'refers to $linkCount other ${linkCount == 1 ? 'symbol' : 'symbols'}',
       if (linkCount > 0 && element.hasSeeAlso) ', and ',
       if (linkCount == 0 && element.hasSeeAlso) 'and ',
       if (element.hasSeeAlso) 'has a "See also:" section',
@@ -237,7 +247,8 @@ class _SamplerState extends State<Sampler> {
               child: Padding(
                 padding: const EdgeInsets.all(4.0),
                 child: ListTile(
-                  visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+                  visualDensity:
+                      const VisualDensity(horizontal: -4, vertical: -4),
                   shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(
                       Radius.circular(10.0),
@@ -266,12 +277,14 @@ class _SamplerState extends State<Sampler> {
               ),
             ),
             Tooltip(
-              message: 'Add a new sample to the\nframework file for this element',
+              message:
+                  'Add a new sample to the\nframework file for this element',
               height: 40,
               child: TextButton(
                 child: const Text('ADD SAMPLE'),
                 onPressed: () async {
-                  Navigator.of(context).push<void>(_createOptionDialog(context, element));
+                  Navigator.of(context)
+                      .push<void>(_createOptionDialog(context, element));
                 },
               ),
             ),
@@ -294,15 +307,18 @@ class _SamplerState extends State<Sampler> {
       return const Iterable<File>.empty();
     }
     if (value.text.contains(path.separator)) {
-      return Model.instance.files!
-          .where((File file) => file.path.toLowerCase().contains(value.text.toLowerCase()));
+      return Model.instance.files!.where((File file) =>
+          file.path.toLowerCase().contains(value.text.toLowerCase()));
     }
-    return Model.instance.files!
-        .where((File file) => file.basename.toLowerCase().contains(value.text.toLowerCase()));
+    return Model.instance.files!.where((File file) =>
+        file.basename.toLowerCase().contains(value.text.toLowerCase()));
   }
 
-  Widget _buildFileField(BuildContext context, TextEditingController textEditingController,
-      FocusNode focusNode, VoidCallback onFieldSubmitted) {
+  Widget _buildFileField(
+      BuildContext context,
+      TextEditingController textEditingController,
+      FocusNode focusNode,
+      VoidCallback onFieldSubmitted) {
     return AutocompleteField(
       focusNode: focusNode,
       textEditingController: textEditingController,
@@ -329,18 +345,23 @@ class _SamplerState extends State<Sampler> {
     if (Model.instance.samples.isEmpty) {
       return 'No samples loaded.';
     }
-    final int snippets = Model.instance.samples.whereType<SnippetSample>().length;
+    final int snippets =
+        Model.instance.samples.whereType<SnippetSample>().length;
     final int applications = Model.instance.samples
-        .where((CodeSample sample) => sample is ApplicationSample && sample is! DartpadSample)
+        .where((CodeSample sample) =>
+            sample is ApplicationSample && sample is! DartpadSample)
         .length;
-    final int dartpads = Model.instance.samples.whereType<DartpadSample>().length;
+    final int dartpads =
+        Model.instance.samples.whereType<DartpadSample>().length;
     final int total = snippets + applications + dartpads;
-    final bool allOneKind = total == snippets || total == applications || total == dartpads;
+    final bool allOneKind =
+        total == snippets || total == applications || total == dartpads;
     return <String>[
       if (!allOneKind)
         '${Model.instance.samples.length} sample${Model.instance.samples.length != 1 ? 's' : ''} total',
       if (snippets > 0) '$snippets snippet${snippets != 1 ? 's' : ''}',
-      if (applications > 0) '$applications application sample${applications != 1 ? 's' : ''}',
+      if (applications > 0)
+        '$applications application sample${applications != 1 ? 's' : ''}',
       if (dartpads > 0) '$dartpads dartpad sample${dartpads != 1 ? 's' : ''}'
     ].join(', ');
   }
@@ -373,8 +394,8 @@ class _SamplerState extends State<Sampler> {
           (showOverrides || !element.override);
     }).map<ExpansionPanel>(
       (SourceElement element) {
-        final ExpansionPanel result =
-            _createExpansionPanel(element, index, isExpanded: index == expandedIndex);
+        final ExpansionPanel result = _createExpansionPanel(element, index,
+            isExpanded: index == expandedIndex);
         index++;
         return result;
       },
@@ -390,7 +411,8 @@ class _SamplerState extends State<Sampler> {
         child: Stack(
           alignment: Alignment.center,
           children: <Widget>[
-            if (filesLoading) const CircularProgressIndicator.adaptive(value: null),
+            if (filesLoading)
+              const CircularProgressIndicator.adaptive(value: null),
             Column(
               children: <Widget>[
                 Padding(
@@ -410,7 +432,8 @@ class _SamplerState extends State<Sampler> {
                         fieldViewBuilder: _buildFileField,
                         optionsBuilder: _fileOptions,
                         displayStringForOption: (File file) {
-                          if (path.isWithin(Model.instance.flutterRoot.path, file.absolute.path)) {
+                          if (path.isWithin(Model.instance.flutterRoot.path,
+                              file.absolute.path)) {
                             return path.relative(file.absolute.path,
                                 from: Model.instance.flutterRoot.absolute.path);
                           } else {
@@ -481,8 +504,10 @@ class _SamplerState extends State<Sampler> {
                               },
                               label: const Text('has samples'),
                             ),
-                            for (final SourceElementType type in SourceElementType.values.where(
-                                (SourceElementType type) => type != SourceElementType.unknownType))
+                            for (final SourceElementType type
+                                in SourceElementType.values.where(
+                                    (SourceElementType type) =>
+                                        type != SourceElementType.unknownType))
                               LabeledCheckbox(
                                 value: showTypes.contains(type),
                                 onChanged: (bool? value) {
@@ -510,7 +535,8 @@ class _SamplerState extends State<Sampler> {
                       ),
                       Expanded(
                         child: Text(_getSampleStats(),
-                            textAlign: TextAlign.end, style: Theme.of(context).textTheme.caption),
+                            textAlign: TextAlign.end,
+                            style: Theme.of(context).textTheme.caption),
                       ),
                     ],
                   ),
@@ -540,7 +566,8 @@ class _SamplerState extends State<Sampler> {
 }
 
 class ElementExpansionPanel extends StatefulWidget {
-  const ElementExpansionPanel({Key? key, required this.element}) : super(key: key);
+  const ElementExpansionPanel({Key? key, required this.element})
+      : super(key: key);
 
   final SourceElement element;
 
@@ -570,7 +597,8 @@ class _ElementExpansionPanelState extends State<ElementExpansionPanel> {
     });
   }
 
-  ExpansionPanel _createExpansionPanel(CodeSample sample, int index, {bool isExpanded = false}) {
+  ExpansionPanel _createExpansionPanel(CodeSample sample, int index,
+      {bool isExpanded = false}) {
     return ExpansionPanel(
       headerBuilder: (BuildContext context, bool isExpanded) {
         return Padding(
@@ -584,7 +612,8 @@ class _ElementExpansionPanelState extends State<ElementExpansionPanel> {
                       Radius.circular(10.0),
                     ),
                   ),
-                  visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
+                  visualDensity:
+                      const VisualDensity(horizontal: -4, vertical: -4),
                   onTap: () {
                     setState(() {
                       if (expandedIndex == index) {
@@ -599,11 +628,13 @@ class _ElementExpansionPanelState extends State<ElementExpansionPanel> {
                     TextSpan(
                       children: <InlineSpan>[
                         TextSpan(
-                          text: '${sample.type == 'dartpad' ? 'dartpad sample' : sample.type} for ',
+                          text:
+                              '${sample.type == 'dartpad' ? 'dartpad sample' : sample.type} for ',
                         ),
                         codeTextSpan(context, sample.start.element!),
                         TextSpan(
-                            text: '${sample.index != 0 ? '(${sample.index})' : ''} '
+                            text:
+                                '${sample.index != 0 ? '(${sample.index})' : ''} '
                                 'at line ${sample.start.line}'),
                       ],
                     ),
@@ -615,9 +646,12 @@ class _ElementExpansionPanelState extends State<ElementExpansionPanel> {
                 child: TextButton(
                   child: const Text('SELECT'),
                   onPressed: () {
-                    Model.instance.currentElement = Model.instance.getElementForSample(sample);
+                    Model.instance.currentElement =
+                        Model.instance.getElementForSample(sample);
                     Model.instance.currentSample = sample;
-                    Navigator.of(context).pushNamed(kDetailViewRoute).then((Object? result) {
+                    Navigator.of(context)
+                        .pushNamed(kDetailViewRoute)
+                        .then((Object? result) {
                       Model.instance.currentSample = null;
                       Model.instance.currentElement = null;
                     });
@@ -645,8 +679,8 @@ class _ElementExpansionPanelState extends State<ElementExpansionPanel> {
     int index = 0;
     panels.addAll(samples.map<ExpansionPanel>(
       (CodeSample sample) {
-        final ExpansionPanel result =
-            _createExpansionPanel(sample, index, isExpanded: index == expandedIndex);
+        final ExpansionPanel result = _createExpansionPanel(sample, index,
+            isExpanded: index == expandedIndex);
         index++;
         return result;
       },

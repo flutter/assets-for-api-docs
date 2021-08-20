@@ -82,10 +82,10 @@ class StackDiagram extends StatelessWidget implements DiagramMetadata {
       key: UniqueKey(),
       constraints: BoxConstraints.tight(const Size(400.0, 250.0)),
       child: Container(
-          alignment: FractionalOffset.center,
-          padding: const EdgeInsets.all(5.0),
-          color: Colors.white,
-          child: returnWidget,
+        alignment: FractionalOffset.center,
+        padding: const EdgeInsets.all(5.0),
+        color: Colors.white,
+        child: returnWidget,
       ),
     );
   }

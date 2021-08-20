@@ -8,7 +8,8 @@ import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 import 'diagram_step.dart';
 
-class BottomNavigationBarDiagram extends StatelessWidget implements DiagramMetadata {
+class BottomNavigationBarDiagram extends StatelessWidget
+    implements DiagramMetadata {
   const BottomNavigationBarDiagram(this.name, {Key? key}) : super(key: key);
 
   @override
@@ -58,16 +59,19 @@ class BottomNavigationBarDiagram extends StatelessWidget implements DiagramMetad
   }
 }
 
-class BottomNavigationBarDiagramStep extends DiagramStep<BottomNavigationBarDiagram> {
-  BottomNavigationBarDiagramStep(DiagramController controller) : super(controller);
+class BottomNavigationBarDiagramStep
+    extends DiagramStep<BottomNavigationBarDiagram> {
+  BottomNavigationBarDiagramStep(DiagramController controller)
+      : super(controller);
 
   @override
   final String category = 'material';
 
   @override
-  Future<List<BottomNavigationBarDiagram>> get diagrams async => <BottomNavigationBarDiagram>[
-    const BottomNavigationBarDiagram('bottom_navigation_bar'),
-  ];
+  Future<List<BottomNavigationBarDiagram>> get diagrams async =>
+      <BottomNavigationBarDiagram>[
+        const BottomNavigationBarDiagram('bottom_navigation_bar'),
+      ];
 
   @override
   Future<File> generateDiagram(BottomNavigationBarDiagram diagram) async {

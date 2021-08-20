@@ -72,13 +72,14 @@ class CupertinoAppDiagramStep extends DiagramStep<CupertinoAppDiagram> {
   // This diagram will only be created when run on macOS, so that the fonts are
   // correct.
   @override
-  Set<DiagramPlatform> get platforms => <DiagramPlatform>{ DiagramPlatform.macos };
+  Set<DiagramPlatform> get platforms =>
+      <DiagramPlatform>{DiagramPlatform.macos};
 
   @override
   Future<List<CupertinoAppDiagram>> get diagrams async => <CupertinoAppDiagram>[
-    const CupertinoAppDiagram(_basic),
-    const CupertinoAppDiagram(_theme),
-  ];
+        const CupertinoAppDiagram(_basic),
+        const CupertinoAppDiagram(_theme),
+      ];
 
   @override
   Future<File> generateDiagram(CupertinoAppDiagram diagram) async {

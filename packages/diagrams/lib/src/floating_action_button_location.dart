@@ -36,8 +36,10 @@ const String _startDocked = '_start_docked';
 const String _startFloat = '_start_float';
 const String _startTop = '_start_top';
 
-class FloatingActionButtonLocationDiagram extends StatelessWidget implements DiagramMetadata {
-  const FloatingActionButtonLocationDiagram(this.nameSuffix, {Key? key}) : super(key: key);
+class FloatingActionButtonLocationDiagram extends StatelessWidget
+    implements DiagramMetadata {
+  const FloatingActionButtonLocationDiagram(this.nameSuffix, {Key? key})
+      : super(key: key);
 
   final String nameSuffix;
 
@@ -134,9 +136,7 @@ class FloatingActionButtonLocationDiagram extends StatelessWidget implements Dia
       appBar: AppBar(
         title: Text(appBarTitle),
       ),
-      body: const Center(
-          child: Text('Press the button below!')
-      ),
+      body: const Center(child: Text('Press the button below!')),
       floatingActionButtonLocation: fabLocation,
       floatingActionButton: FloatingActionButton(
         mini: isMini,
@@ -146,8 +146,10 @@ class FloatingActionButtonLocationDiagram extends StatelessWidget implements Dia
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(icon: Icon(Icons.account_circle_outlined),label: 'You'),
-          BottomNavigationBarItem(icon: Icon(Icons.add_alarm_outlined),label: 'Alarm'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.account_circle_outlined), label: 'You'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.add_alarm_outlined), label: 'Alarm'),
         ],
       ),
     );
@@ -164,14 +166,17 @@ class FloatingActionButtonLocationDiagram extends StatelessWidget implements Dia
   }
 }
 
-class FloatingActionButtonLocationDiagramStep extends DiagramStep<FloatingActionButtonLocationDiagram> {
-  FloatingActionButtonLocationDiagramStep(DiagramController controller) : super(controller);
+class FloatingActionButtonLocationDiagramStep
+    extends DiagramStep<FloatingActionButtonLocationDiagram> {
+  FloatingActionButtonLocationDiagramStep(DiagramController controller)
+      : super(controller);
 
   @override
   final String category = 'material';
 
   @override
-  Future<List<FloatingActionButtonLocationDiagram>> get diagrams async => <FloatingActionButtonLocationDiagram>[
+  Future<List<FloatingActionButtonLocationDiagram>> get diagrams async =>
+      <FloatingActionButtonLocationDiagram>[
         const FloatingActionButtonLocationDiagram(_centerDocked),
         const FloatingActionButtonLocationDiagram(_centerFloat),
         const FloatingActionButtonLocationDiagram(_centerTop),
@@ -193,7 +198,8 @@ class FloatingActionButtonLocationDiagramStep extends DiagramStep<FloatingAction
       ];
 
   @override
-  Future<File> generateDiagram(FloatingActionButtonLocationDiagram diagram) async {
+  Future<File> generateDiagram(
+      FloatingActionButtonLocationDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
     return controller.drawDiagramToFile(File('${diagram.name}.png'));
   }

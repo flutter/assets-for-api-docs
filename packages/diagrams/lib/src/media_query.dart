@@ -1,4 +1,4 @@
-// Copyright 2017 The Chromium Authors. All rights reserved.
+// Copyright 2013 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -21,7 +21,6 @@ class MediaQueryDiagram extends StatefulWidget implements DiagramMetadata {
 }
 
 class _MediaQueryDiagramState extends State<MediaQueryDiagram> {
-
   @override
   Widget build(BuildContext context) {
     return ConstrainedBox(
@@ -132,7 +131,8 @@ class MediaQueryDiagramStep extends DiagramStep<MediaQueryDiagram> {
   final String category = 'widgets';
 
   @override
-  Future<List<MediaQueryDiagram>> get diagrams async => <MediaQueryDiagram>[const MediaQueryDiagram(name: 'media_query')];
+  Future<List<MediaQueryDiagram>> get diagrams async =>
+      <MediaQueryDiagram>[const MediaQueryDiagram(name: 'media_query')];
 
   @override
   Future<File> generateDiagram(MediaQueryDiagram diagram) async {

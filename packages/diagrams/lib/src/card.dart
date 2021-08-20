@@ -62,7 +62,8 @@ class CardDiagramStep extends DiagramStep<CardDiagram> {
   final String category = 'material';
 
   @override
-  Future<List<CardDiagram>> get diagrams async => <CardDiagram>[const CardDiagram()];
+  Future<List<CardDiagram>> get diagrams async =>
+      <CardDiagram>[const CardDiagram()];
 
   @override
   Future<File> generateDiagram(CardDiagram diagram) async {

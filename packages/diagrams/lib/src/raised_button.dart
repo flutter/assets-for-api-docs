@@ -27,7 +27,8 @@ class RaisedButtonDiagram extends StatelessWidget implements DiagramMetadata {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              const RaisedButton( // ignore: deprecated_member_use
+              const RaisedButton(
+                // ignore: deprecated_member_use
                 onPressed: null,
                 child: Text(
                   'Disabled Button',
@@ -35,7 +36,8 @@ class RaisedButtonDiagram extends StatelessWidget implements DiagramMetadata {
                 ),
               ),
               const SizedBox(height: 30),
-              RaisedButton( // ignore: deprecated_member_use
+              RaisedButton(
+                // ignore: deprecated_member_use
                 onPressed: () {},
                 child: const Text(
                   'Enabled Button',
@@ -43,7 +45,8 @@ class RaisedButtonDiagram extends StatelessWidget implements DiagramMetadata {
                 ),
               ),
               const SizedBox(height: 30),
-              RaisedButton( // ignore: deprecated_member_use
+              RaisedButton(
+                // ignore: deprecated_member_use
                 onPressed: () {},
                 textColor: Colors.white,
                 padding: EdgeInsets.zero,

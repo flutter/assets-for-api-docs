@@ -8,7 +8,8 @@ import 'package:snippets/snippets.dart';
 
 import 'model.dart';
 
-typedef OptionDialogSubmitted = void Function(Type sampleType, String? template);
+typedef OptionDialogSubmitted = void Function(
+    Type sampleType, String? template);
 
 /// A modal dialog that allows selection of parameters for the new sample.
 class OptionDialog extends StatefulWidget {
@@ -24,7 +25,8 @@ class _OptionDialogState extends State<OptionDialog> {
   String? selectedSampleType;
   String? selectedTemplate;
 
-  bool get okEnabled => selectedSampleType != null &&
+  bool get okEnabled =>
+      selectedSampleType != null &&
       (selectedTemplate != null || selectedSampleType == 'snippet');
 
   @override
@@ -48,9 +50,12 @@ class _OptionDialogState extends State<OptionDialog> {
                     });
                   },
                   items: const <DropdownMenuItem<String>>[
-                    DropdownMenuItem<String>(child: Text('dartpad'), value: 'dartpad'),
-                    DropdownMenuItem<String>(child: Text('sample'), value: 'sample'),
-                    DropdownMenuItem<String>(child: Text('snippet'), value: 'snippet'),
+                    DropdownMenuItem<String>(
+                        child: Text('dartpad'), value: 'dartpad'),
+                    DropdownMenuItem<String>(
+                        child: Text('sample'), value: 'sample'),
+                    DropdownMenuItem<String>(
+                        child: Text('snippet'), value: 'snippet'),
                   ],
                 ),
               ),
@@ -73,7 +78,8 @@ class _OptionDialogState extends State<OptionDialog> {
                     items: Model.instance
                         .getTemplateNames()
                         .map<DropdownMenuItem<String>>((String name) {
-                      return DropdownMenuItem<String>(child: Text(name), value: name);
+                      return DropdownMenuItem<String>(
+                          child: Text(name), value: name);
                     }).toList(),
                   ),
                 ),
@@ -104,7 +110,8 @@ class _OptionDialogState extends State<OptionDialog> {
                       sampleType = SnippetSample;
                       break;
                     default:
-                      throw SnippetException('Encountered unknown sample type $selectedSampleType');
+                      throw SnippetException(
+                          'Encountered unknown sample type $selectedSampleType');
                   }
                   widget.onSubmitted(sampleType, selectedTemplate);
                 }

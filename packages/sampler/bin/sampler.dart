@@ -15,7 +15,8 @@ import 'package:snippets/snippets.dart';
 
 ProcessRunner processRunner = ProcessRunner();
 
-File findExecutableForPlatform(String executableName, Directory packageDirectory) {
+File findExecutableForPlatform(
+    String executableName, Directory packageDirectory) {
   final FileSystem filesystem = FlutterInformation.instance.filesystem;
   switch (FlutterInformation.instance.platform.operatingSystem) {
     case 'linux':
@@ -71,7 +72,8 @@ String getPackageDigest(Directory packageLocation) {
     ...packageLocation
         .childDirectory('lib')
         .listSync(recursive: true)
-        .where((FileSystemEntity entity) => entity is File && entity.basename.endsWith('.dart'))
+        .where((FileSystemEntity entity) =>
+            entity is File && entity.basename.endsWith('.dart'))
         .cast<File>(),
     packageLocation.childDirectory('bin').childFile('sampler.dart'),
     packageLocation.childFile('pubspec.yaml'),
@@ -81,16 +83,20 @@ String getPackageDigest(Directory packageLocation) {
 Future<File?> buildExecutableIfNeeded(Directory packageLocation) async {
   final Platform platform = FlutterInformation.instance.platform;
   final Directory flutterRoot = FlutterInformation.instance.getFlutterRoot();
-  final File mainLocation = packageLocation.childDirectory('lib').childFile('main.dart');
-  final File flutterExe =
-      flutterRoot.childDirectory('bin').childFile(platform.isWindows ? 'flutter.bat' : 'flutter');
-  final File builtExecutable = findExecutableForPlatform('sampler', packageLocation);
+  final File mainLocation =
+      packageLocation.childDirectory('lib').childFile('main.dart');
+  final File flutterExe = flutterRoot
+      .childDirectory('bin')
+      .childFile(platform.isWindows ? 'flutter.bat' : 'flutter');
+  final File builtExecutable =
+      findExecutableForPlatform('sampler', packageLocation);
 
   final File lastBuildDigestFile =
       packageLocation.childDirectory('build').childFile('package_digest');
   final String packageDigest = getPackageDigest(packageLocation);
-  final String previousDigest =
-      lastBuildDigestFile.existsSync() ? lastBuildDigestFile.readAsStringSync() : '';
+  final String previousDigest = lastBuildDigestFile.existsSync()
+      ? lastBuildDigestFile.readAsStringSync()
+      : '';
   if (!builtExecutable.existsSync() || packageDigest != previousDigest) {
     stderr.writeln('Building sampler...');
     stderr.writeln(
@@ -115,8 +121,10 @@ Future<File?> buildExecutableIfNeeded(Directory packageLocation) async {
 
 Future<void> main(List<String> args) async {
   final Platform platform = FlutterInformation.instance.platform;
-  final Directory packageLocation =
-      FlutterInformation.instance.filesystem.file(platform.script.toFilePath()).parent.parent;
+  final Directory packageLocation = FlutterInformation.instance.filesystem
+      .file(platform.script.toFilePath())
+      .parent
+      .parent;
 
   final File? builtExecutable = await buildExecutableIfNeeded(packageLocation);
   if (builtExecutable == null) {

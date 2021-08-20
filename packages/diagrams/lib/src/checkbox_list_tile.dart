@@ -95,14 +95,16 @@ class LabeledCheckbox extends StatelessWidget {
   }
 }
 
-class CheckboxListTileDiagram extends StatefulWidget implements DiagramMetadata {
+class CheckboxListTileDiagram extends StatefulWidget
+    implements DiagramMetadata {
   const CheckboxListTileDiagram(this.name, {Key? key}) : super(key: key);
 
   @override
   final String name;
 
   @override
-  State<CheckboxListTileDiagram> createState() => _CheckboxListTileDiagramState();
+  State<CheckboxListTileDiagram> createState() =>
+      _CheckboxListTileDiagramState();
 }
 
 class _CheckboxListTileDiagramState extends State<CheckboxListTileDiagram> {
@@ -123,7 +125,9 @@ class _CheckboxListTileDiagramState extends State<CheckboxListTileDiagram> {
               title: const Text('Animate Slowly'),
               value: timeDilation != 1.0,
               onChanged: (bool? value) {
-                setState(() { timeDilation = (value ?? false) ? 20.0 : 1.0; });
+                setState(() {
+                  timeDilation = (value ?? false) ? 20.0 : 1.0;
+                });
               },
               secondary: const Icon(Icons.hourglass_empty),
             ),
@@ -138,38 +142,38 @@ class _CheckboxListTileDiagramState extends State<CheckboxListTileDiagram> {
             padding: const EdgeInsets.all(5.0),
             color: Colors.white,
             child: LinkedLabelCheckbox(
-              label: 'Linked, tappable label text',
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                label: 'Linked, tappable label text',
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                value: _isSelected,
+                onChanged: (bool? newValue) {
+                  setState(() {
+                    _isSelected = newValue!;
+                  });
+                }),
+          ),
+        );
+      case 'checkbox_list_tile_custom':
+        return ConstrainedBox(
+          key: UniqueKey(),
+          constraints: BoxConstraints.tight(const Size(400.0, 100.0)),
+          child: Container(
+            alignment: FractionalOffset.center,
+            padding: const EdgeInsets.all(20.0),
+            color: Colors.white,
+            child: LabeledCheckbox(
+              label: 'This is the label text',
+              padding: const EdgeInsets.symmetric(horizontal: 5.0),
               value: _isSelected,
-              onChanged: (bool? newValue) {
+              onChanged: (bool newValue) {
                 setState(() {
-                  _isSelected = newValue!;
+                  _isSelected = newValue;
                 });
-              }),
+              },
             ),
-          );
-        case 'checkbox_list_tile_custom':
-          return ConstrainedBox(
-            key: UniqueKey(),
-            constraints: BoxConstraints.tight(const Size(400.0, 100.0)),
-            child: Container(
-              alignment: FractionalOffset.center,
-              padding: const EdgeInsets.all(20.0),
-              color: Colors.white,
-              child: LabeledCheckbox(
-                  label: 'This is the label text',
-                  padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                  value: _isSelected,
-                  onChanged: (bool newValue) {
-                    setState(() {
-                      _isSelected = newValue;
-                    });
-                  },
-                ),
-              ),
-            );
-        default:
-          return const Text('Error');
+          ),
+        );
+      default:
+        return const Text('Error');
     }
   }
 }
@@ -181,11 +185,12 @@ class CheckboxListTileDiagramStep extends DiagramStep<CheckboxListTileDiagram> {
   final String category = 'material';
 
   @override
-  Future<List<CheckboxListTileDiagram>> get diagrams async => <CheckboxListTileDiagram>[
-    const CheckboxListTileDiagram('checkbox_list_tile'),
-    const CheckboxListTileDiagram('checkbox_list_tile_semantics'),
-    const CheckboxListTileDiagram('checkbox_list_tile_custom'),
-  ];
+  Future<List<CheckboxListTileDiagram>> get diagrams async =>
+      <CheckboxListTileDiagram>[
+        const CheckboxListTileDiagram('checkbox_list_tile'),
+        const CheckboxListTileDiagram('checkbox_list_tile_semantics'),
+        const CheckboxListTileDiagram('checkbox_list_tile_custom'),
+      ];
 
   @override
   Future<File> generateDiagram(CheckboxListTileDiagram diagram) async {

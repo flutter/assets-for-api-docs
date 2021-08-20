@@ -40,7 +40,8 @@ class TransitionDiagramStep extends DiagramStep<TransitionDiagram<dynamic>> {
     _diagrams.add(const SlideTransitionDiagram(decorate: false));
   }
 
-  final List<TransitionDiagram<dynamic>> _diagrams = <TransitionDiagram<dynamic>>[];
+  final List<TransitionDiagram<dynamic>> _diagrams =
+      <TransitionDiagram<dynamic>>[];
 
   @override
   final String category = 'widgets';
@@ -52,16 +53,21 @@ class TransitionDiagramStep extends DiagramStep<TransitionDiagram<dynamic>> {
   Future<File> generateDiagram(TransitionDiagram<dynamic> diagram) async {
     controller.builder = (BuildContext context) => diagram;
 
-    final Map<Duration, DiagramKeyframe> keyframes = <Duration, DiagramKeyframe>{
+    final Map<Duration, DiagramKeyframe> keyframes =
+        <Duration, DiagramKeyframe>{
       Duration.zero: (Duration now) async {
-        final RenderBox target = _transitionKey.currentContext!.findRenderObject()! as RenderBox;
-        final Offset targetOffset = target.localToGlobal(target.size.center(Offset.zero));
+        final RenderBox target =
+            _transitionKey.currentContext!.findRenderObject()! as RenderBox;
+        final Offset targetOffset =
+            target.localToGlobal(target.size.center(Offset.zero));
         final TestGesture gesture = await controller.startGesture(targetOffset);
         await gesture.up();
       },
       const Duration(seconds: 3): (Duration now) async {
-        final RenderBox target = _transitionKey.currentContext!.findRenderObject()! as RenderBox;
-        final Offset targetOffset = target.localToGlobal(target.size.center(Offset.zero));
+        final RenderBox target =
+            _transitionKey.currentContext!.findRenderObject()! as RenderBox;
+        final Offset targetOffset =
+            target.localToGlobal(target.size.center(Offset.zero));
         final TestGesture gesture = await controller.startGesture(targetOffset);
         await gesture.up();
       },
@@ -79,7 +85,7 @@ class TransitionDiagramStep extends DiagramStep<TransitionDiagram<dynamic>> {
 }
 
 // Required because AlignTransition requires an Animation<Rect>, not a Animation<Rect?>.
-class _NonNullableAlignmentGeometryTween  extends Tween<AlignmentGeometry> {
+class _NonNullableAlignmentGeometryTween extends Tween<AlignmentGeometry> {
   /// Creates a fractional offset geometry tween.
   _NonNullableAlignmentGeometryTween({
     required AlignmentGeometry begin,
@@ -92,7 +98,8 @@ class _NonNullableAlignmentGeometryTween  extends Tween<AlignmentGeometry> {
 }
 
 class AlignTransitionDiagram extends TransitionDiagram<AlignmentGeometry> {
-  const AlignTransitionDiagram({Key? key, bool decorate = true}) : super(key: key, decorate: decorate);
+  const AlignTransitionDiagram({Key? key, bool decorate = true})
+      : super(key: key, decorate: decorate);
 
   @override
   Curve get curve => Curves.fastOutSlowIn;
@@ -107,13 +114,15 @@ class AlignTransitionDiagram extends TransitionDiagram<AlignmentGeometry> {
     );
   }
 
-  static final _NonNullableAlignmentGeometryTween _offsetTween = _NonNullableAlignmentGeometryTween(
+  static final _NonNullableAlignmentGeometryTween _offsetTween =
+      _NonNullableAlignmentGeometryTween(
     begin: AlignmentDirectional.bottomStart,
     end: AlignmentDirectional.center,
   );
 
   @override
-  Widget buildTransition(BuildContext context, Animation<AlignmentGeometry> animation) {
+  Widget buildTransition(
+      BuildContext context, Animation<AlignmentGeometry> animation) {
     return Center(
       child: AlignTransition(
         key: _transitionKey,
@@ -125,7 +134,8 @@ class AlignTransitionDiagram extends TransitionDiagram<AlignmentGeometry> {
 }
 
 class DecoratedBoxTransitionDiagram extends TransitionDiagram<Decoration> {
-  const DecoratedBoxTransitionDiagram({Key? key, bool decorate = true}) : super(key: key, decorate: decorate);
+  const DecoratedBoxTransitionDiagram({Key? key, bool decorate = true})
+      : super(key: key, decorate: decorate);
 
   @override
   Curve get curve => Curves.decelerate;
@@ -138,7 +148,8 @@ class DecoratedBoxTransitionDiagram extends TransitionDiagram<Decoration> {
     ));
   }
 
-  static const BorderRadius _beginRadius = BorderRadius.all(Radius.circular(50.0));
+  static const BorderRadius _beginRadius =
+      BorderRadius.all(Radius.circular(50.0));
   static const BorderRadius _endRadius = BorderRadius.zero;
   static final DecorationTween _decorationTween = DecorationTween(
     begin: BoxDecoration(
@@ -153,7 +164,8 @@ class DecoratedBoxTransitionDiagram extends TransitionDiagram<Decoration> {
   );
 
   @override
-  Widget buildTransition(BuildContext context, Animation<Decoration> animation) {
+  Widget buildTransition(
+      BuildContext context, Animation<Decoration> animation) {
     return DecoratedBoxTransition(
       key: _transitionKey,
       decoration: animation,
@@ -167,7 +179,8 @@ class DecoratedBoxTransitionDiagram extends TransitionDiagram<Decoration> {
 }
 
 class FadeTransitionDiagram extends TransitionDiagram<double> {
-  const FadeTransitionDiagram({Key? key, bool decorate = true}) : super(key: key, decorate: decorate);
+  const FadeTransitionDiagram({Key? key, bool decorate = true})
+      : super(key: key, decorate: decorate);
 
   @override
   Curve get curve => Curves.fastOutSlowIn;
@@ -177,7 +190,7 @@ class FadeTransitionDiagram extends TransitionDiagram<double> {
     return CurvedAnimation(
       parent: controller,
       curve: curve,
-  );
+    );
   }
 
   @override
@@ -191,7 +204,8 @@ class FadeTransitionDiagram extends TransitionDiagram<double> {
 }
 
 class PositionedTransitionDiagram extends TransitionDiagram<RelativeRect> {
-  const PositionedTransitionDiagram({Key? key, bool decorate = true}) : super(key: key, decorate: decorate);
+  const PositionedTransitionDiagram({Key? key, bool decorate = true})
+      : super(key: key, decorate: decorate);
 
   @override
   Curve get curve => Curves.elasticInOut;
@@ -210,7 +224,8 @@ class PositionedTransitionDiagram extends TransitionDiagram<RelativeRect> {
   );
 
   @override
-  Widget buildTransition(BuildContext context, Animation<RelativeRect> animation) {
+  Widget buildTransition(
+      BuildContext context, Animation<RelativeRect> animation) {
     return Center(
       child: Stack(
         children: <Widget>[
@@ -229,7 +244,8 @@ class PositionedTransitionDiagram extends TransitionDiagram<RelativeRect> {
 // Required because RelativePositionedTransition wants an Animation<Rect>, not a Animation<Rect?>.
 class _NonNullableRectTween extends Tween<Rect> {
   /// Creates a [Rect] tween.
-  _NonNullableRectTween({ required Rect begin, required Rect end }) : super(begin: begin, end: end);
+  _NonNullableRectTween({required Rect begin, required Rect end})
+      : super(begin: begin, end: end);
 
   /// Returns the value this variable has at the given animation clock value.
   @override
@@ -237,7 +253,8 @@ class _NonNullableRectTween extends Tween<Rect> {
 }
 
 class RelativePositionedTransitionDiagram extends TransitionDiagram<Rect> {
-  const RelativePositionedTransitionDiagram({Key? key, bool decorate = true}) : super(key: key, decorate: decorate);
+  const RelativePositionedTransitionDiagram({Key? key, bool decorate = true})
+      : super(key: key, decorate: decorate);
 
   @override
   Curve get curve => Curves.elasticInOut;
@@ -260,7 +277,8 @@ class RelativePositionedTransitionDiagram extends TransitionDiagram<Rect> {
     return Center(
       child: Stack(
         children: <Widget>[
-          Container(color: const Color(0xffffffff), width: 200.0, height: 200.0),
+          Container(
+              color: const Color(0xffffffff), width: 200.0, height: 200.0),
           RelativePositionedTransition(
             key: _transitionKey,
             size: const Size(150.0, 150.0),
@@ -274,7 +292,8 @@ class RelativePositionedTransitionDiagram extends TransitionDiagram<Rect> {
 }
 
 class RotationTransitionDiagram extends TransitionDiagram<double> {
-  const RotationTransitionDiagram({Key? key, bool decorate = true}) : super(key: key, decorate: decorate);
+  const RotationTransitionDiagram({Key? key, bool decorate = true})
+      : super(key: key, decorate: decorate);
 
   @override
   Curve get curve => Curves.elasticOut;
@@ -298,7 +317,8 @@ class RotationTransitionDiagram extends TransitionDiagram<double> {
 }
 
 class ScaleTransitionDiagram extends TransitionDiagram<double> {
-  const ScaleTransitionDiagram({Key? key, bool decorate = true}) : super(key: key, decorate: decorate);
+  const ScaleTransitionDiagram({Key? key, bool decorate = true})
+      : super(key: key, decorate: decorate);
 
   @override
   Curve get curve => Curves.fastOutSlowIn;
@@ -322,7 +342,8 @@ class ScaleTransitionDiagram extends TransitionDiagram<double> {
 }
 
 class SizeTransitionDiagram extends TransitionDiagram<double> {
-  const SizeTransitionDiagram({Key? key, bool decorate = true}) : super(key: key, decorate: decorate);
+  const SizeTransitionDiagram({Key? key, bool decorate = true})
+      : super(key: key, decorate: decorate);
 
   @override
   Curve get curve => Curves.fastOutSlowIn;
@@ -361,7 +382,8 @@ class SizeTransitionDiagram extends TransitionDiagram<double> {
 }
 
 class SlideTransitionDiagram extends TransitionDiagram<Offset> {
-  const SlideTransitionDiagram({Key? key, bool decorate = true}) : super(key: key, decorate: decorate);
+  const SlideTransitionDiagram({Key? key, bool decorate = true})
+      : super(key: key, decorate: decorate);
 
   @override
   Curve get curve => Curves.elasticIn;

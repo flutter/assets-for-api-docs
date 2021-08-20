@@ -13,7 +13,8 @@ import 'utils.dart';
 
 /// A label widget that shows a padded label with some bold data.
 class DataLabel extends StatelessWidget {
-  const DataLabel({Key? key, this.label = '', this.data = ''}) : super(key: key);
+  const DataLabel({Key? key, this.label = '', this.data = ''})
+      : super(key: key);
 
   final String label;
   final String data;
@@ -34,7 +35,8 @@ class DataLabel extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsetsDirectional.only(start: 8.0, end: 8.0),
-              child: Text(data, style: labelStyle.copyWith(fontWeight: FontWeight.bold)),
+              child: Text(data,
+                  style: labelStyle.copyWith(fontWeight: FontWeight.bold)),
             ),
           ],
         ),
@@ -55,7 +57,8 @@ class OutputLocation extends StatelessWidget {
     this.startLine = 0,
     Platform platform = const LocalPlatform(),
   })  : _fileBrowserName = _getFileBrowserName(platform),
-        assert(file == null || file.absolute.path.contains(location.absolute.path),
+        assert(
+            file == null || file.absolute.path.contains(location.absolute.path),
             'Supplied file must be within location directory'),
         super(key: key);
 
@@ -93,14 +96,16 @@ class OutputLocation extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsetsDirectional.only(start: 8.0, end: 8.0),
+                  padding:
+                      const EdgeInsetsDirectional.only(start: 8.0, end: 8.0),
                   child: Text(
                     '$label${label.isNotEmpty ? ' ' : ''}$path',
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsetsDirectional.only(start: 8.0, end: 8.0),
+                  padding:
+                      const EdgeInsetsDirectional.only(start: 8.0, end: 8.0),
                   child: IconButton(
                     tooltip: 'Copy path to clipboard',
                     icon: const Icon(Icons.copy),
@@ -116,7 +121,8 @@ class OutputLocation extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsetsDirectional.only(start: 8.0, end: 8.0),
+                  padding:
+                      const EdgeInsetsDirectional.only(start: 8.0, end: 8.0),
                   child: TextButton(
                     child: Text('OPEN IN $_fileBrowserName'),
                     onPressed: () {
@@ -126,11 +132,13 @@ class OutputLocation extends StatelessWidget {
                 ),
                 for (final IdeType type in IdeType.values)
                   Padding(
-                    padding: const EdgeInsetsDirectional.only(start: 8.0, end: 8.0),
+                    padding:
+                        const EdgeInsetsDirectional.only(start: 8.0, end: 8.0),
                     child: TextButton(
                       child: Text('OPEN IN ${getIdeName(type).toUpperCase()}'),
                       onPressed: () {
-                        openInIde(type, location, file: file, startLine: startLine);
+                        openInIde(type, location,
+                            file: file, startLine: startLine);
                       },
                     ),
                   ),
@@ -173,8 +181,9 @@ class ActionPanel extends StatelessWidget {
             ),
           ),
           child: Row(
-            mainAxisAlignment:
-                children.length < 2 ? MainAxisAlignment.center : MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: children.length < 2
+                ? MainAxisAlignment.center
+                : MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: children,
           ),
@@ -246,7 +255,8 @@ class _CodePanelState extends State<CodePanel> {
   void initState() {
     super.initState();
     highlightTheme = Map<String, TextStyle>.from(githubTheme);
-    highlightTheme['root'] = highlightTheme['root']!.copyWith(backgroundColor: Colors.transparent);
+    highlightTheme['root'] =
+        highlightTheme['root']!.copyWith(backgroundColor: Colors.transparent);
   }
 
   @override
@@ -292,7 +302,8 @@ class TextPanel extends StatelessWidget {
   // Strips out multiple empty lines, since those can appear when the tool
   // sections are stripped out.
   String _formatText(String text) {
-    return text.replaceAll(RegExp(r'(\n[ \t]*$){2,}', dotAll: true, multiLine: true), '\n');
+    return text.replaceAll(
+        RegExp(r'(\n[ \t]*$){2,}', dotAll: true, multiLine: true), '\n');
   }
 
   @override

@@ -17,7 +17,8 @@ const String _rowFixed = 'row_fixed';
 const String _rowTextDirection = 'row_textDirection';
 
 class RowDiagram extends StatelessWidget implements DiagramMetadata {
-  const RowDiagram(this.name, { this.ignoreErrors = false, Key? key}) : super(key: key);
+  const RowDiagram(this.name, {this.ignoreErrors = false, Key? key})
+      : super(key: key);
 
   @override
   final String name;
@@ -115,11 +116,11 @@ class RowDiagramStep extends DiagramStep<RowDiagram> {
 
   @override
   Future<List<RowDiagram>> get diagrams async => <RowDiagram>[
-    const RowDiagram(_row),
-    const RowDiagram(_rowError, ignoreErrors: true),
-    const RowDiagram(_rowFixed),
-    const RowDiagram(_rowTextDirection),
-  ];
+        const RowDiagram(_row),
+        const RowDiagram(_rowError, ignoreErrors: true),
+        const RowDiagram(_rowFixed),
+        const RowDiagram(_rowTextDirection),
+      ];
 
   @override
   Future<File> generateDiagram(RowDiagram diagram) async {
@@ -138,7 +139,8 @@ class RowDiagramStep extends DiagramStep<RowDiagram> {
       FlutterError.onError = oldHandler;
       if (diagram.ignoreErrors && errorCount == 0) {
         FlutterError.reportError(FlutterErrorDetails(
-          exception: Exception('Expected an error but did not get any errors for "${diagram.name}".'),
+          exception: Exception(
+              'Expected an error but did not get any errors for "${diagram.name}".'),
           library: 'diagrams',
         ));
       }

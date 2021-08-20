@@ -95,8 +95,10 @@ class GestureDetectorDiagramStep extends DiagramStep<GestureDetectorDiagram> {
 
     await Future<void>.delayed(_pauseDuration);
 
-    final RenderBox target = _gestureDetectorKey.currentContext!.findRenderObject()! as RenderBox;
-    final Offset targetOffset = target.localToGlobal(target.size.center(Offset.zero));
+    final RenderBox target =
+        _gestureDetectorKey.currentContext!.findRenderObject()! as RenderBox;
+    final Offset targetOffset =
+        target.localToGlobal(target.size.center(Offset.zero));
     final TestGesture gesture = await controller.startGesture(targetOffset);
     await gesture.up();
 

@@ -71,12 +71,13 @@ String getChannelName({
     throw GitStatusFailed(gitResult);
   }
 
-  final RegExpMatch? gitBranchMatch =
-      gitBranchRegexp.firstMatch((gitResult.stdout as String).trim().split('\n').first);
+  final RegExpMatch? gitBranchMatch = gitBranchRegexp
+      .firstMatch((gitResult.stdout as String).trim().split('\n').first);
   return gitBranchMatch == null
       ? '<unknown>'
       : gitBranchMatch.namedGroup('branch')!.split('...').first;
 }
+
 const List<String> sampleTypes = <String>[
   'snippet',
   'sample',
@@ -93,7 +94,8 @@ String getChannelNameWithRetries() {
       return getChannelName();
     } on GitStatusFailed catch (e) {
       retryCount += 1;
-      stderr.write('git status failed, retrying ($retryCount)\nError report:\n$e');
+      stderr.write(
+          'git status failed, retrying ($retryCount)\nError report:\n$e');
     }
   }
 
@@ -111,12 +113,15 @@ void main(List<String> argList) {
     defaultsTo: 'dartpad',
     allowed: sampleTypes,
     allowedHelp: <String, String>{
-      'dartpad': 'Produce a code sample application complete with embedding the sample in an '
-          'application template for using in Dartpad.',
-      'sample': 'Produce a code sample application complete with embedding the sample in an '
-          'application template.',
-      'snippet': 'Produce a nicely formatted piece of sample code. Does not embed the '
-          'sample into an application template.',
+      'dartpad':
+          'Produce a code sample application complete with embedding the sample in an '
+              'application template for using in Dartpad.',
+      'sample':
+          'Produce a code sample application complete with embedding the sample in an '
+              'application template.',
+      'snippet':
+          'Produce a nicely formatted piece of sample code. Does not embed the '
+              'sample into an application template.',
     },
     help: 'The type of snippet to produce.',
   );
@@ -189,7 +194,8 @@ void main(List<String> argList) {
 
   if (args[_kInputOption] == null) {
     stderr.writeln(parser.usage);
-    errorExit('The --$_kInputOption option must be specified, either on the command '
+    errorExit(
+        'The --$_kInputOption option must be specified, either on the command '
         'line, or in the INPUT environment variable.');
     return;
   }
@@ -202,7 +208,8 @@ void main(List<String> argList) {
 
   String? template;
   if (sampleType == 'sample' || sampleType == 'dartpad') {
-    const String errorMessage = 'The --$_kTemplateOption option must be specified for "sample" and "dartpad" sample types.';
+    const String errorMessage =
+        'The --$_kTemplateOption option must be specified for "sample" and "dartpad" sample types.';
     if (args[_kTemplateOption] == null) {
       errorExit(errorMessage);
       return;
@@ -232,7 +239,8 @@ void main(List<String> argList) {
     if (outputPath.isAbsolute) {
       output = outputPath;
     } else {
-      output = filesystem.file(path.join(outputDirectory.path, outputPath.path));
+      output =
+          filesystem.file(path.join(outputDirectory.path, outputPath.path));
     }
   } else {
     final List<String> idParts = <String>[];
@@ -258,8 +266,9 @@ void main(List<String> argList) {
     output = filesystem.file(outputDirectory.childFile('$id.dart'));
   }
 
-  final int? sourceLine =
-      environment['SOURCE_LINE'] != null ? int.tryParse(environment['SOURCE_LINE']!) : null;
+  final int? sourceLine = environment['SOURCE_LINE'] != null
+      ? int.tryParse(environment['SOURCE_LINE']!)
+      : null;
   final String sourcePath = environment['SOURCE_PATH'] ?? 'unknown.dart';
   final SnippetDartdocParser sampleParser = SnippetDartdocParser(filesystem);
   final SourceElement element = sampleParser.parseFromDartdocToolFile(

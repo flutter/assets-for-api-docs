@@ -27,7 +27,7 @@ class FakeDragScrollActivity extends ScrollActivity {
     required Duration duration,
     required Curve curve,
     required TickerProvider vsync,
-  })   : _completer = Completer<void>(),
+  })  : _completer = Completer<void>(),
         _controller = AnimationController.unbounded(
           value: from,
           debugLabel: '$FakeDragScrollActivity',

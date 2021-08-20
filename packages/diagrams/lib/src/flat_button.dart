@@ -25,7 +25,8 @@ class FlatButtonDiagram extends StatelessWidget implements DiagramMetadata {
 
     switch (name) {
       case _basic:
-        returnWidget = FlatButton( // ignore: deprecated_member_use
+        returnWidget = FlatButton(
+          // ignore: deprecated_member_use
           onPressed: () {},
           child: const Text(
             'Flat Button',
@@ -33,7 +34,8 @@ class FlatButtonDiagram extends StatelessWidget implements DiagramMetadata {
         );
         break;
       case _properties:
-        returnWidget = FlatButton( // ignore: deprecated_member_use
+        returnWidget = FlatButton(
+          // ignore: deprecated_member_use
           color: Colors.blue,
           textColor: Colors.white,
           disabledColor: Colors.grey,

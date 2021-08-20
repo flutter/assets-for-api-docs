@@ -30,13 +30,15 @@ Future<void> main(List<String> argList) async {
   final ArgParser parser = ArgParser();
   parser.addOption(
     _kOutputOption,
-    defaultsTo: path.join(flutterInformation.getFlutterRoot().absolute.path, 'examples', 'api'),
+    defaultsTo: path.join(
+        flutterInformation.getFlutterRoot().absolute.path, 'examples', 'api'),
     help: 'The output path for generated sample applications.',
   );
   parser.addOption(
     _kInputOption,
     mandatory: true,
-    help: 'The input Flutter source file containing the sample code to extract.',
+    help:
+        'The input Flutter source file containing the sample code to extract.',
   );
   parser.addFlag(
     _kHelpOption,
@@ -57,7 +59,8 @@ Future<void> main(List<String> argList) async {
     errorExit('The --$_kInputOption option must not be empty.');
   }
 
-  if (args[_kOutputOption] == null || (args[_kOutputOption] as String).isEmpty) {
+  if (args[_kOutputOption] == null ||
+      (args[_kOutputOption] as String).isEmpty) {
     stderr.writeln(parser.usage);
     errorExit('The --$_kOutputOption option must be specified, and not empty.');
   }
@@ -74,7 +77,8 @@ Future<void> main(List<String> argList) async {
     'src',
   );
   if (!path.isWithin(flutterSource, input.absolute.path)) {
-    errorExit('Input file must be under the $flutterSource directory: ${input.absolute.path} is not.');
+    errorExit(
+        'Input file must be under the $flutterSource directory: ${input.absolute.path} is not.');
   }
 
   try {
@@ -84,16 +88,15 @@ Future<void> main(List<String> argList) async {
     dartdocParser.parseFromComments(fileElements);
     dartdocParser.parseAndAddAssumptions(fileElements, input, silent: true);
 
-    final String srcPath = path.relative(input.absolute.path, from: flutterSource);
+    final String srcPath =
+        path.relative(input.absolute.path, from: flutterSource);
     final String dstPath = path.join(
-      flutterInformation
-          .getFlutterRoot()
-          .absolute
-          .path,
+      flutterInformation.getFlutterRoot().absolute.path,
       'examples',
       'api',
     );
-    for (final SourceElement element in fileElements.where((SourceElement element) {
+    for (final SourceElement element
+        in fileElements.where((SourceElement element) {
       return element.sampleCount > 0;
     })) {
       for (final CodeSample sample in element.samples) {
@@ -131,7 +134,8 @@ Future<void> main(List<String> argList) async {
         );
         if (!filesystem.file(path.join(dstPath, 'pubspec.yaml')).existsSync()) {
           print('Publishing ${outputFile.absolute.path}');
-          await liberator.extract(overwrite: true, mainDart: outputFile, includeMobile: true);
+          await liberator.extract(
+              overwrite: true, mainDart: outputFile, includeMobile: true);
         } else {
           await outputFile.absolute.writeAsString(sample.output);
         }

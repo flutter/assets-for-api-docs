@@ -78,8 +78,7 @@ class LabeledRadio extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        if (value != groupValue)
-          onChanged(value);
+        if (value != groupValue) onChanged(value);
       },
       child: Padding(
         padding: padding,
@@ -131,13 +130,21 @@ class _RadioListTileDiagramState extends State<RadioListTileDiagram> {
                   title: const Text('Lafayette'),
                   value: SingingCharacter.lafayette,
                   groupValue: _character,
-                  onChanged: (SingingCharacter? value) { setState(() { _character = value; }); },
+                  onChanged: (SingingCharacter? value) {
+                    setState(() {
+                      _character = value;
+                    });
+                  },
                 ),
                 RadioListTile<SingingCharacter>(
                   title: const Text('Thomas Jefferson'),
                   value: SingingCharacter.jefferson,
                   groupValue: _character,
-                  onChanged: (SingingCharacter? value) { setState(() { _character = value; }); },
+                  onChanged: (SingingCharacter? value) {
+                    setState(() {
+                      _character = value;
+                    });
+                  },
                 ),
               ],
             ),
@@ -179,42 +186,42 @@ class _RadioListTileDiagramState extends State<RadioListTileDiagram> {
             ),
           ),
         );
-        case 'radio_list_tile_custom':
-          return ConstrainedBox(
-            key: UniqueKey(),
-            constraints: BoxConstraints.tight(const Size(400.0, 140.0)),
-            child: Container(
-              alignment: FractionalOffset.center,
-              padding: const EdgeInsets.all(5.0),
-              color: Colors.white,
-              child: Column(
-                children: <Widget>[
-                  LabeledRadio(
-                    label: 'This is the first label text',
-                    padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                    value: true,
-                    groupValue: _isRadioSelected,
-                    onChanged: (bool? newValue) {
-                      setState(() {
-                        _isRadioSelected = newValue!;
-                      });
-                    },
-                  ),
-                  LabeledRadio(
-                    label: 'This is the second label text',
-                    padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                    value: false,
-                    groupValue: _isRadioSelected,
-                    onChanged: (bool? newValue) {
-                      setState(() {
-                        _isRadioSelected = newValue!;
-                      });
-                    },
-                  ),
-                ],
-              ),
+      case 'radio_list_tile_custom':
+        return ConstrainedBox(
+          key: UniqueKey(),
+          constraints: BoxConstraints.tight(const Size(400.0, 140.0)),
+          child: Container(
+            alignment: FractionalOffset.center,
+            padding: const EdgeInsets.all(5.0),
+            color: Colors.white,
+            child: Column(
+              children: <Widget>[
+                LabeledRadio(
+                  label: 'This is the first label text',
+                  padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                  value: true,
+                  groupValue: _isRadioSelected,
+                  onChanged: (bool? newValue) {
+                    setState(() {
+                      _isRadioSelected = newValue!;
+                    });
+                  },
+                ),
+                LabeledRadio(
+                  label: 'This is the second label text',
+                  padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                  value: false,
+                  groupValue: _isRadioSelected,
+                  onChanged: (bool? newValue) {
+                    setState(() {
+                      _isRadioSelected = newValue!;
+                    });
+                  },
+                ),
+              ],
             ),
-          );
+          ),
+        );
       default:
         return const Text('Error');
     }
@@ -228,11 +235,12 @@ class RadioListTileDiagramStep extends DiagramStep<RadioListTileDiagram> {
   final String category = 'material';
 
   @override
-  Future<List<RadioListTileDiagram>> get diagrams async => <RadioListTileDiagram>[
-    const RadioListTileDiagram('radio_list_tile'),
-    const RadioListTileDiagram('radio_list_tile_semantics'),
-    const RadioListTileDiagram('radio_list_tile_custom'),
-  ];
+  Future<List<RadioListTileDiagram>> get diagrams async =>
+      <RadioListTileDiagram>[
+        const RadioListTileDiagram('radio_list_tile'),
+        const RadioListTileDiagram('radio_list_tile_semantics'),
+        const RadioListTileDiagram('radio_list_tile_custom'),
+      ];
 
   @override
   Future<File> generateDiagram(RadioListTileDiagram diagram) async {

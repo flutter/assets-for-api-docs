@@ -54,7 +54,8 @@ class TextStyleDiagram extends StatelessWidget implements DiagramMetadata {
                 style: TextStyle(color: Colors.black.withOpacity(0.8)),
               ),
               TextSpan(
-                text: "You're gonna need congressional approval and you don't have the votes!\n",
+                text:
+                    "You're gonna need congressional approval and you don't have the votes!\n",
                 style: TextStyle(color: Colors.black.withOpacity(1.0)),
               ),
             ],

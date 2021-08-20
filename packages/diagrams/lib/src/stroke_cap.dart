@@ -39,7 +39,8 @@ class StrokeCapDescription extends CustomPainter {
     );
   }
 
-  static TextPainter _createLabelPainter(String label, {FontStyle style = FontStyle.normal}) {
+  static TextPainter _createLabelPainter(String label,
+      {FontStyle style = FontStyle.normal}) {
     final TextPainter result = TextPainter(
       textDirection: TextDirection.ltr,
       text: TextSpan(
@@ -58,7 +59,8 @@ class StrokeCapDescription extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     assert(size != Size.zero);
-    final Offset center = Offset(size.width / 2.0, (size.height - _capPainter.height - padding.vertical) / 2.0);
+    final Offset center = Offset(size.width / 2.0,
+        (size.height - _capPainter.height - padding.vertical) / 2.0);
     final Offset start = Offset(0.0, center.dy);
     final Offset middle = Offset(size.width / 2.0, center.dy);
 
@@ -106,7 +108,9 @@ class StrokeCapDescription extends CustomPainter {
 }
 
 class StrokeCapDiagram extends StatelessWidget implements DiagramMetadata {
-  const StrokeCapDiagram({required this.name, this.cap = StrokeCap.round, Key? key}) : super(key: key);
+  const StrokeCapDiagram(
+      {required this.name, this.cap = StrokeCap.round, Key? key})
+      : super(key: key);
 
   @override
   final String name;

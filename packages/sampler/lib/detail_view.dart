@@ -36,8 +36,9 @@ class _DetailViewState extends State<DetailView> {
     setState(() {
       exporting = true;
       if (project == null) {
-        final Directory outputLocation =
-            Model.instance.filesystem.systemTempDirectory.createTempSync('flutter_sample.');
+        final Directory outputLocation = Model
+            .instance.filesystem.systemTempDirectory
+            .createTempSync('flutter_sample.');
         project = FlutterSampleLiberator(
           Model.instance.currentElement!,
           Model.instance.currentSample!,
@@ -63,7 +64,8 @@ class _DetailViewState extends State<DetailView> {
         if (error.isEmpty) {
           return;
         }
-        final ScaffoldMessengerState? scaffold = ScaffoldMessenger.maybeOf(context);
+        final ScaffoldMessengerState? scaffold =
+            ScaffoldMessenger.maybeOf(context);
         scaffold?.showSnackBar(
           SnackBar(
             content: Text(error),
@@ -80,11 +82,13 @@ class _DetailViewState extends State<DetailView> {
   @override
   Widget build(BuildContext context) {
     if (Model.instance.currentSample == null) {
-      return const Scaffold(body: Center(child: Text('Working sample not set.')));
+      return const Scaffold(
+          body: Center(child: Text('Working sample not set.')));
     }
     final CodeSample sample = Model.instance.currentSample!;
     final String filename = sample.start.file != null
-        ? path.relative(sample.start.file!.path, from: Model.instance.flutterRoot.path)
+        ? path.relative(sample.start.file!.path,
+            from: Model.instance.flutterRoot.path)
         : '<generated>';
     return Scaffold(
       appBar: AppBar(
@@ -100,11 +104,14 @@ class _DetailViewState extends State<DetailView> {
               DataLabel(label: 'Type of sample:', data: sample.type),
               DataLabel(
                   label: 'Sample is attached to:',
-                  data: '${sample.element} starting at line ${sample.start.line}'),
+                  data:
+                      '${sample.element} starting at line ${sample.start.line}'),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: CodePanel(code: sample.inputAsString, color: Colors.deepPurple.shade50),
+                  child: CodePanel(
+                      code: sample.inputAsString,
+                      color: Colors.deepPurple.shade50),
                 ),
               ),
               ActionPanel(
@@ -113,16 +120,21 @@ class _DetailViewState extends State<DetailView> {
                   if (!exporting)
                     TextButton(
                         child: Tooltip(
-                          message: 'Extract a sample from the Flutter source file',
+                          message:
+                              'Extract a sample from the Flutter source file',
                           child: Text(
-                            project == null ? 'EXTRACT SAMPLE' : 'RE-EXTRACT SAMPLE',
+                            project == null
+                                ? 'EXTRACT SAMPLE'
+                                : 'RE-EXTRACT SAMPLE',
                           ),
                         ),
                         onPressed: _extractSample),
                   if (project != null && !exporting)
                     OutputLocation(
                       location: project!.location,
-                      file: project!.location.childDirectory('lib').childFile('main.dart'),
+                      file: project!.location
+                          .childDirectory('lib')
+                          .childFile('main.dart'),
                     ),
                 ],
               ),
@@ -131,7 +143,8 @@ class _DetailViewState extends State<DetailView> {
                 children: <Widget>[
                   TextButton(
                       child: const Tooltip(
-                        message: 'Reinsert extracted, edited sample into the Flutter source file',
+                        message:
+                            'Reinsert extracted, edited sample into the Flutter source file',
                         child: Text('REINSERT'),
                       ),
                       onPressed: project != null && !exporting && !importing

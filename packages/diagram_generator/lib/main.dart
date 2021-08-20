@@ -19,12 +19,13 @@ const platform_pkg.Platform platform = platform_pkg.LocalPlatform();
 Future<Directory> prepareOutputDirectory(String? outputDir) async {
   Directory directory;
   if (platform.isAndroid) {
-      directory = Directory(
-        outputDir ?? path.join(
-          (await getApplicationDocumentsDirectory()).absolute.path,
-          'diagrams',
-        ),
-      );
+    directory = Directory(
+      outputDir ??
+          path.join(
+            (await getApplicationDocumentsDirectory()).absolute.path,
+            'diagrams',
+          ),
+    );
   } else {
     directory = Directory(outputDir!);
   }
@@ -39,7 +40,7 @@ Future<void> main(List<String> args) async {
   DiagramFlutterBinding.ensureInitialized();
   late final List<String> arguments;
   if (platform.isAndroid) {
-     arguments = window.defaultRouteName.length > 5
+    arguments = window.defaultRouteName.length > 5
         ? Uri.decodeComponent(window.defaultRouteName.substring(5)).split(' ')
         : <String>[];
   } else {
@@ -55,7 +56,7 @@ Future<void> main(List<String> args) async {
   final StringBuffer errorLog = StringBuffer();
   FlutterError.onError = (FlutterErrorDetails details) {
     final DebugPrintCallback oldDebugPrint = debugPrint;
-    debugPrint = (String? message, { int? wrapWidth }) {
+    debugPrint = (String? message, {int? wrapWidth}) {
       errorLog.writeln(message);
       oldDebugPrint(message, wrapWidth: wrapWidth);
     };
@@ -65,16 +66,18 @@ Future<void> main(List<String> args) async {
 
   final List<String> categories = flags['category'] as List<String>;
   final List<String> names = flags['name'] as List<String>;
-  final Set<DiagramPlatform> platforms = (flags['platform'] as List<String>).map<DiagramPlatform>((String platformStr) {
-    assert(diagramStepPlatformNames.containsKey(platformStr), 'Invalid platform $platformStr');
+  final Set<DiagramPlatform> platforms = (flags['platform'] as List<String>)
+      .map<DiagramPlatform>((String platformStr) {
+    assert(diagramStepPlatformNames.containsKey(platformStr),
+        'Invalid platform $platformStr');
     return diagramStepPlatformNames[platformStr]!;
   }).toSet();
-
 
   print('Filters:\n  categories: $categories\n  names: $names');
 
   final DateTime start = DateTime.now();
-  final Directory outputDirectory = await prepareOutputDirectory(platform.isAndroid ? null : flags['output-dir'] as String?);
+  final Directory outputDirectory = await prepareOutputDirectory(
+      platform.isAndroid ? null : flags['output-dir'] as String?);
 
   final DiagramController controller = DiagramController(
     outputDirectory: outputDirectory,
@@ -83,7 +86,8 @@ Future<void> main(List<String> args) async {
   );
 
   // Add the diagram steps here.
-  final List<DiagramStep<DiagramMetadata>> steps = <DiagramStep<DiagramMetadata>>[
+  final List<DiagramStep<DiagramMetadata>> steps =
+      <DiagramStep<DiagramMetadata>>[
     AlertDialogDiagramStep(controller),
     AlignDiagramStep(controller),
     AnimationStatusValueDiagramStep(controller),
@@ -156,45 +160,42 @@ Future<void> main(List<String> args) async {
   ];
 
   final Completer<void> done = Completer<void>();
-  Zone
-    .current
-    .fork(specification: ZoneSpecification(
-      handleUncaughtError: (
-        Zone self,
-        ZoneDelegate parent,
-        Zone zone,
-        Object error,
-        StackTrace stackTrace,
-      ) {
-        print('Exception! $error\n$stackTrace');
-        errorLog.writeln(error);
-        errorLog.writeln(stackTrace);
-      },
-    ))
-    .runGuarded(() async {
-      for (final DiagramStep<DiagramMetadata> step in steps) {
-        if (categories.isNotEmpty && !categories.contains(step.category)) {
-          continue;
-        }
-        final Directory stepOutputDirectory =
-            Directory(path.join(outputDirectory.absolute.path, step.category));
-        stepOutputDirectory.createSync(recursive: true);
-        controller.outputDirectory = stepOutputDirectory;
-        controller.pixelRatio = 1.0;
-        print('Working on step ${step.runtimeType}');
-
-        await step.generateDiagrams(onlyGenerate: names, platforms: platforms);
+  Zone.current.fork(specification: ZoneSpecification(
+    handleUncaughtError: (
+      Zone self,
+      ZoneDelegate parent,
+      Zone zone,
+      Object error,
+      StackTrace stackTrace,
+    ) {
+      print('Exception! $error\n$stackTrace');
+      errorLog.writeln(error);
+      errorLog.writeln(stackTrace);
+    },
+  )).runGuarded(() async {
+    for (final DiagramStep<DiagramMetadata> step in steps) {
+      if (categories.isNotEmpty && !categories.contains(step.category)) {
+        continue;
       }
-      done.complete();
-    });
+      final Directory stepOutputDirectory =
+          Directory(path.join(outputDirectory.absolute.path, step.category));
+      stepOutputDirectory.createSync(recursive: true);
+      controller.outputDirectory = stepOutputDirectory;
+      controller.pixelRatio = 1.0;
+      print('Working on step ${step.runtimeType}');
+
+      await step.generateDiagrams(onlyGenerate: names, platforms: platforms);
+    }
+    done.complete();
+  });
   await done.future;
 
   // Save errors, if any. (We always create the file, even if empty, to signal we got to the end.)
   final String errors = errorLog.toString();
-  final File errorsFile = File(path.join(outputDirectory.absolute.path, 'error.log'));
+  final File errorsFile =
+      File(path.join(outputDirectory.absolute.path, 'error.log'));
   errorsFile.writeAsStringSync(errors);
-  if (errors.isNotEmpty)
-    print('Wrote errors to: ${errorsFile.path}');
+  if (errors.isNotEmpty) print('Wrote errors to: ${errorsFile.path}');
 
   final DateTime end = DateTime.now();
   final Duration elapsed = end.difference(start);

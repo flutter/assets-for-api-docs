@@ -71,7 +71,8 @@ class Model extends ChangeNotifier {
 
   /// Collects the list of Flutter source files to choose from and populates the
   /// [files] member.
-  Future<void> collectFiles(Iterable<Directory> directories, {String suffix = '.dart'}) async {
+  Future<void> collectFiles(Iterable<Directory> directories,
+      {String suffix = '.dart'}) async {
     files = <File>[];
     for (final Directory directory in directories) {
       final List<File> foundDartFiles = <File>[];
@@ -88,8 +89,8 @@ class Model extends ChangeNotifier {
         }
         assert(entity is File);
         final File file = filesystem.file(entity.absolute.path);
-        final File relativePath =
-            filesystem.file(path.relative(file.path, from: directory.absolute.path));
+        final File relativePath = filesystem
+            .file(path.relative(file.path, from: directory.absolute.path));
         if (path.split(relativePath.path).contains('test')) {
           continue;
         }
@@ -113,7 +114,8 @@ class Model extends ChangeNotifier {
   File? get workingFile {
     return _workingFile == null
         ? null
-        : filesystem.file(path.join(flutterPackageRoot.absolute.path, _workingFile!.path));
+        : filesystem.file(
+            path.join(flutterPackageRoot.absolute.path, _workingFile!.path));
   }
 
   /// Gets the contents of the [workingFile] as a String.
@@ -152,14 +154,16 @@ class Model extends ChangeNotifier {
     }
     // Only reload if the contents have actually changed.
     final String contents = await workingFile!.readAsString();
-    if (_workingFileDigest != null && _computeDigest(contents) == _workingFileDigest!) {
+    if (_workingFileDigest != null &&
+        _computeDigest(contents) == _workingFileDigest!) {
       return;
     }
     await _loadWorkingFile(contents: contents);
     if (_currentElement != null && _elements != null) {
       // Try to find the old element.
-      final Iterable<SourceElement> oldMatches = _elements!
-          .where((SourceElement element) => element.elementName == _currentElement!.elementName);
+      final Iterable<SourceElement> oldMatches = _elements!.where(
+          (SourceElement element) =>
+              element.elementName == _currentElement!.elementName);
       if (oldMatches.isNotEmpty) {
         _currentElement = oldMatches.first;
       } else {
@@ -200,9 +204,11 @@ class Model extends ChangeNotifier {
     });
     _elements = getElementsFromString(_workingFileContents!, workingFile!);
     _dartdocParser.parseFromComments(_elements!);
-    _dartdocParser.parseAndAddAssumptions(_elements!, workingFile!, silent: true);
+    _dartdocParser.parseAndAddAssumptions(_elements!, workingFile!,
+        silent: true);
     for (final CodeSample sample in samples) {
-      _snippetGenerator.generateCode(sample, addSectionMarkers: true, includeAssumptions: true);
+      _snippetGenerator.generateCode(sample,
+          addSectionMarkers: true, includeAssumptions: true);
     }
     print('Loaded ${samples.length} samples from ${workingFile!.path}');
   }
@@ -219,7 +225,8 @@ class Model extends ChangeNotifier {
 
   /// Inserts a new sample placeholder into the [currentElement], and write it
   /// out to the [workingFile].
-  Future<void> insertNewSample({Type sampleType = SnippetSample, String? template}) async {
+  Future<void> insertNewSample(
+      {Type sampleType = SnippetSample, String? template}) async {
     assert(_workingFile != null, 'Working file must be set to insert a sample');
 
     // If reloading the file invalidates the current element (because it
@@ -350,12 +357,15 @@ class Model extends ChangeNotifier {
     if (elements == null) {
       return null;
     }
-    return elements!.where((SourceElement element) => element.samples.contains(sample)).single;
+    return elements!
+        .where((SourceElement element) => element.samples.contains(sample))
+        .single;
   }
 
   /// The list of samples available in all of the elements in the file.
   Iterable<CodeSample> get samples {
-    return _elements?.expand<CodeSample>((SourceElement element) => element.samples) ??
+    return _elements
+            ?.expand<CodeSample>((SourceElement element) => element.samples) ??
         const <CodeSample>[];
   }
 

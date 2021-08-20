@@ -21,7 +21,8 @@ void openFileBrowser(FileSystemEntity location,
       // Tries to open the system file manager using DBus and select the file.
       // Some file managers don't support selecting the file, but it will at
       // least open the directory that the file exists in.
-      final ProcessRunner runner = ProcessRunner(processManager: processManager);
+      final ProcessRunner runner =
+          ProcessRunner(processManager: processManager);
       runner.runProcess(<String>[
         'dbus-send',
         '--session',
@@ -33,7 +34,8 @@ void openFileBrowser(FileSystemEntity location,
         'string:""',
       ]).then((ProcessRunnerResult result) {
         if (result.exitCode != 0) {
-          print('Failed to open file ${location.absolute.path}: ${result.output}');
+          print(
+              'Failed to open file ${location.absolute.path}: ${result.output}');
         }
       });
       break;
@@ -43,11 +45,15 @@ void openFileBrowser(FileSystemEntity location,
     case 'windows':
       processManager.run(<String>[
         'start',
-        if (location is Directory) location.absolute.path else location.parent.absolute.path
+        if (location is Directory)
+          location.absolute.path
+        else
+          location.parent.absolute.path
       ], runInShell: true);
       break;
     default:
-      throw Exception('Opening files on platform ${platform.operatingSystem} is not supported.');
+      throw Exception(
+          'Opening files on platform ${platform.operatingSystem} is not supported.');
   }
 }
 
@@ -109,7 +115,8 @@ void openInIde(
               (result.stdout as String).split('\n').where((String candidate) {
             return !candidate.contains('/Application Support/');
           });
-          final String appName = candidates.isNotEmpty ? candidates.first : 'IntelliJ IDEA CE';
+          final String appName =
+              candidates.isNotEmpty ? candidates.first : 'IntelliJ IDEA CE';
           final List<String> command = <String>[
             'open',
             '-na',
@@ -135,8 +142,10 @@ void openInIde(
             'mdfind',
             'kMDItemCFBundleIdentifier=com.microsoft.VSCode* kind:application',
           ], stdoutEncoding: utf8);
-          final Iterable<String> candidates = (result.stdout as String).split('\n');
-          final String appName = candidates.isNotEmpty ? candidates.first : 'Visual Studio Code';
+          final Iterable<String> candidates =
+              (result.stdout as String).split('\n');
+          final String appName =
+              candidates.isNotEmpty ? candidates.first : 'Visual Studio Code';
           processManager.run(<String>[
             'open',
             '-na',
@@ -146,7 +155,8 @@ void openInIde(
             location.absolute.path,
             if (file != null) '--goto',
             if (file != null) '${file.absolute.path}:$startLine',
-          ], stdoutEncoding: utf8, stderrEncoding: utf8).then((ProcessResult result) {
+          ], stdoutEncoding: utf8, stderrEncoding: utf8).then(
+              (ProcessResult result) {
             if (result.exitCode != 0) {
               throw SnippetException(
                   'Unable to launch app $appName (${result.exitCode}): ${result.stderr}');

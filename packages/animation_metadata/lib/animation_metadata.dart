@@ -22,14 +22,17 @@ class AnimationMetadata {
   factory AnimationMetadata.fromFile(File metadataFile) {
     assert(metadataFile.existsSync());
     metadataFile = File(path.normalize(metadataFile.absolute.path));
-    final Map<String, Object?> metadata = json.decode(metadataFile.readAsStringSync()) as Map<String, dynamic>;
+    final Map<String, Object?> metadata =
+        json.decode(metadataFile.readAsStringSync()) as Map<String, dynamic>;
     final String baseDir = path.dirname(metadataFile.absolute.path);
-    final List<File> frameFiles = (metadata[_frameFilesKey]! as List<String>).map<File>(
-          (dynamic name) {
+    final List<File> frameFiles =
+        (metadata[_frameFilesKey]! as List<String>).map<File>(
+      (dynamic name) {
         return File(path.normalize(path.join(baseDir, name as String)));
       },
     ).toList();
-    final Duration duration = Duration(milliseconds: metadata[_durationMsKey]! as int);
+    final Duration duration =
+        Duration(milliseconds: metadata[_durationMsKey]! as int);
     return AnimationMetadata.fromData(
       metadataFile: metadataFile,
       name: metadata[_nameKey]! as String,
@@ -53,12 +56,14 @@ class AnimationMetadata {
       _durationMsKey: duration.inMilliseconds,
       _frameRateKey: frameRate,
       _frameFilesKey: frameFiles.map<String>((File file) {
-        return path.relative(file.path, from: path.dirname(metadataFile.absolute.path));
+        return path.relative(file.path,
+            from: path.dirname(metadataFile.absolute.path));
       }).toList(),
     };
     const JsonEncoder encoder = JsonEncoder.withIndent('  ');
     final String jsonMetadata = encoder.convert(metadata);
-    print('Writing metadata for ${duration.inMilliseconds}ms animation (${frameFiles.length} frames) to: ${metadataFile.path}');
+    print(
+        'Writing metadata for ${duration.inMilliseconds}ms animation (${frameFiles.length} frames) to: ${metadataFile.path}');
     return metadataFile.writeAsString(jsonMetadata);
   }
 
