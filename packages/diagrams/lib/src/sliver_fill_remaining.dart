@@ -1,4 +1,4 @@
-// Copyright 2019 The Chromium Authors. All rights reserved.
+// Copyright 2013 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -15,11 +15,13 @@ import 'fake_drag_scroll_activity.dart';
 
 const Duration _kScrollUpDuration = Duration(seconds: 1);
 const Duration _kScrollPauseDuration = Duration(seconds: 1);
-final Duration _kTotalDuration = _kScrollPauseDuration + _kScrollUpDuration + _kScrollPauseDuration;
+final Duration _kTotalDuration =
+    _kScrollPauseDuration + _kScrollUpDuration + _kScrollPauseDuration;
 
 const double _kCurveAnimationFrameRate = 60.0;
 
-class SliverFillRemainingDiagram extends StatefulWidget implements DiagramMetadata {
+class SliverFillRemainingDiagram extends StatefulWidget
+    implements DiagramMetadata {
   const SliverFillRemainingDiagram({Key? key}) : super(key: key);
 
   @override
@@ -27,10 +29,10 @@ class SliverFillRemainingDiagram extends StatefulWidget implements DiagramMetada
 
   @override
   State<StatefulWidget> createState() => _SliverFillRemainingDiagramState();
-
 }
 
-class _SliverFillRemainingDiagramState extends State<SliverFillRemainingDiagram> with TickerProviderStateMixin<SliverFillRemainingDiagram> {
+class _SliverFillRemainingDiagramState extends State<SliverFillRemainingDiagram>
+    with TickerProviderStateMixin<SliverFillRemainingDiagram> {
   _SliverFillRemainingDiagramState();
 
   final ScrollController _scrollController = ScrollController();
@@ -62,7 +64,8 @@ class _SliverFillRemainingDiagramState extends State<SliverFillRemainingDiagram>
   }
 
   Future<void> _animate({required double to, required Duration duration}) {
-    final ScrollPositionWithSingleContext position = _scrollController.position as ScrollPositionWithSingleContext;
+    final ScrollPositionWithSingleContext position =
+        _scrollController.position as ScrollPositionWithSingleContext;
     final FakeDragScrollActivity activity = FakeDragScrollActivity(
       position,
       from: _scrollController.offset,
@@ -121,16 +124,19 @@ class _SliverFillRemainingDiagramState extends State<SliverFillRemainingDiagram>
   }
 }
 
-class SliverFillRemainingDiagramStep extends DiagramStep<SliverFillRemainingDiagram> {
-  SliverFillRemainingDiagramStep(DiagramController controller) : super(controller);
+class SliverFillRemainingDiagramStep
+    extends DiagramStep<SliverFillRemainingDiagram> {
+  SliverFillRemainingDiagramStep(DiagramController controller)
+      : super(controller);
 
   @override
   final String category = 'widgets';
 
   @override
-  Future<List<SliverFillRemainingDiagram>> get diagrams async => <SliverFillRemainingDiagram>[
-    const SliverFillRemainingDiagram(),
-  ];
+  Future<List<SliverFillRemainingDiagram>> get diagrams async =>
+      <SliverFillRemainingDiagram>[
+        const SliverFillRemainingDiagram(),
+      ];
 
   @override
   Future<File> generateDiagram(SliverFillRemainingDiagram diagram) async {

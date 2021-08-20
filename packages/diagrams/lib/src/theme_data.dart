@@ -1,4 +1,4 @@
-// Copyright 2019 The Chromium Authors. All rights reserved.
+// Copyright 2013 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -70,7 +70,8 @@ class ThemeDataDiagram extends StatelessWidget implements DiagramMetadata {
                   ).copyWith(
                     secondary: Colors.green,
                   ),
-                  textTheme: const TextTheme(bodyText2: TextStyle(color: Colors.purple)),
+                  textTheme: const TextTheme(
+                      bodyText2: TextStyle(color: Colors.purple)),
                 ),
                 home: Stack(
                   children: <Widget>[

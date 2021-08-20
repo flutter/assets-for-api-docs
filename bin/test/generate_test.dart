@@ -1,4 +1,4 @@
-// Copyright 2017 The Chromium Authors. All rights reserved.
+// Copyright 2013 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -66,31 +66,34 @@ void main() {
               '--dart-entrypoint-args',
               temporaryDirectory.path,
             ],
-            workingDirectory: path.join(DiagramGenerator.projectDir, 'utils', 'diagram_generator'),
+            workingDirectory: path.join(
+                DiagramGenerator.projectDir, 'utils', 'diagram_generator'),
           ): <ProcessResult>[
             ProcessResult(0, 0, '', ''),
           ],
           FakeInvocationRecord(
-              <String>[
-                'optipng',
-                '-zc1-9',
-                '-zm1-9',
-                '-zs0-3',
-                '-f0-5',
-                'output.png',
-                '-out',
-                path.join(DiagramGenerator.projectDir, 'assets', 'output.png'),
-              ],
-            workingDirectory: temporaryDirectory.path,
-            ): <ProcessResult>[
-              ProcessResult(0, 0, '', ''),
+            <String>[
+              'optipng',
+              '-zc1-9',
+              '-zm1-9',
+              '-zs0-3',
+              '-f0-5',
+              'output.png',
+              '-out',
+              path.join(DiagramGenerator.projectDir, 'assets', 'output.png'),
             ],
+            workingDirectory: temporaryDirectory.path,
+          ): <ProcessResult>[
+            ProcessResult(0, 0, '', ''),
+          ],
         };
         processManager.fakeResults = calls;
         // Fake an output file
-        final File errorLog = File(path.join(temporaryDirectory.path, 'error.log'));
+        final File errorLog =
+            File(path.join(temporaryDirectory.path, 'error.log'));
         errorLog.writeAsString('');
-        final File output = File(path.join(temporaryDirectory.path, 'output.png'));
+        final File output =
+            File(path.join(temporaryDirectory.path, 'output.png'));
         output.writeAsString('');
         await generator.generateDiagrams();
         processManager.verifyCalls(calls.keys.toList());

@@ -1,4 +1,4 @@
-// Copyright 2019 The Chromium Authors. All rights reserved.
+// Copyright 2013 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -82,10 +82,10 @@ class StackDiagram extends StatelessWidget implements DiagramMetadata {
       key: UniqueKey(),
       constraints: BoxConstraints.tight(const Size(400.0, 250.0)),
       child: Container(
-          alignment: FractionalOffset.center,
-          padding: const EdgeInsets.all(5.0),
-          color: Colors.white,
-          child: returnWidget,
+        alignment: FractionalOffset.center,
+        padding: const EdgeInsets.all(5.0),
+        color: Colors.white,
+        child: returnWidget,
       ),
     );
   }

@@ -1,4 +1,4 @@
-// Copyright 2014 The Flutter Authors. All rights reserved.
+// Copyright 2013 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -27,7 +27,8 @@ String sortImports(String contents) {
     ),
   );
   final List<AnalysisError> errors = <AnalysisError>[];
-  final _ImportOrganizer organizer = _ImportOrganizer(contents, parseResult.unit, errors);
+  final _ImportOrganizer organizer =
+      _ImportOrganizer(contents, parseResult.unit, errors);
   final List<_SourceEdit> edits = organizer.organize();
   // Sort edits in reverse order
   edits.sort((_SourceEdit a, _SourceEdit b) {
@@ -88,8 +89,8 @@ class _ImportOrganizer {
     final List<_SourceEdit> edits = <_SourceEdit>[];
     if (code != initialCode) {
       final int suffixLength = findCommonSuffix(initialCode, code);
-      final _SourceEdit edit = _SourceEdit(
-          0, initialCode.length - suffixLength, code.substring(0, code.length - suffixLength));
+      final _SourceEdit edit = _SourceEdit(0, initialCode.length - suffixLength,
+          code.substring(0, code.length - suffixLength));
       edits.add(edit);
     }
     return edits;
@@ -110,24 +111,28 @@ class _ImportOrganizer {
           int offset = directive.offset;
           int end = directive.end;
 
-          final Token? leadingComment = getLeadingComment(unit, directive, lineInfo);
-          final Token? trailingComment = getTrailingComment(unit, directive, lineInfo, end);
+          final Token? leadingComment =
+              getLeadingComment(unit, directive, lineInfo);
+          final Token? trailingComment =
+              getTrailingComment(unit, directive, lineInfo, end);
 
           String? leadingCommentText;
           if (leadingComment != null) {
-            leadingCommentText = code.substring(leadingComment.offset, directive.offset);
+            leadingCommentText =
+                code.substring(leadingComment.offset, directive.offset);
             offset = leadingComment.offset;
           }
           String? trailingCommentText;
           if (trailingComment != null) {
-            trailingCommentText = code.substring(directive.end, trailingComment.end);
+            trailingCommentText =
+                code.substring(directive.end, trailingComment.end);
             end = trailingComment.end;
           }
           String? documentationText;
           final Comment? documentationComment = directive.documentationComment;
           if (documentationComment != null) {
-            documentationText =
-                code.substring(documentationComment.offset, documentationComment.end);
+            documentationText = code.substring(
+                documentationComment.offset, documentationComment.end);
           }
           String? annotationText;
           final Token? beginToken = directive.metadata.beginToken;
@@ -135,8 +140,9 @@ class _ImportOrganizer {
           if (beginToken != null && endToken != null) {
             annotationText = code.substring(beginToken.offset, endToken.end);
           }
-          final String text =
-              code.substring(directive.firstTokenAfterCommentAndMetadata.offset, directive.end);
+          final String text = code.substring(
+              directive.firstTokenAfterCommentAndMetadata.offset,
+              directive.end);
           final String uriContent = directive.uri.stringValue ?? '';
           directives.add(
             _DirectiveInfo(
@@ -287,7 +293,8 @@ class _ImportOrganizer {
       // as they will be attached to the end of it.
       Token? comment = firstComment;
       while (comment != null &&
-          previousDirectiveLine == lineInfo.getLocation(comment.offset).lineNumber) {
+          previousDirectiveLine ==
+              lineInfo.getLocation(comment.offset).lineNumber) {
         comment = comment.next;
       }
       return comment;
@@ -300,8 +307,8 @@ class _ImportOrganizer {
   ///
   /// To be considered a trailing comment, the comment must be on the same line
   /// as the directive.
-  static Token? getTrailingComment(
-      CompilationUnit unit, UriBasedDirective directive, LineInfo lineInfo, int end) {
+  static Token? getTrailingComment(CompilationUnit unit,
+      UriBasedDirective directive, LineInfo lineInfo, int end) {
     final int line = lineInfo.getLocation(end).lineNumber;
     Token? comment = directive.endToken.next!.precedingComments;
     while (comment != null) {
@@ -383,14 +390,22 @@ class _DirectiveInfo implements Comparable<_DirectiveInfo> {
 class _DirectivePriority {
   const _DirectivePriority(this.name, this.ordinal);
 
-  static const _DirectivePriority IMPORT_SDK = _DirectivePriority('IMPORT_SDK', 0);
-  static const _DirectivePriority IMPORT_PKG = _DirectivePriority('IMPORT_PKG', 1);
-  static const _DirectivePriority IMPORT_OTHER = _DirectivePriority('IMPORT_OTHER', 2);
-  static const _DirectivePriority IMPORT_REL = _DirectivePriority('IMPORT_REL', 3);
-  static const _DirectivePriority EXPORT_SDK = _DirectivePriority('EXPORT_SDK', 4);
-  static const _DirectivePriority EXPORT_PKG = _DirectivePriority('EXPORT_PKG', 5);
-  static const _DirectivePriority EXPORT_OTHER = _DirectivePriority('EXPORT_OTHER', 6);
-  static const _DirectivePriority EXPORT_REL = _DirectivePriority('EXPORT_REL', 7);
+  static const _DirectivePriority IMPORT_SDK =
+      _DirectivePriority('IMPORT_SDK', 0);
+  static const _DirectivePriority IMPORT_PKG =
+      _DirectivePriority('IMPORT_PKG', 1);
+  static const _DirectivePriority IMPORT_OTHER =
+      _DirectivePriority('IMPORT_OTHER', 2);
+  static const _DirectivePriority IMPORT_REL =
+      _DirectivePriority('IMPORT_REL', 3);
+  static const _DirectivePriority EXPORT_SDK =
+      _DirectivePriority('EXPORT_SDK', 4);
+  static const _DirectivePriority EXPORT_PKG =
+      _DirectivePriority('EXPORT_PKG', 5);
+  static const _DirectivePriority EXPORT_OTHER =
+      _DirectivePriority('EXPORT_OTHER', 6);
+  static const _DirectivePriority EXPORT_REL =
+      _DirectivePriority('EXPORT_REL', 7);
   static const _DirectivePriority PART = _DirectivePriority('PART', 8);
 
   final String name;
@@ -422,7 +437,7 @@ class _SourceEdit {
 
   /// The end of the region to be modified.
   int get end => offset + length;
-  
+
   /// The code that is to replace the specified region in the original code.
   final String replacement;
 }

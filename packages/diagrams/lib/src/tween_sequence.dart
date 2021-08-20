@@ -1,4 +1,4 @@
-// Copyright 2019 The Chromium Authors. All rights reserved.
+// Copyright 2013 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -112,7 +112,9 @@ class TweenSequenceDiagramState extends State<TweenSequenceDiagram>
                     color: _tweenSequence.evaluate(_controller),
                   ),
                   DefaultTextStyle(
-                    style: DefaultTextStyle.of(context).style.copyWith(height: 1.2, fontSize: 13.0),
+                    style: DefaultTextStyle.of(context)
+                        .style
+                        .copyWith(height: 1.2, fontSize: 13.0),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,

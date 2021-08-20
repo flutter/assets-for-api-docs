@@ -1,4 +1,4 @@
-// Copyright 2014 The Flutter Authors. All rights reserved.
+// Copyright 2013 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -42,7 +42,8 @@ class SnippetDartdocParser {
   static final RegExp _codeBlockEndRegex = RegExp(r'///\s+```\s*$');
 
   /// A RegExp that matches a linked sample pointer.
-  static final RegExp _filePointerRegex = RegExp(r'\*\* See code in (?<file>[^\]]+) \*\*');
+  static final RegExp _filePointerRegex =
+      RegExp(r'\*\* See code in (?<file>[^\]]+) \*\*');
 
   /// Parses the assumptions in the "Examples can assume:" block at the top of
   /// the `assumptionsFile` and adds them to the code samples contained in the
@@ -53,8 +54,8 @@ class SnippetDartdocParser {
     bool silent = true,
   }) {
     final List<SourceLine> assumptions = parseAssumptions(assumptionsFile);
-    for (final CodeSample sample
-        in elements.expand<CodeSample>((SourceElement element) => element.samples)) {
+    for (final CodeSample sample in elements
+        .expand<CodeSample>((SourceElement element) => element.samples)) {
       if (sample is SnippetSample) {
         sample.assumptions = assumptions;
       }
@@ -91,18 +92,22 @@ class SnippetDartdocParser {
       // Snippet input comes in with the comment markers stripped, so we add them
       // back to make it conform to the source format, so we can use the same
       // parser for editing samples as we do for processing docs.
-      ...input.readAsLinesSync().map<String>((String line) => '/// $line'.trimRight()),
+      ...input
+          .readAsLinesSync()
+          .map<String>((String line) => '/// $line'.trimRight()),
       '/// {@end-tool}',
     ];
     for (final String line in inputStrings) {
       lines.add(
-        SourceLine(line, element: element ?? '', line: lineNumber, file: sourceFile),
+        SourceLine(line,
+            element: element ?? '', line: lineNumber, file: sourceFile),
       );
       lineNumber++;
     }
     // No need to get assumptions: dartdoc won't give that to us.
-    final SourceElement newElement =
-        SourceElement(SourceElementType.unknownType, element!, -1, file: input, comment: lines);
+    final SourceElement newElement = SourceElement(
+        SourceElementType.unknownType, element!, -1,
+        file: input, comment: lines);
     parseFromComments(<SourceElement>[newElement], silent: silent);
     for (final CodeSample sample in newElement.samples) {
       sample.metadata.addAll(<String, Object?>{
@@ -274,7 +279,8 @@ class SnippetDartdocParser {
               );
               break;
             default:
-              throw SnippetException('Unknown snippet type ${snippetArgs.first}');
+              throw SnippetException(
+                  'Unknown snippet type ${snippetArgs.first}');
           }
           snippetArgs = <String>[];
           block = <SourceLine>[];
@@ -285,27 +291,33 @@ class SnippetDartdocParser {
         } else if (_filePointerRegex.hasMatch(trimmedLine)) {
           foundSourceLink = true;
           if (foundDartSection) {
-            throw SnippetException('Snippet contains a source link and a dart section. Cannot contain both.',
+            throw SnippetException(
+              'Snippet contains a source link and a dart section. Cannot contain both.',
               file: line.file?.path,
               line: line.line,
             );
           }
           if (linkedFile != null) {
-            throw SnippetException('Found more than one linked sample. Only one linked file per sample is allowed.',
+            throw SnippetException(
+              'Found more than one linked sample. Only one linked file per sample is allowed.',
               file: line.file?.path,
               line: line.line,
             );
           }
           final RegExpMatch match = _filePointerRegex.firstMatch(trimmedLine)!;
-          linkedFile = filesystem.file(path.join(flutterRoot.absolute.path, match.namedGroup('file')));
+          linkedFile = filesystem.file(
+              path.join(flutterRoot.absolute.path, match.namedGroup('file')));
         } else {
-          block.add(line.copyWith(text: line.text.replaceFirst(RegExp(r'\s*/// ?'), '')));
+          block.add(line.copyWith(
+              text: line.text.replaceFirst(RegExp(r'\s*/// ?'), '')));
         }
       } else {
         if (_dartDocSampleEndRegex.hasMatch(trimmedLine)) {
           if (inDart) {
-            throw SnippetException("Dart section didn't terminate before end of sample",
-                file: line.file?.path, line: line.line);
+            throw SnippetException(
+                "Dart section didn't terminate before end of sample",
+                file: line.file?.path,
+                line: line.line);
           }
         }
         if (inDart) {
@@ -327,7 +339,8 @@ class SnippetDartdocParser {
           }
         } else if (_codeBlockStartRegex.hasMatch(trimmedLine)) {
           if (foundSourceLink) {
-            throw SnippetException('Snippet contains a source link and a dart section. Cannot contain both.',
+            throw SnippetException(
+              'Snippet contains a source link and a dart section. Cannot contain both.',
               file: line.file?.path,
               line: line.line,
             );
@@ -338,7 +351,8 @@ class SnippetDartdocParser {
         }
       }
       if (!inSnippet && !inDart) {
-        final RegExpMatch? sampleMatch = _dartDocSampleBeginRegex.firstMatch(trimmedLine);
+        final RegExpMatch? sampleMatch =
+            _dartDocSampleBeginRegex.firstMatch(trimmedLine);
         if (sampleMatch != null) {
           inSnippet = sampleMatch.namedGroup('type') == 'snippet' ||
               sampleMatch.namedGroup('type') == 'sample' ||
@@ -390,7 +404,8 @@ class SnippetDartdocParser {
     // Match group 2 (quote) contains the quote character used (which is discarded).
     // Match group 3 (value) is a quoted arg, if any, without the quotes.
     // Match group 4 (unquoted) is the unquoted arg, if any.
-    final RegExp argMatcher = RegExp(r'(?<option>[-_a-zA-Z0-9]+=)?' // option name
+    final RegExp argMatcher = RegExp(
+        r'(?<option>[-_a-zA-Z0-9]+=)?' // option name
         r'(?:' // Start a new non-capture group for the two possibilities.
         r'''(?<quote>["'])(?<value>(?:\\{2})*|(?:.*?[^\\](?:\\{2})*))\2|''' // value with quotes.
         r'(?<unquoted>[^ ]+))'); // without quotes.
@@ -402,7 +417,8 @@ class SnippetDartdocParser {
     // functionality of "option=value".
     return matches.map<String>((RegExpMatch match) {
       String option = '';
-      if (match.namedGroup('option') != null && !match.namedGroup('option')!.startsWith('-')) {
+      if (match.namedGroup('option') != null &&
+          !match.namedGroup('option')!.startsWith('-')) {
         option = '--';
       }
       if (match.namedGroup('quote') != null) {

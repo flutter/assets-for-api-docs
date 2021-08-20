@@ -1,4 +1,4 @@
-// Copyright 2014 The Flutter Authors. All rights reserved.
+// Copyright 2013 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -40,12 +40,14 @@ class FakeProcessManager implements ProcessManager {
   /// that will produce them. Each command line has a list of returned stdout
   /// output that will be returned on each successive call.
   Map<FakeInvocationRecord, List<ProcessResult>> _fakeResults =
-  <FakeInvocationRecord, List<ProcessResult>>{};
-  Map<FakeInvocationRecord, List<ProcessResult>> get fakeResults => _fakeResults;
+      <FakeInvocationRecord, List<ProcessResult>>{};
+  Map<FakeInvocationRecord, List<ProcessResult>> get fakeResults =>
+      _fakeResults;
   set fakeResults(Map<FakeInvocationRecord, List<ProcessResult>> value) {
     _fakeResults = <FakeInvocationRecord, List<ProcessResult>>{};
     for (final FakeInvocationRecord key in value.keys) {
-      _fakeResults[key] = (value[key] ?? <ProcessResult>[ProcessResult(0, 0, '', '')]).toList();
+      _fakeResults[key] =
+          (value[key] ?? <ProcessResult>[ProcessResult(0, 0, '', '')]).toList();
     }
   }
 
@@ -59,7 +61,8 @@ class FakeProcessManager implements ProcessManager {
     expect(invocations.length, equals(calls.length));
     for (final FakeInvocationRecord call in calls) {
       expect(invocations[index].invocation, orderedEquals(call.invocation));
-      expect(invocations[index].workingDirectory, equals(call.workingDirectory), reason: 'Wrong working directory for ${call.invocation}');
+      expect(invocations[index].workingDirectory, equals(call.workingDirectory),
+          reason: 'Wrong working directory for ${call.invocation}');
       index++;
     }
   }
@@ -85,27 +88,35 @@ class FakeProcessManager implements ProcessManager {
         break;
       }
     }
-    expect(foundResult, isNotNull, reason: '$command not found in expected results: ${fakeResults.keys}');
-    return fakeResults[foundCommand]?.removeAt(0) ?? ProcessResult(0, 0, '', '');
+    expect(foundResult, isNotNull,
+        reason: '$command not found in expected results: ${fakeResults.keys}');
+    return fakeResults[foundCommand]?.removeAt(0) ??
+        ProcessResult(0, 0, '', '');
   }
 
   FakeProcess _popProcess(FakeInvocationRecord command) =>
       FakeProcess(_popResult(command), stdinResults);
 
-  Future<Process> _nextProcess(List<String> invocation, String? workingDirectory) async {
-    final FakeInvocationRecord record = FakeInvocationRecord(invocation, workingDirectory: workingDirectory);
+  Future<Process> _nextProcess(
+      List<String> invocation, String? workingDirectory) async {
+    final FakeInvocationRecord record =
+        FakeInvocationRecord(invocation, workingDirectory: workingDirectory);
     invocations.add(record);
     return Future<Process>.value(_popProcess(record));
   }
 
-  ProcessResult _nextResultSync(List<String> invocation, String? workingDirectory) {
-    final FakeInvocationRecord record = FakeInvocationRecord(invocation, workingDirectory: workingDirectory);
+  ProcessResult _nextResultSync(
+      List<String> invocation, String? workingDirectory) {
+    final FakeInvocationRecord record =
+        FakeInvocationRecord(invocation, workingDirectory: workingDirectory);
     invocations.add(record);
     return _popResult(record);
   }
 
-  Future<ProcessResult> _nextResult(List<String> invocation, String? workingDirectory) async {
-    final FakeInvocationRecord record = FakeInvocationRecord(invocation, workingDirectory: workingDirectory);
+  Future<ProcessResult> _nextResult(
+      List<String> invocation, String? workingDirectory) async {
+    final FakeInvocationRecord record =
+        FakeInvocationRecord(invocation, workingDirectory: workingDirectory);
     invocations.add(record);
     return Future<ProcessResult>.value(_popResult(record));
   }
@@ -122,14 +133,14 @@ class FakeProcessManager implements ProcessManager {
 
   @override
   Future<ProcessResult> run(
-      List<dynamic> command, {
-        String? workingDirectory,
-        Map<String, String>? environment,
-        bool includeParentEnvironment = true,
-        bool runInShell = false,
-        Encoding stdoutEncoding = systemEncoding,
-        Encoding stderrEncoding = systemEncoding,
-      }) {
+    List<dynamic> command, {
+    String? workingDirectory,
+    Map<String, String>? environment,
+    bool includeParentEnvironment = true,
+    bool runInShell = false,
+    Encoding stdoutEncoding = systemEncoding,
+    Encoding stderrEncoding = systemEncoding,
+  }) {
     if (commandsThrow) {
       throw const ProcessException('failed_executable', <String>[]);
     }
@@ -138,14 +149,14 @@ class FakeProcessManager implements ProcessManager {
 
   @override
   ProcessResult runSync(
-      List<dynamic> command, {
-        String? workingDirectory,
-        Map<String, String>? environment,
-        bool includeParentEnvironment = true,
-        bool runInShell = false,
-        Encoding stdoutEncoding = systemEncoding,
-        Encoding stderrEncoding = systemEncoding,
-      }) {
+    List<dynamic> command, {
+    String? workingDirectory,
+    Map<String, String>? environment,
+    bool includeParentEnvironment = true,
+    bool runInShell = false,
+    Encoding stdoutEncoding = systemEncoding,
+    Encoding stderrEncoding = systemEncoding,
+  }) {
     if (commandsThrow) {
       throw const ProcessException('failed_executable', <String>[]);
     }
@@ -154,13 +165,13 @@ class FakeProcessManager implements ProcessManager {
 
   @override
   Future<Process> start(
-      List<dynamic> command, {
-        String? workingDirectory,
-        Map<String, String>? environment,
-        bool includeParentEnvironment = true,
-        bool runInShell = false,
-        ProcessStartMode mode = ProcessStartMode.normal,
-      }) {
+    List<dynamic> command, {
+    String? workingDirectory,
+    Map<String, String>? environment,
+    bool includeParentEnvironment = true,
+    bool runInShell = false,
+    ProcessStartMode mode = ProcessStartMode.normal,
+  }) {
     if (commandsThrow) {
       throw const ProcessException('failed_executable', <String>[]);
     }
@@ -174,8 +185,10 @@ typedef StdinResults = void Function(String input);
 /// FakeProcessManager.
 class FakeProcess implements Process {
   FakeProcess(ProcessResult result, StdinResults stdinResults)
-      : stdoutStream = Stream<List<int>>.value((result.stdout as String).codeUnits),
-        stderrStream = Stream<List<int>>.value((result.stderr as String).codeUnits),
+      : stdoutStream =
+            Stream<List<int>>.value((result.stdout as String).codeUnits),
+        stderrStream =
+            Stream<List<int>>.value((result.stderr as String).codeUnits),
         desiredExitCode = result.exitCode,
         stdinSink = IOSink(StringStreamConsumer(stdinResults));
 
@@ -213,7 +226,8 @@ class StringStreamConsumer implements StreamConsumer<List<int>> {
   StringStreamConsumer(this.sendString);
 
   List<Stream<List<int>>> streams = <Stream<List<int>>>[];
-  List<StreamSubscription<List<int>>> subscriptions = <StreamSubscription<List<int>>>[];
+  List<StreamSubscription<List<int>>> subscriptions =
+      <StreamSubscription<List<int>>>[];
   List<Completer<dynamic>> completers = <Completer<dynamic>>[];
 
   /// The callback called when this consumer receives input.

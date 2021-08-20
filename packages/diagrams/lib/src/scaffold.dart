@@ -1,4 +1,4 @@
-// Copyright 2019 The Chromium Authors. All rights reserved.
+// Copyright 2013 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -36,9 +36,8 @@ class ScaffoldDiagramState extends State<ScaffoldDiagram> {
           appBar: AppBar(
             title: const Text('Sample Code'),
           ),
-          body: Center(
-            child: Text('You have pressed the button $_count times.')
-          ),
+          body:
+              Center(child: Text('You have pressed the button $_count times.')),
           floatingActionButton: FloatingActionButton(
             onPressed: () => setState(() => _count++),
             tooltip: 'Increment Counter',
@@ -51,9 +50,8 @@ class ScaffoldDiagramState extends State<ScaffoldDiagram> {
           appBar: AppBar(
             title: const Text('Sample Code'),
           ),
-          body: Center(
-            child: Text('You have pressed the button $_count times.')
-          ),
+          body:
+              Center(child: Text('You have pressed the button $_count times.')),
           backgroundColor: Colors.blueGrey.shade200,
           floatingActionButton: FloatingActionButton(
             onPressed: () => setState(() => _count++),
@@ -80,7 +78,8 @@ class ScaffoldDiagramState extends State<ScaffoldDiagram> {
             tooltip: 'Increment Counter',
             child: const Icon(Icons.add),
           ),
-          floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerDocked,
         );
         break;
     }

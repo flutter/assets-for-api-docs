@@ -1,4 +1,4 @@
-// Copyright 2019 The Chromium Authors. All rights reserved.
+// Copyright 2013 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -31,7 +31,8 @@ class BoxDecorationDiagram extends StatelessWidget implements DiagramMetadata {
           decoration: BoxDecoration(
             color: const Color(0xff7c94b6),
             image: const DecorationImage(
-              image: NetworkImage('https://flutter.github.io/assets-for-api-docs/assets/widgets/owl-2.jpg'),
+              image: NetworkImage(
+                  'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl-2.jpg'),
               fit: BoxFit.cover,
             ),
             border: Border.all(

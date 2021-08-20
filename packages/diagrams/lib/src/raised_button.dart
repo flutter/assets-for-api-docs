@@ -1,4 +1,4 @@
-// Copyright 2019 The Chromium Authors. All rights reserved.
+// Copyright 2013 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -27,7 +27,8 @@ class RaisedButtonDiagram extends StatelessWidget implements DiagramMetadata {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              const RaisedButton( // ignore: deprecated_member_use
+              // ignore: deprecated_member_use
+              const RaisedButton(
                 onPressed: null,
                 child: Text(
                   'Disabled Button',
@@ -35,7 +36,8 @@ class RaisedButtonDiagram extends StatelessWidget implements DiagramMetadata {
                 ),
               ),
               const SizedBox(height: 30),
-              RaisedButton( // ignore: deprecated_member_use
+              // ignore: deprecated_member_use
+              RaisedButton(
                 onPressed: () {},
                 child: const Text(
                   'Enabled Button',
@@ -43,7 +45,8 @@ class RaisedButtonDiagram extends StatelessWidget implements DiagramMetadata {
                 ),
               ),
               const SizedBox(height: 30),
-              RaisedButton( // ignore: deprecated_member_use
+              // ignore: deprecated_member_use
+              RaisedButton(
                 onPressed: () {},
                 textColor: Colors.white,
                 padding: EdgeInsets.zero,

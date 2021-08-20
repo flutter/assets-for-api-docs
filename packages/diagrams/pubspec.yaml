@@ -1,5 +1,13 @@
 name: diagrams
 description: Main app for building API doc assets.
+repository: https://github.com/flutter/assets-for-api-docs/tree/master/packages/diagrams
+issue_tracker: https://github.com/flutter/flutter/issues
+version: 0.1.0
+publish_to: none
+
+environment:
+  sdk: ">=2.12.2 <3.0.0"
+  flutter: ">=0.1.4 <2.0.0"
 
 dependencies:
   archive: ^3.1.2
@@ -20,8 +28,3 @@ flutter:
     - assets/blend_mode_destination.jpeg
     - assets/blend_mode_grid.png
     - assets/blend_mode_source.png
-
-environment:
-  sdk: ">=2.12.2 <3.0.0"
-  flutter: ">=0.1.4 <2.0.0"
-

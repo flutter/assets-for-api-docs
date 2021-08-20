@@ -1,4 +1,4 @@
-// Copyright 2019 The Chromium Authors. All rights reserved.
+// Copyright 2013 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -129,7 +129,7 @@ class _ArticleDescription extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
-               ),
+                ),
               ),
               const Padding(padding: EdgeInsets.only(bottom: 2.0)),
               Text(
@@ -223,6 +223,7 @@ class CustomListItemTwo extends StatelessWidget {
     );
   }
 }
+
 class CustomListItemDiagram extends StatelessWidget implements DiagramMetadata {
   const CustomListItemDiagram(this.name, {Key? key}) : super(key: key);
 
@@ -265,7 +266,7 @@ class CustomListItemDiagram extends StatelessWidget implements DiagramMetadata {
           ),
         );
       case 'custom_list_item_b':
-       return ConstrainedBox(
+        return ConstrainedBox(
           key: UniqueKey(),
           constraints: BoxConstraints.tight(const Size(400.0, 265.0)),
           child: Container(
@@ -281,8 +282,8 @@ class CustomListItemDiagram extends StatelessWidget implements DiagramMetadata {
                   ),
                   title: 'Flutter 1.0 Launch',
                   subtitle:
-                    'Flutter continues to improve and expand its horizons. '
-                    'This text should max out at two lines and clip',
+                      'Flutter continues to improve and expand its horizons. '
+                      'This text should max out at two lines and clip',
                   author: 'Dash',
                   publishDate: 'Dec 28',
                   readDuration: '5 mins',
@@ -291,7 +292,8 @@ class CustomListItemDiagram extends StatelessWidget implements DiagramMetadata {
                   thumbnail: Container(
                     decoration: const BoxDecoration(color: Colors.blue),
                   ),
-                  title: 'Flutter 1.2 Release - Continual updates to the framework',
+                  title:
+                      'Flutter 1.2 Release - Continual updates to the framework',
                   subtitle: 'Flutter once again improves and makes updates.',
                   author: 'Flutter',
                   publishDate: 'Feb 26',
@@ -300,7 +302,7 @@ class CustomListItemDiagram extends StatelessWidget implements DiagramMetadata {
               ],
             ),
           ),
-       );
+        );
       default:
         return const Text('Error');
     }
@@ -314,10 +316,11 @@ class CustomListItemDiagramStep extends DiagramStep<CustomListItemDiagram> {
   final String category = 'widgets';
 
   @override
-  Future<List<CustomListItemDiagram>> get diagrams async => <CustomListItemDiagram>[
-    const CustomListItemDiagram('custom_list_item_a'),
-    const CustomListItemDiagram('custom_list_item_b'),
-  ];
+  Future<List<CustomListItemDiagram>> get diagrams async =>
+      <CustomListItemDiagram>[
+        const CustomListItemDiagram('custom_list_item_a'),
+        const CustomListItemDiagram('custom_list_item_b'),
+      ];
 
   @override
   Future<File> generateDiagram(CustomListItemDiagram diagram) async {

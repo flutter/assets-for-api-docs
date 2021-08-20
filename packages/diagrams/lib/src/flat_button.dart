@@ -1,4 +1,4 @@
-// Copyright 2019 The Chromium Authors. All rights reserved.
+// Copyright 2013 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -25,7 +25,8 @@ class FlatButtonDiagram extends StatelessWidget implements DiagramMetadata {
 
     switch (name) {
       case _basic:
-        returnWidget = FlatButton( // ignore: deprecated_member_use
+        // ignore: deprecated_member_use
+        returnWidget = FlatButton(
           onPressed: () {},
           child: const Text(
             'Flat Button',
@@ -33,7 +34,8 @@ class FlatButtonDiagram extends StatelessWidget implements DiagramMetadata {
         );
         break;
       case _properties:
-        returnWidget = FlatButton( // ignore: deprecated_member_use
+        // ignore: deprecated_member_use
+        returnWidget = FlatButton(
           color: Colors.blue,
           textColor: Colors.white,
           disabledColor: Colors.grey,

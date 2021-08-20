@@ -1,4 +1,4 @@
-// Copyright 2014 The Flutter Authors. All rights reserved.
+// Copyright 2013 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -8,16 +8,37 @@ import 'package:file/file.dart';
 import 'package:file/memory.dart';
 import 'package:path/path.dart' as path;
 import 'package:platform/platform.dart';
+import 'package:pub_semver/pub_semver.dart';
 import 'package:snippets/snippets.dart';
 import 'package:test/test.dart' hide TypeMatcher, isInstanceOf;
 
 import '../bin/snippets.dart' as snippets_main;
 import 'fake_process_manager.dart';
 
+class FakeFlutterInformation extends FlutterInformation {
+  FakeFlutterInformation(this.flutterRoot);
+
+  final Directory flutterRoot;
+
+  @override
+  Directory getFlutterRoot() {
+    return flutterRoot;
+  }
+
+  @override
+  Map<String, dynamic> getFlutterInformation() {
+    return <String, dynamic>{
+      'flutterRoot': flutterRoot,
+      'frameworkVersion': Version(2, 10, 0),
+      'dartSdkVersion': Version(2, 12, 1),
+    };
+  }
+}
+
 void main() {
   group('Generator', () {
     late MemoryFileSystem memoryFileSystem = MemoryFileSystem();
-    late SnippetConfiguration configuration;
+    late FlutterRepoSnippetConfiguration configuration;
     late SnippetGenerator generator;
     late Directory tmpDir;
     late File template;
@@ -47,15 +68,17 @@ void main() {
     setUp(() {
       // Create a new filesystem.
       memoryFileSystem = MemoryFileSystem();
-      tmpDir = memoryFileSystem.systemTempDirectory.createTempSync('flutter_snippets_test.');
+      tmpDir = memoryFileSystem.systemTempDirectory
+          .createTempSync('flutter_snippets_test.');
       configuration = FlutterRepoSnippetConfiguration(
-          flutterRoot: memoryFileSystem.directory(path.join(tmpDir.absolute.path, 'flutter')),
+          flutterRoot: memoryFileSystem
+              .directory(path.join(tmpDir.absolute.path, 'flutter')),
           filesystem: memoryFileSystem);
       configuration.createOutputDirectoryIfNeeded();
       configuration.templatesDirectory.createSync(recursive: true);
       configuration.skeletonsDirectory.createSync(recursive: true);
-      template =
-          memoryFileSystem.file(path.join(configuration.templatesDirectory.path, 'template.tmpl'));
+      template = memoryFileSystem.file(
+          path.join(configuration.templatesDirectory.path, 'template.tmpl'));
       template.writeAsStringSync('''
 // Flutter code sample for {{element}}
 
@@ -66,6 +89,8 @@ void main() {
 {{code}}
 ''');
       <String>['dartpad', 'sample', 'snippet'].forEach(_writeSkeleton);
+      FlutterInformation.instance =
+          FakeFlutterInformation(configuration.flutterRoot);
       generator = SnippetGenerator(
           configuration: configuration,
           filesystem: memoryFileSystem,
@@ -73,10 +98,10 @@ void main() {
     });
 
     test('generates samples', () async {
-      final File inputFile =
-          memoryFileSystem.file(path.join(tmpDir.absolute.path, 'snippet_in.txt'))
-            ..createSync(recursive: true)
-            ..writeAsStringSync(r'''
+      final File inputFile = memoryFileSystem
+          .file(path.join(tmpDir.absolute.path, 'snippet_in.txt'))
+        ..createSync(recursive: true)
+        ..writeAsStringSync(r'''
 A description of the snippet.
 
 On several lines.
@@ -91,9 +116,10 @@ void main() {
 }
 ```
 ''');
-      final File outputFile =
-          memoryFileSystem.file(path.join(tmpDir.absolute.path, 'snippet_out.txt'));
-      final SnippetDartdocParser sampleParser = SnippetDartdocParser(memoryFileSystem);
+      final File outputFile = memoryFileSystem
+          .file(path.join(tmpDir.absolute.path, 'snippet_out.txt'));
+      final SnippetDartdocParser sampleParser =
+          SnippetDartdocParser(memoryFileSystem);
       const String sourcePath = 'packages/flutter/lib/src/widgets/foo.dart';
       const int sourceLine = 222;
       final SourceElement element = sampleParser.parseFromDartdocToolFile(
@@ -137,10 +163,10 @@ void main() {
     });
 
     test('generates snippets', () async {
-      final File inputFile =
-          memoryFileSystem.file(path.join(tmpDir.absolute.path, 'snippet_in.txt'))
-            ..createSync(recursive: true)
-            ..writeAsStringSync(r'''
+      final File inputFile = memoryFileSystem
+          .file(path.join(tmpDir.absolute.path, 'snippet_in.txt'))
+        ..createSync(recursive: true)
+        ..writeAsStringSync(r'''
 A description of the snippet.
 
 On several lines.
@@ -152,7 +178,8 @@ void main() {
 ```
 ''');
 
-      final SnippetDartdocParser sampleParser = SnippetDartdocParser(memoryFileSystem);
+      final SnippetDartdocParser sampleParser =
+          SnippetDartdocParser(memoryFileSystem);
       const String sourcePath = 'packages/flutter/lib/src/widgets/foo.dart';
       const int sourceLine = 222;
       final SourceElement element = sampleParser.parseFromDartdocToolFile(
@@ -181,10 +208,10 @@ void main() {
     });
 
     test('generates dartpad samples', () async {
-      final File inputFile =
-          memoryFileSystem.file(path.join(tmpDir.absolute.path, 'snippet_in.txt'))
-            ..createSync(recursive: true)
-            ..writeAsStringSync(r'''
+      final File inputFile = memoryFileSystem
+          .file(path.join(tmpDir.absolute.path, 'snippet_in.txt'))
+        ..createSync(recursive: true)
+        ..writeAsStringSync(r'''
 A description of the snippet.
 
 On several lines.
@@ -196,7 +223,8 @@ void main() {
 ```
 ''');
 
-      final SnippetDartdocParser sampleParser = SnippetDartdocParser(memoryFileSystem);
+      final SnippetDartdocParser sampleParser =
+          SnippetDartdocParser(memoryFileSystem);
       const String sourcePath = 'packages/flutter/lib/src/widgets/foo.dart';
       const int sourceLine = 222;
       final SourceElement element = sampleParser.parseFromDartdocToolFile(
@@ -223,10 +251,10 @@ void main() {
     });
 
     test('generates sample metadata', () async {
-      final File inputFile =
-          memoryFileSystem.file(path.join(tmpDir.absolute.path, 'snippet_in.txt'))
-            ..createSync(recursive: true)
-            ..writeAsStringSync(r'''
+      final File inputFile = memoryFileSystem
+          .file(path.join(tmpDir.absolute.path, 'snippet_in.txt'))
+        ..createSync(recursive: true)
+        ..writeAsStringSync(r'''
 A description of the snippet.
 
 On several lines.
@@ -238,12 +266,13 @@ void main() {
 ```
 ''');
 
-      final File outputFile =
-          memoryFileSystem.file(path.join(tmpDir.absolute.path, 'snippet_out.dart'));
-      final File expectedMetadataFile =
-          memoryFileSystem.file(path.join(tmpDir.absolute.path, 'snippet_out.json'));
+      final File outputFile = memoryFileSystem
+          .file(path.join(tmpDir.absolute.path, 'snippet_out.dart'));
+      final File expectedMetadataFile = memoryFileSystem
+          .file(path.join(tmpDir.absolute.path, 'snippet_out.json'));
 
-      final SnippetDartdocParser sampleParser = SnippetDartdocParser(memoryFileSystem);
+      final SnippetDartdocParser sampleParser =
+          SnippetDartdocParser(memoryFileSystem);
       const String sourcePath = 'packages/flutter/lib/src/widgets/foo.dart';
       const int sourceLine = 222;
       final SourceElement element = sampleParser.parseFromDartdocToolFile(
@@ -255,16 +284,20 @@ void main() {
         type: 'sample',
       );
       expect(element.samples, isNotEmpty);
-      element.samples.first.metadata.addAll(<String, Object>{'channel': 'stable'});
+      element.samples.first.metadata
+          .addAll(<String, Object>{'channel': 'stable'});
       generator.generateCode(element.samples.first, output: outputFile);
       expect(expectedMetadataFile.existsSync(), isTrue);
       final Map<String, dynamic> json =
-          jsonDecode(expectedMetadataFile.readAsStringSync()) as Map<String, dynamic>;
+          jsonDecode(expectedMetadataFile.readAsStringSync())
+              as Map<String, dynamic>;
       expect(json['id'], equals('MyElement.0'));
       expect(json['channel'], equals('stable'));
       expect(json['file'], equals('snippet_out.dart'));
-      expect(json['description'], equals('A description of the snippet.\n\nOn several lines.'));
-      expect(json['sourcePath'], equals('packages/flutter/lib/src/widgets/foo.dart'));
+      expect(json['description'],
+          equals('A description of the snippet.\n\nOn several lines.'));
+      expect(json['sourcePath'],
+          equals('packages/flutter/lib/src/widgets/foo.dart'));
     });
   });
 
@@ -277,8 +310,10 @@ void main() {
     setUp(() {
       fakeProcessManager = FakeProcessManager();
       memoryFileSystem = MemoryFileSystem();
-      tmpDir = memoryFileSystem.systemTempDirectory.createTempSync('flutter_snippets_test.');
-      flutterRoot = memoryFileSystem.directory(path.join(tmpDir.absolute.path, 'flutter'))
+      tmpDir = memoryFileSystem.systemTempDirectory
+          .createTempSync('flutter_snippets_test.');
+      flutterRoot = memoryFileSystem
+          .directory(path.join(tmpDir.absolute.path, 'flutter'))
         ..createSync(recursive: true);
     });
 
@@ -316,11 +351,14 @@ void main() {
 
       snippets_main.platform = platform;
       snippets_main.filesystem = memoryFileSystem;
-      final File input = memoryFileSystem.file(tmpDir.childFile('input.snippet'))
+      final File input = memoryFileSystem
+          .file(tmpDir.childFile('input.snippet'))
         ..writeAsString('/// Test file');
-      snippets_main.main(<String>['--input=${input.absolute.path}', '--template=template']);
+      snippets_main.main(
+          <String>['--input=${input.absolute.path}', '--template=template']);
 
-      final Map<String, dynamic> metadata = mockSnippetGenerator.sample.metadata;
+      final Map<String, dynamic> metadata =
+          mockSnippetGenerator.sample.metadata;
       // Ignore the channel, because channel is really just the branch, and will be
       // different on development workstations.
       metadata.remove('channel');
@@ -337,26 +375,39 @@ void main() {
           }));
 
       snippets_main.main(<String>[]);
-      expect(errorMessage, equals('The --input option must be specified, either on the command line, or in the INPUT environment variable.'));
+      expect(
+          errorMessage,
+          equals(
+              'The --input option must be specified, either on the command line, or in the INPUT environment variable.'));
       errorMessage = '';
 
       snippets_main.main(<String>['--input=${input.absolute.path}']);
-      expect(errorMessage, equals('The --template option must be specified for "sample" and "dartpad" sample types.'));
+      expect(
+          errorMessage,
+          equals(
+              'The --template option must be specified for "sample" and "dartpad" sample types.'));
       errorMessage = '';
 
-      snippets_main.main(<String>['--input=${input.absolute.path}', '--type=snippet']);
+      snippets_main
+          .main(<String>['--input=${input.absolute.path}', '--type=snippet']);
       expect(errorMessage, equals(''));
       errorMessage = '';
 
       mockSnippetGenerator = MockSnippetGenerator();
       snippets_main.snippetGenerator = mockSnippetGenerator;
-      snippets_main.main(<String>['--input=${input.absolute.path}', '--type=snippet', '--no-format-output']);
+      snippets_main.main(<String>[
+        '--input=${input.absolute.path}',
+        '--type=snippet',
+        '--no-format-output'
+      ]);
       expect(mockSnippetGenerator.formatOutput, equals(false));
       errorMessage = '';
 
       input.deleteSync();
-      snippets_main.main(<String>['--input=${input.absolute.path}', '--template=template']);
-      expect(errorMessage, equals('The input file ${input.absolute.path} does not exist.'));
+      snippets_main.main(
+          <String>['--input=${input.absolute.path}', '--template=template']);
+      expect(errorMessage,
+          equals('The input file ${input.absolute.path} does not exist.'));
       errorMessage = '';
     });
   });

@@ -1,4 +1,4 @@
-// Copyright 2019 The Chromium Authors. All rights reserved.
+// Copyright 2013 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -14,7 +14,8 @@ import 'diagram_step.dart';
 const String _basic = 'dropdown_button';
 
 class DropdownButtonDiagram extends StatelessWidget implements DiagramMetadata {
-  const DropdownButtonDiagram(this.name, this.buttonKey, {Key? key}) : super(key: key);
+  const DropdownButtonDiagram(this.name, this.buttonKey, {Key? key})
+      : super(key: key);
 
   @override
   final String name;
@@ -34,9 +35,7 @@ class DropdownButtonDiagram extends StatelessWidget implements DiagramMetadata {
               icon: const Icon(Icons.arrow_downward),
               iconSize: 24,
               elevation: 16,
-              style: const TextStyle(
-                color: Colors.deepPurple
-              ),
+              style: const TextStyle(color: Colors.deepPurple),
               underline: Container(
                 height: 2,
                 color: Colors.deepPurpleAccent,
@@ -65,7 +64,8 @@ class DropdownButtonDiagramStep extends DiagramStep<DropdownButtonDiagram> {
   final String category = 'material';
 
   @override
-  Future<List<DropdownButtonDiagram>> get diagrams async => <DropdownButtonDiagram>[
+  Future<List<DropdownButtonDiagram>> get diagrams async =>
+      <DropdownButtonDiagram>[
         DropdownButtonDiagram(_basic, GlobalKey()),
       ];
 

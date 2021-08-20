@@ -1,4 +1,4 @@
-// Copyright 2014 The Flutter Authors. All rights reserved.
+// Copyright 2013 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -42,7 +42,8 @@ class _MyDiagramState extends State<MyDiagram> {
 Future<void> main() async {
   DiagramFlutterBinding.ensureInitialized();
   final Directory directory = Directory(
-    path.join((await getApplicationDocumentsDirectory()).absolute.path, 'output'),
+    path.join(
+        (await getApplicationDocumentsDirectory()).absolute.path, 'output'),
   );
   if (directory.existsSync()) {
     directory.deleteSync(recursive: true);

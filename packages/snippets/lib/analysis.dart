@@ -1,4 +1,4 @@
-// Copyright 2014 The Flutter Authors. All rights reserved.
+// Copyright 2013 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -28,7 +28,8 @@ Iterable<List<SourceLine>> getFileDocumentationComments(File file) {
 
 /// Gets an iterable over all of the blocks of documentation comments from an
 /// iterable over the [SourceElement]s involved.
-Iterable<List<SourceLine>> getDocumentationComments(Iterable<SourceElement> elements) {
+Iterable<List<SourceLine>> getDocumentationComments(
+    Iterable<SourceElement> elements) {
   return elements
       .where((SourceElement element) => element.comment.isNotEmpty)
       .map<List<SourceLine>>((SourceElement element) => element.comment);
@@ -55,7 +56,8 @@ Iterable<SourceElement> getElementsFromString(String content, File file) {
         flags: <String>[],
       ),
       content: content);
-  final _SourceVisitor<CompilationUnit> visitor = _SourceVisitor<CompilationUnit>(file);
+  final _SourceVisitor<CompilationUnit> visitor =
+      _SourceVisitor<CompilationUnit>(file);
   visitor.visitCompilationUnit(parseResult.unit);
   visitor.assignLineNumbers();
   return visitor.elements;
@@ -65,7 +67,8 @@ Iterable<SourceElement> getElementsFromString(String content, File file) {
 ///
 /// Takes an optional [ResourceProvider] to allow reading from a memory
 /// filesystem.
-Iterable<SourceElement> getFileElements(File file, {afs.ResourceProvider? resourceProvider}) {
+Iterable<SourceElement> getFileElements(File file,
+    {afs.ResourceProvider? resourceProvider}) {
   resourceProvider ??= afs.PhysicalResourceProvider.INSTANCE;
   final ParseStringResult parseResult = parseFile(
       featureSet: FeatureSet.fromEnableFlags2(
@@ -74,7 +77,8 @@ Iterable<SourceElement> getFileElements(File file, {afs.ResourceProvider? resour
       ),
       path: file.absolute.path,
       resourceProvider: resourceProvider);
-  final _SourceVisitor<CompilationUnit> visitor = _SourceVisitor<CompilationUnit>(file);
+  final _SourceVisitor<CompilationUnit> visitor =
+      _SourceVisitor<CompilationUnit>(file);
   visitor.visitCompilationUnit(parseResult.unit);
   visitor.assignLineNumbers();
   return visitor.elements;
@@ -97,11 +101,13 @@ class _SourceVisitor<T> extends RecursiveAstVisitor<T> {
     for (final SourceElement element in elements) {
       final List<SourceLine> newLines = <SourceLine>[];
       for (final SourceLine line in element.comment) {
-        final CharacterLocation intervalLine = lineInfo.getLocation(line.startChar);
+        final CharacterLocation intervalLine =
+            lineInfo.getLocation(line.startChar);
         newLines.add(line.copyWith(line: intervalLine.lineNumber));
       }
       final int elementLine = lineInfo.getLocation(element.startPos).lineNumber;
-      replacedElements.add(element.copyWith(comment: newLines, startLine: elementLine));
+      replacedElements
+          .add(element.copyWith(comment: newLines, startLine: elementLine));
       removedElements.add(element);
     }
     elements.removeAll(removedElements);
@@ -152,8 +158,10 @@ class _SourceVisitor<T> extends RecursiveAstVisitor<T> {
         continue;
       }
       List<SourceLine> comment = <SourceLine>[];
-      if (node.documentationComment != null && node.documentationComment!.tokens.isNotEmpty) {
-        comment = _processComment(declaration.name.name, node.documentationComment!);
+      if (node.documentationComment != null &&
+          node.documentationComment!.tokens.isNotEmpty) {
+        comment =
+            _processComment(declaration.name.name, node.documentationComment!);
       }
       elements.add(
         SourceElement(
@@ -173,7 +181,8 @@ class _SourceVisitor<T> extends RecursiveAstVisitor<T> {
   T? visitGenericTypeAlias(GenericTypeAlias node) {
     if (isPublic(node.name.name)) {
       List<SourceLine> comment = <SourceLine>[];
-      if (node.documentationComment != null && node.documentationComment!.tokens.isNotEmpty) {
+      if (node.documentationComment != null &&
+          node.documentationComment!.tokens.isNotEmpty) {
         comment = _processComment(node.name.name, node.documentationComment!);
       }
       elements.add(
@@ -196,10 +205,11 @@ class _SourceVisitor<T> extends RecursiveAstVisitor<T> {
         continue;
       }
       List<SourceLine> comment = <SourceLine>[];
-      if (node.documentationComment != null && node.documentationComment!.tokens.isNotEmpty) {
+      if (node.documentationComment != null &&
+          node.documentationComment!.tokens.isNotEmpty) {
         assert(enclosingClass.isNotEmpty);
-        comment =
-            _processComment('$enclosingClass.${declaration.name.name}', node.documentationComment!);
+        comment = _processComment('$enclosingClass.${declaration.name.name}',
+            node.documentationComment!);
       }
       elements.add(
         SourceElement(
@@ -218,11 +228,15 @@ class _SourceVisitor<T> extends RecursiveAstVisitor<T> {
 
   @override
   T? visitConstructorDeclaration(ConstructorDeclaration node) {
-    final String fullName = '$enclosingClass${node.name == null ? '' : '.${node.name}'}';
-    if (isPublic(enclosingClass) && (node.name == null || isPublic(node.name!.name))) {
+    final String fullName =
+        '$enclosingClass${node.name == null ? '' : '.${node.name}'}';
+    if (isPublic(enclosingClass) &&
+        (node.name == null || isPublic(node.name!.name))) {
       List<SourceLine> comment = <SourceLine>[];
-      if (node.documentationComment != null && node.documentationComment!.tokens.isNotEmpty) {
-        comment = _processComment('$enclosingClass.$fullName', node.documentationComment!);
+      if (node.documentationComment != null &&
+          node.documentationComment!.tokens.isNotEmpty) {
+        comment = _processComment(
+            '$enclosingClass.$fullName', node.documentationComment!);
       }
       elements.add(
         SourceElement(
@@ -244,7 +258,8 @@ class _SourceVisitor<T> extends RecursiveAstVisitor<T> {
       List<SourceLine> comment = <SourceLine>[];
       // Skip functions that are defined inside of methods.
       if (!isInsideMethod(node)) {
-        if (node.documentationComment != null && node.documentationComment!.tokens.isNotEmpty) {
+        if (node.documentationComment != null &&
+            node.documentationComment!.tokens.isNotEmpty) {
           comment = _processComment(node.name.name, node.documentationComment!);
         }
         elements.add(
@@ -266,9 +281,11 @@ class _SourceVisitor<T> extends RecursiveAstVisitor<T> {
   T? visitMethodDeclaration(MethodDeclaration node) {
     if (isPublic(node.name.name) && isPublic(enclosingClass)) {
       List<SourceLine> comment = <SourceLine>[];
-      if (node.documentationComment != null && node.documentationComment!.tokens.isNotEmpty) {
+      if (node.documentationComment != null &&
+          node.documentationComment!.tokens.isNotEmpty) {
         assert(enclosingClass.isNotEmpty);
-        comment = _processComment('$enclosingClass.${node.name.name}', node.documentationComment!);
+        comment = _processComment(
+            '$enclosingClass.${node.name.name}', node.documentationComment!);
       }
       elements.add(
         SourceElement(
@@ -297,7 +314,8 @@ class _SourceVisitor<T> extends RecursiveAstVisitor<T> {
     if (!node.name.name.startsWith('_')) {
       enclosingClass = node.name.name;
       List<SourceLine> comment = <SourceLine>[];
-      if (node.documentationComment != null && node.documentationComment!.tokens.isNotEmpty) {
+      if (node.documentationComment != null &&
+          node.documentationComment!.tokens.isNotEmpty) {
         comment = _processComment(node.name.name, node.documentationComment!);
       }
       elements.add(

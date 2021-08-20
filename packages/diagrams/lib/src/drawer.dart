@@ -1,4 +1,4 @@
-// Copyright 2019 The Chromium Authors. All rights reserved.
+// Copyright 2013 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -123,8 +123,10 @@ class DrawerDiagramStep extends DiagramStep<DrawerDiagram> {
 
     await Future<void>.delayed(_pauseDuration);
 
-    final RenderBox target = _menuKey.currentContext!.findRenderObject()! as RenderBox;
-    final Offset targetOffset = target.localToGlobal(target.size.center(Offset.zero));
+    final RenderBox target =
+        _menuKey.currentContext!.findRenderObject()! as RenderBox;
+    final Offset targetOffset =
+        target.localToGlobal(target.size.center(Offset.zero));
     final TestGesture gesture = await controller.startGesture(targetOffset);
     await gesture.up();
 

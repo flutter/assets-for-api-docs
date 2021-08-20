@@ -1,4 +1,4 @@
-// Copyright 2014 The Flutter Authors. All rights reserved.
+// Copyright 2013 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -26,7 +26,6 @@ const String testVersionInfo = r'''
 }
 ''';
 
-
 void main() {
   group('FlutterInformation', () {
     late FakeProcessManager fakeProcessManager;
@@ -47,23 +46,29 @@ void main() {
 
     test('calls out to flutter if FLUTTER_VERSION is not set', () async {
       fakeProcessManager.stdout = testVersionInfo;
-      final Map<String,dynamic> info = flutterInformation.getFlutterInformation();
+      final Map<String, dynamic> info =
+          flutterInformation.getFlutterInformation();
       expect(fakeProcessManager.runs, equals(1));
-      expect(info['frameworkVersion'], equals(Version.parse('2.5.0-2.0.pre.63')));
+      expect(
+          info['frameworkVersion'], equals(Version.parse('2.5.0-2.0.pre.63')));
     });
     test("doesn't call out to flutter if FLUTTER_VERSION is set", () async {
       fakePlatform.environment['FLUTTER_VERSION'] = testVersionInfo;
-      final Map<String,dynamic> info = flutterInformation.getFlutterInformation();
+      final Map<String, dynamic> info =
+          flutterInformation.getFlutterInformation();
       expect(fakeProcessManager.runs, equals(0));
-      expect(info['frameworkVersion'], equals(Version.parse('2.5.0-2.0.pre.63')));
+      expect(
+          info['frameworkVersion'], equals(Version.parse('2.5.0-2.0.pre.63')));
     });
-    test('getFlutterRoot calls out to flutter if FLUTTER_ROOT is not set', () async {
+    test('getFlutterRoot calls out to flutter if FLUTTER_ROOT is not set',
+        () async {
       fakeProcessManager.stdout = testVersionInfo;
       final Directory root = flutterInformation.getFlutterRoot();
       expect(fakeProcessManager.runs, equals(1));
       expect(root.path, equals('/home/user/flutter'));
     });
-    test("getFlutterRoot doesn't call out to flutter if FLUTTER_ROOT is set", () async {
+    test("getFlutterRoot doesn't call out to flutter if FLUTTER_ROOT is set",
+        () async {
       fakePlatform.environment['FLUTTER_ROOT'] = '/home/user/flutter';
       final Directory root = flutterInformation.getFlutterRoot();
       expect(fakeProcessManager.runs, equals(0));
@@ -71,9 +76,11 @@ void main() {
     });
     test('parses version properly', () async {
       fakePlatform.environment['FLUTTER_VERSION'] = testVersionInfo;
-      final Map<String,dynamic> info = flutterInformation.getFlutterInformation();
+      final Map<String, dynamic> info =
+          flutterInformation.getFlutterInformation();
       expect(info['frameworkVersion'], isNotNull);
-      expect(info['frameworkVersion'], equals(Version.parse('2.5.0-2.0.pre.63')));
+      expect(
+          info['frameworkVersion'], equals(Version.parse('2.5.0-2.0.pre.63')));
       expect(info['dartSdkVersion'], isNotNull);
       expect(info['dartSdkVersion'], equals(Version.parse('2.14.0-360.0.dev')));
     });

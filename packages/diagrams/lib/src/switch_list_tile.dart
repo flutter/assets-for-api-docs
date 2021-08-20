@@ -1,4 +1,4 @@
-// Copyright 2019 The Chromium Authors. All rights reserved.
+// Copyright 2013 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -112,7 +112,7 @@ class _SwitchListTileDiagramState extends State<SwitchListTileDiagram> {
 
   @override
   Widget build(BuildContext context) {
-    switch(widget.name) {
+    switch (widget.name) {
       case 'switch_list_tile':
         return ConstrainedBox(
           key: UniqueKey(),
@@ -124,7 +124,11 @@ class _SwitchListTileDiagramState extends State<SwitchListTileDiagram> {
             child: SwitchListTile(
               title: const Text('Lights'),
               value: _lights,
-              onChanged: (bool value) { setState(() { _lights = value; }); },
+              onChanged: (bool value) {
+                setState(() {
+                  _lights = value;
+                });
+              },
               secondary: const Icon(Icons.lightbulb_outline),
             ),
           ),
@@ -182,11 +186,12 @@ class SwitchListTileDiagramStep extends DiagramStep<SwitchListTileDiagram> {
   final String category = 'material';
 
   @override
-  Future<List<SwitchListTileDiagram>> get diagrams async => <SwitchListTileDiagram>[
-    const SwitchListTileDiagram('switch_list_tile'),
-    const SwitchListTileDiagram('switch_list_tile_semantics'),
-    const SwitchListTileDiagram('switch_list_tile_custom'),
-  ];
+  Future<List<SwitchListTileDiagram>> get diagrams async =>
+      <SwitchListTileDiagram>[
+        const SwitchListTileDiagram('switch_list_tile'),
+        const SwitchListTileDiagram('switch_list_tile_semantics'),
+        const SwitchListTileDiagram('switch_list_tile_custom'),
+      ];
 
   @override
   Future<File> generateDiagram(SwitchListTileDiagram diagram) async {

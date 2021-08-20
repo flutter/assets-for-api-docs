@@ -1,1 +1,1 @@
-exclude: [utils, packages, bin]
+exclude: [packages, bin]

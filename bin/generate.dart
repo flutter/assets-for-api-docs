@@ -1,4 +1,4 @@
-// Copyright 2014 The Flutter Authors. All rights reserved.
+// Copyright 2013 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -101,22 +101,26 @@ class DiagramGenerator {
   }) async {
     final DateTime startTime = DateTime.now();
     if (!await _findIdForDeviceName()) {
-      throw GeneratorException('Unable to find device ID for device $device. Are you sure it is attached?');
+      throw GeneratorException(
+          'Unable to find device ID for device $device. Are you sure it is attached?');
     }
 
     try {
       await _createScreenshots(categories, names);
-      final List<File> outputFiles = await _combineAnimations(await _transferImages());
+      final List<File> outputFiles =
+          await _combineAnimations(await _transferImages());
       await _optimizeImages(outputFiles);
     } finally {
       if (cleanup) {
         await temporaryDirectory.delete(recursive: true);
       }
     }
-    print('Elapsed time for diagram generation: ${DateTime.now().difference(startTime)}');
+    print(
+        'Elapsed time for diagram generation: ${DateTime.now().difference(startTime)}');
   }
 
-  Future<void> _createScreenshots(List<String> categories, List<String> names) async {
+  Future<void> _createScreenshots(
+      List<String> categories, List<String> names) async {
     print('Creating images.');
     final List<String> filters = <String>[];
     for (final String category in categories) {
@@ -146,7 +150,8 @@ class DiagramGenerator {
       filters.add('--platform');
       filters.add('fuchsia');
     } else {
-      throw GeneratorException('Unsupported target platform $deviceTargetPlatform for device $deviceId');
+      throw GeneratorException(
+          'Unsupported target platform $deviceTargetPlatform for device $deviceId');
     }
     filters.add('--output-dir');
     filters.add(temporaryDirectory.absolute.path);
@@ -190,11 +195,15 @@ class DiagramGenerator {
     );
 
     final List<dynamic> devices = jsonDecode(result.stdout) as List<dynamic>;
-    for (final Map<String, dynamic> entry in devices.cast<Map<String, dynamic>>()) {
-      if ((entry['name'] as String).toLowerCase().startsWith(device.toLowerCase()) ||
+    for (final Map<String, dynamic> entry
+        in devices.cast<Map<String, dynamic>>()) {
+      if ((entry['name'] as String)
+              .toLowerCase()
+              .startsWith(device.toLowerCase()) ||
           (entry['id'] as String) == device) {
         deviceId = entry['id'] as String;
-        deviceTargetPlatform = (entry['targetPlatform'] as String).toLowerCase();
+        deviceTargetPlatform =
+            (entry['targetPlatform'] as String).toLowerCase();
         return true;
       }
     }
@@ -223,7 +232,8 @@ class DiagramGenerator {
         workingDirectory: temporaryDirectory,
         printOutput: false,
       );
-      for (final ArchiveFile file in TarDecoder().decodeBytes(tarData.stdoutRaw)) {
+      for (final ArchiveFile file
+          in TarDecoder().decodeBytes(tarData.stdoutRaw)) {
         if (file.isFile) {
           files.add(File(file.name));
           File(path.join(temporaryDirectory.absolute.path, file.name))
@@ -235,7 +245,8 @@ class DiagramGenerator {
       await for (final FileSystemEntity entity
           in temporaryDirectory.list(recursive: true, followLinks: false)) {
         if (entity is File) {
-          final String relativePath = path.relative(entity.path, from: temporaryDirectory.path);
+          final String relativePath =
+              path.relative(entity.path, from: temporaryDirectory.path);
           files.add(File(relativePath));
         }
       }
@@ -252,7 +263,8 @@ class DiagramGenerator {
     }
   }
 
-  Future<List<File>> _buildMoviesFromMetadata(List<AnimationMetadata> metadataList) async {
+  Future<List<File>> _buildMoviesFromMetadata(
+      List<AnimationMetadata> metadataList) async {
     final Directory destDir = Directory(assetDir);
     final List<File> outputs = <File>[];
     final List<WorkerJob> jobs = <WorkerJob>[];
@@ -273,7 +285,8 @@ class DiagramGenerator {
           // output.
           '-framerate', metadata.frameRate.toStringAsFixed(2),
           '-tune', 'animation', // Optimize the encoder for cell animation.
-          '-preset', 'veryslow', // Use the slowest (best quality) compression preset.
+          '-preset',
+          'veryslow', // Use the slowest (best quality) compression preset.
           // Almost lossless quality (can't use lossless '0' because Safari
           // doesn't support it).
           '-crf', '1',
@@ -297,15 +310,16 @@ class DiagramGenerator {
 
   Future<List<File>> _combineAnimations(List<File> inputFiles) async {
     final List<File> errorFiles = inputFiles
-      .where((File input) => path.basename(input.path) == 'error.log')
-      .toList();
+        .where((File input) => path.basename(input.path) == 'error.log')
+        .toList();
 
     if (errorFiles.length != 1)
       throw GeneratorException('Subprocess did not complete cleanly!');
 
     print('Processing ${inputFiles.length - 1} files...');
 
-    final String errorsFileName = path.join(temporaryDirectory.absolute.path, errorFiles.single.path);
+    final String errorsFileName =
+        path.join(temporaryDirectory.absolute.path, errorFiles.single.path);
     final String errors = await File(errorsFileName).readAsString();
     if (errors.isNotEmpty) {
       print('Failed. Errors:');
@@ -314,8 +328,8 @@ class DiagramGenerator {
     }
 
     final List<File> metadataFiles = inputFiles
-      .where((File input) => path.extension(input.path) == '.json')
-      .toList();
+        .where((File input) => path.extension(input.path) == '.json')
+        .toList();
 
     // Collect all the animation frames that are in the metadata files so that
     // we can eliminate them from the other files that were transferred.
@@ -329,10 +343,12 @@ class DiagramGenerator {
           ),
         );
       }
-      final AnimationMetadata metadata = AnimationMetadata.fromFile(metadataFile);
+      final AnimationMetadata metadata =
+          AnimationMetadata.fromFile(metadataFile);
       metadataList.add(metadata);
       animationFiles.add(metadata.metadataFile.absolute.path);
-      animationFiles.addAll(metadata.frameFiles.map((File file) => file.absolute.path));
+      animationFiles
+          .addAll(metadata.frameFiles.map((File file) => file.absolute.path));
     }
     final List<File> staticFiles = inputFiles.where((File input) {
       if (!input.isAbsolute) {
@@ -346,7 +362,8 @@ class DiagramGenerator {
       }
       return !animationFiles.contains(input.absolute.path);
     }).toList();
-    final List<File> convertedFiles = await _buildMoviesFromMetadata(metadataList);
+    final List<File> convertedFiles =
+        await _buildMoviesFromMetadata(metadataList);
     return staticFiles..addAll(convertedFiles);
   }
 
@@ -356,7 +373,8 @@ class DiagramGenerator {
       if (!imagePath.path.endsWith('.png')) {
         continue;
       }
-      final File destination = File(path.join(Directory(assetDir).path, imagePath.path));
+      final File destination =
+          File(path.join(Directory(assetDir).path, imagePath.path));
       final Directory destDir = destination.parent;
       if (!destDir.existsSync()) {
         destDir.createSync(recursive: true);

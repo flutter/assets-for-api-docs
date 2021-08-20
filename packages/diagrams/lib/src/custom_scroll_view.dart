@@ -1,4 +1,4 @@
-// Copyright 2019 The Chromium Authors. All rights reserved.
+// Copyright 2013 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -13,13 +13,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'diagram_step.dart';
 import 'fake_drag_scroll_activity.dart';
 
-final Duration _kTotalDuration =
-    _kScrollUpDuration
-        + _kScrollPauseDuration
-        + _kScrollDownDurationPartOne
-        + _kScrollPauseDuration
-        + _kScrollDownDurationPartTwo
-        + _kScrollPauseDuration;
+final Duration _kTotalDuration = _kScrollUpDuration +
+    _kScrollPauseDuration +
+    _kScrollDownDurationPartOne +
+    _kScrollPauseDuration +
+    _kScrollDownDurationPartTwo +
+    _kScrollPauseDuration;
 const Duration _kScrollUpDuration = Duration(seconds: 1, milliseconds: 500);
 const Duration _kScrollDownDurationPartOne = Duration(milliseconds: 800);
 const Duration _kScrollDownDurationPartTwo = Duration(seconds: 1);
@@ -28,7 +27,8 @@ const Duration _kScrollPauseDuration = Duration(milliseconds: 900);
 const double _kCurveAnimationFrameRate = 60.0;
 const String _customScrollView = 'custom_scroll_view';
 
-class CustomScrollViewDiagram extends StatefulWidget implements DiagramMetadata {
+class CustomScrollViewDiagram extends StatefulWidget
+    implements DiagramMetadata {
   const CustomScrollViewDiagram(this.name, {Key? key}) : super(key: key);
 
   @override
@@ -36,10 +36,10 @@ class CustomScrollViewDiagram extends StatefulWidget implements DiagramMetadata 
 
   @override
   State<StatefulWidget> createState() => _CustomScrollViewDiagramState();
-
 }
 
-class _CustomScrollViewDiagramState extends State<CustomScrollViewDiagram> with TickerProviderStateMixin<CustomScrollViewDiagram> {
+class _CustomScrollViewDiagramState extends State<CustomScrollViewDiagram>
+    with TickerProviderStateMixin<CustomScrollViewDiagram> {
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -78,7 +78,8 @@ class _CustomScrollViewDiagramState extends State<CustomScrollViewDiagram> with 
   }
 
   Future<void> _animate({required double to, required Duration duration}) {
-    final ScrollPositionWithSingleContext position = _scrollController.position as ScrollPositionWithSingleContext;
+    final ScrollPositionWithSingleContext position =
+        _scrollController.position as ScrollPositionWithSingleContext;
     final FakeDragScrollActivity activity = FakeDragScrollActivity(
       position,
       from: _scrollController.offset,
@@ -115,7 +116,7 @@ class _CustomScrollViewDiagramState extends State<CustomScrollViewDiagram> with 
               childAspectRatio: 4.0,
             ),
             delegate: SliverChildBuilderDelegate(
-                  (BuildContext context, int index) {
+              (BuildContext context, int index) {
                 return Container(
                   alignment: Alignment.center,
                   color: Colors.teal[100 * (index % 9)],
@@ -127,13 +128,14 @@ class _CustomScrollViewDiagramState extends State<CustomScrollViewDiagram> with 
           ),
           SliverFixedExtentList(
             itemExtent: 50.0,
-            delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
-              return Container(
-                alignment: Alignment.center,
-                color: Colors.lightBlue[100 * (index % 9)],
-                child: Text('List Item $index'),
-              );
-            },
+            delegate: SliverChildBuilderDelegate(
+              (BuildContext context, int index) {
+                return Container(
+                  alignment: Alignment.center,
+                  color: Colors.lightBlue[100 * (index % 9)],
+                  child: Text('List Item $index'),
+                );
+              },
             ),
           ),
         ],
@@ -149,7 +151,8 @@ class CustomScrollViewDiagramStep extends DiagramStep<CustomScrollViewDiagram> {
   final String category = 'widgets';
 
   @override
-  Future<List<CustomScrollViewDiagram>> get diagrams async => <CustomScrollViewDiagram>[
+  Future<List<CustomScrollViewDiagram>> get diagrams async =>
+      <CustomScrollViewDiagram>[
         const CustomScrollViewDiagram(_customScrollView),
       ];
 

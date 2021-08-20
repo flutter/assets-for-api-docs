@@ -1,4 +1,4 @@
-// Copyright 2014 The Flutter Authors. All rights reserved.
+// Copyright 2013 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -56,7 +56,8 @@ class _TestTappableDiagramState extends State<TestTappableDiagram> {
     return TextButton(
       child: const SizedBox.shrink(),
       style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all<Color?>(on ? Colors.red : Colors.blue),
+        backgroundColor:
+            MaterialStateProperty.all<Color?>(on ? Colors.red : Colors.blue),
       ),
       onPressed: () {
         setState(() {
@@ -72,7 +73,8 @@ void main() {
     late Directory outputDir;
 
     setUp(() async {
-      outputDir = Directory.systemTemp.createTempSync('flutter_diagram_capture_test.');
+      outputDir =
+          Directory.systemTemp.createTempSync('flutter_diagram_capture_test.');
     });
 
     tearDown(() {
@@ -90,7 +92,8 @@ void main() {
       final ui.Image captured = await controller.drawDiagramToImage();
       expect(captured.width, equals(100));
       expect(captured.height, equals(50));
-      final ByteData? output = await captured.toByteData(format: ui.ImageByteFormat.rawRgba);
+      final ByteData? output =
+          await captured.toByteData(format: ui.ImageByteFormat.rawRgba);
       expect(output!.lengthInBytes, equals(20000));
     });
 
@@ -105,7 +108,8 @@ void main() {
       final ui.Image captured = await controller.drawDiagramToImage();
       expect(captured.width, equals(100));
       expect(captured.height, equals(50));
-      final ByteData? output = await captured.toByteData(format: ui.ImageByteFormat.rawRgba);
+      final ByteData? output =
+          await captured.toByteData(format: ui.ImageByteFormat.rawRgba);
       expect(output!.lengthInBytes, equals(20000));
     });
 
@@ -118,27 +122,32 @@ void main() {
       );
 
       final File outputFile = File('test1.png');
-      final File actualOutputFile = await controller.drawDiagramToFile(outputFile);
+      final File actualOutputFile =
+          await controller.drawDiagramToFile(outputFile);
       expect(actualOutputFile.existsSync(), isTrue);
       final List<int> imageContents = actualOutputFile.readAsBytesSync();
       final image.Image decodedImage = image.decodePng(imageContents)!;
       expect(decodedImage.width, equals(100));
       expect(decodedImage.height, equals(50));
       expect(decodedImage.length, equals(5000));
-      expect(decodedImage[decodedImage.index(50, 10)], equals(0xdd000000)); // Check a pixel value
+      expect(decodedImage[decodedImage.index(50, 10)],
+          equals(0xdd000000)); // Check a pixel value
     });
 
     test('can create images from an animated widget', () async {
       final UniqueKey key = UniqueKey();
       final DiagramController controller = DiagramController(
-        builder: (BuildContext context) => TestAnimatedDiagram(key: key, size: 1.0),
+        builder: (BuildContext context) =>
+            TestAnimatedDiagram(key: key, size: 1.0),
         outputDirectory: outputDir,
         pixelRatio: 1.0,
         screenDimensions: const Size(100.0, 100.0),
       );
 
-      controller.builder = (BuildContext context) => TestAnimatedDiagram(key: key, size: 50.0);
-      final List<ui.Image> outputImages = await controller.drawAnimatedDiagramToImages(
+      controller.builder =
+          (BuildContext context) => TestAnimatedDiagram(key: key, size: 50.0);
+      final List<ui.Image> outputImages =
+          await controller.drawAnimatedDiagramToImages(
         end: const Duration(milliseconds: 1200),
         frameDuration: const Duration(milliseconds: 200),
       );
@@ -154,13 +163,15 @@ void main() {
     test('can write images from an animated widget to files', () async {
       final UniqueKey key = UniqueKey();
       final DiagramController controller = DiagramController(
-        builder: (BuildContext context) => TestAnimatedDiagram(key: key, size: 1.0),
+        builder: (BuildContext context) =>
+            TestAnimatedDiagram(key: key, size: 1.0),
         outputDirectory: outputDir,
         pixelRatio: 1.0,
         screenDimensions: const Size(100.0, 100.0),
       );
 
-      controller.builder = (BuildContext context) => TestAnimatedDiagram(key: key, size: 50.0);
+      controller.builder =
+          (BuildContext context) => TestAnimatedDiagram(key: key, size: 50.0);
       final File outputFile = await controller.drawAnimatedDiagramToFiles(
         end: const Duration(milliseconds: 1200),
         frameRate: 5.0,
@@ -172,13 +183,18 @@ void main() {
       expect(outputFile.lengthSync(), greaterThan(0));
 
       Map<String, dynamic> _loadMetadata(File metadataFile) {
-        final Map<String, dynamic> metadata = json.decode(metadataFile.readAsStringSync()) as Map<String, dynamic>;
+        final Map<String, dynamic> metadata = json
+            .decode(metadataFile.readAsStringSync()) as Map<String, dynamic>;
         final String baseDir = path.dirname(metadataFile.absolute.path);
-        final List<File> frameFiles = (metadata['frame_files']! as List<dynamic>)
-            .map<File>((dynamic name) => File(path.normalize(path.join(baseDir, name as String)))).toList();
+        final List<File> frameFiles =
+            (metadata['frame_files']! as List<dynamic>)
+                .map<File>((dynamic name) =>
+                    File(path.normalize(path.join(baseDir, name as String))))
+                .toList();
         metadata['frame_files'] = frameFiles;
         return metadata;
       }
+
       final Map<String, dynamic> metadata = _loadMetadata(outputFile);
       final List<File> frames = metadata['frame_files'] as List<File>;
       expect(frames.length, equals(7));
@@ -204,14 +220,16 @@ void main() {
       );
 
       final File outputFile = File('test2.png');
-      final File actualOutputFile = await controller.drawDiagramToFile(outputFile);
+      final File actualOutputFile =
+          await controller.drawDiagramToFile(outputFile);
       expect(actualOutputFile.existsSync(), isTrue);
       final List<int> imageContents = actualOutputFile.readAsBytesSync();
       final image.Image decodedImage = image.decodePng(imageContents)!;
       expect(decodedImage.width, equals(300));
       expect(decodedImage.height, equals(150));
       expect(decodedImage.length, equals(45000));
-      expect(decodedImage[decodedImage.index(150, 20)], equals(0xdd000000)); // Check a pixel value
+      expect(decodedImage[decodedImage.index(150, 20)],
+          equals(0xdd000000)); // Check a pixel value
     });
 
     test('can inject gestures', () async {
@@ -228,16 +246,19 @@ void main() {
       image.Image decodedImage = image.decodePng(imageContents)!;
       expect(decodedImage.width, equals(64));
       expect(decodedImage.height, equals(48));
-      expect(decodedImage[decodedImage.index(44, 18)], equals(0xfff39621)); // Check a pixel value
+      expect(decodedImage[decodedImage.index(44, 18)],
+          equals(0xfff39621)); // Check a pixel value
 
-      final TestGesture gesture = await controller.startGesture(const Offset(50.0, 50.0));
+      final TestGesture gesture =
+          await controller.startGesture(const Offset(50.0, 50.0));
       await gesture.up();
       controller.advanceTime(const Duration(seconds: 1));
 
       actualOutputFile = await controller.drawDiagramToFile(outputFile);
       imageContents = actualOutputFile.readAsBytesSync();
       decodedImage = image.decodePng(imageContents)!;
-      expect(decodedImage[decodedImage.index(44, 18)], equals(0xff3643f4)); // Check a pixel value
+      expect(decodedImage[decodedImage.index(44, 18)],
+          equals(0xff3643f4)); // Check a pixel value
     });
   });
 }

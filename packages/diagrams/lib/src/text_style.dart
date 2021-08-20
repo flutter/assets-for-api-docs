@@ -1,4 +1,4 @@
-// Copyright 2019 The Chromium Authors. All rights reserved.
+// Copyright 2013 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -54,7 +54,8 @@ class TextStyleDiagram extends StatelessWidget implements DiagramMetadata {
                 style: TextStyle(color: Colors.black.withOpacity(0.8)),
               ),
               TextSpan(
-                text: "You're gonna need congressional approval and you don't have the votes!\n",
+                text:
+                    "You're gonna need congressional approval and you don't have the votes!\n",
                 style: TextStyle(color: Colors.black.withOpacity(1.0)),
               ),
             ],

@@ -1,4 +1,4 @@
-// Copyright 2019 The Chromium Authors. All rights reserved.
+// Copyright 2013 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -58,8 +58,7 @@ class FormDiagramStep extends DiagramStep<FormDiagram> {
   final String category = 'widgets';
 
   @override
-  Future<List<FormDiagram>> get diagrams async =>
-      <FormDiagram>[
+  Future<List<FormDiagram>> get diagrams async => <FormDiagram>[
         const FormDiagram('form'),
       ];
 

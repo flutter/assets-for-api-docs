@@ -1,4 +1,4 @@
-// Copyright 2019 The Chromium Authors. All rights reserved.
+// Copyright 2013 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -30,7 +30,8 @@ class RichTextDiagram extends StatelessWidget implements DiagramMetadata {
             text: 'Hello ',
             style: DefaultTextStyle.of(context).style,
             children: const <TextSpan>[
-              TextSpan(text: 'bold', style: TextStyle(fontWeight: FontWeight.bold)),
+              TextSpan(
+                  text: 'bold', style: TextStyle(fontWeight: FontWeight.bold)),
               TextSpan(text: ' world!'),
             ],
           ),

@@ -1,4 +1,4 @@
-// Copyright 2014 The Flutter Authors. All rights reserved.
+// Copyright 2013 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -45,7 +45,8 @@ class SnippetConfiguration {
   /// Gets the skeleton file to use for the given [SampleType] and DartPad
   /// preference.
   File getHtmlSkeletonFile(String type) {
-    final String filename = type == 'dartpad' ? 'dartpad-sample.html' : '$type.html';
+    final String filename =
+        type == 'dartpad' ? 'dartpad-sample.html' : '$type.html';
     return filesystem.file(path.join(skeletonsDirectory.path, filename));
   }
 }
@@ -54,15 +55,16 @@ class SnippetConfiguration {
 /// locations based in the current location of the snippets main.dart.
 class FlutterRepoSnippetConfiguration extends SnippetConfiguration {
   FlutterRepoSnippetConfiguration(
-      {required Directory flutterRoot, FileSystem filesystem = const LocalFileSystem()})
+      {required this.flutterRoot,
+      FileSystem filesystem = const LocalFileSystem()})
       : super(
           filesystem: filesystem,
-          configDirectory:
-              _underRoot(filesystem, flutterRoot, const <String>['dev', 'snippets', 'config']),
-          outputDirectory:
-              _underRoot(filesystem, flutterRoot, const <String>['dev', 'docs', 'doc', 'snippets']),
-          skeletonsDirectory: _underRoot(
-              filesystem, flutterRoot, const <String>['dev', 'snippets', 'config', 'skeletons']),
+          configDirectory: _underRoot(filesystem, flutterRoot,
+              const <String>['dev', 'snippets', 'config']),
+          outputDirectory: _underRoot(filesystem, flutterRoot,
+              const <String>['dev', 'docs', 'doc', 'snippets']),
+          skeletonsDirectory: _underRoot(filesystem, flutterRoot,
+              const <String>['dev', 'snippets', 'config', 'skeletons']),
           templatesDirectory: _underRoot(
             filesystem,
             flutterRoot,
@@ -70,6 +72,10 @@ class FlutterRepoSnippetConfiguration extends SnippetConfiguration {
           ),
         );
 
-  static Directory _underRoot(FileSystem fs, Directory flutterRoot, List<String> dirs) =>
-      fs.directory(path.canonicalize(path.joinAll(<String>[flutterRoot.absolute.path, ...dirs])));
+  final Directory flutterRoot;
+
+  static Directory _underRoot(
+          FileSystem fs, Directory flutterRoot, List<String> dirs) =>
+      fs.directory(path.canonicalize(
+          path.joinAll(<String>[flutterRoot.absolute.path, ...dirs])));
 }

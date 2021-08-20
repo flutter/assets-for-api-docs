@@ -1,4 +1,4 @@
-// Copyright 2014 The Flutter Authors. All rights reserved.
+// Copyright 2013 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -63,9 +63,11 @@ class FlutterInformation {
     return getFlutterInformation()['flutterRoot'] as Directory;
   }
 
-  Version getFlutterVersion() => getFlutterInformation()['frameworkVersion'] as Version;
+  Version getFlutterVersion() =>
+      getFlutterInformation()['frameworkVersion'] as Version;
 
-  Version getDartSdkVersion() => getFlutterInformation()['dartSdkVersion'] as Version;
+  Version getDartSdkVersion() =>
+      getFlutterInformation()['dartSdkVersion'] as Version;
 
   Map<String, dynamic>? _cachedFlutterInformation;
 
@@ -91,8 +93,9 @@ class FlutterInformation {
       }
       io.ProcessResult result;
       try {
-        result = processManager
-            .runSync(<String>[flutterCommand, '--version', '--machine'], stdoutEncoding: utf8);
+        result = processManager.runSync(
+            <String>[flutterCommand, '--version', '--machine'],
+            stdoutEncoding: utf8);
       } on io.ProcessException catch (e) {
         throw SnippetException(
             'Unable to determine Flutter information. Either set FLUTTER_ROOT, or place flutter command in your path.\n$e');
@@ -102,10 +105,12 @@ class FlutterInformation {
             'Unable to determine Flutter information, because of abnormal exit to flutter command.');
       }
       flutterVersionJson = (result.stdout as String).replaceAll(
-          'Waiting for another flutter command to release the startup lock...', '');
+          'Waiting for another flutter command to release the startup lock...',
+          '');
     }
 
-    final Map<String, dynamic> flutterVersion = json.decode(flutterVersionJson) as Map<String, dynamic>;
+    final Map<String, dynamic> flutterVersion =
+        json.decode(flutterVersionJson) as Map<String, dynamic>;
     if (flutterVersion['flutterRoot'] == null ||
         flutterVersion['frameworkVersion'] == null ||
         flutterVersion['dartSdkVersion'] == null) {
@@ -114,8 +119,10 @@ class FlutterInformation {
     }
 
     final Map<String, dynamic> info = <String, dynamic>{};
-    info['flutterRoot'] = filesystem.directory(flutterVersion['flutterRoot']! as String);
-    info['frameworkVersion'] = Version.parse(flutterVersion['frameworkVersion'] as String);
+    info['flutterRoot'] =
+        filesystem.directory(flutterVersion['flutterRoot']! as String);
+    info['frameworkVersion'] =
+        Version.parse(flutterVersion['frameworkVersion'] as String);
 
     final RegExpMatch? dartVersionRegex =
         RegExp(r'(?<base>[\d.]+)(?:\s+\(build (?<detail>[-.\w]+)\))?')
@@ -125,7 +132,8 @@ class FlutterInformation {
           'Flutter command output has unexpected format, unable to parse dart SDK version ${flutterVersion['dartSdkVersion']}.');
     }
     info['dartSdkVersion'] = Version.parse(
-        dartVersionRegex.namedGroup('detail') ?? dartVersionRegex.namedGroup('base')!);
+        dartVersionRegex.namedGroup('detail') ??
+            dartVersionRegex.namedGroup('base')!);
     _cachedFlutterInformation = info;
 
     return info;
@@ -138,8 +146,10 @@ class FlutterInformation {
 /// marker.
 String sectionArrows(String name, {bool start = true}) {
   const int markerArrows = 8;
-  final String arrows = (start ? '\u25bc' /* ▼ */ : '\u25b2' /* ▲ */) * markerArrows;
-  final String marker = '//* $arrows $name $arrows (do not modify or remove section marker)';
+  final String arrows =
+      (start ? '\u25bc' /* ▼ */ : '\u25b2' /* ▲ */) * markerArrows;
+  final String marker =
+      '//* $arrows $name $arrows (do not modify or remove section marker)';
   return '${start ? '\n//*${'*' * marker.length}\n' : '\n'}'
       '$marker'
       '${!start ? '\n//*${'*' * marker.length}\n' : '\n'}';
@@ -161,28 +171,33 @@ String interpolateTemplate(
     }
     // We don't wrap some sections, because otherwise they generate invalid files.
     const Set<String> skippedSections = <String>{'element', 'copyright'};
-    final bool addMarkers = addSectionMarkers && !skippedSections.contains(name);
+    final bool addMarkers =
+        addSectionMarkers && !skippedSections.contains(name);
     final String result = <String>[
       if (addMarkers) sectionArrows(name, start: true),
       ...contents,
       if (addMarkers) sectionArrows(name, start: false),
     ].join('\n');
     final RegExp wrappingNewlines = RegExp(r'^\n*(.*)\n*$', dotAll: true);
-    return result.replaceAllMapped(wrappingNewlines, (Match match) => match.group(1)!);
+    return result.replaceAllMapped(
+        wrappingNewlines, (Match match) => match.group(1)!);
   }
 
   return '${addCopyright ? '{{copyright}}\n\n' : ''}$template'
       .replaceAllMapped(RegExp(r'{{([^}]+)}}'), (Match match) {
     final String name = match[1]!;
-    final int componentIndex =
-        injections.indexWhere((TemplateInjection injection) => injection.name == name);
+    final int componentIndex = injections
+        .indexWhere((TemplateInjection injection) => injection.name == name);
     if (metadata[name] != null && componentIndex == -1) {
       // If the match isn't found in the injections, then just return the
       // metadata entry.
-      return wrapSectionMarker((metadata[name]! as String).split('\n'), name: name);
+      return wrapSectionMarker((metadata[name]! as String).split('\n'),
+          name: name);
     }
     return wrapSectionMarker(
-        componentIndex >= 0 ? injections[componentIndex].stringContents : <String>[],
+        componentIndex >= 0
+            ? injections[componentIndex].stringContents
+            : <String>[],
         name: name);
   }).replaceAll(RegExp(r'\n\n+'), '\n\n');
 }
@@ -219,7 +234,8 @@ class SampleStats {
 }
 
 Iterable<CodeSample> getSamplesInElements(Iterable<SourceElement>? elements) {
-  return elements?.expand<CodeSample>((SourceElement element) => element.samples) ??
+  return elements
+          ?.expand<CodeSample>((SourceElement element) => element.samples) ??
       const <CodeSample>[];
 }
 
@@ -236,7 +252,8 @@ SampleStats getSampleStats(SourceElement element) {
   final int applications = element.applicationSampleCount;
   final String sampleCount = <String>[
     if (snippets > 0) '$snippets snippet${snippets != 1 ? 's' : ''}',
-    if (applications > 0) '$applications application sample${applications != 1 ? 's' : ''}',
+    if (applications > 0)
+      '$applications application sample${applications != 1 ? 's' : ''}',
     if (dartpads > 0) '$dartpads dartpad sample${dartpads != 1 ? 's' : ''}'
   ].join(', ');
   final int wordCount = element.wordCount;
@@ -247,7 +264,8 @@ SampleStats getSampleStats(SourceElement element) {
     '$lineCount ${lineCount == 1 ? 'line' : 'lines'}',
     if (linkCount > 0 && element.hasSeeAlso) ', ',
     if (linkCount > 0 && !element.hasSeeAlso) ' and ',
-    if (linkCount > 0) 'refers to $linkCount other ${linkCount == 1 ? 'symbol' : 'symbols'}',
+    if (linkCount > 0)
+      'refers to $linkCount other ${linkCount == 1 ? 'symbol' : 'symbols'}',
     if (linkCount > 0 && element.hasSeeAlso) ', and ',
     if (linkCount == 0 && element.hasSeeAlso) 'and ',
     if (element.hasSeeAlso) 'has a "See also:" section',

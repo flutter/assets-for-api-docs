@@ -1,4 +1,4 @@
-// Copyright 2019 The Chromium Authors. All rights reserved.
+// Copyright 2013 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -46,26 +46,25 @@ class AnimationStatusValueDiagramState
     Timer(_kBreakDuration, () {
       _controller.forward();
     });
-    _controller
-      .addStatusListener((AnimationStatus status) {
-        switch (status) {
-          case AnimationStatus.dismissed:
-            _status = 'dismissed';
-            break;
-          case AnimationStatus.forward:
-            _status = 'forward';
-            break;
-          case AnimationStatus.reverse:
-            _status = 'reverse';
-            break;
-          case AnimationStatus.completed:
-            _status = 'completed';
-            Timer(_kBreakDuration, () {
-              _controller.reverse();
-            });
-            break;
-        }
-      });
+    _controller.addStatusListener((AnimationStatus status) {
+      switch (status) {
+        case AnimationStatus.dismissed:
+          _status = 'dismissed';
+          break;
+        case AnimationStatus.forward:
+          _status = 'forward';
+          break;
+        case AnimationStatus.reverse:
+          _status = 'reverse';
+          break;
+        case AnimationStatus.completed:
+          _status = 'completed';
+          Timer(_kBreakDuration, () {
+            _controller.reverse();
+          });
+          break;
+      }
+    });
   }
 
   @override
@@ -157,7 +156,8 @@ class AnimationStatusValueDiagramStep
   final String category = 'animation';
 
   @override
-  Future<List<AnimationStatusValueDiagram>> get diagrams async => const <AnimationStatusValueDiagram>[
+  Future<List<AnimationStatusValueDiagram>> get diagrams async =>
+      const <AnimationStatusValueDiagram>[
         AnimationStatusValueDiagram(),
       ];
 

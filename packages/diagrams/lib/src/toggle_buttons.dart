@@ -1,4 +1,4 @@
-// Copyright 2019 The Chromium Authors. All rights reserved.
+// Copyright 2013 The Flutter Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
@@ -13,8 +13,10 @@ import 'diagram_step.dart';
 
 const String _toggleButtonsSimple = 'toggle_buttons_simple';
 const String _toggleButtonsRequired = 'toggle_buttons_required';
-const String _toggleButtonsMutuallyExclusive = 'toggle_buttons_mutually_exclusive';
-const String _toggleButtonsRequiredMutuallyExclusive = 'toggle_buttons_required_mutually_exclusive';
+const String _toggleButtonsMutuallyExclusive =
+    'toggle_buttons_mutually_exclusive';
+const String _toggleButtonsRequiredMutuallyExclusive =
+    'toggle_buttons_required_mutually_exclusive';
 const double _kAnimationFrameRate = 60.0;
 const Map<String, List<int>> tapSteps = <String, List<int>>{
   _toggleButtonsSimple: <int>[0, 2, 0, 2],
@@ -30,7 +32,7 @@ final List<GlobalKey> _iconKeys = <GlobalKey>[
 ];
 
 class ToggleButtonsDiagram extends StatefulWidget implements DiagramMetadata {
-  const ToggleButtonsDiagram(this.name, { Key? key }) : super(key: key);
+  const ToggleButtonsDiagram(this.name, {Key? key}) : super(key: key);
 
   @override
   final String name;
@@ -60,7 +62,7 @@ class _ToggleButtonsDiagramState extends State<ToggleButtonsDiagram> {
           },
           isSelected: isSelected,
         );
-      break;
+        break;
       case _toggleButtonsRequired:
         returnWidget = ToggleButtons(
           children: <Widget>[
@@ -71,12 +73,14 @@ class _ToggleButtonsDiagramState extends State<ToggleButtonsDiagram> {
           onPressed: (int index) {
             int count = 0;
             for (int index = 0; index < isSelected.length; index++) {
-              if (isSelected[index])
+              if (isSelected[index]) {
                 count += 1;
+              }
             }
 
-            if (isSelected[index] && count < 2)
+            if (isSelected[index] && count < 2) {
               return;
+            }
             setState(() {
               isSelected[index] = !isSelected[index];
             });
@@ -93,7 +97,9 @@ class _ToggleButtonsDiagramState extends State<ToggleButtonsDiagram> {
           ],
           onPressed: (int index) {
             setState(() {
-              for (int buttonIndex = 0; buttonIndex < isSelected.length; buttonIndex++) {
+              for (int buttonIndex = 0;
+                  buttonIndex < isSelected.length;
+                  buttonIndex++) {
                 if (buttonIndex == index) {
                   isSelected[buttonIndex] = !isSelected[buttonIndex];
                 } else {
@@ -104,7 +110,7 @@ class _ToggleButtonsDiagramState extends State<ToggleButtonsDiagram> {
           },
           isSelected: isSelected,
         );
-      break;
+        break;
       case _toggleButtonsRequiredMutuallyExclusive:
         returnWidget = ToggleButtons(
           children: <Widget>[
@@ -114,7 +120,9 @@ class _ToggleButtonsDiagramState extends State<ToggleButtonsDiagram> {
           ],
           onPressed: (int index) {
             setState(() {
-              for (int buttonIndex = 0; buttonIndex < isSelected.length; buttonIndex++) {
+              for (int buttonIndex = 0;
+                  buttonIndex < isSelected.length;
+                  buttonIndex++) {
                 if (buttonIndex == index) {
                   isSelected[buttonIndex] = true;
                 } else {
@@ -154,12 +162,14 @@ class ToggleButtonsDiagramStep extends DiagramStep<ToggleButtonsDiagram> {
   final String category = 'material';
 
   @override
-  Future<List<ToggleButtonsDiagram>> get diagrams async => <ToggleButtonsDiagram>[
-    ToggleButtonsDiagram(_toggleButtonsSimple, key: UniqueKey()),
-    ToggleButtonsDiagram(_toggleButtonsRequired, key: UniqueKey()),
-    ToggleButtonsDiagram(_toggleButtonsMutuallyExclusive, key: UniqueKey()),
-    ToggleButtonsDiagram(_toggleButtonsRequiredMutuallyExclusive, key: UniqueKey()),
-  ];
+  Future<List<ToggleButtonsDiagram>> get diagrams async =>
+      <ToggleButtonsDiagram>[
+        ToggleButtonsDiagram(_toggleButtonsSimple, key: UniqueKey()),
+        ToggleButtonsDiagram(_toggleButtonsRequired, key: UniqueKey()),
+        ToggleButtonsDiagram(_toggleButtonsMutuallyExclusive, key: UniqueKey()),
+        ToggleButtonsDiagram(_toggleButtonsRequiredMutuallyExclusive,
+            key: UniqueKey()),
+      ];
 
   Future<void> tapIcons(DiagramController controller, Duration now) async {
     RenderBox target;
@@ -167,8 +177,10 @@ class ToggleButtonsDiagramStep extends DiagramStep<ToggleButtonsDiagram> {
       final List<int> steps = tapSteps[_testName]!;
       if (_stepCount < steps.length) {
         final int targetIcon = steps[_stepCount];
-        target = _iconKeys[targetIcon].currentContext!.findRenderObject()! as RenderBox;
-        final Offset targetOffset = target.localToGlobal(target.size.center(Offset.zero));
+        target = _iconKeys[targetIcon].currentContext!.findRenderObject()!
+            as RenderBox;
+        final Offset targetOffset =
+            target.localToGlobal(target.size.center(Offset.zero));
         final TestGesture gesture = await controller.startGesture(targetOffset);
         Future<void>.delayed(const Duration(milliseconds: 500), gesture.up);
         _stepCount += 1;
