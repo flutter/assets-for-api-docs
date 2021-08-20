@@ -1,5 +1,13 @@
 name: simple
 description: A simple example of how to use the diagram_capture library.
+repository: https://github.com/flutter/assets-for-api-docs/tree/master/packages/diagram_capture/example
+issue_tracker: https://github.com/flutter/flutter/issues
+version: 0.1.0
+publish_to: none
+
+environment:
+  sdk: ">=2.12.2 <3.0.0"
+  flutter: ">=0.1.4 <2.0.0"
 
 dependencies:
   diagram_capture:
@@ -14,7 +22,3 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-
-environment:
-  sdk: ">=2.12.0-0 <3.0.0"
-  flutter: ">=0.1.4 <2.0.0"

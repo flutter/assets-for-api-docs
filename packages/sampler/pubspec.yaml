@@ -1,10 +1,8 @@
 name: sampler
 description: A specialized utility for managing sample code in the Flutter repo.
+repository: https://github.com/flutter/assets-for-api-docs/tree/master/packages/sampler
+issue_tracker: https://github.com/flutter/flutter/issues?q=is%3Aissue+is%3Aopen+label%3A%22p%3A+sampler%22
 version: 0.2.0
-homepage: https://github.com/flutter/flutter
-
-binaries:
-  sampler
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
@@ -32,3 +30,6 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+binaries:
+  sampler:

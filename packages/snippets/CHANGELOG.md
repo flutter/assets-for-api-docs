@@ -1,5 +1,3 @@
-# Change Log for `snippets`
-
 ## 0.2.3
 
 * Fix sample ID generation to not generate IDs with invalid characters in them (e.g. a ":" in "dart:ui").
