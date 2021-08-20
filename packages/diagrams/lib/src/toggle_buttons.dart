@@ -73,10 +73,14 @@ class _ToggleButtonsDiagramState extends State<ToggleButtonsDiagram> {
           onPressed: (int index) {
             int count = 0;
             for (int index = 0; index < isSelected.length; index++) {
-              if (isSelected[index]) count += 1;
+              if (isSelected[index]) {
+                count += 1;
+              }
             }
 
-            if (isSelected[index] && count < 2) return;
+            if (isSelected[index] && count < 2) {
+              return;
+            }
             setState(() {
               isSelected[index] = !isSelected[index];
             });

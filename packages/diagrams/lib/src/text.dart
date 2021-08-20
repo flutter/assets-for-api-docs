@@ -696,14 +696,18 @@ class RenderTextHeightBreakdown extends RenderBox
 
   TextDirection get textDirection => _textPainter.textDirection!;
   set textDirection(TextDirection value) {
-    if (_textPainter.textDirection == value) return;
+    if (_textPainter.textDirection == value) {
+      return;
+    }
     _textPainter.textDirection = value;
     markNeedsLayout();
   }
 
   TextSpan get text => _textPainter.text! as TextSpan;
   set text(TextSpan? value) {
-    if (_textPainter.text == value) return;
+    if (_textPainter.text == value) {
+      return;
+    }
     _textPainter.text = value;
     markNeedsLayout();
   }
@@ -730,7 +734,9 @@ class RenderTextHeightBreakdown extends RenderBox
   bool get paintHeightIndicator => _paintHeightIndicator;
   bool _paintHeightIndicator;
   set paintHeightIndicator(bool value) {
-    if (value == _paintHeightIndicator) return;
+    if (value == _paintHeightIndicator) {
+      return;
+    }
 
     _paintHeightIndicator = value;
     markNeedsPaint();
@@ -739,7 +745,9 @@ class RenderTextHeightBreakdown extends RenderBox
   bool get paintLeadingIndicator => _paintLeadingIndicator;
   bool _paintLeadingIndicator;
   set paintLeadingIndicator(bool value) {
-    if (value == _paintLeadingIndicator) return;
+    if (value == _paintLeadingIndicator) {
+      return;
+    }
     _paintLeadingIndicator = value;
     markNeedsPaint();
   }
@@ -747,7 +755,9 @@ class RenderTextHeightBreakdown extends RenderBox
   bool get paintCaptions => _paintCaptions;
   bool _paintCaptions;
   set paintCaptions(bool value) {
-    if (value == _paintCaptions) return;
+    if (value == _paintCaptions) {
+      return;
+    }
     _paintCaptions = value;
     markNeedsPaint();
   }
@@ -919,7 +929,9 @@ class RenderTextHeightBreakdown extends RenderBox
       );
     }
 
-    if (glyphsBox.bottom >= size.height - 1) return;
+    if (glyphsBox.bottom >= size.height - 1) {
+      return;
+    }
     // Bottom Leading Area
     labelPainter.text = TextSpan(text: 'Bottom Leading', style: textStyle);
     labelPainter.layout();

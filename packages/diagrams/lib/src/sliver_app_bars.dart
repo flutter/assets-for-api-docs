@@ -82,19 +82,25 @@ class SliverAppBarDiagramState extends State<SliverAppBarDiagram>
 
   Future<void> _play() async {
     await Future<void>.delayed(_kScrollPauseDuration);
-    if (!mounted) return;
+    if (!mounted) {
+      return;
+    }
     await _animate(
       to: 600.0,
       duration: _kScrollUpDuration,
     );
     await Future<void>.delayed(_kScrollPauseDuration);
-    if (!mounted) return;
+    if (!mounted) {
+      return;
+    }
     await _animate(
       to: 490.0,
       duration: _kScrollDownDurationPartOne,
     );
     await Future<void>.delayed(_kScrollPauseDuration);
-    if (!mounted) return;
+    if (!mounted) {
+      return;
+    }
     await _animate(
       to: 0.0,
       duration: _kScrollDownDurationPartTwo,

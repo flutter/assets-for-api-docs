@@ -96,7 +96,9 @@ class DiagramImage extends ImageProvider<DiagramImage>
 
   @override
   bool operator ==(dynamic other) {
-    if (other.runtimeType != runtimeType) return false;
+    if (other.runtimeType != runtimeType) {
+      return false;
+    }
     // ignore: test_types_in_equals
     final DiagramImage typedOther = other as DiagramImage;
     return image == typedOther.image && scale == typedOther.scale;

@@ -195,7 +195,9 @@ Future<void> main(List<String> args) async {
   final File errorsFile =
       File(path.join(outputDirectory.absolute.path, 'error.log'));
   errorsFile.writeAsStringSync(errors);
-  if (errors.isNotEmpty) print('Wrote errors to: ${errorsFile.path}');
+  if (errors.isNotEmpty) {
+    print('Wrote errors to: ${errorsFile.path}');
+  }
 
   final DateTime end = DateTime.now();
   final Duration elapsed = end.difference(start);

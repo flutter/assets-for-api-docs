@@ -236,8 +236,8 @@ class TranslateSampleTile extends StatelessWidget {
           padding: const EdgeInsets.all(6.0),
           child: ClipRRect(
             borderRadius: outerRadius,
+            // ignore: avoid_unnecessary_containers
             child: Container(
-              // ignore: avoid_unnecessary_containers
               width: containerSize,
               height: containerSize,
               alignment: Alignment.center,
