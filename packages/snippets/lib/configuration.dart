@@ -55,7 +55,7 @@ class SnippetConfiguration {
 /// locations based in the current location of the snippets main.dart.
 class FlutterRepoSnippetConfiguration extends SnippetConfiguration {
   FlutterRepoSnippetConfiguration(
-      {required Directory flutterRoot,
+      {required this.flutterRoot,
       FileSystem filesystem = const LocalFileSystem()})
       : super(
           filesystem: filesystem,
@@ -71,6 +71,8 @@ class FlutterRepoSnippetConfiguration extends SnippetConfiguration {
             const <String>['dev', 'snippets', 'config', 'templates'],
           ),
         );
+
+  final Directory flutterRoot;
 
   static Directory _underRoot(
           FileSystem fs, Directory flutterRoot, List<String> dirs) =>

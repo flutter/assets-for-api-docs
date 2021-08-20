@@ -8,16 +8,37 @@ import 'package:file/file.dart';
 import 'package:file/memory.dart';
 import 'package:path/path.dart' as path;
 import 'package:platform/platform.dart';
+import 'package:pub_semver/pub_semver.dart';
 import 'package:snippets/snippets.dart';
 import 'package:test/test.dart' hide TypeMatcher, isInstanceOf;
 
 import '../bin/snippets.dart' as snippets_main;
 import 'fake_process_manager.dart';
 
+class FakeFlutterInformation extends FlutterInformation {
+  FakeFlutterInformation(this.flutterRoot);
+
+  final Directory flutterRoot;
+
+  @override
+  Directory getFlutterRoot() {
+    return flutterRoot;
+  }
+
+  @override
+  Map<String, dynamic> getFlutterInformation() {
+    return <String, dynamic>{
+      'flutterRoot': flutterRoot,
+      'frameworkVersion': Version(2, 10, 0),
+      'dartSdkVersion': Version(2, 12, 1),
+    };
+  }
+}
+
 void main() {
   group('Generator', () {
     late MemoryFileSystem memoryFileSystem = MemoryFileSystem();
-    late SnippetConfiguration configuration;
+    late FlutterRepoSnippetConfiguration configuration;
     late SnippetGenerator generator;
     late Directory tmpDir;
     late File template;
@@ -68,6 +89,8 @@ void main() {
 {{code}}
 ''');
       <String>['dartpad', 'sample', 'snippet'].forEach(_writeSkeleton);
+      FlutterInformation.instance =
+          FakeFlutterInformation(configuration.flutterRoot);
       generator = SnippetGenerator(
           configuration: configuration,
           filesystem: memoryFileSystem,
