@@ -1,0 +1,66 @@
+#!/bin/bash
+# Copyright 2013 The Flutter Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+set -e
+
+# So that users can run this script from anywhere and it will work as expected.
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null && pwd)"
+REPO_DIR="$(dirname "$SCRIPT_DIR")"
+ALLOWED_CHECKS=(license-check analyze pubspec-check version-check publish-check test)
+
+function usage() {
+  echo "Usage: testing.sh [--help] [--no-upgrade] [--no-activate] [<checks>]"
+  echo "  --no-activate - Don't activate flutter_plugin_tools"
+  echo "  <checks>      - The checks to run. If not specified, all checks are run."
+  echo "                  Available checks are:"
+  echo "                    ${ALLOWED_CHECKS[*]}"
+}
+
+function parse_args() {
+  while (( "$#" )); do
+    case "$1" in
+      --help)
+        usage
+        exit 0
+        ;;
+      --no-activate)
+        ACTIVATE=0
+        shift
+        ;;
+      --)
+        shift
+        break
+        ;;
+      *)
+        if [[ " ${ALLOWED_CHECKS[*]} " =~ " $1 " ]]; then
+          CHECKS=("${CHECKS[@]}" "$1")
+        else
+          echo "$1 is not a valid check"
+          usage
+          exit 1
+        fi
+        shift
+        ;;
+    esac
+  done
+}
+
+ACTIVATE=1
+CHECKS=()
+parse_args "$@"
+if [[ ${#CHECKS[@]} == 0 ]]; then
+  CHECKS=("${ALLOWED_CHECKS[@]}")
+fi
+
+cd "$REPO_DIR"
+if [[ $ACTIVATE == 1 ]]; then
+  echo "Activating plugin tools"
+  pub global activate flutter_plugin_tools
+fi
+
+for check in "${CHECKS[@]}"; do
+  echo "Running $check"
+  dart pub global run flutter_plugin_tools "$check" --run-on-changed-packages
+done

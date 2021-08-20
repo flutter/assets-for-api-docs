@@ -1,1 +1,7 @@
-exclude: [packages, bin]
+# Configures GitHub Pages to not serve the code, just the assets directory.
+
+exclude:
+  - packages
+  - bin
+  - ci
+  - analysis_options.yaml

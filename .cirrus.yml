@@ -39,17 +39,17 @@ task:
   matrix:
     - name: analyze
       always:
-        format_script: ./ci/tool_runner.sh format --fail-on-change --clang-format=clang-format-12
+        format_script: ./ci/tool_runner format --fail-on-change --clang-format=clang-format-12
         license_script: dart pub global run flutter_plugin_tools license-check
-        analyze_script: ./ci/tool_runner.sh analyze --custom-analysis=web_benchmarks/testing/test_app,flutter_lints/example
-        pubspec_script: ./ci/tool_runner.sh pubspec-check
+        analyze_script: ./ci/tool_runner analyze --custom-analysis=web_benchmarks/testing/test_app,flutter_lints/example
+        pubspec_script: ./ci/tool_runner pubspec-check
     - name: publishable
-      version_script: ./ci/tool_runner.sh version-check
-      publishable_script: ./ci/tool_runner.sh publish-check
+      version_script: ./ci/tool_runner version-check
+      publishable_script: ./ci/tool_runner publish-check
       depends_on:
         - analyze
     - name: tests-linux
-      script: ./ci/tool_runner.sh test
+      script: ./ci/tool_runner test
       depends_on:
         - analyze
 
