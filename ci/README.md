@@ -4,20 +4,20 @@ This directory contains scripts that are either used by the continuous
 integration (CI) system, or are useful to the deveoper for diagnosing issues
 encountered in CI.
 
-## [fix_format.sh](fix_format.sh)
+## [fix_format](fix_format)
 
 This script will fix any formatting issues in the repo.
 
-## [pub_upgrade.sh](pub_upgrade.sh)
+## [pub_upgrade](pub_upgrade)
 
 This script will run `flutter pub upgrade` in each of the directories that contain a pubspec.yaml in the repo.
 
-## [testing.sh](testing.sh)
+## [check](check)
 
 This script will run any or all of the tests that the CI system runs, using the
 same mechanism. If no check is specified, all are run.
 
-You may also tell `testing.sh` to not automatically activate the
+You may also tell `check` to not automatically activate the
 [`flutter_plugin_tools`](https://pub.dev/packages/flutter_plugin_tools) package
 with the `--no-activate` option.
 
