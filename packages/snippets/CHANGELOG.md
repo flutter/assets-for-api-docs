@@ -1,3 +1,7 @@
+## 0.2.4
+
+* publish the extract_sample command.
+
 ## 0.2.3
 
 * Fix sample ID generation to not generate IDs with invalid characters in them (e.g. a ":" in "dart:ui").
