@@ -552,6 +552,8 @@ class DiagramController {
         return 'NATIVE';
       case ui.ImageByteFormat.png:
         return 'PNG';
+      default:
+        throw ArgumentError('Unknown byte format $format');
     }
   }
 
