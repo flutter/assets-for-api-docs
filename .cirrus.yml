@@ -37,7 +37,7 @@ task:
     memory: 8G
   << : *FLUTTER_UPGRADE_TEMPLATE
   matrix:
-    - name: analyze
+    - name: analyze+format
       always:
         format_script: ./ci/tool_runner format --fail-on-change --clang-format=clang-format-12
         license_script: dart pub global run flutter_plugin_tools license-check
@@ -47,9 +47,9 @@ task:
       version_script: ./ci/tool_runner version-check
       publishable_script: ./ci/tool_runner publish-check
       depends_on:
-        - analyze
-    - name: tests-linux
+        - analyze+format
+    - name: tests
       script: ./ci/tool_runner test
       depends_on:
-        - analyze
+        - analyze+format
 
