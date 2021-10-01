@@ -1,7 +1,7 @@
 gcp_credentials: ENCRYPTED[!48cff44dd32e9cc412d4d381c7fe68d373ca04cf2639f8192d21cb1a9ab5e21129651423a1cf88f3fd7fe2125c1cabd9!]
 
 env:
-  CHANNEL: "master" # Default to master when not explicitly set by a task.
+  CHANNEL: "dev" # Default to dev when not explicitly set by a task.
 
 tool_setup_template: &TOOL_SETUP_TEMPLATE
   tool_setup_script:
@@ -16,8 +16,11 @@ flutter_upgrade_template: &FLUTTER_UPGRADE_TEMPLATE
     - cd $FLUTTER_HOME
     - git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
     - git fetch origin
-    # Switch to the requested branch.
-    - git checkout $CHANNEL
+    # Fetch requested channel
+    - git fetch origin $CHANNEL
+    # Switch to the requested branch (and since dev is a local dir, use -- to
+    # force git to pick the branch)
+    - git checkout $CHANNEL --
     # Reset to upstream branch, rather than using pull, since the base image
     # can sometimes be in a state where it has diverged from upstream (!).
     - git reset --hard @{u}

@@ -12,7 +12,6 @@ import 'package:file/file.dart' as file;
 import 'package:file/local.dart' as file;
 import 'package:meta/meta.dart';
 import 'package:path/path.dart';
-import 'package:path/src/context.dart';
 import 'package:watcher/watcher.dart';
 
 /// The name of the directory containing plugin specific subfolders used to

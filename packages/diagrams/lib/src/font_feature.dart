@@ -8,7 +8,6 @@ import 'dart:ui' show FontFeature;
 
 import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 
 import 'diagram_step.dart';
 
