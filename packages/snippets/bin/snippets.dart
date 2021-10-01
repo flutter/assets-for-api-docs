@@ -208,7 +208,8 @@ void main(List<String> argList) {
 
   String template = '';
   if (sampleType == 'sample' || sampleType == 'dartpad') {
-    template = (args[_kTemplateOption] as String? ?? '').replaceAll(RegExp(r'.tmpl$'), '');
+    template = (args[_kTemplateOption] as String? ?? '')
+        .replaceAll(RegExp(r'.tmpl$'), '');
   }
 
   final bool formatOutput = args[_kFormatOutputOption]! as bool;

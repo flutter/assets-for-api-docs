@@ -107,11 +107,13 @@ Future<void> main(List<String> argList) async {
       return element.sampleCount > 0;
     })) {
       if (verbose) {
-        print('Extracting ${element.sampleCount} samples from ${element.elementName}');
+        print(
+            'Extracting ${element.sampleCount} samples from ${element.elementName}');
       }
       for (final CodeSample sample in element.samples) {
         // Ignore anything else, because those are not full apps.
-        if (sample.type != 'dartpad' && sample.type != 'sample' || sample.sourceFile != null) {
+        if (sample.type != 'dartpad' && sample.type != 'sample' ||
+            sample.sourceFile != null) {
           continue;
         }
         snippetGenerator.generateCode(
@@ -142,7 +144,9 @@ Future<void> main(List<String> argList) async {
           sample,
           location: filesystem.directory(outputPath),
         );
-        if (!filesystem.file(path.join(outputPath, 'pubspec.yaml')).existsSync()) {
+        if (!filesystem
+            .file(path.join(outputPath, 'pubspec.yaml'))
+            .existsSync()) {
           if (verbose) {
             print('Publishing ${outputFile.absolute.path}');
           }

@@ -57,7 +57,7 @@ fi
 cd "$REPO_DIR"
 if [[ $ACTIVATE == 1 ]]; then
   echo "Activating plugin tools"
-  pub global activate flutter_plugin_tools
+  dart pub global activate flutter_plugin_tools
 fi
 
 for check in "${CHECKS[@]}"; do

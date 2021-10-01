@@ -360,7 +360,8 @@ class SnippetGenerator {
         if (sample.sourceFile == null) {
           final String templateName = sample.template;
           if (templateName.isEmpty) {
-            io.stderr.writeln('Non-linked samples must have a --template argument.');
+            io.stderr
+                .writeln('Non-linked samples must have a --template argument.');
             io.exit(1);
           }
           final Directory templatesDir = configuration.templatesDirectory;
