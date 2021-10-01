@@ -45,13 +45,13 @@ Future<void> main(List<String> argList) async {
     _kHelpOption,
     defaultsTo: false,
     negatable: false,
-    help: 'Prints help documentation for this command',
+    help: 'Prints help documentation for this command.',
   );
   parser.addFlag(
     _kVerboseOption,
     defaultsTo: false,
     negatable: false,
-    help: 'Prints extra output diagnostics',
+    help: 'Prints extra output diagnostics.',
   );
 
   final ArgResults args = parser.parse(argList);
