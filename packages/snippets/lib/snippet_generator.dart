@@ -358,9 +358,14 @@ class SnippetGenerator {
       case ApplicationSample:
         String app;
         if (sample.sourceFile == null) {
-          final Directory templatesDir = configuration.templatesDirectory;
           final String templateName = sample.template;
-          final File? templateFile =
+          if (templateName.isEmpty) {
+            io.stderr.writeln('Non-linked samples must have a --template argument.');
+            io.exit(1);
+          }
+          final Directory templatesDir = configuration.templatesDirectory;
+          File? templateFile;
+          templateFile =
               getTemplatePath(templateName, templatesDir: templatesDir);
           if (templateFile == null) {
             io.stderr.writeln(

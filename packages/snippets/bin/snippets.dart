@@ -206,21 +206,9 @@ void main(List<String> argList) {
     return;
   }
 
-  String? template;
+  String template = '';
   if (sampleType == 'sample' || sampleType == 'dartpad') {
-    const String errorMessage =
-        'The --$_kTemplateOption option must be specified for "sample" and "dartpad" sample types.';
-    if (args[_kTemplateOption] == null) {
-      errorExit(errorMessage);
-      return;
-    }
-    final String templateArg = args[_kTemplateOption]! as String;
-    if (templateArg.isEmpty) {
-      stderr.writeln(parser.usage);
-      errorExit(errorMessage);
-      return;
-    }
-    template = templateArg.replaceAll(RegExp(r'.tmpl$'), '');
+    template = (args[_kTemplateOption] as String? ?? '').replaceAll(RegExp(r'.tmpl$'), '');
   }
 
   final bool formatOutput = args[_kFormatOutputOption]! as bool;
@@ -276,7 +264,7 @@ void main(List<String> argList) {
     startLine: sourceLine,
     element: elementName,
     sourceFile: filesystem.file(sourcePath),
-    template: template ?? '',
+    template: template,
     type: sampleType,
   );
   final Map<String, Object?> metadata = <String, Object?>{

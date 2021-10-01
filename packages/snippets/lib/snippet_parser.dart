@@ -203,7 +203,7 @@ class SnippetDartdocParser {
   /// assigns the resulting samples to the `samples` member of the given
   /// `element`.
   void parseComment(SourceElement element) {
-    // Whether or not we're in a snippet code sample (with template) specifically.
+    // Whether or not we're in a snippet code sample.
     bool inSnippet = false;
     // Whether or not we're in a '```dart' segment.
     bool inDart = false;

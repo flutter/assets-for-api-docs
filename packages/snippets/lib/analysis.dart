@@ -309,6 +309,31 @@ class _SourceVisitor<T> extends RecursiveAstVisitor<T> {
   }
 
   @override
+  T? visitMixinDeclaration(MixinDeclaration node) {
+    enclosingClass = node.name.name;
+    if (!node.name.name.startsWith('_')) {
+      enclosingClass = node.name.name;
+      List<SourceLine> comment = <SourceLine>[];
+      if (node.documentationComment != null &&
+          node.documentationComment!.tokens.isNotEmpty) {
+        comment = _processComment(node.name.name, node.documentationComment!);
+      }
+      elements.add(
+        SourceElement(
+          SourceElementType.classType,
+          node.name.name,
+          node.beginToken.charOffset,
+          file: file,
+          comment: comment,
+        ),
+      );
+    }
+    final T? result = super.visitMixinDeclaration(node);
+    enclosingClass = '';
+    return result;
+  }
+
+  @override
   T? visitClassDeclaration(ClassDeclaration node) {
     enclosingClass = node.name.name;
     if (!node.name.name.startsWith('_')) {
