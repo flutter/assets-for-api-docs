@@ -1,4 +1,4 @@
-# Last updated 08/20/2021 (to rebuild the docker image, update this timestamp)
+# Last updated 10/01/2021 (to rebuild the docker image, update this timestamp)
 FROM cirrusci/flutter:dev
 
 RUN sudo apt-get update && \

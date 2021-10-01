@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Extract" type="DartCommandLineRunConfigurationType" factoryName="Dart Command Line Application">
-    <option name="arguments" value="--input=&quot;$PROJECT_DIR$/../flutter/packages/flutter/lib/src/widgets/navigator.dart&quot;" />
+    <option name="arguments" value="--verbose --input=&quot;$PROJECT_DIR$/../flutter/packages/flutter/lib/src/widgets/scrollbar.dart&quot;" />
     <option name="envs">
       <entry key="FLUTTER_ROOT" value="$PROJECT_DIR$/../flutter" />
     </option>

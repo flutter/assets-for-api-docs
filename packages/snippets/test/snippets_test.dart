@@ -381,13 +381,6 @@ void main() {
               'The --input option must be specified, either on the command line, or in the INPUT environment variable.'));
       errorMessage = '';
 
-      snippets_main.main(<String>['--input=${input.absolute.path}']);
-      expect(
-          errorMessage,
-          equals(
-              'The --template option must be specified for "sample" and "dartpad" sample types.'));
-      errorMessage = '';
-
       snippets_main
           .main(<String>['--input=${input.absolute.path}', '--type=snippet']);
       expect(errorMessage, equals(''));

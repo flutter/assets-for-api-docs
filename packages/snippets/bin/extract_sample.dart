@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'dart:io' show stderr, exit;
+import 'dart:io' show stderr, exit, exitCode;
 
 import 'package:args/args.dart';
 import 'package:file/file.dart';
@@ -21,6 +21,7 @@ const String _kCopyrightNotice = '''
 const String _kHelpOption = 'help';
 const String _kInputOption = 'input';
 const String _kOutputOption = 'output';
+const String _kVerboseOption = 'verbose';
 
 /// Extracts the samples from a source file to the given output directory, and
 /// removes them from the original source files, replacing them with a pointer
@@ -36,7 +37,7 @@ Future<void> main(List<String> argList) async {
   );
   parser.addOption(
     _kInputOption,
-    mandatory: true,
+    defaultsTo: null,
     help:
         'The input Flutter source file containing the sample code to extract.',
   );
@@ -44,14 +45,22 @@ Future<void> main(List<String> argList) async {
     _kHelpOption,
     defaultsTo: false,
     negatable: false,
-    help: 'Prints help documentation for this command',
+    help: 'Prints help documentation for this command.',
+  );
+  parser.addFlag(
+    _kVerboseOption,
+    defaultsTo: false,
+    negatable: false,
+    help: 'Prints extra output diagnostics.',
   );
 
   final ArgResults args = parser.parse(argList);
+  final bool verbose = (args[_kVerboseOption] as bool?) ?? false;
 
-  if (args[_kHelpOption] as bool) {
+  if ((args[_kHelpOption] as bool?) ?? false) {
     stderr.writeln(parser.usage);
-    exit(0);
+    exitCode = 1;
+    return;
   }
 
   if (args[_kInputOption] == null || (args[_kInputOption] as String).isEmpty) {
@@ -59,8 +68,8 @@ Future<void> main(List<String> argList) async {
     errorExit('The --$_kInputOption option must not be empty.');
   }
 
-  if (args[_kOutputOption] == null ||
-      (args[_kOutputOption] as String).isEmpty) {
+  final String outputPath = (args[_kOutputOption] as String?) ?? '';
+  if (outputPath.isEmpty) {
     stderr.writeln(parser.usage);
     errorExit('The --$_kOutputOption option must be specified, and not empty.');
   }
@@ -88,20 +97,23 @@ Future<void> main(List<String> argList) async {
     dartdocParser.parseFromComments(fileElements);
     dartdocParser.parseAndAddAssumptions(fileElements, input, silent: true);
 
+    if (verbose) {
+      print('Parsed ${fileElements.length} elements from ${input.path}');
+    }
     final String srcPath =
         path.relative(input.absolute.path, from: flutterSource);
-    final String dstPath = path.join(
-      flutterInformation.getFlutterRoot().absolute.path,
-      'examples',
-      'api',
-    );
     for (final SourceElement element
         in fileElements.where((SourceElement element) {
       return element.sampleCount > 0;
     })) {
+      if (verbose) {
+        print(
+            'Extracting ${element.sampleCount} samples from ${element.elementName}');
+      }
       for (final CodeSample sample in element.samples) {
         // Ignore anything else, because those are not full apps.
-        if (sample.type != 'dartpad' && sample.type != 'sample') {
+        if (sample.type != 'dartpad' && sample.type != 'sample' ||
+            sample.sourceFile != null) {
           continue;
         }
         snippetGenerator.generateCode(
@@ -112,7 +124,7 @@ Future<void> main(List<String> argList) async {
         );
         final File outputFile = filesystem.file(
           path.joinAll(<String>[
-            dstPath,
+            outputPath,
             'lib',
             path.withoutExtension(srcPath), // e.g. material/app_bar
             <String>[
@@ -130,13 +142,20 @@ Future<void> main(List<String> argList) async {
         final FlutterSampleLiberator liberator = FlutterSampleLiberator(
           element,
           sample,
-          location: filesystem.directory(dstPath),
+          location: filesystem.directory(outputPath),
         );
-        if (!filesystem.file(path.join(dstPath, 'pubspec.yaml')).existsSync()) {
-          print('Publishing ${outputFile.absolute.path}');
+        if (!filesystem
+            .file(path.join(outputPath, 'pubspec.yaml'))
+            .existsSync()) {
+          if (verbose) {
+            print('Publishing ${outputFile.absolute.path}');
+          }
           await liberator.extract(
               overwrite: true, mainDart: outputFile, includeMobile: true);
         } else {
+          if (verbose) {
+            print('Writing ${outputFile.absolute.path}');
+          }
           await outputFile.absolute.writeAsString(sample.output);
         }
         await liberator.reinsertAsReference(outputFile);

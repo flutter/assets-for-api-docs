@@ -14,9 +14,6 @@ import 'package:analyzer/source/line_info.dart';
 import 'package:file/file.dart';
 import 'package:snippets/snippets.dart';
 
-import 'data_types.dart';
-import 'util.dart';
-
 /// Gets an iterable over all of the blocks of documentation comments in a file
 /// using the analyzer.
 ///
@@ -306,6 +303,31 @@ class _SourceVisitor<T> extends RecursiveAstVisitor<T> {
     return node.metadata.where((Annotation annotation) {
       return annotation.name.name == 'override';
     }).isNotEmpty;
+  }
+
+  @override
+  T? visitMixinDeclaration(MixinDeclaration node) {
+    enclosingClass = node.name.name;
+    if (!node.name.name.startsWith('_')) {
+      enclosingClass = node.name.name;
+      List<SourceLine> comment = <SourceLine>[];
+      if (node.documentationComment != null &&
+          node.documentationComment!.tokens.isNotEmpty) {
+        comment = _processComment(node.name.name, node.documentationComment!);
+      }
+      elements.add(
+        SourceElement(
+          SourceElementType.classType,
+          node.name.name,
+          node.beginToken.charOffset,
+          file: file,
+          comment: comment,
+        ),
+      );
+    }
+    final T? result = super.visitMixinDeclaration(node);
+    enclosingClass = '';
+    return result;
   }
 
   @override

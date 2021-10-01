@@ -1,3 +1,7 @@
+## 0.2.5
+
+* Make the `--template` argument optional for dartpad and sample samples.
+
 ## 0.2.4
 
 * publish the extract_sample command.

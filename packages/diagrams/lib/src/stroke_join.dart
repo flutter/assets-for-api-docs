@@ -7,7 +7,6 @@ import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:diagram_capture/diagram_capture.dart';
-import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';

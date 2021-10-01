@@ -7,8 +7,8 @@ for the [API documentation](https://api.flutter.dev) for Flutter.
 The easiest way to run the app, is to do this:
 
 ```
-% pub global activate sampler  # Just need to do this the first time.
-% pub global run sampler
+% dart pub global activate sampler  # Just need to do this the first time.
+% dart pub global run sampler
 ```
 
 Which will build and run the app in release mode on your platform. The

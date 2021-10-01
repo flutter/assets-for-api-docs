@@ -11,5 +11,5 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null && pwd)"
 REPO_DIR="$(dirname "$SCRIPT_DIR")"
 
 cd "$REPO_DIR"
-pub global activate flutter_plugin_tools
-pub global run flutter_plugin_tools format "$@"
+dart pub global activate flutter_plugin_tools
+dart pub global run flutter_plugin_tools format "$@"
