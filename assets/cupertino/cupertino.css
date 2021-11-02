@@ -1,0 +1,31 @@
+/* Styles for Cupertino icons. */
+/* Keep this css file in sync with https://github.com/flutter/packages/tree/master/third_party/packages/cupertino_icons/css/icons.css */
+/* Keep ttf font file in sync with https://github.com/flutter/packages/tree/master/third_party/packages/cupertino_icons/assets/CupertinoIcons.ttf */
+@font-face {
+  font-family: 'Cupertino Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: url("CupertinoIcons.ttf") format("truetype");
+}
+
+.cupertino-icons, .cupertino-icons {
+  font-family: 'Cupertino Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 28px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-feature-settings: "liga";
+  -moz-font-feature-settings: "liga=1";
+  -moz-font-feature-settings: "liga";
+  font-feature-settings: "liga";
+  text-align: center;
+}
