@@ -35,7 +35,6 @@ class CupertinoIconDiagram extends StatelessWidget implements DiagramMetadata {
                 CupertinoIcons.heart_fill,
                 color: Colors.pink,
                 size: 24.0,
-                semanticLabel: 'Text to announce in accessibility modes',
               ),
               Icon(
                 CupertinoIcons.bell_fill,
