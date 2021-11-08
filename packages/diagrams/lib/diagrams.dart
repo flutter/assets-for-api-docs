@@ -19,6 +19,7 @@ export 'src/colors.dart';
 export 'src/column.dart';
 export 'src/container.dart';
 export 'src/cupertino_app.dart';
+export 'src/cupertino_icon.dart';
 export 'src/curve.dart';
 export 'src/custom_list_item.dart';
 export 'src/custom_scroll_view.dart';
