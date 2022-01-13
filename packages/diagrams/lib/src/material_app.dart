@@ -12,7 +12,7 @@ import 'diagram_step.dart';
 
 const String _basic = 'basic_material_app';
 const String _theme = 'theme_material_app';
-const String _textstyle_fallback = 'textstyle_fallback';
+const String _textstyle = 'textstyle_material_app';
 
 class MaterialAppDiagram extends StatelessWidget implements DiagramMetadata {
   const MaterialAppDiagram(this.name, {Key? key}) : super(key: key);
@@ -47,7 +47,7 @@ class MaterialAppDiagram extends StatelessWidget implements DiagramMetadata {
           debugShowCheckedModeBanner: false,
         );
         break;
-      case _textstyle_fallback:
+      case _textstyle:
         returnWidget = const MaterialApp(
           title: 'Material App',
           home: Center(
@@ -79,7 +79,7 @@ class MaterialAppDiagramStep extends DiagramStep<MaterialAppDiagram> {
   Future<List<MaterialAppDiagram>> get diagrams async => <MaterialAppDiagram>[
         const MaterialAppDiagram(_basic),
         const MaterialAppDiagram(_theme),
-        const MaterialAppDiagram(_textstyle_fallback),
+        const MaterialAppDiagram(_textstyle),
       ];
 
   @override
