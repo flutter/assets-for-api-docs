@@ -49,7 +49,7 @@ class MaterialAppDiagram extends StatelessWidget implements DiagramMetadata {
         break;
       case _textstyle:
         returnWidget = const MaterialApp(
-          home:  Center(
+          home: Center(
             child: Text('Hello World'),
           ),
           debugShowCheckedModeBanner: false,
