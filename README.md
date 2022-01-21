@@ -93,6 +93,9 @@ To create a new diagram:
 
 4. Run `bin/generate --name xxx` where 'xxx' is the name of your diagram.
 
+## Issues
+
+Please file any issues in the [main flutter repo](https://github.com/flutter/flutter/issues/new).
 
 ## Origin of third-party content
 
