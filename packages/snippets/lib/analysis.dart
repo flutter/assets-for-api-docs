@@ -221,6 +221,7 @@ class _SourceVisitor<T> extends RecursiveAstVisitor<T> {
       );
       return super.visitFieldDeclaration(node);
     }
+    return null;
   }
 
   @override
