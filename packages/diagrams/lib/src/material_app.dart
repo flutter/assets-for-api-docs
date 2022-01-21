@@ -12,6 +12,7 @@ import 'diagram_step.dart';
 
 const String _basic = 'basic_material_app';
 const String _theme = 'theme_material_app';
+const String _textstyle = 'unspecified_textstyle_material_app';
 
 class MaterialAppDiagram extends StatelessWidget implements DiagramMetadata {
   const MaterialAppDiagram(this.name, {Key? key}) : super(key: key);
@@ -46,6 +47,14 @@ class MaterialAppDiagram extends StatelessWidget implements DiagramMetadata {
           debugShowCheckedModeBanner: false,
         );
         break;
+      case _textstyle:
+        returnWidget = const MaterialApp(
+          home: Center(
+            child: Text('Hello World'),
+          ),
+          debugShowCheckedModeBanner: false,
+        );
+        break;
     }
 
     return ConstrainedBox(
@@ -70,6 +79,7 @@ class MaterialAppDiagramStep extends DiagramStep<MaterialAppDiagram> {
   Future<List<MaterialAppDiagram>> get diagrams async => <MaterialAppDiagram>[
         const MaterialAppDiagram(_basic),
         const MaterialAppDiagram(_theme),
+        const MaterialAppDiagram(_textstyle),
       ];
 
   @override
