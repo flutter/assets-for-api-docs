@@ -99,7 +99,7 @@ Please file any issues in the [main flutter repo](https://github.com/flutter/flu
 
 ## Origin of third-party content
 
-* `/assets/audio/goat.mp3`: CC0 Creative Commons, from [https://pixabay.com/sound-effects/happy-goat-6463/](https://pixabay.com/sound-effects/happy-goat-6463/)
+* `/assets/audio/rooster.mp3`: CC0 Creative Commons, from [https://pixabay.com/sound-effects/rooster-crowing-7027/](https://pixabay.com/sound-effects/rooster-crowing-7027/)
 * `/assets/videos/bee.mp4`: CC0 Creative Commons, from [https://pixabay.com/en/videos/honey-bee-insect-bee-flower-flying-211/](https://pixabay.com/en/videos/honey-bee-insect-bee-flower-flying-211/)
 * `/assets/videos/butterfly.mp4`: CC0 Creative Commons, from [https://pixabay.com/en/videos/butterfly-flower-insect-nature-209/](https://pixabay.com/en/videos/butterfly-flower-insect-nature-209/)
 * Also see the license information for [images used in the diagrams](packages/diagrams/assets/README.md)
