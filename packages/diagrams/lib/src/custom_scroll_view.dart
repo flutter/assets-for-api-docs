@@ -45,7 +45,7 @@ class _CustomScrollViewDiagramState extends State<CustomScrollViewDiagram>
   @override
   void initState() {
     super.initState();
-    SchedulerBinding.instance!.scheduleFrameCallback((Duration _) {
+    SchedulerBinding.instance.scheduleFrameCallback((Duration _) {
       _play();
     });
   }
@@ -54,7 +54,7 @@ class _CustomScrollViewDiagramState extends State<CustomScrollViewDiagram>
   void didUpdateWidget(CustomScrollViewDiagram oldWidget) {
     super.didUpdateWidget(oldWidget);
     _scrollController.jumpTo(0.0);
-    SchedulerBinding.instance!.scheduleFrameCallback((Duration _) {
+    SchedulerBinding.instance.scheduleFrameCallback((Duration _) {
       _play();
     });
   }
