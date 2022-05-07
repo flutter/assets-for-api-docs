@@ -104,6 +104,7 @@ Future<void> main(List<String> args) async {
     ContainerDiagramStep(controller),
     CupertinoAppDiagramStep(controller),
     CupertinoIconDiagramStep(controller),
+    CupertinoColorsDiagramStep(controller),
     CurveDiagramStep(controller),
     CustomListItemDiagramStep(controller),
     CustomScrollViewDiagramStep(controller),
