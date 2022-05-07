@@ -65,7 +65,7 @@ class SliverAppBarDiagramState extends State<SliverAppBarDiagram>
   @override
   void initState() {
     super.initState();
-    SchedulerBinding.instance!.scheduleFrameCallback((Duration _) {
+    SchedulerBinding.instance.scheduleFrameCallback((Duration _) {
       _play();
     });
   }
@@ -74,7 +74,7 @@ class SliverAppBarDiagramState extends State<SliverAppBarDiagram>
   void didUpdateWidget(SliverAppBarDiagram oldWidget) {
     super.didUpdateWidget(oldWidget);
     _scrollController.jumpTo(0.0);
-    SchedulerBinding.instance!.scheduleFrameCallback((Duration _) {
+    SchedulerBinding.instance.scheduleFrameCallback((Duration _) {
       _play();
     });
   }

@@ -40,7 +40,7 @@ class _SliverFillRemainingDiagramState extends State<SliverFillRemainingDiagram>
   @override
   void initState() {
     super.initState();
-    SchedulerBinding.instance!.scheduleFrameCallback((Duration _) {
+    SchedulerBinding.instance.scheduleFrameCallback((Duration _) {
       _play();
     });
   }
@@ -49,7 +49,7 @@ class _SliverFillRemainingDiagramState extends State<SliverFillRemainingDiagram>
   void didUpdateWidget(SliverFillRemainingDiagram oldWidget) {
     super.didUpdateWidget(oldWidget);
     _scrollController.jumpTo(0.0);
-    SchedulerBinding.instance!.scheduleFrameCallback((Duration _) {
+    SchedulerBinding.instance.scheduleFrameCallback((Duration _) {
       _play();
     });
   }
