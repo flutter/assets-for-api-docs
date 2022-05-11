@@ -4,6 +4,7 @@
 
 library diagrams;
 
+export 'src/adjust_drag_offset.dart';
 export 'src/alert_dialog.dart';
 export 'src/align.dart';
 export 'src/animation_diagram.dart';
