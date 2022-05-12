@@ -27,4 +27,3 @@ dev_dependencies:
 
 executables:
   snippets:
-  extract_sample:
