@@ -8,7 +8,6 @@ import 'package:file/memory.dart';
 import 'package:platform/platform.dart';
 import 'package:pub_semver/pub_semver.dart';
 import 'package:snippets/snippets.dart';
-import 'package:snippets/util.dart';
 import 'package:test/test.dart' hide TypeMatcher, isInstanceOf;
 
 import 'fake_process_manager.dart';

@@ -1,3 +1,8 @@
+## 0.3.0
+
+* Removes obsolete `extract_sample.dart` script.
+* Removes obsolete `flutter_sample_editor.dart` script.
+
 ## 0.2.5
 
 * Make the `--template` argument optional for dartpad and sample samples.
