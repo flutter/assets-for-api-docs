@@ -7,6 +7,14 @@ specially-crafted graphics.
 Assets committed to this repo and pushed to GitHub are immediately
 available for linking and reference.
 
+## Adding new assets
+
+In accordance with the [Flutter style guide](https://github.com/flutter/flutter/wiki/Style-guide-for-Flutter-repo#provide-illustrations-diagrams-or-screenshots),
+assets submitted to this repository should be easily reproducible, e.g. by
+running a Flutter app or a script. This makes it easier to update the asset in
+the future, if needed. Check the existing diagrams (and their generation code)
+in this repository to see examples. Avoid checking in just a static image file
+(e.g. PNG, JPEG), without a way to regenerate and update it.
 
 ## URL structure
 
@@ -20,7 +28,6 @@ material library would go in the `assets/material/` directory and be at
 
 All asset files should be under the `assets` directory in an appropriate
 subdirectory.
-
 
 ## Generation
 
@@ -79,7 +86,6 @@ the `assets/tests` directory should not be optimized.
 
 The automatic generation tool will automatically apply optimization to
 the assets it generates.
-
 
 ## Creating new diagrams
 
