@@ -10,7 +10,8 @@ import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
 
-class AdjustDragOffsetDiagram extends StatelessWidget implements DiagramMetadata {
+class AdjustDragOffsetDiagram extends StatelessWidget
+    implements DiagramMetadata {
   const AdjustDragOffsetDiagram({Key? key}) : super(key: key);
 
   @override
@@ -32,18 +33,23 @@ class AdjustDragOffsetDiagram extends StatelessWidget implements DiagramMetadata
             width: 300,
             height: 150,
             child: const Center(
-              child: Text('Target Rectangle', style: TextStyle(fontSize: 30),),
+              child: Text(
+                'Target Rectangle',
+                style: TextStyle(fontSize: 30),
+              ),
             ),
           ),
           const Positioned(
             top: 206.5,
             left: 546,
-            child: Text('- - - - - - - - - - - -', style: TextStyle(fontSize: 30)),
+            child:
+                Text('- - - - - - - - - - - -', style: TextStyle(fontSize: 30)),
           ),
           const Positioned(
             top: 353,
             right: 545,
-            child: Text('- - - - - - - - - - - -', style: TextStyle(fontSize: 30)),
+            child:
+                Text('- - - - - - - - - - - -', style: TextStyle(fontSize: 30)),
           ),
           const Positioned(
             top: 100,
@@ -68,7 +74,8 @@ class AdjustDragOffsetDiagramStep extends DiagramStep<AdjustDragOffsetDiagram> {
   final String category = 'rendering';
 
   @override
-  Future<List<AdjustDragOffsetDiagram>> get diagrams async => const <AdjustDragOffsetDiagram>[AdjustDragOffsetDiagram()];
+  Future<List<AdjustDragOffsetDiagram>> get diagrams async =>
+      const <AdjustDragOffsetDiagram>[AdjustDragOffsetDiagram()];
 
   @override
   Future<File> generateDiagram(AdjustDragOffsetDiagram diagram) async {
