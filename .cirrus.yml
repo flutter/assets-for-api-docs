@@ -48,7 +48,7 @@ task:
         pubspec_script: ./ci/tool_runner pubspec-check
     - name: publishable
       version_script: ./ci/tool_runner version-check
-      publishable_script: ./ci/tool_runner publish-check
+      publishable_script: ./ci/tool_runner publish-check --allow-pre-release
       depends_on:
         - analyze+format
     - name: tests
