@@ -88,6 +88,7 @@ Future<void> main(List<String> args) async {
   // Add the diagram steps here.
   final List<DiagramStep<DiagramMetadata>> steps =
       <DiagramStep<DiagramMetadata>>[
+    AdjustDragOffsetDiagramStep(controller),
     AlertDialogDiagramStep(controller),
     AlignDiagramStep(controller),
     AnimationStatusValueDiagramStep(controller),
