@@ -36,27 +36,6 @@ String? _getStandardStateLocation() {
       : null;
 }
 
-/// Return modification times for every file path in [paths].
-///
-/// If a path is `null`, the modification time is also `null`.
-///
-/// If any exception happens, the file is considered as a not existing and
-/// `-1` is its modification time.
-List<int?> _pathsToTimes(List<String?> paths) {
-  return paths.map((String? path) {
-    if (path != null) {
-      try {
-        final io.File file = io.File(path);
-        return file.lastModifiedSync().millisecondsSinceEpoch;
-      } catch (_) {
-        return -1;
-      }
-    } else {
-      return null;
-    }
-  }).toList();
-}
-
 /// A `dart:io` based implementation of [ResourceProvider].
 class FileSystemResourceProvider implements ResourceProvider {
   FileSystemResourceProvider(this.filesystem, {String? stateLocation})
@@ -83,13 +62,6 @@ class FileSystemResourceProvider implements ResourceProvider {
   Folder getFolder(String path) {
     _ensureAbsoluteAndNormalized(path);
     return _PhysicalFolder(filesystem.directory(path));
-  }
-
-  @override
-  Future<List<int?>> getModificationTimes(List<Source> sources) async {
-    final List<String> paths =
-        sources.map((Source source) => source.fullName).toList();
-    return _pathsToTimes(paths);
   }
 
   @override
@@ -232,6 +204,11 @@ class _PhysicalFile extends _PhysicalResource implements File {
       throw _wrapException(exception);
     }
   }
+
+  @override
+  ResourceWatcher watch() {
+    throw UnimplementedError();
+  }
 }
 
 /// A `dart:io` based implementation of [Folder].
@@ -345,6 +322,11 @@ class _PhysicalFolder extends _PhysicalResource implements Folder {
 
   @override
   Uri toUri() => Uri.directory(path);
+
+  @override
+  ResourceWatcher watch() {
+    throw UnimplementedError();
+  }
 }
 
 /// A `dart:io` based implementation of [Resource].
@@ -368,11 +350,8 @@ abstract class _PhysicalResource implements Resource {
 
   @Deprecated('Use parent2 instead')
   @override
-  Folder? get parent {
+  Folder get parent {
     final String parentPath = pathContext.dirname(path);
-    if (parentPath == path) {
-      return null;
-    }
     return _PhysicalFolder(io.Directory(parentPath));
   }
 
