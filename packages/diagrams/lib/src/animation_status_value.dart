@@ -36,6 +36,7 @@ class AnimationStatusValueDiagramState
     with TickerProviderStateMixin<AnimationStatusValueDiagram> {
   late AnimationController _controller;
   String _status = 'dismissed';
+  Timer? _breakTimer;
 
   @override
   void initState() {
@@ -58,7 +59,8 @@ class AnimationStatusValueDiagramState
           break;
         case AnimationStatus.completed:
           _status = 'completed';
-          Timer(_kBreakDuration, () {
+          _breakTimer = Timer(_kBreakDuration, () {
+            _breakTimer = null;
             _controller.reverse();
           });
           break;
@@ -68,6 +70,8 @@ class AnimationStatusValueDiagramState
 
   @override
   void dispose() {
+    _breakTimer?.cancel();
+    _breakTimer = null;
     _controller.dispose();
     super.dispose();
   }
