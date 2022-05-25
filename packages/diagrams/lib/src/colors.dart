@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'diagram_step.dart';
 
 const double _kSwatchWidth = 450.0;
-const double _kFontSize = 19.0;
+const double _kFontSize = 18.0;
 const double _kPadding = 10.0;
 
 abstract class ColorDiagram extends StatelessWidget implements DiagramMetadata {
