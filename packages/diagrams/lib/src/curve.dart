@@ -606,6 +606,11 @@ class CurveDiagramStep extends DiagramStep<CurveDiagram> {
           caption: 'Interval(0.25, 0.75)',
           curve: Interval(0.25, 0.75)),
       const CurveDiagram(
+        name: 'suspended',
+        caption: 'Suspended(0.5)',
+        curve: Suspended(0.5),
+      ),
+      const CurveDiagram(
           name: 'linear', caption: 'Curves.linear', curve: Curves.linear),
       const CurveDiagram(
           name: 'sawtooth', caption: 'SawTooth(3)', curve: SawTooth(3)),
