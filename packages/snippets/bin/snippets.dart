@@ -125,6 +125,7 @@ void main(List<String> argList) {
     },
     help: 'The type of snippet to produce.',
   );
+  // TODO(goderbauer): Remove template support, this is no longer used.
   parser.addOption(
     _kTemplateOption,
     defaultsTo: null,

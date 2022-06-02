@@ -89,6 +89,7 @@ Future<void> main(List<String> args) async {
   // Add the diagram steps here.
   final List<DiagramStep<DiagramMetadata>> steps =
       <DiagramStep<DiagramMetadata>>[
+    AdjustDragOffsetDiagramStep(controller),
     AlertDialogDiagramStep(controller),
     AlignDiagramStep(controller),
     AnimationStatusValueDiagramStep(controller),
@@ -104,6 +105,7 @@ Future<void> main(List<String> args) async {
     ContainerDiagramStep(controller),
     CupertinoAppDiagramStep(controller),
     CupertinoIconDiagramStep(controller),
+    CupertinoColorsDiagramStep(controller),
     CurveDiagramStep(controller),
     CustomListItemDiagramStep(controller),
     CustomScrollViewDiagramStep(controller),

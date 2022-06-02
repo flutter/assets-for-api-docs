@@ -98,7 +98,7 @@ class _ImportOrganizer {
 
   /// Organize all [Directive]s.
   void _organizeDirectives() {
-    final LineInfo lineInfo = unit.lineInfo ?? LineInfo.fromContent(code);
+    final LineInfo lineInfo = unit.lineInfo;
     bool hasLibraryDirective = false;
     final List<_DirectiveInfo> directives = <_DirectiveInfo>[];
     for (final Directive directive in unit.directives) {

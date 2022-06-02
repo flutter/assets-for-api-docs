@@ -136,12 +136,12 @@ class AnimatedDefaultTextStyleDiagram
     final TextStyle selectedStyle =
         Theme.of(context).textTheme.headline4!.copyWith(
               color: Colors.red,
-              fontSize: 60.0,
+              fontSize: 50.0,
               fontWeight: FontWeight.w100,
             );
     final TextStyle unselectedStyle = selectedStyle.copyWith(
       color: Colors.blue,
-      fontSize: 60.0,
+      fontSize: 50.0,
       fontWeight: FontWeight.w900,
     );
 
