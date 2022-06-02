@@ -10,6 +10,7 @@ import 'package:args/args.dart';
 import 'package:diagram_capture/diagram_capture.dart';
 import 'package:diagrams/diagrams.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:platform/platform.dart' as platform_pkg;
@@ -213,4 +214,17 @@ Future<void> main(List<String> args) async {
   // Have to actually exit the app, otherwise flutter run won't ever exit,
   // and the generation script won't continue.
   exit(0);
+}
+
+// This is used by the `integration_test/smoke_test.dart`.
+class SmokeTestApp extends StatelessWidget {
+  const SmokeTestApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      title: 'Smoke Test',
+      home: Placeholder(),
+    );
+  }
 }

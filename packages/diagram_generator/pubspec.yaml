@@ -23,6 +23,8 @@ dependencies:
   process: ^4.2.1
 
 dev_dependencies:
+  integration_test:
+    sdk: flutter
   flutter_test:
     sdk: flutter
   mockito: ^5.0.3
