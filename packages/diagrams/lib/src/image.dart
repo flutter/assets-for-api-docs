@@ -40,7 +40,7 @@ class DiagramImage extends ImageProvider<DiagramImage>
   }
 
   @override
-  ImageStreamCompleter load(DiagramImage key, DecoderCallback decode) {
+  ImageStreamCompleter loadBuffer(DiagramImage key, DecoderBufferCallback decode) {
     return MultiFrameImageStreamCompleter(
       codec: _loadAsync(),
       chunkEvents: chunkEvents.stream,
@@ -105,7 +105,7 @@ class DiagramImage extends ImageProvider<DiagramImage>
   }
 
   @override
-  int get hashCode => hashValues(image, scale);
+  int get hashCode => Object.hash(image, scale);
 }
 
 class FrameBuilderImageDiagram extends ImageDiagram {
