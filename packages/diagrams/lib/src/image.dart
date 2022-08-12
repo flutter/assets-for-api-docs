@@ -40,7 +40,8 @@ class DiagramImage extends ImageProvider<DiagramImage>
   }
 
   @override
-  ImageStreamCompleter loadBuffer(DiagramImage key, DecoderBufferCallback decode) {
+  ImageStreamCompleter loadBuffer(
+      DiagramImage key, DecoderBufferCallback decode) {
     return MultiFrameImageStreamCompleter(
       codec: _loadAsync(),
       chunkEvents: chunkEvents.stream,
