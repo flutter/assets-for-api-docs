@@ -215,9 +215,10 @@ class SnippetGenerator {
           assert(buffer.isEmpty);
           subLine = null;
         } else if (block[index].text.startsWith('// ')) {
-          if (buffer.length > 1) {
+          if (buffer.length > 1) { // don't include leading comments
+            // so that it doesn't start with "// " and get caught in this again
             buffer.add(SourceLine('/${block[index].text}'));
-          } // so that it doesn't start with "// " and get caught in this again
+          }
         } else {
           subLine ??= block[index];
           buffer.add(block[index]);
