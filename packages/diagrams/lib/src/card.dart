@@ -5,13 +5,12 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
 
 class CardDiagram extends StatelessWidget implements DiagramMetadata {
-  const CardDiagram({Key? key}) : super(key: key);
+  const CardDiagram({super.key});
 
   @override
   String get name => 'card';
@@ -56,7 +55,7 @@ class CardDiagram extends StatelessWidget implements DiagramMetadata {
 }
 
 class CardDiagramStep extends DiagramStep<CardDiagram> {
-  CardDiagramStep(DiagramController controller) : super(controller);
+  CardDiagramStep(super.controller);
 
   @override
   final String category = 'material';

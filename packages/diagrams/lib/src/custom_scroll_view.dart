@@ -5,7 +5,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -29,7 +28,7 @@ const String _customScrollView = 'custom_scroll_view';
 
 class CustomScrollViewDiagram extends StatefulWidget
     implements DiagramMetadata {
-  const CustomScrollViewDiagram(this.name, {Key? key}) : super(key: key);
+  const CustomScrollViewDiagram(this.name, {super.key});
 
   @override
   final String name;
@@ -145,7 +144,7 @@ class _CustomScrollViewDiagramState extends State<CustomScrollViewDiagram>
 }
 
 class CustomScrollViewDiagramStep extends DiagramStep<CustomScrollViewDiagram> {
-  CustomScrollViewDiagramStep(DiagramController controller) : super(controller);
+  CustomScrollViewDiagramStep(super.controller);
 
   @override
   final String category = 'widgets';

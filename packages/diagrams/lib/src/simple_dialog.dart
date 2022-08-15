@@ -4,7 +4,6 @@
 
 import 'dart:io';
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -23,7 +22,7 @@ final GlobalKey _treasuryKey = GlobalKey();
 final GlobalKey _stateKey = GlobalKey();
 
 class SimpleDialogDiagram extends StatelessWidget implements DiagramMetadata {
-  const SimpleDialogDiagram(this.name, {Key? key}) : super(key: key);
+  const SimpleDialogDiagram(this.name, {super.key});
 
   @override
   final String name;
@@ -113,7 +112,7 @@ enum Department {
 }
 
 class SimpleDialogDiagramStep extends DiagramStep<SimpleDialogDiagram> {
-  SimpleDialogDiagramStep(DiagramController controller) : super(controller);
+  SimpleDialogDiagramStep(super.controller);
 
   @override
   final String category = 'material';
@@ -127,7 +126,7 @@ class SimpleDialogDiagramStep extends DiagramStep<SimpleDialogDiagram> {
   Future<File> generateDiagram(SimpleDialogDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
 
-    controller.advanceTime(Duration.zero);
+    controller.advanceTime();
 
     final Future<File> result = controller.drawAnimatedDiagramToFiles(
       end: _totalDuration,

@@ -19,8 +19,7 @@ const double _kAnimationFrameRate = 60.0;
 
 class ImplicitAnimationDiagramStep
     extends DiagramStep<ImplicitAnimationDiagram<dynamic>> {
-  ImplicitAnimationDiagramStep(DiagramController controller)
-      : super(controller) {
+  ImplicitAnimationDiagramStep(super.controller) {
     _diagrams.add(const AnimatedAlignDiagram());
     _diagrams.add(const AnimatedContainerDiagram());
     _diagrams.add(const AnimatedDefaultTextStyleDiagram());
@@ -80,7 +79,7 @@ class ImplicitAnimationDiagramStep
 }
 
 class AnimatedAlignDiagram extends ImplicitAnimationDiagram<AlignmentGeometry> {
-  const AnimatedAlignDiagram({Key? key}) : super(key: key);
+  const AnimatedAlignDiagram({super.key});
 
   @override
   Curve get curve => Curves.fastOutSlowIn;
@@ -102,7 +101,7 @@ class AnimatedAlignDiagram extends ImplicitAnimationDiagram<AlignmentGeometry> {
 
 class AnimatedContainerDiagram
     extends ImplicitAnimationDiagram<AlignmentGeometry> {
-  const AnimatedContainerDiagram({Key? key}) : super(key: key);
+  const AnimatedContainerDiagram({super.key});
 
   @override
   Curve get curve => Curves.fastOutSlowIn;
@@ -126,7 +125,7 @@ class AnimatedContainerDiagram
 
 class AnimatedDefaultTextStyleDiagram
     extends ImplicitAnimationDiagram<AlignmentGeometry> {
-  const AnimatedDefaultTextStyleDiagram({Key? key}) : super(key: key);
+  const AnimatedDefaultTextStyleDiagram({super.key});
 
   @override
   Curve get curve => Curves.elasticInOut;
@@ -160,7 +159,7 @@ class AnimatedDefaultTextStyleDiagram
 
 class AnimatedOpacityDiagram
     extends ImplicitAnimationDiagram<AlignmentGeometry> {
-  const AnimatedOpacityDiagram({Key? key}) : super(key: key);
+  const AnimatedOpacityDiagram({super.key});
 
   @override
   Curve get curve => Curves.fastOutSlowIn;
@@ -181,7 +180,7 @@ class AnimatedOpacityDiagram
 
 class AnimatedPaddingDiagram
     extends ImplicitAnimationDiagram<AlignmentGeometry> {
-  const AnimatedPaddingDiagram({Key? key}) : super(key: key);
+  const AnimatedPaddingDiagram({super.key});
 
   @override
   Curve get curve => Curves.fastOutSlowIn;
@@ -204,7 +203,7 @@ class AnimatedPaddingDiagram
 
 class AnimatedPhysicalModelDiagram
     extends ImplicitAnimationDiagram<AlignmentGeometry> {
-  const AnimatedPhysicalModelDiagram({Key? key}) : super(key: key);
+  const AnimatedPhysicalModelDiagram({super.key});
 
   @override
   Curve get curve => Curves.fastOutSlowIn;
@@ -242,7 +241,7 @@ class AnimatedPhysicalModelDiagram
 
 class AnimatedPositionedDiagram
     extends ImplicitAnimationDiagram<AlignmentGeometry> {
-  const AnimatedPositionedDiagram({Key? key}) : super(key: key);
+  const AnimatedPositionedDiagram({super.key});
 
   @override
   Curve get curve => Curves.fastOutSlowIn;
@@ -274,7 +273,7 @@ class AnimatedPositionedDiagram
 
 class AnimatedPositionedDirectionalDiagram
     extends ImplicitAnimationDiagram<AlignmentGeometry> {
-  const AnimatedPositionedDirectionalDiagram({Key? key}) : super(key: key);
+  const AnimatedPositionedDirectionalDiagram({super.key});
 
   @override
   Curve get curve => Curves.fastOutSlowIn;
@@ -309,7 +308,7 @@ class AnimatedPositionedDirectionalDiagram
 }
 
 class AnimatedThemeDiagram extends ImplicitAnimationDiagram<AlignmentGeometry> {
-  const AnimatedThemeDiagram({Key? key}) : super(key: key);
+  const AnimatedThemeDiagram({super.key});
 
   @override
   Curve get curve => Curves.elasticInOut;
@@ -340,7 +339,7 @@ class AnimatedThemeDiagram extends ImplicitAnimationDiagram<AlignmentGeometry> {
 }
 
 class WindowPaddingDiagram extends ImplicitAnimationDiagram<AlignmentGeometry> {
-  const WindowPaddingDiagram({Key? key}) : super(key: key);
+  const WindowPaddingDiagram({super.key});
 
   @override
   Curve get curve => Curves.fastOutSlowIn;

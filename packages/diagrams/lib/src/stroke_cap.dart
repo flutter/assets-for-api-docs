@@ -5,7 +5,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
@@ -109,8 +108,7 @@ class StrokeCapDescription extends CustomPainter {
 
 class StrokeCapDiagram extends StatelessWidget implements DiagramMetadata {
   const StrokeCapDiagram(
-      {required this.name, this.cap = StrokeCap.round, Key? key})
-      : super(key: key);
+      {required this.name, this.cap = StrokeCap.round, super.key});
 
   @override
   final String name;
@@ -135,7 +133,7 @@ class StrokeCapDiagram extends StatelessWidget implements DiagramMetadata {
 }
 
 class StrokeCapDiagramStep extends DiagramStep<StrokeCapDiagram> {
-  StrokeCapDiagramStep(DiagramController controller) : super(controller) {
+  StrokeCapDiagramStep(super.controller) {
     _diagrams.addAll(<StrokeCapDiagram>[
       const StrokeCapDiagram(
         name: 'butt_cap',
@@ -143,7 +141,6 @@ class StrokeCapDiagramStep extends DiagramStep<StrokeCapDiagram> {
       ),
       const StrokeCapDiagram(
         name: 'round_cap',
-        cap: StrokeCap.round,
       ),
       const StrokeCapDiagram(
         name: 'square_cap',

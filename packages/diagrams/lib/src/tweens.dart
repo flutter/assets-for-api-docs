@@ -5,7 +5,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
@@ -21,7 +20,7 @@ final Duration _kTotalDuration = _kBreakDuration +
 const double _kCurveAnimationFrameRate = 60.0;
 
 class TweensDiagram extends StatefulWidget implements DiagramMetadata {
-  const TweensDiagram({Key? key}) : super(key: key);
+  const TweensDiagram({super.key});
 
   @override
   State<TweensDiagram> createState() => TweensDiagramState();
@@ -169,7 +168,7 @@ class TweensDiagramState extends State<TweensDiagram>
 }
 
 class TweensDiagramStep extends DiagramStep<TweensDiagram> {
-  TweensDiagramStep(DiagramController controller) : super(controller);
+  TweensDiagramStep(super.controller);
 
   @override
   final String category = 'animation';

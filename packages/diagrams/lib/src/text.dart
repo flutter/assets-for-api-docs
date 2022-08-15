@@ -7,7 +7,6 @@ import 'dart:io';
 import 'dart:math' show max;
 import 'dart:ui' as ui;
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
@@ -20,7 +19,7 @@ const String _textBorder = 'text_border';
 const String _textGradient = 'text_gradient';
 
 class TextDiagram extends StatelessWidget implements DiagramMetadata {
-  const TextDiagram(this.name, {Key? key}) : super(key: key);
+  const TextDiagram(this.name, {super.key});
 
   @override
   final String name;
@@ -137,7 +136,7 @@ class TextDiagram extends StatelessWidget implements DiagramMetadata {
 }
 
 class TextHeightDiagram extends StatelessWidget implements DiagramMetadata {
-  const TextHeightDiagram(this.name, {Key? key}) : super(key: key);
+  const TextHeightDiagram(this.name, {super.key});
 
   @override
   final String name;
@@ -317,7 +316,7 @@ class TextDiagramPainter extends CustomPainter {
 // Height values comparison.
 class TextHeightComparison extends TextHeightDiagram
     implements DiagramMetadata {
-  const TextHeightComparison(String name, {Key? key}) : super(name, key: key);
+  const TextHeightComparison(super.name, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -496,7 +495,7 @@ class TextHeightComparisonPainter extends CustomPainter {
 /// Side-by-side comparison of paragraphs with different text height
 /// configuration combinations.
 class TextHeightBreakdown extends TextHeightDiagram implements DiagramMetadata {
-  const TextHeightBreakdown(String name, {Key? key}) : super(name, key: key);
+  const TextHeightBreakdown(super.name, {super.key});
 
   static const double _height = 4;
   static const double _fontSize = 85;
@@ -518,7 +517,6 @@ class TextHeightBreakdown extends TextHeightDiagram implements DiagramMetadata {
           ),
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               Row(
                 crossAxisAlignment: CrossAxisAlignment.baseline,
@@ -627,7 +625,7 @@ class TextHeightBreakdown extends TextHeightDiagram implements DiagramMetadata {
 
 class TextHeightBreakdownRow extends LeafRenderObjectWidget {
   const TextHeightBreakdownRow({
-    Key? key,
+    super.key,
     required this.text,
     required this.backgroundColor,
     required this.style,
@@ -635,7 +633,7 @@ class TextHeightBreakdownRow extends LeafRenderObjectWidget {
     this.paintHeightIndicator = false,
     this.paintLeadingIndicator = false,
     this.paintCaptions = false,
-  }) : super(key: key);
+  });
 
   final String text;
   final TextStyle style;
@@ -764,21 +762,19 @@ class RenderTextHeightBreakdown extends RenderBox
 
   late final TextPainter heightCaptionTextPainter =
       TextPainter(textDirection: textDirection, textAlign: TextAlign.center);
-  static late final TextStyle heightCaptionTextStyle =
+  static final TextStyle heightCaptionTextStyle =
       TextStyle(fontSize: 20, color: Colors.blue[900]);
   static const Offset fontMetricsLabelPadding = Offset(0, 3);
   static const double heightCaptionBracketMinX = -25;
 
   @override
   Size computeDryLayout(BoxConstraints constraints) {
-    _textPainter.layout(
-        minWidth: constraints.minWidth, maxWidth: double.infinity);
+    _textPainter.layout(minWidth: constraints.minWidth);
     if (paintHeightIndicator) {
       heightCaptionTextPainter.text = TextSpan(
           text: 'Text Height:\n${_textPainter.height} px',
           style: heightCaptionTextStyle);
-      heightCaptionTextPainter.layout(
-          minWidth: constraints.minWidth, maxWidth: double.infinity);
+      heightCaptionTextPainter.layout(minWidth: constraints.minWidth);
       return constraints.constrain(Size(
         heightCaptionTextPainter.width +
             _textPainter.width +
@@ -1049,7 +1045,7 @@ class RenderTextHeightBreakdown extends RenderBox
 }
 
 class TextHeightDiagramStep extends DiagramStep<TextHeightDiagram> {
-  TextHeightDiagramStep(DiagramController controller) : super(controller);
+  TextHeightDiagramStep(super.controller);
 
   @override
   final String category = 'painting';
@@ -1069,7 +1065,7 @@ class TextHeightDiagramStep extends DiagramStep<TextHeightDiagram> {
 }
 
 class TextDiagramStep extends DiagramStep<TextDiagram> {
-  TextDiagramStep(DiagramController controller) : super(controller);
+  TextDiagramStep(super.controller);
 
   @override
   final String category = 'widgets';

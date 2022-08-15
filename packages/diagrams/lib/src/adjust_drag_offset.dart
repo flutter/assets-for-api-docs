@@ -5,14 +5,13 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
 
 class AdjustDragOffsetDiagram extends StatelessWidget
     implements DiagramMetadata {
-  const AdjustDragOffsetDiagram({Key? key}) : super(key: key);
+  const AdjustDragOffsetDiagram({super.key});
 
   @override
   String get name => 'adjust_drag_offset';
@@ -68,7 +67,7 @@ class AdjustDragOffsetDiagram extends StatelessWidget
 }
 
 class AdjustDragOffsetDiagramStep extends DiagramStep<AdjustDragOffsetDiagram> {
-  AdjustDragOffsetDiagramStep(DiagramController controller) : super(controller);
+  AdjustDragOffsetDiagramStep(super.controller);
 
   @override
   final String category = 'rendering';

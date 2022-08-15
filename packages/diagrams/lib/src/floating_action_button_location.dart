@@ -5,7 +5,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
@@ -38,8 +37,7 @@ const String _startTop = '_start_top';
 
 class FloatingActionButtonLocationDiagram extends StatelessWidget
     implements DiagramMetadata {
-  const FloatingActionButtonLocationDiagram(this.nameSuffix, {Key? key})
-      : super(key: key);
+  const FloatingActionButtonLocationDiagram(this.nameSuffix, {super.key});
 
   final String nameSuffix;
 
@@ -141,8 +139,8 @@ class FloatingActionButtonLocationDiagram extends StatelessWidget
       floatingActionButton: FloatingActionButton(
         mini: isMini,
         onPressed: () {},
-        child: const Icon(Icons.navigation),
         backgroundColor: Colors.green,
+        child: const Icon(Icons.navigation),
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
@@ -168,8 +166,7 @@ class FloatingActionButtonLocationDiagram extends StatelessWidget
 
 class FloatingActionButtonLocationDiagramStep
     extends DiagramStep<FloatingActionButtonLocationDiagram> {
-  FloatingActionButtonLocationDiagramStep(DiagramController controller)
-      : super(controller);
+  FloatingActionButtonLocationDiagramStep(super.controller);
 
   @override
   final String category = 'material';

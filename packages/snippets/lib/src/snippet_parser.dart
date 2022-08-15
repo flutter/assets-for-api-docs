@@ -362,7 +362,7 @@ class SnippetDartdocParser {
               // There are arguments to the snippet tool to keep track of.
               snippetArgs = <String>[
                 sampleMatch.namedGroup('type')!,
-                ..._splitUpQuotedArgs(sampleMatch.namedGroup('args')!).toList()
+                ..._splitUpQuotedArgs(sampleMatch.namedGroup('args')!)
               ];
             } else {
               snippetArgs = <String>[

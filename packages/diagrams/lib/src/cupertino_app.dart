@@ -5,7 +5,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'diagram_step.dart';
@@ -14,7 +13,7 @@ const String _basic = 'basic_cupertino_app';
 const String _theme = 'theme_cupertino_app';
 
 class CupertinoAppDiagram extends StatelessWidget implements DiagramMetadata {
-  const CupertinoAppDiagram(this.name, {Key? key}) : super(key: key);
+  const CupertinoAppDiagram(this.name, {super.key});
 
   @override
   final String name;
@@ -64,7 +63,7 @@ class CupertinoAppDiagram extends StatelessWidget implements DiagramMetadata {
 }
 
 class CupertinoAppDiagramStep extends DiagramStep<CupertinoAppDiagram> {
-  CupertinoAppDiagramStep(DiagramController controller) : super(controller);
+  CupertinoAppDiagramStep(super.controller);
 
   @override
   final String category = 'cupertino';

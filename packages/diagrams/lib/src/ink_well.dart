@@ -4,7 +4,6 @@
 
 import 'dart:io';
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -14,7 +13,7 @@ import 'utils.dart';
 final GlobalKey _splashKey = GlobalKey();
 
 class InkWellDiagram extends StatelessWidget implements DiagramMetadata {
-  InkWellDiagram({Key? key}) : super(key: key);
+  InkWellDiagram({super.key});
 
   final GlobalKey canvasKey = GlobalKey();
   final GlobalKey childKey = GlobalKey();
@@ -83,7 +82,7 @@ class InkWellDiagram extends StatelessWidget implements DiagramMetadata {
 }
 
 class InkWellDiagramStep extends DiagramStep<InkWellDiagram> {
-  InkWellDiagramStep(DiagramController controller) : super(controller) {
+  InkWellDiagramStep(super.controller) {
     _diagrams.add(InkWellDiagram());
   }
 
@@ -99,7 +98,7 @@ class InkWellDiagramStep extends DiagramStep<InkWellDiagram> {
   Future<File> generateDiagram(InkWellDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
 
-    controller.advanceTime(Duration.zero);
+    controller.advanceTime();
     final RenderBox target =
         _splashKey.currentContext!.findRenderObject()! as RenderBox;
     final Offset targetOffset =

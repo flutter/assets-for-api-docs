@@ -5,7 +5,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
@@ -21,7 +20,7 @@ const double _kCurveAnimationFrameRate = 60.0;
 
 class AnimationStatusValueDiagram extends StatefulWidget
     implements DiagramMetadata {
-  const AnimationStatusValueDiagram({Key? key}) : super(key: key);
+  const AnimationStatusValueDiagram({super.key});
 
   @override
   State<AnimationStatusValueDiagram> createState() =>
@@ -152,8 +151,7 @@ class AnimationStatusValueDiagramState
 
 class AnimationStatusValueDiagramStep
     extends DiagramStep<AnimationStatusValueDiagram> {
-  AnimationStatusValueDiagramStep(DiagramController controller)
-      : super(controller);
+  AnimationStatusValueDiagramStep(super.controller);
 
   @override
   final String category = 'animation';

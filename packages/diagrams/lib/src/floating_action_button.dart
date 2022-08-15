@@ -5,7 +5,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
@@ -15,7 +14,7 @@ const String _labeled = 'floating_action_button_label';
 
 class FloatingActionButtonDiagram extends StatelessWidget
     implements DiagramMetadata {
-  const FloatingActionButtonDiagram(this.name, {Key? key}) : super(key: key);
+  const FloatingActionButtonDiagram(this.name, {super.key});
 
   @override
   final String name;
@@ -33,8 +32,8 @@ class FloatingActionButtonDiagram extends StatelessWidget
           body: const Center(child: Text('Press the button below!')),
           floatingActionButton: FloatingActionButton(
             onPressed: () {},
-            child: const Icon(Icons.navigation),
             backgroundColor: Colors.green,
+            child: const Icon(Icons.navigation),
           ),
         );
         break;
@@ -70,8 +69,7 @@ class FloatingActionButtonDiagram extends StatelessWidget
 
 class FloatingActionButtonDiagramStep
     extends DiagramStep<FloatingActionButtonDiagram> {
-  FloatingActionButtonDiagramStep(DiagramController controller)
-      : super(controller);
+  FloatingActionButtonDiagramStep(super.controller);
 
   @override
   final String category = 'material';

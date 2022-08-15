@@ -4,7 +4,6 @@
 
 import 'dart:io';
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -15,7 +14,7 @@ final GlobalKey splashKey = GlobalKey();
 
 class InkResponseLargeDiagram extends StatelessWidget
     implements DiagramMetadata {
-  InkResponseLargeDiagram({Key? key}) : super(key: key);
+  InkResponseLargeDiagram({super.key});
 
   final GlobalKey canvasKey = GlobalKey();
   final GlobalKey childKey = GlobalKey();
@@ -84,8 +83,7 @@ class InkResponseLargeDiagram extends StatelessWidget
 }
 
 class InkResponseLargeDiagramStep extends DiagramStep<InkResponseLargeDiagram> {
-  InkResponseLargeDiagramStep(DiagramController controller)
-      : super(controller) {
+  InkResponseLargeDiagramStep(super.controller) {
     _diagrams.add(InkResponseLargeDiagram());
   }
 
@@ -100,7 +98,7 @@ class InkResponseLargeDiagramStep extends DiagramStep<InkResponseLargeDiagram> {
   @override
   Future<File> generateDiagram(InkResponseLargeDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    controller.advanceTime(Duration.zero);
+    controller.advanceTime();
     final RenderBox target =
         splashKey.currentContext!.findRenderObject()! as RenderBox;
     final Offset targetOffset =

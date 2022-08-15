@@ -12,7 +12,6 @@ import 'package:analyzer/dart/ast/token.dart';
 import 'package:analyzer/error/error.dart';
 import 'package:analyzer/source/line_info.dart';
 import 'package:meta/meta.dart';
-import 'package:snippets/snippets.dart';
 
 import 'util.dart';
 

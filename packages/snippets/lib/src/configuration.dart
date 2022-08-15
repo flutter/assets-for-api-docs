@@ -54,11 +54,8 @@ class SnippetConfiguration {
 /// A class to compute the configuration of the snippets input and output
 /// locations based in the current location of the snippets main.dart.
 class FlutterRepoSnippetConfiguration extends SnippetConfiguration {
-  FlutterRepoSnippetConfiguration(
-      {required this.flutterRoot,
-      FileSystem filesystem = const LocalFileSystem()})
+  FlutterRepoSnippetConfiguration({required this.flutterRoot, super.filesystem})
       : super(
-          filesystem: filesystem,
           configDirectory: _underRoot(filesystem, flutterRoot,
               const <String>['dev', 'snippets', 'config']),
           outputDirectory: _underRoot(filesystem, flutterRoot,

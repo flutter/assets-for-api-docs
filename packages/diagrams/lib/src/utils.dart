@@ -8,9 +8,9 @@ import 'package:flutter/material.dart';
 /// generic widget in diagrams.
 class Hole extends StatelessWidget {
   const Hole({
-    Key? key,
+    super.key,
     this.color = const Color(0xFFFFFFFF),
-  }) : super(key: key);
+  });
 
   final Color color;
 
@@ -21,7 +21,6 @@ class Hole extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(4.0),
         child: Placeholder(
-          strokeWidth: 2.0,
           color: color,
         ),
       ),

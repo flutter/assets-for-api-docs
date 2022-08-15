@@ -31,7 +31,7 @@ final List<GlobalKey> _iconKeys = <GlobalKey>[
 ];
 
 class ToggleButtonsDiagram extends StatefulWidget implements DiagramMetadata {
-  const ToggleButtonsDiagram(this.name, {Key? key}) : super(key: key);
+  const ToggleButtonsDiagram(this.name, {super.key});
 
   @override
   final String name;
@@ -49,26 +49,21 @@ class _ToggleButtonsDiagramState extends State<ToggleButtonsDiagram> {
     switch (widget.name) {
       case _toggleButtonsSimple:
         returnWidget = ToggleButtons(
-          children: <Widget>[
-            Icon(Icons.ac_unit, key: _iconKeys[0]),
-            Icon(Icons.call, key: _iconKeys[1]),
-            Icon(Icons.cake, key: _iconKeys[2]),
-          ],
           onPressed: (int index) {
             setState(() {
               isSelected[index] = !isSelected[index];
             });
           },
           isSelected: isSelected,
-        );
-        break;
-      case _toggleButtonsRequired:
-        returnWidget = ToggleButtons(
           children: <Widget>[
             Icon(Icons.ac_unit, key: _iconKeys[0]),
             Icon(Icons.call, key: _iconKeys[1]),
             Icon(Icons.cake, key: _iconKeys[2]),
           ],
+        );
+        break;
+      case _toggleButtonsRequired:
+        returnWidget = ToggleButtons(
           onPressed: (int index) {
             int count = 0;
             for (int index = 0; index < isSelected.length; index++) {
@@ -85,15 +80,15 @@ class _ToggleButtonsDiagramState extends State<ToggleButtonsDiagram> {
             });
           },
           isSelected: isSelected,
-        );
-        break;
-      case _toggleButtonsMutuallyExclusive:
-        returnWidget = ToggleButtons(
           children: <Widget>[
             Icon(Icons.ac_unit, key: _iconKeys[0]),
             Icon(Icons.call, key: _iconKeys[1]),
             Icon(Icons.cake, key: _iconKeys[2]),
           ],
+        );
+        break;
+      case _toggleButtonsMutuallyExclusive:
+        returnWidget = ToggleButtons(
           onPressed: (int index) {
             setState(() {
               for (int buttonIndex = 0;
@@ -108,15 +103,15 @@ class _ToggleButtonsDiagramState extends State<ToggleButtonsDiagram> {
             });
           },
           isSelected: isSelected,
-        );
-        break;
-      case _toggleButtonsRequiredMutuallyExclusive:
-        returnWidget = ToggleButtons(
           children: <Widget>[
             Icon(Icons.ac_unit, key: _iconKeys[0]),
             Icon(Icons.call, key: _iconKeys[1]),
             Icon(Icons.cake, key: _iconKeys[2]),
           ],
+        );
+        break;
+      case _toggleButtonsRequiredMutuallyExclusive:
+        returnWidget = ToggleButtons(
           onPressed: (int index) {
             setState(() {
               for (int buttonIndex = 0;
@@ -131,6 +126,11 @@ class _ToggleButtonsDiagramState extends State<ToggleButtonsDiagram> {
             });
           },
           isSelected: isSelected,
+          children: <Widget>[
+            Icon(Icons.ac_unit, key: _iconKeys[0]),
+            Icon(Icons.call, key: _iconKeys[1]),
+            Icon(Icons.cake, key: _iconKeys[2]),
+          ],
         );
         break;
       default:
@@ -152,7 +152,7 @@ class _ToggleButtonsDiagramState extends State<ToggleButtonsDiagram> {
 }
 
 class ToggleButtonsDiagramStep extends DiagramStep<ToggleButtonsDiagram> {
-  ToggleButtonsDiagramStep(DiagramController controller) : super(controller);
+  ToggleButtonsDiagramStep(super.controller);
 
   String _testName = '';
   int _stepCount = 0;

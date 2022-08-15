@@ -5,7 +5,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
@@ -14,7 +13,7 @@ const String _column = 'column';
 const String _columnWithProperties = 'column_properties';
 
 class ColumnDiagram extends StatelessWidget implements DiagramMetadata {
-  const ColumnDiagram(this.name, {Key? key}) : super(key: key);
+  const ColumnDiagram(this.name, {super.key});
 
   @override
   final String name;
@@ -30,7 +29,6 @@ class ColumnDiagram extends StatelessWidget implements DiagramMetadata {
             Text('Craft beautiful UIs'),
             Expanded(
               child: FittedBox(
-                fit: BoxFit.contain, // otherwise the logo will be tiny
                 child: FlutterLogo(),
               ),
             ),
@@ -77,7 +75,7 @@ class ColumnDiagram extends StatelessWidget implements DiagramMetadata {
 }
 
 class ColumnDiagramStep extends DiagramStep<ColumnDiagram> {
-  ColumnDiagramStep(DiagramController controller) : super(controller);
+  ColumnDiagramStep(super.controller);
 
   @override
   final String category = 'widgets';

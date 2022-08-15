@@ -5,14 +5,13 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
 import 'utils.dart';
 
 class HeroesDiagram extends StatefulWidget implements DiagramMetadata {
-  const HeroesDiagram({Key? key}) : super(key: key);
+  const HeroesDiagram({super.key});
 
   @override
   String get name => 'heroes';
@@ -52,7 +51,6 @@ class _HeroesDiagramState extends State<HeroesDiagram> {
                     children: <Widget>[
                       Column(
                         key: heroKey,
-                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           SizedBox(
                             height: 400.0,
@@ -253,7 +251,7 @@ class RightArrowPainter extends CustomPainter {
 }
 
 class HeroesDiagramStep extends DiagramStep<HeroesDiagram> {
-  HeroesDiagramStep(DiagramController controller) : super(controller);
+  HeroesDiagramStep(super.controller);
 
   @override
   final String category = 'interaction';

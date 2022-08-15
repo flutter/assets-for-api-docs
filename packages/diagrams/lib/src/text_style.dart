@@ -5,7 +5,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
@@ -18,7 +17,7 @@ const String _wavyUnderline = 'text_style_wavy_red_underline';
 const String _customFonts = 'text_style_custom_fonts';
 
 class TextStyleDiagram extends StatelessWidget implements DiagramMetadata {
-  const TextStyleDiagram(this.name, {Key? key}) : super(key: key);
+  const TextStyleDiagram(this.name, {super.key});
 
   @override
   final String name;
@@ -111,7 +110,7 @@ class TextStyleDiagram extends StatelessWidget implements DiagramMetadata {
 }
 
 class TextStyleDiagramStep extends DiagramStep<TextStyleDiagram> {
-  TextStyleDiagramStep(DiagramController controller) : super(controller);
+  TextStyleDiagramStep(super.controller);
 
   @override
   final String category = 'painting';

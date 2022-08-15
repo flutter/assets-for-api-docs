@@ -4,7 +4,6 @@
 
 import 'dart:async';
 import 'dart:io';
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'diagram_step.dart';
@@ -18,8 +17,8 @@ class LinkedLabelRadio extends StatelessWidget {
     required this.groupValue,
     required this.value,
     required this.onChanged,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final String label;
   final EdgeInsets padding;
@@ -65,8 +64,8 @@ class LabeledRadio extends StatelessWidget {
     required this.groupValue,
     required this.value,
     required this.onChanged,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final String label;
   final EdgeInsets padding;
@@ -102,7 +101,7 @@ class LabeledRadio extends StatelessWidget {
 }
 
 class RadioListTileDiagram extends StatefulWidget implements DiagramMetadata {
-  const RadioListTileDiagram(this.name, {Key? key}) : super(key: key);
+  const RadioListTileDiagram(this.name, {super.key});
 
   @override
   final String name;
@@ -231,7 +230,7 @@ class _RadioListTileDiagramState extends State<RadioListTileDiagram> {
 }
 
 class RadioListTileDiagramStep extends DiagramStep<RadioListTileDiagram> {
-  RadioListTileDiagramStep(DiagramController controller) : super(controller);
+  RadioListTileDiagramStep(super.controller);
 
   @override
   final String category = 'material';

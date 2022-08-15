@@ -11,6 +11,7 @@ environment:
 
 dependencies:
   archive: ^3.1.2
+  args: ^2.3.1
   cupertino_icons: ^1.0.2
   diagram_capture:
     path: ../../packages/diagram_capture
@@ -18,6 +19,7 @@ dependencies:
     path: ../../packages/diagrams
   flutter:
     sdk: flutter
+  path: ^1.8.2
   path_provider: ^2.0.1
   platform: ^3.0.0
   process: ^4.2.1

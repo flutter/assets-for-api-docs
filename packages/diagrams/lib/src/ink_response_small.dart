@@ -4,7 +4,6 @@
 
 import 'dart:io';
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -15,7 +14,7 @@ final GlobalKey _splashKey = GlobalKey();
 
 class InkResponseSmallDiagram extends StatelessWidget
     implements DiagramMetadata {
-  InkResponseSmallDiagram({Key? key}) : super(key: key);
+  InkResponseSmallDiagram({super.key});
 
   final GlobalKey canvasKey = GlobalKey();
   final GlobalKey childKey = GlobalKey();
@@ -85,8 +84,7 @@ class InkResponseSmallDiagram extends StatelessWidget
 }
 
 class InkResponseSmallDiagramStep extends DiagramStep<InkResponseSmallDiagram> {
-  InkResponseSmallDiagramStep(DiagramController controller)
-      : super(controller) {
+  InkResponseSmallDiagramStep(super.controller) {
     _diagrams.add(InkResponseSmallDiagram());
   }
 
@@ -101,7 +99,7 @@ class InkResponseSmallDiagramStep extends DiagramStep<InkResponseSmallDiagram> {
   @override
   Future<File> generateDiagram(InkResponseSmallDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
-    controller.advanceTime(Duration.zero);
+    controller.advanceTime();
     final RenderBox target =
         _splashKey.currentContext!.findRenderObject()! as RenderBox;
     final Offset targetOffset =

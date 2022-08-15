@@ -4,7 +4,6 @@
 
 import 'dart:io';
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -16,7 +15,7 @@ final Duration _totalDuration = _pauseDuration + _openDuration + _pauseDuration;
 final GlobalKey _openDialogKey = GlobalKey();
 
 class AlertDialogDiagram extends StatelessWidget implements DiagramMetadata {
-  const AlertDialogDiagram(this.name, {Key? key}) : super(key: key);
+  const AlertDialogDiagram(this.name, {super.key});
 
   @override
   final String name;
@@ -87,7 +86,7 @@ class AlertDialogDiagram extends StatelessWidget implements DiagramMetadata {
 }
 
 class AlertDialogDiagramStep extends DiagramStep<AlertDialogDiagram> {
-  AlertDialogDiagramStep(DiagramController controller) : super(controller);
+  AlertDialogDiagramStep(super.controller);
 
   @override
   final String category = 'material';
@@ -101,7 +100,7 @@ class AlertDialogDiagramStep extends DiagramStep<AlertDialogDiagram> {
   Future<File> generateDiagram(AlertDialogDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
 
-    controller.advanceTime(Duration.zero);
+    controller.advanceTime();
 
     final Future<File> result = controller.drawAnimatedDiagramToFiles(
       end: _totalDuration,

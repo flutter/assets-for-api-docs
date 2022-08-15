@@ -5,7 +5,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
@@ -13,7 +12,7 @@ import 'diagram_step.dart';
 const String _icon = 'icon';
 
 class IconDiagram extends StatelessWidget implements DiagramMetadata {
-  const IconDiagram(this.name, {Key? key}) : super(key: key);
+  const IconDiagram(this.name, {super.key});
 
   @override
   final String name;
@@ -54,7 +53,7 @@ class IconDiagram extends StatelessWidget implements DiagramMetadata {
 }
 
 class IconDiagramStep extends DiagramStep<IconDiagram> {
-  IconDiagramStep(DiagramController controller) : super(controller);
+  IconDiagramStep(super.controller);
 
   @override
   final String category = 'widgets';

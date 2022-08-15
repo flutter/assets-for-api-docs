@@ -5,13 +5,12 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
 
 class DividerDiagram extends StatelessWidget implements DiagramMetadata {
-  const DividerDiagram(this.name, {Key? key}) : super(key: key);
+  const DividerDiagram(this.name, {super.key});
 
   @override
   final String name;
@@ -59,7 +58,7 @@ class DividerDiagram extends StatelessWidget implements DiagramMetadata {
 }
 
 class DividerDiagramStep extends DiagramStep<DividerDiagram> {
-  DividerDiagramStep(DiagramController controller) : super(controller);
+  DividerDiagramStep(super.controller);
 
   @override
   final String category = 'material';

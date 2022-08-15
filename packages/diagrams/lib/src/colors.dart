@@ -5,7 +5,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
@@ -15,15 +14,14 @@ const double _kFontSize = 18.0;
 const double _kPadding = 10.0;
 
 abstract class ColorDiagram extends StatelessWidget implements DiagramMetadata {
-  const ColorDiagram({Key? key}) : super(key: key);
+  const ColorDiagram({super.key});
 
   @override
   String get name;
 }
 
 class ColorSwatchDiagram extends ColorDiagram {
-  const ColorSwatchDiagram(this.name, this.swatch, this.keys, {Key? key})
-      : super(key: key);
+  const ColorSwatchDiagram(this.name, this.swatch, this.keys, {super.key});
 
   @override
   final String name;
@@ -83,8 +81,7 @@ class ColorSwatchDiagram extends ColorDiagram {
 }
 
 class ColorListDiagram extends ColorDiagram {
-  const ColorListDiagram(this.name, this.background, this.colors, {Key? key})
-      : super(key: key);
+  const ColorListDiagram(this.name, this.background, this.colors, {super.key});
 
   @override
   final String name;
@@ -128,7 +125,7 @@ class ColorListDiagram extends ColorDiagram {
 }
 
 class ColorsDiagramStep extends DiagramStep<ColorDiagram> {
-  ColorsDiagramStep(DiagramController controller) : super(controller) {
+  ColorsDiagramStep(super.controller) {
     const List<int> palette = <int>[
       50,
       100,

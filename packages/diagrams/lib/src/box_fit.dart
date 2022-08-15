@@ -5,14 +5,13 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
 
 class BoxFitDiagram extends StatelessWidget implements DiagramMetadata {
-  const BoxFitDiagram(this.fit, {Key? key}) : super(key: key);
+  const BoxFitDiagram(this.fit, {super.key});
 
   final BoxFit fit;
 
@@ -81,7 +80,7 @@ class BoxFitDiagram extends StatelessWidget implements DiagramMetadata {
 }
 
 class BoxFitDiagramStep extends DiagramStep<BoxFitDiagram> {
-  BoxFitDiagramStep(DiagramController controller) : super(controller) {
+  BoxFitDiagramStep(super.controller) {
     for (final BoxFit fit in BoxFit.values) {
       _diagrams.add(BoxFitDiagram(fit));
     }

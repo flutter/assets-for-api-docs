@@ -5,7 +5,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
@@ -14,7 +13,7 @@ const String _column = 'expanded_column';
 const String _row = 'expanded_row';
 
 class ExpandedDiagram extends StatelessWidget implements DiagramMetadata {
-  const ExpandedDiagram(this.name, {Key? key}) : super(key: key);
+  const ExpandedDiagram(this.name, {super.key});
 
   @override
   final String name;
@@ -76,7 +75,6 @@ class ExpandedDiagram extends StatelessWidget implements DiagramMetadata {
                   width: 50,
                 ),
                 Expanded(
-                  flex: 1,
                   child: Container(
                     color: Colors.amber,
                     height: 100,
@@ -103,7 +101,7 @@ class ExpandedDiagram extends StatelessWidget implements DiagramMetadata {
 }
 
 class ExpandedDiagramStep extends DiagramStep<ExpandedDiagram> {
-  ExpandedDiagramStep(DiagramController controller) : super(controller);
+  ExpandedDiagramStep(super.controller);
 
   @override
   final String category = 'widgets';

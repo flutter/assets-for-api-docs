@@ -5,7 +5,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
@@ -20,7 +19,7 @@ const Duration _kBreakDuration = Duration(seconds: 1, milliseconds: 500);
 const double _kCurveAnimationFrameRate = 60.0;
 
 class TweenSequenceDiagram extends StatefulWidget implements DiagramMetadata {
-  const TweenSequenceDiagram({Key? key}) : super(key: key);
+  const TweenSequenceDiagram({super.key});
 
   @override
   State<TweenSequenceDiagram> createState() => TweenSequenceDiagramState();
@@ -101,7 +100,6 @@ class TweenSequenceDiagramState extends State<TweenSequenceDiagram>
           builder: (BuildContext context, Widget? child) {
             return Center(
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   Container(
@@ -146,7 +144,7 @@ class TweenSequenceDiagramState extends State<TweenSequenceDiagram>
 }
 
 class TweenSequenceDiagramStep extends DiagramStep<TweenSequenceDiagram> {
-  TweenSequenceDiagramStep(DiagramController controller) : super(controller);
+  TweenSequenceDiagramStep(super.controller);
 
   @override
   final String category = 'animation';

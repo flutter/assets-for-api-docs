@@ -21,7 +21,7 @@ import 'package:flutter/widgets.dart';
 /// to trigger all scroll-related effects in [SliverAppBar]s.
 class FakeDragScrollActivity extends ScrollActivity {
   FakeDragScrollActivity(
-    ScrollActivityDelegate delegate, {
+    super.delegate, {
     required double from,
     required double to,
     required Duration duration,
@@ -33,8 +33,7 @@ class FakeDragScrollActivity extends ScrollActivity {
           debugLabel: '$FakeDragScrollActivity',
           vsync: vsync,
         ),
-        _lastValue = from,
-        super(delegate) {
+        _lastValue = from {
     _controller
       ..addListener(_tick)
       ..animateTo(to, duration: duration, curve: curve).whenComplete(_end);

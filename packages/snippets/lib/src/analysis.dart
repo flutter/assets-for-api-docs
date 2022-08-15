@@ -12,7 +12,9 @@ import 'package:analyzer/file_system/file_system.dart' as afs;
 import 'package:analyzer/file_system/physical_file_system.dart' as afs;
 import 'package:analyzer/source/line_info.dart';
 import 'package:file/file.dart';
-import 'package:snippets/snippets.dart';
+
+import 'data_types.dart';
+import 'util.dart';
 
 /// Gets an iterable over all of the blocks of documentation comments in a file
 /// using the analyzer.

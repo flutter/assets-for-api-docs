@@ -215,9 +215,11 @@ class SnippetGenerator {
           assert(buffer.isEmpty);
           subLine = null;
         } else if (block[index].text.startsWith('// ')) {
-          if (buffer.length > 1) // don't include leading comments
-            buffer.add(SourceLine(
-                '/${block[index].text}')); // so that it doesn't start with "// " and get caught in this again
+          if (buffer.length > 1) {
+            // don't include leading comments
+            // so that it doesn't start with "// " and get caught in this again
+            buffer.add(SourceLine('/${block[index].text}'));
+          }
         } else {
           subLine ??= block[index];
           buffer.add(block[index]);
@@ -298,7 +300,7 @@ class SnippetGenerator {
   }
 
   String _loadFileAsUtf8(File file) {
-    return file.readAsStringSync(encoding: utf8);
+    return file.readAsStringSync();
   }
 
   /// Generate the HTML using the skeleton file for the type of the given sample.
@@ -459,7 +461,7 @@ class SnippetGenerator {
     int count = 0;
     for (final String line in code.split('\n')) {
       count++;
-      buffer.writeln('${count.toString().padLeft(5, ' ')}: $line');
+      buffer.writeln('${count.toString().padLeft(5)}: $line');
     }
     return buffer.toString();
   }

@@ -8,7 +8,6 @@
 import 'dart:io';
 import 'dart:ui' as ui;
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/widgets.dart';
 
 import 'diagram_step.dart';
@@ -114,7 +113,7 @@ Future<ui.Picture> _paintScaledSample(
 }
 
 class FilterQualityDiagram extends StatelessWidget implements DiagramMetadata {
-  const FilterQualityDiagram({Key? key}) : super(key: key);
+  const FilterQualityDiagram({super.key});
 
   @override
   String get name => 'filter_quality';
@@ -156,7 +155,7 @@ class _FilterQualityPainter extends CustomPainter {
 }
 
 class FilterQualityDiagramStep extends DiagramStep<FilterQualityDiagram> {
-  FilterQualityDiagramStep(DiagramController controller) : super(controller);
+  FilterQualityDiagramStep(super.controller);
 
   @override
   final String category = 'dart-ui';

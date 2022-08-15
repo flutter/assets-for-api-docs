@@ -5,13 +5,12 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
 
 class FormDiagram extends StatelessWidget implements DiagramMetadata {
-  const FormDiagram(this.name, {Key? key}) : super(key: key);
+  const FormDiagram(this.name, {super.key});
 
   @override
   final String name;
@@ -52,7 +51,7 @@ class FormDiagram extends StatelessWidget implements DiagramMetadata {
 }
 
 class FormDiagramStep extends DiagramStep<FormDiagram> {
-  FormDiagramStep(DiagramController controller) : super(controller);
+  FormDiagramStep(super.controller);
 
   @override
   final String category = 'widgets';

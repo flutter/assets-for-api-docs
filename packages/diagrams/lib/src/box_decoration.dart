@@ -5,7 +5,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
@@ -13,7 +12,7 @@ import 'diagram_step.dart';
 const String _boxDecoration = 'box_decoration';
 
 class BoxDecorationDiagram extends StatelessWidget implements DiagramMetadata {
-  const BoxDecorationDiagram(this.name, {Key? key}) : super(key: key);
+  const BoxDecorationDiagram(this.name, {super.key});
 
   @override
   final String name;
@@ -36,7 +35,6 @@ class BoxDecorationDiagram extends StatelessWidget implements DiagramMetadata {
               fit: BoxFit.cover,
             ),
             border: Border.all(
-              color: Colors.black,
               width: 8,
             ),
             borderRadius: BorderRadius.circular(12),
@@ -48,7 +46,7 @@ class BoxDecorationDiagram extends StatelessWidget implements DiagramMetadata {
 }
 
 class BoxDecorationDiagramStep extends DiagramStep<BoxDecorationDiagram> {
-  BoxDecorationDiagramStep(DiagramController controller) : super(controller);
+  BoxDecorationDiagramStep(super.controller);
 
   @override
   final String category = 'painting';

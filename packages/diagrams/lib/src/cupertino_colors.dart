@@ -5,7 +5,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'diagram_step.dart';
@@ -116,7 +115,7 @@ List<Map<String, CupertinoDynamicColor>> backgroundColors =
 
 class CupertinoColorsDiagram extends StatelessWidget
     implements DiagramMetadata {
-  const CupertinoColorsDiagram(this.name, {Key? key}) : super(key: key);
+  const CupertinoColorsDiagram(this.name, {super.key});
 
   @override
   final String name;
@@ -415,7 +414,7 @@ class CupertinoColorsDiagram extends StatelessWidget
 }
 
 class CupertinoColorsDiagramStep extends DiagramStep<CupertinoColorsDiagram> {
-  CupertinoColorsDiagramStep(DiagramController controller) : super(controller);
+  CupertinoColorsDiagramStep(super.controller);
 
   @override
   final String category = 'cupertino';
@@ -440,7 +439,7 @@ class CupertinoColorsDiagramStep extends DiagramStep<CupertinoColorsDiagram> {
 }
 
 class ColorWidget extends StatelessWidget {
-  const ColorWidget({Key? key, required this.color}) : super(key: key);
+  const ColorWidget({super.key, required this.color});
 
   final Color color;
 
