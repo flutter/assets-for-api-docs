@@ -56,7 +56,7 @@ const Size _kDefaultDiagramViewportSize = Size(1280.0, 1024.0);
 class _DiagramViewConfiguration extends ViewConfiguration {
   _DiagramViewConfiguration({
     super.size = _kDefaultDiagramViewportSize,
-  })  : _paintMatrix = _getMatrix(size, ui.window.devicePixelRatio);
+  }) : _paintMatrix = _getMatrix(size, ui.window.devicePixelRatio);
 
   static Matrix4 _getMatrix(Size size, double devicePixelRatio) {
     final double inverseRatio = devicePixelRatio / ui.window.devicePixelRatio;
@@ -94,8 +94,7 @@ class _DiagramViewConfiguration extends ViewConfiguration {
 // Provides a concrete implementation of WidgetController.
 class _DiagramWidgetController extends WidgetController
     implements TickerProvider {
-  _DiagramWidgetController(super.binding)
-      : _tickers = <_DiagramTicker>{};
+  _DiagramWidgetController(super.binding) : _tickers = <_DiagramTicker>{};
 
   @override
   DiagramFlutterBinding get binding => super.binding as DiagramFlutterBinding;

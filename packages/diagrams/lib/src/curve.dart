@@ -320,7 +320,7 @@ class CurveDiagram extends StatefulWidget implements DiagramMetadata {
     this.duration = _kCurveAnimationDuration,
     required this.curve,
     super.key,
-  })  : name = 'curve_$name';
+  }) : name = 'curve_$name';
 
   @override
   final String name;

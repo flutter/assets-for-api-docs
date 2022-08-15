@@ -283,7 +283,7 @@ class DartpadSample extends ApplicationSample {
     required super.args,
     required super.index,
     required super.lineProto,
-  })  : assert(args.isNotEmpty);
+  }) : assert(args.isNotEmpty);
 
   DartpadSample.fromFile({
     super.input,

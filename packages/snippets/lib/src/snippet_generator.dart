@@ -216,8 +216,7 @@ class SnippetGenerator {
           subLine = null;
         } else if (block[index].text.startsWith('// ')) {
           if (buffer.length > 1) {
-            buffer.add(SourceLine(
-                '/${block[index].text}'));
+            buffer.add(SourceLine('/${block[index].text}'));
           } // so that it doesn't start with "// " and get caught in this again
         } else {
           subLine ??= block[index];

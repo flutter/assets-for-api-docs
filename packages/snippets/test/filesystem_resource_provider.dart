@@ -285,8 +285,7 @@ class _PhysicalFolder extends _PhysicalResource implements Folder {
     try {
       final List<Resource> children = <Resource>[];
       final io.Directory directory = _entry as io.Directory;
-      final List<io.FileSystemEntity> entries =
-          directory.listSync();
+      final List<io.FileSystemEntity> entries = directory.listSync();
       final int numEntries = entries.length;
       for (int i = 0; i < numEntries; i++) {
         final io.FileSystemEntity entity = entries[i];

@@ -60,8 +60,7 @@ class BlendModeDiagram extends StatelessWidget implements DiagramMetadata {
       constraints: BoxConstraints.tight(const Size.square(400.0)),
       child: DecoratedBox(
         decoration: ShapeDecoration(
-          shape: Border.all(color: Colors.white) +
-              Border.all(),
+          shape: Border.all(color: Colors.white) + Border.all(),
           image: const DecorationImage(
             image: gridImageProvider,
             repeat: ImageRepeat.repeat,

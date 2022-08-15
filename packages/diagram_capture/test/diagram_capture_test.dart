@@ -92,8 +92,7 @@ void main() {
       final ui.Image captured = await controller.drawDiagramToImage();
       expect(captured.width, equals(100));
       expect(captured.height, equals(50));
-      final ByteData? output =
-          await captured.toByteData();
+      final ByteData? output = await captured.toByteData();
       expect(output!.lengthInBytes, equals(20000));
     });
 
@@ -107,8 +106,7 @@ void main() {
       final ui.Image captured = await controller.drawDiagramToImage();
       expect(captured.width, equals(100));
       expect(captured.height, equals(50));
-      final ByteData? output =
-          await captured.toByteData();
+      final ByteData? output = await captured.toByteData();
       expect(output!.lengthInBytes, equals(20000));
     });
 
@@ -136,8 +134,7 @@ void main() {
     test('can create images from an animated widget', () async {
       final UniqueKey key = UniqueKey();
       final DiagramController controller = DiagramController(
-        builder: (BuildContext context) =>
-            TestAnimatedDiagram(key: key),
+        builder: (BuildContext context) => TestAnimatedDiagram(key: key),
         outputDirectory: outputDir,
         pixelRatio: 1.0,
         screenDimensions: const Size(100.0, 100.0),
@@ -162,8 +159,7 @@ void main() {
     test('can write images from an animated widget to files', () async {
       final UniqueKey key = UniqueKey();
       final DiagramController controller = DiagramController(
-        builder: (BuildContext context) =>
-            TestAnimatedDiagram(key: key),
+        builder: (BuildContext context) => TestAnimatedDiagram(key: key),
         outputDirectory: outputDir,
         pixelRatio: 1.0,
         screenDimensions: const Size(100.0, 100.0),

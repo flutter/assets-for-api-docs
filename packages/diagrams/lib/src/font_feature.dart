@@ -185,8 +185,7 @@ class LocalizedFontFeatureDiagram extends FontFeatureDiagram<Locale> {
         style: textStyle.copyWith(
           fontFamily: 'Noto Sans',
           fontFeatures: <FontFeature>[
-            const FontFeature(
-                'locl'), // redundant, this is the default anyway
+            const FontFeature('locl'), // redundant, this is the default anyway
           ],
         ),
         textAlign: TextAlign.left,

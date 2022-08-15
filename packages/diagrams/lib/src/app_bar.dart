@@ -44,9 +44,7 @@ class _DiagramState extends State<AppBarDiagram> {
         child: Material(
           color: const Color(0xFFFFFFFF),
           child: MediaQuery(
-            data: const MediaQueryData(
-              
-            ),
+            data: const MediaQueryData(),
             child: Stack(
               children: <Widget>[
                 Center(

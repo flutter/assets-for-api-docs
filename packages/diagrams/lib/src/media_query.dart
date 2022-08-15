@@ -35,9 +35,7 @@ class _MediaQueryDiagramState extends State<MediaQueryDiagram> {
         child: Material(
           color: const Color(0xFFFFFFFF),
           child: MediaQuery(
-            data: const MediaQueryData(
-              
-            ),
+            data: const MediaQueryData(),
             child: Center(
               child: Stack(
                 alignment: Alignment.topCenter,

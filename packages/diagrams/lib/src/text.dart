@@ -769,14 +769,12 @@ class RenderTextHeightBreakdown extends RenderBox
 
   @override
   Size computeDryLayout(BoxConstraints constraints) {
-    _textPainter.layout(
-        minWidth: constraints.minWidth);
+    _textPainter.layout(minWidth: constraints.minWidth);
     if (paintHeightIndicator) {
       heightCaptionTextPainter.text = TextSpan(
           text: 'Text Height:\n${_textPainter.height} px',
           style: heightCaptionTextStyle);
-      heightCaptionTextPainter.layout(
-          minWidth: constraints.minWidth);
+      heightCaptionTextPainter.layout(minWidth: constraints.minWidth);
       return constraints.constrain(Size(
         heightCaptionTextPainter.width +
             _textPainter.width +
