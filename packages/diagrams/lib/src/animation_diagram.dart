@@ -38,9 +38,9 @@ String getName(Type type) {
 abstract class TransitionDiagram<T> extends StatefulWidget
     implements DiagramMetadata {
   const TransitionDiagram({
-    Key? key,
+    super.key,
     this.decorate = true,
-  }) : super(key: key);
+  });
 
   /// Whether or not to decorate this diagram with an animation curve and top label.
   final bool decorate;
@@ -108,7 +108,7 @@ class TransitionDiagramState<T> extends State<TransitionDiagram<T>>
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                border: Border.all(color: Colors.black26, width: 1.0),
+                border: Border.all(color: Colors.black26),
               ),
               constraints: const BoxConstraints.tightFor(
                 width: 250.0,
@@ -158,7 +158,7 @@ class TransitionDiagramState<T> extends State<TransitionDiagram<T>>
 
 abstract class ImplicitAnimationDiagram<T> extends StatefulWidget
     implements DiagramMetadata {
-  const ImplicitAnimationDiagram({Key? key}) : super(key: key);
+  const ImplicitAnimationDiagram({super.key});
 
   /// The animation curve for the animation to use.
   Curve get curve;
@@ -317,8 +317,7 @@ class SparklinePainter extends CustomPainter {
 }
 
 class Sparkline extends StatelessWidget {
-  const Sparkline({Key? key, required this.curve, required this.position})
-      : super(key: key);
+  const Sparkline({super.key, required this.curve, required this.position});
 
   final Curve curve;
   final double position;
@@ -330,7 +329,7 @@ class Sparkline extends StatelessWidget {
 }
 
 class SampleWidget extends StatelessWidget {
-  const SampleWidget({Key? key, this.small = false}) : super(key: key);
+  const SampleWidget({super.key, this.small = false});
 
   final bool small;
 

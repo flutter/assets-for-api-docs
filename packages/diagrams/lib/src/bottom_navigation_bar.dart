@@ -4,13 +4,12 @@
 
 import 'dart:async';
 import 'dart:io';
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 import 'diagram_step.dart';
 
 class BottomNavigationBarDiagram extends StatelessWidget
     implements DiagramMetadata {
-  const BottomNavigationBarDiagram(this.name, {Key? key}) : super(key: key);
+  const BottomNavigationBarDiagram(this.name, {super.key});
 
   @override
   final String name;
@@ -49,9 +48,7 @@ class BottomNavigationBarDiagram extends StatelessWidget
                 label: 'School',
               ),
             ],
-            currentIndex: 0,
             selectedItemColor: Colors.amber[800],
-            onTap: null,
           ),
         ),
       ),
@@ -61,8 +58,7 @@ class BottomNavigationBarDiagram extends StatelessWidget
 
 class BottomNavigationBarDiagramStep
     extends DiagramStep<BottomNavigationBarDiagram> {
-  BottomNavigationBarDiagramStep(DiagramController controller)
-      : super(controller);
+  BottomNavigationBarDiagramStep(super.controller);
 
   @override
   final String category = 'material';

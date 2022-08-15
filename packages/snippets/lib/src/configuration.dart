@@ -56,9 +56,8 @@ class SnippetConfiguration {
 class FlutterRepoSnippetConfiguration extends SnippetConfiguration {
   FlutterRepoSnippetConfiguration(
       {required this.flutterRoot,
-      FileSystem filesystem = const LocalFileSystem()})
+      super.filesystem})
       : super(
-          filesystem: filesystem,
           configDirectory: _underRoot(filesystem, flutterRoot,
               const <String>['dev', 'snippets', 'config']),
           outputDirectory: _underRoot(filesystem, flutterRoot,

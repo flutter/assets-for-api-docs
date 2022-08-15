@@ -9,7 +9,7 @@ import 'package:file/file.dart';
 import 'package:file/local.dart';
 import 'package:meta/meta.dart';
 import 'package:platform/platform.dart' show LocalPlatform, Platform;
-import 'package:process/process.dart' show ProcessManager, LocalProcessManager;
+import 'package:process/process.dart' show LocalProcessManager, ProcessManager;
 import 'package:pub_semver/pub_semver.dart';
 
 import 'data_types.dart';
@@ -165,7 +165,7 @@ String interpolateTemplate(
   bool addCopyright = false,
 }) {
   String wrapSectionMarker(Iterable<String> contents, {required String name}) {
-    if (contents.join('').trim().isEmpty) {
+    if (contents.join().trim().isEmpty) {
       // Skip empty sections.
       return '';
     }
@@ -174,7 +174,7 @@ String interpolateTemplate(
     final bool addMarkers =
         addSectionMarkers && !skippedSections.contains(name);
     final String result = <String>[
-      if (addMarkers) sectionArrows(name, start: true),
+      if (addMarkers) sectionArrows(name),
       ...contents,
       if (addMarkers) sectionArrows(name, start: false),
     ].join('\n');
@@ -270,7 +270,7 @@ SampleStats getSampleStats(SourceElement element) {
     if (linkCount == 0 && element.hasSeeAlso) 'and ',
     if (element.hasSeeAlso) 'has a "See also:" section',
     '.',
-  ].join('');
+  ].join();
   return SampleStats(
     totalSamples: total,
     dartpadSamples: dartpads,

@@ -5,7 +5,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
@@ -15,7 +14,7 @@ const String _theme = 'theme_material_app';
 const String _textstyle = 'unspecified_textstyle_material_app';
 
 class MaterialAppDiagram extends StatelessWidget implements DiagramMetadata {
-  const MaterialAppDiagram(this.name, {Key? key}) : super(key: key);
+  const MaterialAppDiagram(this.name, {super.key});
 
   @override
   final String name;
@@ -70,7 +69,7 @@ class MaterialAppDiagram extends StatelessWidget implements DiagramMetadata {
 }
 
 class MaterialAppDiagramStep extends DiagramStep<MaterialAppDiagram> {
-  MaterialAppDiagramStep(DiagramController controller) : super(controller);
+  MaterialAppDiagramStep(super.controller);
 
   @override
   final String category = 'material';

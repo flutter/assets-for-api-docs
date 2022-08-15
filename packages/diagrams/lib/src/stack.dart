@@ -5,7 +5,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
@@ -14,7 +13,7 @@ const String _stack = 'stack';
 const String _stackWithGradient = 'stack_with_gradient';
 
 class StackDiagram extends StatelessWidget implements DiagramMetadata {
-  const StackDiagram(this.name, {Key? key}) : super(key: key);
+  const StackDiagram(this.name, {super.key});
 
   @override
   final String name;
@@ -92,7 +91,7 @@ class StackDiagram extends StatelessWidget implements DiagramMetadata {
 }
 
 class StackDiagramStep extends DiagramStep<StackDiagram> {
-  StackDiagramStep(DiagramController controller) : super(controller);
+  StackDiagramStep(super.controller);
 
   @override
   final String category = 'widgets';

@@ -18,7 +18,7 @@ const double _kAnimationFrameRate = 60.0;
 const double _kLogoSize = 150.0;
 
 class TransitionDiagramStep extends DiagramStep<TransitionDiagram<dynamic>> {
-  TransitionDiagramStep(DiagramController controller) : super(controller) {
+  TransitionDiagramStep(super.controller) {
     _diagrams.add(const AlignTransitionDiagram());
     _diagrams.add(const DecoratedBoxTransitionDiagram());
     _diagrams.add(const FadeTransitionDiagram());
@@ -97,8 +97,7 @@ class _NonNullableAlignmentGeometryTween extends Tween<AlignmentGeometry> {
 }
 
 class AlignTransitionDiagram extends TransitionDiagram<AlignmentGeometry> {
-  const AlignTransitionDiagram({Key? key, bool decorate = true})
-      : super(key: key, decorate: decorate);
+  const AlignTransitionDiagram({super.key, super.decorate});
 
   @override
   Curve get curve => Curves.fastOutSlowIn;
@@ -133,8 +132,7 @@ class AlignTransitionDiagram extends TransitionDiagram<AlignmentGeometry> {
 }
 
 class DecoratedBoxTransitionDiagram extends TransitionDiagram<Decoration> {
-  const DecoratedBoxTransitionDiagram({Key? key, bool decorate = true})
-      : super(key: key, decorate: decorate);
+  const DecoratedBoxTransitionDiagram({super.key, super.decorate});
 
   @override
   Curve get curve => Curves.decelerate;
@@ -178,8 +176,7 @@ class DecoratedBoxTransitionDiagram extends TransitionDiagram<Decoration> {
 }
 
 class FadeTransitionDiagram extends TransitionDiagram<double> {
-  const FadeTransitionDiagram({Key? key, bool decorate = true})
-      : super(key: key, decorate: decorate);
+  const FadeTransitionDiagram({super.key, super.decorate});
 
   @override
   Curve get curve => Curves.fastOutSlowIn;
@@ -203,8 +200,7 @@ class FadeTransitionDiagram extends TransitionDiagram<double> {
 }
 
 class PositionedTransitionDiagram extends TransitionDiagram<RelativeRect> {
-  const PositionedTransitionDiagram({Key? key, bool decorate = true})
-      : super(key: key, decorate: decorate);
+  const PositionedTransitionDiagram({super.key, super.decorate});
 
   @override
   Curve get curve => Curves.elasticInOut;
@@ -252,8 +248,7 @@ class _NonNullableRectTween extends Tween<Rect> {
 }
 
 class RelativePositionedTransitionDiagram extends TransitionDiagram<Rect> {
-  const RelativePositionedTransitionDiagram({Key? key, bool decorate = true})
-      : super(key: key, decorate: decorate);
+  const RelativePositionedTransitionDiagram({super.key, super.decorate});
 
   @override
   Curve get curve => Curves.elasticInOut;
@@ -291,8 +286,7 @@ class RelativePositionedTransitionDiagram extends TransitionDiagram<Rect> {
 }
 
 class RotationTransitionDiagram extends TransitionDiagram<double> {
-  const RotationTransitionDiagram({Key? key, bool decorate = true})
-      : super(key: key, decorate: decorate);
+  const RotationTransitionDiagram({super.key, super.decorate});
 
   @override
   Curve get curve => Curves.elasticOut;
@@ -316,8 +310,7 @@ class RotationTransitionDiagram extends TransitionDiagram<double> {
 }
 
 class ScaleTransitionDiagram extends TransitionDiagram<double> {
-  const ScaleTransitionDiagram({Key? key, bool decorate = true})
-      : super(key: key, decorate: decorate);
+  const ScaleTransitionDiagram({super.key, super.decorate});
 
   @override
   Curve get curve => Curves.fastOutSlowIn;
@@ -341,8 +334,7 @@ class ScaleTransitionDiagram extends TransitionDiagram<double> {
 }
 
 class SizeTransitionDiagram extends TransitionDiagram<double> {
-  const SizeTransitionDiagram({Key? key, bool decorate = true})
-      : super(key: key, decorate: decorate);
+  const SizeTransitionDiagram({super.key, super.decorate});
 
   @override
   Curve get curve => Curves.fastOutSlowIn;
@@ -369,8 +361,6 @@ class SizeTransitionDiagram extends TransitionDiagram<double> {
           constraints: const BoxConstraints.tightFor(width: _kLogoSize),
           child: SizeTransition(
             key: _transitionKey,
-            axis: Axis.vertical,
-            axisAlignment: 0.0,
             sizeFactor: animation,
             child: const SampleWidget(),
           ),
@@ -381,8 +371,7 @@ class SizeTransitionDiagram extends TransitionDiagram<double> {
 }
 
 class SlideTransitionDiagram extends TransitionDiagram<Offset> {
-  const SlideTransitionDiagram({Key? key, bool decorate = true})
-      : super(key: key, decorate: decorate);
+  const SlideTransitionDiagram({super.key, super.decorate});
 
   @override
   Curve get curve => Curves.elasticIn;

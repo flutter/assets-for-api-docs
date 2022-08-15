@@ -5,7 +5,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
@@ -17,7 +16,7 @@ const String _inputDecorationCollapsed = 'input_decoration_collapsed';
 
 class InputDecorationDiagram extends StatelessWidget
     implements DiagramMetadata {
-  const InputDecorationDiagram(this.name, {Key? key}) : super(key: key);
+  const InputDecorationDiagram(this.name, {super.key});
 
   @override
   final String name;
@@ -110,7 +109,7 @@ class InputDecorationDiagram extends StatelessWidget
 }
 
 class InputDecorationDiagramStep extends DiagramStep<InputDecorationDiagram> {
-  InputDecorationDiagramStep(DiagramController controller) : super(controller);
+  InputDecorationDiagramStep(super.controller);
 
   @override
   final String category = 'material';

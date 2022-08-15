@@ -5,7 +5,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -22,7 +21,7 @@ const double _kCurveAnimationFrameRate = 60.0;
 
 class SliverFillRemainingDiagram extends StatefulWidget
     implements DiagramMetadata {
-  const SliverFillRemainingDiagram({Key? key}) : super(key: key);
+  const SliverFillRemainingDiagram({super.key});
 
   @override
   String get name => 'sliver_fill_remaining_fill_overscroll';
@@ -126,8 +125,7 @@ class _SliverFillRemainingDiagramState extends State<SliverFillRemainingDiagram>
 
 class SliverFillRemainingDiagramStep
     extends DiagramStep<SliverFillRemainingDiagram> {
-  SliverFillRemainingDiagramStep(DiagramController controller)
-      : super(controller);
+  SliverFillRemainingDiagramStep(super.controller);
 
   @override
   final String category = 'widgets';

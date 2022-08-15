@@ -4,7 +4,6 @@
 
 import 'dart:io';
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -16,7 +15,7 @@ final Duration _totalDuration = _pauseDuration + _pauseDuration;
 final GlobalKey _gestureDetectorKey = GlobalKey();
 
 class GestureDetectorDiagram extends StatefulWidget implements DiagramMetadata {
-  const GestureDetectorDiagram(this.name, {Key? key}) : super(key: key);
+  const GestureDetectorDiagram(this.name, {super.key});
 
   @override
   final String name;
@@ -68,7 +67,7 @@ class _GestureDetectorDiagramState extends State<GestureDetectorDiagram> {
 }
 
 class GestureDetectorDiagramStep extends DiagramStep<GestureDetectorDiagram> {
-  GestureDetectorDiagramStep(DiagramController controller) : super(controller);
+  GestureDetectorDiagramStep(super.controller);
 
   @override
   final String category = 'widgets';
@@ -83,7 +82,7 @@ class GestureDetectorDiagramStep extends DiagramStep<GestureDetectorDiagram> {
   Future<File> generateDiagram(GestureDetectorDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
 
-    controller.advanceTime(Duration.zero);
+    controller.advanceTime();
 
     final Future<File> result = controller.drawAnimatedDiagramToFiles(
       end: _totalDuration,

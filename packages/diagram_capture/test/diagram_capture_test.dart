@@ -21,7 +21,7 @@ Widget buildStaticDiagram(BuildContext context) {
 }
 
 class TestAnimatedDiagram extends StatelessWidget {
-  const TestAnimatedDiagram({Key? key, this.size = 1.0}) : super(key: key);
+  const TestAnimatedDiagram({super.key, this.size = 1.0});
 
   final double size;
 
@@ -42,7 +42,7 @@ class TestAnimatedDiagram extends StatelessWidget {
 }
 
 class TestTappableDiagram extends StatefulWidget {
-  const TestTappableDiagram({Key? key}) : super(key: key);
+  const TestTappableDiagram({super.key});
 
   @override
   State<TestTappableDiagram> createState() => _TestTappableDiagramState();
@@ -54,7 +54,6 @@ class _TestTappableDiagramState extends State<TestTappableDiagram> {
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      child: const SizedBox.shrink(),
       style: ButtonStyle(
         backgroundColor:
             MaterialStateProperty.all<Color?>(on ? Colors.red : Colors.blue),
@@ -64,6 +63,7 @@ class _TestTappableDiagramState extends State<TestTappableDiagram> {
           on = !on;
         });
       },
+      child: const SizedBox.shrink(),
     );
   }
 }
@@ -93,13 +93,12 @@ void main() {
       expect(captured.width, equals(100));
       expect(captured.height, equals(50));
       final ByteData? output =
-          await captured.toByteData(format: ui.ImageByteFormat.rawRgba);
+          await captured.toByteData();
       expect(output!.lengthInBytes, equals(20000));
     });
 
     test('allows a null builder', () async {
       final DiagramController controller = DiagramController(
-        builder: null,
         outputDirectory: outputDir,
         pixelRatio: 1.0,
         screenDimensions: const Size(100.0, 100.0),
@@ -109,7 +108,7 @@ void main() {
       expect(captured.width, equals(100));
       expect(captured.height, equals(50));
       final ByteData? output =
-          await captured.toByteData(format: ui.ImageByteFormat.rawRgba);
+          await captured.toByteData();
       expect(output!.lengthInBytes, equals(20000));
     });
 
@@ -138,7 +137,7 @@ void main() {
       final UniqueKey key = UniqueKey();
       final DiagramController controller = DiagramController(
         builder: (BuildContext context) =>
-            TestAnimatedDiagram(key: key, size: 1.0),
+            TestAnimatedDiagram(key: key),
         outputDirectory: outputDir,
         pixelRatio: 1.0,
         screenDimensions: const Size(100.0, 100.0),
@@ -164,7 +163,7 @@ void main() {
       final UniqueKey key = UniqueKey();
       final DiagramController controller = DiagramController(
         builder: (BuildContext context) =>
-            TestAnimatedDiagram(key: key, size: 1.0),
+            TestAnimatedDiagram(key: key),
         outputDirectory: outputDir,
         pixelRatio: 1.0,
         screenDimensions: const Size(100.0, 100.0),
@@ -182,7 +181,7 @@ void main() {
       expect(outputFile.existsSync(), isTrue);
       expect(outputFile.lengthSync(), greaterThan(0));
 
-      Map<String, dynamic> _loadMetadata(File metadataFile) {
+      Map<String, dynamic> loadMetadata(File metadataFile) {
         final Map<String, dynamic> metadata = json
             .decode(metadataFile.readAsStringSync()) as Map<String, dynamic>;
         final String baseDir = path.dirname(metadataFile.absolute.path);
@@ -195,7 +194,7 @@ void main() {
         return metadata;
       }
 
-      final Map<String, dynamic> metadata = _loadMetadata(outputFile);
+      final Map<String, dynamic> metadata = loadMetadata(outputFile);
       final List<File> frames = metadata['frame_files'] as List<File>;
       expect(frames.length, equals(7));
       expect(frames[0].path, endsWith('test_name_00000.png'));

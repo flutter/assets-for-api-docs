@@ -4,7 +4,6 @@
 
 import 'dart:io';
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -17,7 +16,7 @@ final Duration _totalDuration =
 final GlobalKey _menuKey = GlobalKey();
 
 class DrawerDiagram extends StatelessWidget implements DiagramMetadata {
-  const DrawerDiagram(this.name, {Key? key}) : super(key: key);
+  const DrawerDiagram(this.name, {super.key});
 
   @override
   final String name;
@@ -97,7 +96,7 @@ class DrawerDiagram extends StatelessWidget implements DiagramMetadata {
 }
 
 class DrawerDiagramStep extends DiagramStep<DrawerDiagram> {
-  DrawerDiagramStep(DiagramController controller) : super(controller);
+  DrawerDiagramStep(super.controller);
 
   @override
   final String category = 'material';
@@ -111,7 +110,7 @@ class DrawerDiagramStep extends DiagramStep<DrawerDiagram> {
   Future<File> generateDiagram(DrawerDiagram diagram) async {
     controller.builder = (BuildContext context) => diagram;
 
-    controller.advanceTime(Duration.zero);
+    controller.advanceTime();
 
     final Future<File> result = controller.drawAnimatedDiagramToFiles(
       end: _totalDuration,

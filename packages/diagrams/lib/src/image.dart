@@ -110,7 +110,7 @@ class DiagramImage extends ImageProvider<DiagramImage>
 }
 
 class FrameBuilderImageDiagram extends ImageDiagram {
-  FrameBuilderImageDiagram(DiagramController controller) : super(controller);
+  FrameBuilderImageDiagram(super.controller);
 
   @override
   Duration get animationDuration => const Duration(seconds: 4);
@@ -138,10 +138,10 @@ class FrameBuilderImageDiagram extends ImageDiagram {
                 return child;
               }
               return AnimatedOpacity(
-                child: child,
                 opacity: frame == null ? 0 : 1,
                 duration: const Duration(seconds: 1),
                 curve: Curves.easeOut,
+                child: child,
               );
             },
           ),
@@ -152,8 +152,7 @@ class FrameBuilderImageDiagram extends ImageDiagram {
 }
 
 class LoadingProgressImageDiagram extends ImageDiagram {
-  const LoadingProgressImageDiagram(DiagramController controller)
-      : super(controller);
+  const LoadingProgressImageDiagram(super.controller);
 
   @override
   Widget build(BuildContext context, ImageProvider image) {
@@ -189,7 +188,7 @@ class LoadingProgressImageDiagram extends ImageDiagram {
 }
 
 class ImageDiagramsStep extends DiagramStep<ImageDiagram> {
-  ImageDiagramsStep(DiagramController controller) : super(controller);
+  ImageDiagramsStep(super.controller);
 
   @override
   final String category = 'widgets';

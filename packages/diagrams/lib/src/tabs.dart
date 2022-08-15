@@ -23,7 +23,7 @@ final List<GlobalKey> _tabKeys = <GlobalKey>[
 ];
 
 class TabsDiagram extends StatefulWidget implements DiagramMetadata {
-  const TabsDiagram(this.name, {Key? key}) : super(key: key);
+  const TabsDiagram(this.name, {super.key});
 
   @override
   final String name;
@@ -86,7 +86,7 @@ class TabsDiagramState extends State<TabsDiagram>
 }
 
 class TabsDiagramStep extends DiagramStep<TabsDiagram> {
-  TabsDiagramStep(DiagramController controller) : super(controller);
+  TabsDiagramStep(super.controller);
 
   @override
   final String category = 'material';

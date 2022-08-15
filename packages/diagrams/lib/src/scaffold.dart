@@ -5,7 +5,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
@@ -15,7 +14,7 @@ const String _scaffoldBackgroundColor = 'scaffold_background_color';
 const String _scaffoldBottomAppBar = 'scaffold_bottom_app_bar';
 
 class ScaffoldDiagram extends StatefulWidget implements DiagramMetadata {
-  const ScaffoldDiagram({Key? key, required this.name}) : super(key: key);
+  const ScaffoldDiagram({super.key, required this.name});
 
   @override
   final String name;
@@ -96,7 +95,7 @@ class ScaffoldDiagramState extends State<ScaffoldDiagram> {
 }
 
 class ScaffoldDiagramStep extends DiagramStep<ScaffoldDiagram> {
-  ScaffoldDiagramStep(DiagramController controller) : super(controller);
+  ScaffoldDiagramStep(super.controller);
 
   @override
   final String category = 'material';

@@ -7,7 +7,6 @@ import 'dart:io';
 import 'dart:math' as math;
 import 'dart:ui' as ui;
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
@@ -203,10 +202,10 @@ class CurveDescription extends CustomPainter {
 /// A sample tile that shows the effect of a curve on translation.
 class TranslateSampleTile extends StatelessWidget {
   const TranslateSampleTile({
-    Key? key,
+    super.key,
     required this.animation,
     required this.name,
-  }) : super(key: key);
+  });
 
   static const double blockHeight = 20.0;
   static const double blockWidth = 30.0;
@@ -245,7 +244,6 @@ class TranslateSampleTile extends StatelessWidget {
                 borderRadius: outerRadius,
                 border: Border.all(
                   color: Colors.black45,
-                  width: 1.0,
                 ),
               ),
               child: mutate(
@@ -279,18 +277,12 @@ class TranslateSampleTile extends StatelessWidget {
 /// A sample tile that shows the effect of a curve on rotation.
 class RotateSampleTile extends TranslateSampleTile {
   const RotateSampleTile(
-      {Key? key, required Animation<double> animation, required String name})
-      : super(
-          key: key,
-          animation: animation,
-          name: name,
-        );
+      {super.key, required super.animation, required super.name});
 
   @override
   Widget mutate({required Widget child}) {
     return Transform.rotate(
       angle: animation.value * math.pi / 2.0,
-      alignment: Alignment.center,
       child: child,
     );
   }
@@ -299,12 +291,7 @@ class RotateSampleTile extends TranslateSampleTile {
 /// A sample tile that shows the effect of a curve on scale.
 class ScaleSampleTile extends TranslateSampleTile {
   const ScaleSampleTile(
-      {Key? key, required Animation<double> animation, required String name})
-      : super(
-          key: key,
-          animation: animation,
-          name: name,
-        );
+      {super.key, required super.animation, required super.name});
 
   @override
   Widget mutate({required Widget child}) {
@@ -318,12 +305,7 @@ class ScaleSampleTile extends TranslateSampleTile {
 /// A sample tile that shows the effect of a curve on opacity.
 class OpacitySampleTile extends TranslateSampleTile {
   const OpacitySampleTile(
-      {Key? key, required Animation<double> animation, required String name})
-      : super(
-          key: key,
-          animation: animation,
-          name: name,
-        );
+      {super.key, required super.animation, required super.name});
 
   @override
   Widget mutate({required Widget child}) {
@@ -337,9 +319,8 @@ class CurveDiagram extends StatefulWidget implements DiagramMetadata {
     required this.caption,
     this.duration = _kCurveAnimationDuration,
     required this.curve,
-    Key? key,
-  })  : name = 'curve_$name',
-        super(key: key);
+    super.key,
+  })  : name = 'curve_$name';
 
   @override
   final String name;
@@ -372,8 +353,6 @@ class CurveDiagramState extends State<CurveDiagram>
     controller = AnimationController(
       duration: widget.duration,
       vsync: this,
-      lowerBound: 0.0,
-      upperBound: 1.0,
     )..addListener(() {
         setState(() {});
       });
@@ -413,12 +392,10 @@ class CurveDiagramState extends State<CurveDiagram>
               alignment: Alignment.center,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       TranslateSampleTile(
                           animation: animation, name: 'translation'),
@@ -428,7 +405,6 @@ class CurveDiagramState extends State<CurveDiagram>
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       ScaleSampleTile(animation: animation, name: 'scale'),
                       OpacitySampleTile(animation: animation, name: 'opacity'),
@@ -445,7 +421,7 @@ class CurveDiagramState extends State<CurveDiagram>
 }
 
 class CurveDiagramStep extends DiagramStep<CurveDiagram> {
-  CurveDiagramStep(DiagramController controller) : super(controller) {
+  CurveDiagramStep(super.controller) {
     _diagrams.addAll(<CurveDiagram>[
       const CurveDiagram(
           name: 'bounce_in',

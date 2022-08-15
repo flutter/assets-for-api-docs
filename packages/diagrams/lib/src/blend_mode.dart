@@ -7,7 +7,6 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:ui' show Image;
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' hide Image;
 
@@ -38,7 +37,7 @@ Future<Image> getImage(ImageProvider provider) {
     },
     onError: (Object error, StackTrace? stack) {
       print(error);
-      throw error;
+      throw error; // ignore: only_throw_errors
     },
   );
 
@@ -47,7 +46,7 @@ Future<Image> getImage(ImageProvider provider) {
 }
 
 class BlendModeDiagram extends StatelessWidget implements DiagramMetadata {
-  const BlendModeDiagram(this.mode, {Key? key}) : super(key: key);
+  const BlendModeDiagram(this.mode, {super.key});
 
   final BlendMode mode;
 
@@ -61,8 +60,8 @@ class BlendModeDiagram extends StatelessWidget implements DiagramMetadata {
       constraints: BoxConstraints.tight(const Size.square(400.0)),
       child: DecoratedBox(
         decoration: ShapeDecoration(
-          shape: Border.all(width: 1.0, color: Colors.white) +
-              Border.all(width: 1.0, color: Colors.black),
+          shape: Border.all(color: Colors.white) +
+              Border.all(),
           image: const DecorationImage(
             image: gridImageProvider,
             repeat: ImageRepeat.repeat,
@@ -251,7 +250,7 @@ class BlendModePainter extends CustomPainter {
 }
 
 class BlendModeDiagramStep extends DiagramStep<BlendModeDiagram> {
-  BlendModeDiagramStep(DiagramController controller) : super(controller);
+  BlendModeDiagramStep(super.controller);
 
   @override
   final String category = 'dart-ui';

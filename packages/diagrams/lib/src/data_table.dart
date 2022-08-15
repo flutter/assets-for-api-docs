@@ -5,13 +5,12 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
 
 class DataTableDiagram extends StatelessWidget implements DiagramMetadata {
-  const DataTableDiagram(this.name, {Key? key}) : super(key: key);
+  const DataTableDiagram(this.name, {super.key});
 
   @override
   final String name;
@@ -77,7 +76,7 @@ class DataTableDiagram extends StatelessWidget implements DiagramMetadata {
 }
 
 class DataTableDiagramStep extends DiagramStep<DataTableDiagram> {
-  DataTableDiagramStep(DiagramController controller) : super(controller);
+  DataTableDiagramStep(super.controller);
 
   @override
   final String category = 'material';

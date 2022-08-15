@@ -6,7 +6,6 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math' as math;
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -26,8 +25,7 @@ enum GradientMode {
 }
 
 class TileModeDiagram extends StatelessWidget implements DiagramMetadata {
-  const TileModeDiagram(this.gradientMode, this.tileMode, {Key? key})
-      : super(key: key);
+  const TileModeDiagram(this.gradientMode, this.tileMode, {super.key});
 
   @override
   String get name =>
@@ -65,7 +63,6 @@ class TileModeDiagram extends StatelessWidget implements DiagramMetadata {
       case GradientMode.sweep:
         gradient = SweepGradient(
           center: FractionalOffset.center,
-          startAngle: 0.0,
           endAngle: math.pi / 2,
           colors: const <Color>[Color(0xFF0000FF), Color(0xFF00FF00)],
           stops: const <double>[0.0, 1.0],
@@ -103,7 +100,7 @@ class TileModeDiagram extends StatelessWidget implements DiagramMetadata {
               margin: const EdgeInsets.all(spacing),
               width: width,
               decoration: BoxDecoration(
-                border: Border.all(width: borderSize),
+                border: Border.all(),
                 color: const Color(0xFFFFFFFF),
               ),
               child: Column(
@@ -113,7 +110,7 @@ class TileModeDiagram extends StatelessWidget implements DiagramMetadata {
                       decoration: BoxDecoration(
                         gradient: _buildGradient(),
                         border: const Border(
-                          bottom: BorderSide(width: 1.0),
+                          bottom: BorderSide(),
                         ),
                       ),
                     ),
@@ -136,7 +133,7 @@ class TileModeDiagram extends StatelessWidget implements DiagramMetadata {
 }
 
 class TileModeDiagramStep extends DiagramStep<TileModeDiagram> {
-  TileModeDiagramStep(DiagramController controller) : super(controller) {
+  TileModeDiagramStep(super.controller) {
     for (final TileMode mode in TileMode.values) {
       for (final GradientMode gradient in GradientMode.values) {
         _diagrams.add(TileModeDiagram(gradient, mode));

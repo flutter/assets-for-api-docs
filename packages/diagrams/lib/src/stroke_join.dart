@@ -6,7 +6,6 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math' as math;
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
@@ -137,8 +136,8 @@ class StrokeJoinDiagram extends StatefulWidget implements DiagramMetadata {
     this.endAngle = 360.0,
     this.join = StrokeJoin.miter,
     this.strokeMiterLimit = 4.0,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   final String name;
@@ -204,21 +203,17 @@ class StrokeJoinPainterState extends State<StrokeJoinDiagram> //
 }
 
 class StrokeJoinDiagramStep extends DiagramStep<StrokeJoinDiagram> {
-  StrokeJoinDiagramStep(DiagramController controller) : super(controller) {
+  StrokeJoinDiagramStep(super.controller) {
     _diagrams.addAll(<StrokeJoinDiagram>[
       const StrokeJoinDiagram(
         name: 'miter_0_join',
-        join: StrokeJoin.miter,
         strokeMiterLimit: 0.0,
       ),
       const StrokeJoinDiagram(
         name: 'miter_4_join',
-        join: StrokeJoin.miter,
-        strokeMiterLimit: 4.0,
       ),
       const StrokeJoinDiagram(
         name: 'miter_6_join',
-        join: StrokeJoin.miter,
         strokeMiterLimit: 6.0,
       ),
       const StrokeJoinDiagram(

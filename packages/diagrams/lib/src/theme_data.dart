@@ -5,7 +5,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
@@ -20,7 +19,7 @@ final GlobalKey _appBarKey = GlobalKey();
 final GlobalKey _fabKey = GlobalKey();
 
 class ThemeDataDiagram extends StatelessWidget implements DiagramMetadata {
-  const ThemeDataDiagram(this.name, {Key? key}) : super(key: key);
+  const ThemeDataDiagram(this.name, {super.key});
 
   @override
   final String name;
@@ -66,7 +65,7 @@ class ThemeDataDiagram extends StatelessWidget implements DiagramMetadata {
                 debugShowCheckedModeBanner: false,
                 theme: ThemeData(
                   colorScheme: ColorScheme.fromSwatch(
-                    primarySwatch: Colors.blue,
+                    
                   ).copyWith(
                     secondary: Colors.green,
                   ),
@@ -83,9 +82,9 @@ class ThemeDataDiagram extends StatelessWidget implements DiagramMetadata {
                           title: const Text('ThemeData Demo'),
                         ),
                         floatingActionButton: FloatingActionButton(
-                          child: const Icon(Icons.add),
                           onPressed: () {},
                           key: _fabKey,
+                          child: const Icon(Icons.add),
                         ),
                         body: Center(
                           child: Text(
@@ -132,7 +131,7 @@ class ThemeDataDiagram extends StatelessWidget implements DiagramMetadata {
 }
 
 class ThemeDataDiagramStep extends DiagramStep<ThemeDataDiagram> {
-  ThemeDataDiagramStep(DiagramController controller) : super(controller);
+  ThemeDataDiagramStep(super.controller);
 
   @override
   final String category = 'material';

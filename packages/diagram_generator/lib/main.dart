@@ -218,7 +218,7 @@ Future<void> main(List<String> args) async {
 
 // This is used by the `integration_test/smoke_test.dart`.
 class SmokeTestApp extends StatelessWidget {
-  const SmokeTestApp({Key? key}) : super(key: key);
+  const SmokeTestApp({super.key});
 
   @override
   Widget build(BuildContext context) {

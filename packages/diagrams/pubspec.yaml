@@ -16,12 +16,12 @@ dependencies:
     path: ../diagram_capture
   flutter:
     sdk: flutter
+  flutter_test:
+    sdk: flutter
   path_provider: ^2.0.1
   process: ^4.2.1
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
   mockito: ^5.0.3
 
 flutter:

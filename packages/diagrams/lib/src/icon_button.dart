@@ -5,7 +5,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
@@ -14,7 +13,7 @@ const String _iconButton = 'icon_button';
 const String _iconButtonBackground = 'icon_button_background';
 
 class IconButtonDiagram extends StatelessWidget implements DiagramMetadata {
-  const IconButtonDiagram(this.name, {Key? key}) : super(key: key);
+  const IconButtonDiagram(this.name, {super.key});
 
   @override
   final String name;
@@ -70,7 +69,7 @@ class IconButtonDiagram extends StatelessWidget implements DiagramMetadata {
 }
 
 class IconButtonDiagramStep extends DiagramStep<IconButtonDiagram> {
-  IconButtonDiagramStep(DiagramController controller) : super(controller);
+  IconButtonDiagramStep(super.controller);
 
   @override
   final String category = 'material';

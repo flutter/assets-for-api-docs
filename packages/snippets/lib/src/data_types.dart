@@ -152,7 +152,7 @@ abstract class CodeSample {
     final StringBuffer buf = StringBuffer('${args.join(' ')}:\n');
     for (final SourceLine line in input) {
       buf.writeln(
-        '${(line.line == -1 ? '??' : line.line).toString().padLeft(4, ' ')}: ${line.text} ',
+        '${(line.line == -1 ? '??' : line.line).toString().padLeft(4)}: ${line.text} ',
       );
     }
     return buf.toString();
@@ -279,26 +279,20 @@ class ApplicationSample extends CodeSample {
 /// the source file.
 class DartpadSample extends ApplicationSample {
   DartpadSample({
-    List<SourceLine> input = const <SourceLine>[],
-    required List<String> args,
-    required int index,
-    required SourceLine lineProto,
-  })  : assert(args.isNotEmpty),
-        super(input: input, args: args, index: index, lineProto: lineProto);
+    super.input,
+    required super.args,
+    required super.index,
+    required super.lineProto,
+  })  : assert(args.isNotEmpty);
 
   DartpadSample.fromFile({
-    List<SourceLine> input = const <SourceLine>[],
-    required List<String> args,
-    required File sourceFile,
-    required int index,
-    required SourceLine lineProto,
+    super.input,
+    required super.args,
+    required super.sourceFile,
+    required super.index,
+    required super.lineProto,
   })  : assert(args.isNotEmpty),
-        super.fromFile(
-            input: input,
-            args: args,
-            sourceFile: sourceFile,
-            index: index,
-            lineProto: lineProto);
+        super.fromFile();
 
   @override
   String get type => 'dartpad';

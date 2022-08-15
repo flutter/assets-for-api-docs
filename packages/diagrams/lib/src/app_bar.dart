@@ -5,14 +5,13 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
 import 'utils.dart';
 
 class AppBarDiagram extends StatefulWidget implements DiagramMetadata {
-  const AppBarDiagram({Key? key, required this.name}) : super(key: key);
+  const AppBarDiagram({super.key, required this.name});
 
   @override
   final String name;
@@ -46,7 +45,7 @@ class _DiagramState extends State<AppBarDiagram> {
           color: const Color(0xFFFFFFFF),
           child: MediaQuery(
             data: const MediaQueryData(
-              padding: EdgeInsets.zero,
+              
             ),
             child: Stack(
               children: <Widget>[
@@ -83,7 +82,6 @@ class _DiagramState extends State<AppBarDiagram> {
                           height: 50.0,
                           padding: const EdgeInsets.all(4.0),
                           child: const Placeholder(
-                            strokeWidth: 2.0,
                             color: Color(0xFFFFFFFF),
                           ),
                         ),
@@ -118,7 +116,7 @@ class _DiagramState extends State<AppBarDiagram> {
 }
 
 class AppBarDiagramStep extends DiagramStep<AppBarDiagram> {
-  AppBarDiagramStep(DiagramController controller) : super(controller);
+  AppBarDiagramStep(super.controller);
 
   @override
   final String category = 'material';

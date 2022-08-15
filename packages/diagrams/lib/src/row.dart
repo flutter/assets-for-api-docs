@@ -5,7 +5,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -17,8 +16,7 @@ const String _rowFixed = 'row_fixed';
 const String _rowTextDirection = 'row_textDirection';
 
 class RowDiagram extends StatelessWidget implements DiagramMetadata {
-  const RowDiagram(this.name, {this.ignoreErrors = false, Key? key})
-      : super(key: key);
+  const RowDiagram(this.name, {this.ignoreErrors = false, super.key});
 
   @override
   final String name;
@@ -46,7 +44,6 @@ class RowDiagram extends StatelessWidget implements DiagramMetadata {
             ),
             Expanded(
               child: FittedBox(
-                fit: BoxFit.contain, // otherwise the logo will be tiny
                 child: FlutterLogo(),
               ),
             ),
@@ -109,7 +106,7 @@ class RowDiagram extends StatelessWidget implements DiagramMetadata {
 }
 
 class RowDiagramStep extends DiagramStep<RowDiagram> {
-  RowDiagramStep(DiagramController controller) : super(controller);
+  RowDiagramStep(super.controller);
 
   @override
   final String category = 'widgets';

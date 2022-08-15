@@ -14,7 +14,7 @@ import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 
 class MyDiagram extends StatefulWidget {
-  const MyDiagram({this.size = 1.0, Key? key}) : super(key: key);
+  const MyDiagram({this.size = 1.0, super.key});
 
   final double size;
 

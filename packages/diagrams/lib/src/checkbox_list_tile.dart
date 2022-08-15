@@ -4,7 +4,6 @@
 
 import 'dart:async';
 import 'dart:io';
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart' show timeDilation;
@@ -12,12 +11,12 @@ import 'diagram_step.dart';
 
 class LinkedLabelCheckbox extends StatelessWidget {
   const LinkedLabelCheckbox({
-    Key? key,
+    super.key,
     required this.label,
     required this.padding,
     required this.value,
     required this.onChanged,
-  }) : super(key: key);
+  });
 
   final String label;
   final EdgeInsets padding;
@@ -59,12 +58,12 @@ class LinkedLabelCheckbox extends StatelessWidget {
 
 class LabeledCheckbox extends StatelessWidget {
   const LabeledCheckbox({
-    Key? key,
+    super.key,
     required this.label,
     required this.padding,
     required this.value,
     required this.onChanged,
-  }) : super(key: key);
+  });
 
   final String label;
   final EdgeInsets padding;
@@ -97,7 +96,7 @@ class LabeledCheckbox extends StatelessWidget {
 
 class CheckboxListTileDiagram extends StatefulWidget
     implements DiagramMetadata {
-  const CheckboxListTileDiagram(this.name, {Key? key}) : super(key: key);
+  const CheckboxListTileDiagram(this.name, {super.key});
 
   @override
   final String name;
@@ -179,7 +178,7 @@ class _CheckboxListTileDiagramState extends State<CheckboxListTileDiagram> {
 }
 
 class CheckboxListTileDiagramStep extends DiagramStep<CheckboxListTileDiagram> {
-  CheckboxListTileDiagramStep(DiagramController controller) : super(controller);
+  CheckboxListTileDiagramStep(super.controller);
 
   @override
   final String category = 'material';

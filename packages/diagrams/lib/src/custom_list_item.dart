@@ -4,7 +4,6 @@
 
 import 'dart:async';
 import 'dart:io';
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 import 'diagram_step.dart';
 
@@ -13,11 +12,10 @@ import 'diagram_step.dart';
 
 class _VideoDescription extends StatelessWidget {
   const _VideoDescription({
-    Key? key,
     required this.title,
     required this.user,
     required this.viewCount,
-  }) : super(key: key);
+  });
 
   final String title;
   final String user;
@@ -61,8 +59,8 @@ class CustomListItem extends StatelessWidget {
     required this.title,
     required this.user,
     required this.viewCount,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final Widget thumbnail;
   final String title;
@@ -77,16 +75,16 @@ class CustomListItem extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Expanded(
-            child: thumbnail,
             flex: 2,
+            child: thumbnail,
           ),
           Expanded(
+            flex: 3,
             child: _VideoDescription(
               title: title,
               user: user,
               viewCount: viewCount,
             ),
-            flex: 3,
           ),
           const Icon(
             Icons.more_vert,
@@ -100,13 +98,12 @@ class CustomListItem extends StatelessWidget {
 
 class _ArticleDescription extends StatelessWidget {
   const _ArticleDescription({
-    Key? key,
     required this.title,
     required this.subtitle,
     required this.author,
     required this.publishDate,
     required this.readDuration,
-  }) : super(key: key);
+  });
 
   final String title;
   final String subtitle;
@@ -120,6 +117,7 @@ class _ArticleDescription extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Expanded(
+          flex: 2,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -143,7 +141,6 @@ class _ArticleDescription extends StatelessWidget {
               ),
             ],
           ),
-          flex: 2,
         ),
         Expanded(
           child: Column(
@@ -166,7 +163,6 @@ class _ArticleDescription extends StatelessWidget {
               ),
             ],
           ),
-          flex: 1,
         ),
       ],
     );
@@ -176,14 +172,14 @@ class _ArticleDescription extends StatelessWidget {
 /// A sample article list item with multi-line [title] and [subtitle]s.
 class CustomListItemTwo extends StatelessWidget {
   const CustomListItemTwo({
-    Key? key,
+    super.key,
     required this.thumbnail,
     required this.title,
     required this.subtitle,
     required this.author,
     required this.publishDate,
     required this.readDuration,
-  }) : super(key: key);
+  });
 
   final Widget thumbnail;
   final String title;
@@ -225,7 +221,7 @@ class CustomListItemTwo extends StatelessWidget {
 }
 
 class CustomListItemDiagram extends StatelessWidget implements DiagramMetadata {
-  const CustomListItemDiagram(this.name, {Key? key}) : super(key: key);
+  const CustomListItemDiagram(this.name, {super.key});
 
   @override
   final String name;
@@ -310,7 +306,7 @@ class CustomListItemDiagram extends StatelessWidget implements DiagramMetadata {
 }
 
 class CustomListItemDiagramStep extends DiagramStep<CustomListItemDiagram> {
-  CustomListItemDiagramStep(DiagramController controller) : super(controller);
+  CustomListItemDiagramStep(super.controller);
 
   @override
   final String category = 'widgets';

@@ -20,10 +20,9 @@ import 'package:vector_math/vector_math_64.dart';
 // the needed structure for capturing them.
 class _Diagram extends StatelessWidget {
   const _Diagram({
-    Key? key,
     required this.boundaryKey,
     required this.child,
-  }) : super(key: key);
+  });
 
   final GlobalKey boundaryKey;
   final Widget child;
@@ -56,9 +55,8 @@ const Size _kDefaultDiagramViewportSize = Size(1280.0, 1024.0);
 // captured image pixels.
 class _DiagramViewConfiguration extends ViewConfiguration {
   _DiagramViewConfiguration({
-    Size size = _kDefaultDiagramViewportSize,
-  })  : _paintMatrix = _getMatrix(size, ui.window.devicePixelRatio),
-        super(size: size);
+    super.size = _kDefaultDiagramViewportSize,
+  })  : _paintMatrix = _getMatrix(size, ui.window.devicePixelRatio);
 
   static Matrix4 _getMatrix(Size size, double devicePixelRatio) {
     final double inverseRatio = devicePixelRatio / ui.window.devicePixelRatio;
@@ -96,9 +94,8 @@ class _DiagramViewConfiguration extends ViewConfiguration {
 // Provides a concrete implementation of WidgetController.
 class _DiagramWidgetController extends WidgetController
     implements TickerProvider {
-  _DiagramWidgetController(WidgetsBinding binding)
-      : _tickers = <_DiagramTicker>{},
-        super(binding);
+  _DiagramWidgetController(super.binding)
+      : _tickers = <_DiagramTicker>{};
 
   @override
   DiagramFlutterBinding get binding => super.binding as DiagramFlutterBinding;
@@ -141,10 +138,12 @@ class _DiagramWidgetController extends WidgetController
       if (binding is LiveTestWidgetsFlutterBinding &&
           binding.framePolicy ==
               LiveTestWidgetsFlutterBindingFramePolicy.benchmark) {
-        throw 'When using LiveTestWidgetsFlutterBindingFramePolicy.benchmark, '
-            'hasScheduledFrame is never set to true. This means that pumpAndSettle() '
-            'cannot be used, because it has no way to know if the application has '
-            'stopped registering new frames.';
+        throw StateError(
+          'When using LiveTestWidgetsFlutterBindingFramePolicy.benchmark, '
+          'hasScheduledFrame is never set to true. This means that pumpAndSettle() '
+          'cannot be used, because it has no way to know if the application has '
+          'stopped registering new frames.',
+        );
       }
       return true;
     }());
@@ -162,7 +161,7 @@ class _DiagramWidgetController extends WidgetController
 typedef _TickerDisposeCallback = void Function(_DiagramTicker ticker);
 
 class _DiagramTicker extends Ticker {
-  _DiagramTicker(TickerCallback onTick, this._onDispose) : super(onTick);
+  _DiagramTicker(super.onTick, this._onDispose);
 
   final _TickerDisposeCallback _onDispose;
 
@@ -550,8 +549,8 @@ class DiagramController {
         return 'NATIVE';
       case ui.ImageByteFormat.png:
         return 'PNG';
-      default:
-        throw ArgumentError('Unknown byte format $format');
+      case ui.ImageByteFormat.rawStraightRgba:
+        return 'RAW STRAIGHT RGBA';
     }
   }
 

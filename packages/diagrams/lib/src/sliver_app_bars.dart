@@ -5,7 +5,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
@@ -31,8 +30,8 @@ class SliverAppBarDiagram extends StatefulWidget implements DiagramMetadata {
     this.floating = false,
     this.snap = false,
     this.repeatAnimation = false,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final bool pinned;
   final bool floating;
@@ -161,7 +160,7 @@ class SliverAppBarDiagramState extends State<SliverAppBarDiagram>
 }
 
 class SliverAppBarDiagramStep extends DiagramStep<SliverAppBarDiagram> {
-  SliverAppBarDiagramStep(DiagramController controller) : super(controller) {
+  SliverAppBarDiagramStep(super.controller) {
     for (final bool pinned in <bool>[false, true]) {
       for (final bool floating in <bool>[false, true]) {
         // snap is only a legal option if floating is true.

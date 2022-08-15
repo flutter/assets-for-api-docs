@@ -4,12 +4,11 @@
 
 import 'dart:async';
 import 'dart:io';
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 import 'diagram_step.dart';
 
 class ListTileDiagram extends StatelessWidget implements DiagramMetadata {
-  const ListTileDiagram(this.name, {Key? key}) : super(key: key);
+  const ListTileDiagram(this.name, {super.key});
 
   @override
   final String name;
@@ -77,7 +76,7 @@ class ListTileDiagram extends StatelessWidget implements DiagramMetadata {
 }
 
 class ListTileDiagramStep extends DiagramStep<ListTileDiagram> {
-  ListTileDiagramStep(DiagramController controller) : super(controller);
+  ListTileDiagramStep(super.controller);
 
   @override
   final String category = 'material';
