@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.diagram_generator">
+    package="dev.flutter.diagram_generator">
    <application
         android:label="diagram_generator"
         android:icon="@mipmap/ic_launcher">

@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-package com.example.diagram_generator
+package dev.flutter.diagram_generator
 
 import io.flutter.embedding.android.FlutterActivity
 
