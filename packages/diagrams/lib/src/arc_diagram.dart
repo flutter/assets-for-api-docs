@@ -99,7 +99,6 @@ final CodeStyles codeStyles = CodeStyles(
   palette: palette,
   fontSize: 16.0,
   fontFamily: 'Ubuntu Mono',
-  package: 'diagrams',
 );
 
 /// Paints text around an arc on the given [canvas].
