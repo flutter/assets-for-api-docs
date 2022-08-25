@@ -48,9 +48,15 @@ class DiagramMaterialApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       useInheritedMediaQuery: true,
-      home: DefaultTextStyle(
-        style: TextStyle(fontFamily: fontFamily),
-        child: home,
+      home: Builder(
+        builder: (BuildContext context) {
+          return DefaultTextStyle(
+            style: DefaultTextStyle.of(context)
+                .style
+                .copyWith(fontFamily: fontFamily),
+            child: home,
+          );
+        },
       ),
     );
   }
