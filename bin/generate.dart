@@ -313,8 +313,9 @@ class DiagramGenerator {
         .where((File input) => path.basename(input.path) == 'error.log')
         .toList();
 
-    if (errorFiles.length != 1)
+    if (errorFiles.length != 1) {
       throw GeneratorException('Subprocess did not complete cleanly!');
+    }
 
     print('Processing ${inputFiles.length - 1} files...');
 
