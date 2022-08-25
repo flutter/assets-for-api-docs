@@ -37,6 +37,7 @@ class MaterialAppDiagram extends StatelessWidget implements DiagramMetadata {
       case _theme:
         returnWidget = DiagramMaterialApp(
           primaryColor: Colors.blueGrey,
+          brightness: Brightness.dark,
           home: Scaffold(
             appBar: AppBar(
               title: const Text('MaterialApp Theme'),

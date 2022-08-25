@@ -24,7 +24,7 @@ class DiagramMaterialApp extends StatelessWidget {
     this.primaryColor,
     this.colorScheme,
     this.textTheme,
-    this.home,
+    required this.home,
   });
 
   final Brightness? brightness;
@@ -33,7 +33,7 @@ class DiagramMaterialApp extends StatelessWidget {
   final Color? primaryColor;
   final ColorScheme? colorScheme;
   final TextTheme? textTheme;
-  final Widget? home;
+  final Widget home;
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +48,10 @@ class DiagramMaterialApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       useInheritedMediaQuery: true,
-      home: home,
+      home: DefaultTextStyle(
+        style: TextStyle(fontFamily: fontFamily),
+        child: home,
+      ),
     );
   }
 }
