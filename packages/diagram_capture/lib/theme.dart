@@ -50,6 +50,7 @@ class DiagramMaterialApp extends StatelessWidget {
       useInheritedMediaQuery: true,
       home: Builder(
         builder: (BuildContext context) {
+          // The fallback text should also be roboto, like in unspecified_textstyle_material_app
           return DefaultTextStyle(
             style: DefaultTextStyle.of(context)
                 .style
