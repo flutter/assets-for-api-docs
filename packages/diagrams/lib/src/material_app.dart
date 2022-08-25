@@ -5,6 +5,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:diagram_capture/theme.dart';
 import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
@@ -25,33 +26,29 @@ class MaterialAppDiagram extends StatelessWidget implements DiagramMetadata {
 
     switch (name) {
       case _basic:
-        returnWidget = MaterialApp(
+        returnWidget = DiagramMaterialApp(
           home: Scaffold(
             appBar: AppBar(
               title: const Text('Home'),
             ),
           ),
-          debugShowCheckedModeBanner: false,
         );
         break;
       case _theme:
-        returnWidget = MaterialApp(
-          theme: ThemeData(
-              brightness: Brightness.dark, primaryColor: Colors.blueGrey),
+        returnWidget = DiagramMaterialApp(
+          primaryColor: Colors.blueGrey,
           home: Scaffold(
             appBar: AppBar(
               title: const Text('MaterialApp Theme'),
             ),
           ),
-          debugShowCheckedModeBanner: false,
         );
         break;
       case _textstyle:
-        returnWidget = const MaterialApp(
+        returnWidget = const DiagramMaterialApp(
           home: Center(
             child: Text('Hello World'),
           ),
-          debugShowCheckedModeBanner: false,
         );
         break;
     }

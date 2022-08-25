@@ -16,6 +16,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:path/path.dart' as path;
 import 'package:vector_math/vector_math_64.dart';
 
+import 'theme.dart';
+
 // The diagram host widget. Diagrams are wrapped by this widget to provide
 // the needed structure for capturing them.
 class _Diagram extends StatelessWidget {
@@ -29,25 +31,25 @@ class _Diagram extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Material(
-        child: Builder(
-          builder: (BuildContext context) {
-            return Center(
-              child: RepaintBoundary(
-                key: boundaryKey,
-                child: child,
-              ),
-            );
-          },
+    return MediaQuery(
+      data: kDefaultMediaQuery,
+      child: DiagramMaterialApp(
+        home: Material(
+          child: Builder(
+            builder: (BuildContext context) {
+              return Center(
+                child: RepaintBoundary(
+                  key: boundaryKey,
+                  child: child,
+                ),
+              );
+            },
+          ),
         ),
       ),
     );
   }
 }
-
-const Size _kDefaultDiagramViewportSize = Size(1280.0, 1024.0);
 
 // View configuration that allows diagrams to not match the physical dimensions
 // of the device. This will change the view used to display the flutter surface
@@ -55,7 +57,7 @@ const Size _kDefaultDiagramViewportSize = Size(1280.0, 1024.0);
 // captured image pixels.
 class _DiagramViewConfiguration extends ViewConfiguration {
   _DiagramViewConfiguration({
-    super.size = _kDefaultDiagramViewportSize,
+    super.size = kDefaultDiagramViewportSize,
   }) : _paintMatrix = _getMatrix(size, ui.window.devicePixelRatio);
 
   static Matrix4 _getMatrix(Size size, double devicePixelRatio) {
@@ -223,7 +225,7 @@ class DiagramFlutterBinding extends BindingBase
   /// Determines the dimensions of the virtual screen that the diagram will
   /// be drawn on, in logical units.
   Size get screenDimensions => _screenDimensions;
-  Size _screenDimensions = _kDefaultDiagramViewportSize;
+  Size _screenDimensions = kDefaultDiagramViewportSize;
   set screenDimensions(Size screenDimensions) {
     _screenDimensions = screenDimensions;
     handleMetricsChanged();
@@ -306,7 +308,7 @@ class DiagramController {
     WidgetBuilder? builder,
     Directory? outputDirectory,
     double? pixelRatio,
-    Size screenDimensions = _kDefaultDiagramViewportSize,
+    Size screenDimensions = kDefaultDiagramViewportSize,
   })  : outputDirectory = outputDirectory ?? Directory.current,
         _builder = builder {
     _binding.pixelRatio = pixelRatio ?? ui.window.devicePixelRatio;

@@ -5,6 +5,7 @@
 import 'dart:io';
 
 import 'package:diagram_capture/diagram_capture.dart';
+import 'package:diagram_capture/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -58,8 +59,7 @@ class TabsDiagramState extends State<TabsDiagram>
     return ConstrainedBox(
       key: UniqueKey(),
       constraints: BoxConstraints.tight(const Size(540.0, 960.0)),
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
+      child: DiagramMaterialApp(
         home: Scaffold(
           appBar: AppBar(
             bottom: TabBar(

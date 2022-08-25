@@ -5,6 +5,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:diagram_capture/theme.dart';
 import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
@@ -61,14 +62,12 @@ class ThemeDataDiagram extends StatelessWidget implements DiagramMetadata {
             padding: const EdgeInsets.only(right: 120),
             color: Colors.white,
             child: Center(
-              child: MaterialApp(
-                debugShowCheckedModeBanner: false,
-                theme: ThemeData(
-                  colorScheme: ColorScheme.fromSwatch().copyWith(
-                    secondary: Colors.green,
-                  ),
-                  textTheme: const TextTheme(
-                      bodyText2: TextStyle(color: Colors.purple)),
+              child: DiagramMaterialApp(
+                colorScheme: ColorScheme.fromSwatch().copyWith(
+                  secondary: Colors.green,
+                ),
+                textTheme: const TextTheme(
+                  bodyText2: TextStyle(color: Colors.purple),
                 ),
                 home: Stack(
                   children: <Widget>[
