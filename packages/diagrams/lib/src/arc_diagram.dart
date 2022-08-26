@@ -3,6 +3,7 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:vector_math/vector_math_64.dart' hide Colors;
 
 import 'diagram_step.dart';
 
@@ -296,6 +297,38 @@ void paintSpan(
   );
 }
 
+void paintArrowHead(
+  Canvas canvas,
+  Offset center,
+  double angle,
+  Color color, {
+  double length = 7.0,
+  double thickness = 3.0,
+  bool bottomOnly = false,
+}) {
+  final Matrix2 matrix = Matrix2.rotation(angle);
+  final Vector2 topVec = matrix.transform(Vector2(-length, length));
+  final Vector2 bottomVec = matrix.transform(Vector2(-length, -length));
+
+  final Path path = Path()
+    ..moveTo(center.dx + bottomVec.x, center.dy + bottomVec.y)
+    ..lineTo(center.dx, center.dy);
+
+  if (!bottomOnly) {
+    path.lineTo(center.dx + topVec.x, center.dy + topVec.y);
+  }
+
+  canvas.drawPath(
+    path,
+    Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round
+      ..strokeJoin = StrokeJoin.round
+      ..color = color
+      ..strokeWidth = thickness,
+  );
+}
+
 /// Similar to [paintSpan] but provides a default text style.
 void paintLabel(
   Canvas canvas,
@@ -329,13 +362,19 @@ class ArcDiagramPainter extends CustomPainter {
   const ArcDiagramPainter({
     required this.startAngle,
     required this.sweepAngle,
+    this.startLabelAlignment = 0.5,
+    this.sweepLabelAlignment = 0.5,
   });
 
   final double startAngle;
   final double sweepAngle;
+  final double startLabelAlignment;
+  final double sweepLabelAlignment;
 
   @override
   void paint(Canvas canvas, Size size) {
+    final Color startArcColor = palette.text;
+    final Color sweepArcColor = palette.primary;
     const double arcRectMargin = 32.0;
     const double rectLabelMargin = 8.0;
     final Rect arcRect = Rect.fromLTRB(
@@ -346,11 +385,12 @@ class ArcDiagramPainter extends CustomPainter {
     );
     const double arcLineThickness = 4.0;
     final bool overlaps = startAngle >= 0 != sweepAngle >= 0;
+    final double overlapNudge = overlaps ? 3.5 : 0.0;
 
-    final Offset arcStart = arcRect.center +
+    final Offset nudgedArcStart = arcRect.center +
         Offset(
-          cos(startAngle) * arcRect.width / 2,
-          sin(startAngle) * arcRect.height / 2,
+          cos(startAngle) * (arcRect.width / 2 + overlapNudge),
+          sin(startAngle) * (arcRect.height / 2 + overlapNudge),
         );
 
     final Offset arcEnd = arcRect.center +
@@ -452,13 +492,23 @@ class ArcDiagramPainter extends CustomPainter {
       fontWeight: FontWeight.bold,
     );
 
+    // Draw arrow at sweepAngle
+    paintArrowHead(
+      canvas,
+      arcEnd,
+      startAngle + sweepAngle + pi / (startAngle > sweepAngle ? -2 : 2),
+      sweepArcColor,
+      thickness: arcLineThickness,
+      bottomOnly: overlaps,
+    );
+
     // Draw indicator for startAngle
     paint
-      ..color = palette.text
-      ..strokeWidth = 3;
+      ..color = startArcColor
+      ..strokeWidth = arcLineThickness;
     paintDottedArc(
       canvas,
-      rect: arcRect.inflate(overlaps ? 3.0 : 0.0),
+      rect: arcRect.inflate(overlapNudge),
       startAngle: 0,
       sweepAngle: startAngle,
       strokeLength: 22.0,
@@ -468,20 +518,19 @@ class ArcDiagramPainter extends CustomPainter {
     paintTextArc(
       canvas,
       'startAngle',
-      rect: arcRect.deflate(overlaps ? -4.0 : 4.0),
+      rect: arcRect.deflate(overlaps ? 4.0 : 4.0),
       style: TextStyle(
-        color: palette.text,
+        color: startArcColor,
         fontSize: 18.0,
         fontWeight: FontWeight.bold,
       ),
       alignment: 0.0,
-      theta: startAngle / 2,
-      inside: !overlaps,
+      theta: startAngle * startLabelAlignment,
     );
 
     // Draw indicator for sweepAngle
     paint
-      ..color = palette.primary
+      ..color = sweepArcColor
       ..strokeWidth = arcLineThickness;
     canvas.drawArc(arcRect, startAngle, sweepAngle, false, paint);
     paintTextArc(
@@ -489,17 +538,27 @@ class ArcDiagramPainter extends CustomPainter {
       'sweepAngle',
       rect: arcRect.deflate(4.0),
       style: TextStyle(
-        color: palette.primary,
+        color: sweepArcColor,
         fontSize: 18.0,
         fontWeight: FontWeight.bold,
       ),
       alignment: 0.0,
-      theta: startAngle + sweepAngle / 2,
+      theta: lerpDouble(
+        startAngle,
+        startAngle + sweepAngle,
+        sweepLabelAlignment,
+      )!,
     );
 
-    // Draw anchors for start and end of path
-    paintAnchor(canvas, arcStart, palette.primary);
-    paintAnchor(canvas, arcEnd, palette.primary);
+    // Draw arrow at startAngle
+    paintArrowHead(
+      canvas,
+      nudgedArcStart,
+      startAngle + pi / 2,
+      startArcColor,
+      thickness: arcLineThickness,
+      bottomOnly: overlaps,
+    );
   }
 
   @override
