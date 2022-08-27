@@ -377,11 +377,11 @@ class ArcDiagramPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final Color startArcColor = palette.text;
-    final Color sweepArcColor = palette.primary;
+    final Color startArcColor = palette.primary;
+    final Color sweepArcColor = palette.text;
     const double arcRectMargin = 32.0;
     const double rectLabelMargin = 8.0;
-    final Rect arcRect = Rect.fromLTRB(
+    final Rect rect = Rect.fromLTRB(
       arcRectMargin,
       arcRectMargin + rectLabelMargin,
       size.height - arcRectMargin,
@@ -390,6 +390,7 @@ class ArcDiagramPainter extends CustomPainter {
     const double arcLineThickness = 4.0;
     final bool overlaps = startAngle >= 0 != sweepAngle >= 0;
     final double overlapNudge = overlaps ? 3.5 : 0.0;
+    final Rect arcRect = rect.deflate(3.0 + overlapNudge);
 
     final Offset nudgedArcStart = arcRect.center +
         Offset(
@@ -485,11 +486,11 @@ class ArcDiagramPainter extends CustomPainter {
     paint
       ..color = palette.subtitle
       ..strokeWidth = 3.0;
-    canvas.drawRect(arcRect, paint);
+    canvas.drawRect(rect, paint);
     paintLabel(
       canvas,
       'rect',
-      offset: arcRect.topLeft - const Offset(0, 4),
+      offset: rect.topLeft - const Offset(0, 4),
       alignment: Alignment.topRight,
       color: palette.subtitle,
       fontSize: 18.0,
@@ -510,15 +511,16 @@ class ArcDiagramPainter extends CustomPainter {
     paint
       ..color = startArcColor
       ..strokeWidth = arcLineThickness;
-    paintDottedArc(
-      canvas,
-      rect: arcRect.inflate(overlapNudge),
-      startAngle: 0,
-      sweepAngle: startAngle,
-      strokeLength: 22.0,
-      spaceLength: 16.0,
-      paint: paint,
-    );
+    // paintDottedArc(
+    //   canvas,
+    //   rect: arcRect.inflate(overlapNudge),
+    //   startAngle: 0,
+    //   sweepAngle: startAngle,
+    //   strokeLength: 22.0,
+    //   spaceLength: 16.0,
+    //   paint: paint,
+    // );
+    canvas.drawArc(arcRect.inflate(overlapNudge), 0, startAngle, false, paint);
     paintTextArc(
       canvas,
       'startAngle',
