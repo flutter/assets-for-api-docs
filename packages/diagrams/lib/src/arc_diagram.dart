@@ -294,8 +294,8 @@ class ArcDiagramPainter extends CustomPainter {
     );
     const double arcLineThickness = 4.0;
     final bool overlaps = startAngle >= 0 != sweepAngle >= 0;
-    final double overlapNudge = overlaps ? 3.5 : 0.0;
-    final Rect arcRect = rect.deflate(3.0 + overlapNudge);
+    final double overlapNudge = overlaps ? 5 : 0.0;
+    final Rect arcRect = rect.deflate(4.0 + overlapNudge);
 
     final Offset nudgedArcStart = arcRect.center +
         Offset(
