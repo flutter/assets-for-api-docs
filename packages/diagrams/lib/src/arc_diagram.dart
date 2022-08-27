@@ -416,15 +416,6 @@ class ArcDiagramPainter extends CustomPainter {
     paint
       ..color = startArcColor
       ..strokeWidth = arcLineThickness;
-    // paintDottedArc(
-    //   canvas,
-    //   rect: arcRect.inflate(overlapNudge),
-    //   startAngle: 0,
-    //   sweepAngle: startAngle,
-    //   strokeLength: 22.0,
-    //   spaceLength: 16.0,
-    //   paint: paint,
-    // );
     canvas.drawArc(arcRect.inflate(overlapNudge), 0, startAngle, false, paint);
     paintTextArc(
       canvas,
