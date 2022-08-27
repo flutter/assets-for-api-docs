@@ -698,6 +698,7 @@ class PathAddArcCCWDiagram extends ArcDiagram {
               foregroundPainter: ArcDiagramPainter(
                 startAngle: 5 * pi / 4,
                 sweepAngle: -3 * pi / 4,
+                startLabelAlignment: 1 / 5,
               ),
             ),
           ),
