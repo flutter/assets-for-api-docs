@@ -4,6 +4,8 @@
 
 import 'package:flutter/material.dart';
 
+import 'diagram_capture.dart';
+
 /// The size of the viewport that diagrams are captured in.
 const Size kDefaultDiagramViewportSize = Size(1280.0, 1024.0);
 
@@ -11,8 +13,9 @@ const Size kDefaultDiagramViewportSize = Size(1280.0, 1024.0);
 ///
 /// This has no padding or insets, a devicePixelRatio of 1.0, and a
 /// textScaleFactor of 1.0.
-const MediaQueryData kDefaultMediaQuery = MediaQueryData(
+final MediaQueryData kDefaultMediaQuery = MediaQueryData(
   size: kDefaultDiagramViewportSize,
+  devicePixelRatio: DiagramFlutterBinding.instance.pixelRatio,
 );
 
 /// A [MaterialApp] with defaults that are appropriate for capturing diagrams.

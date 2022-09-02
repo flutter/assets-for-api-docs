@@ -208,19 +208,30 @@ class DiagramFlutterBinding extends BindingBase
 
   /// Determines the ratio between physical units and logical units.
   ///
-  /// The [pixelRatio] describes the scale between the logical pixels and the
-  /// size of the output image. It is independent of the
+  /// The [outputPixelRatio] describes the scale between the logical pixels and
+  /// the size of the output image. It is independent of the
   /// [window.devicePixelRatio] for the device, so specifying 1.0 (the default)
   /// will give you a 1:1 mapping between logical pixels and the output pixels
   /// in the image.
   ///
   /// Defaults to 1.0.
-  double get pixelRatio => _pixelRatio;
-  double _pixelRatio = 1.0;
-  set pixelRatio(double pixelRatio) {
-    _pixelRatio = pixelRatio;
+  double get outputPixelRatio => _outputPixelRatio;
+  double _outputPixelRatio = 1.0;
+  set outputPixelRatio(double outputPixelRatio) {
+    _outputPixelRatio = outputPixelRatio;
     handleMetricsChanged();
   }
+
+  /// Determines how much to oversample diagrams before they are resized to the
+  /// desired [outputPixelRatio].
+  double get oversampleRatio => _oversampleRatio;
+  double _oversampleRatio = 1.0;
+  set oversampleRatio(double oversampleRatio) {
+    _oversampleRatio = oversampleRatio;
+    handleMetricsChanged();
+  }
+
+  double get pixelRatio => outputPixelRatio * oversampleRatio;
 
   /// Determines the dimensions of the virtual screen that the diagram will
   /// be drawn on, in logical units.
@@ -245,10 +256,32 @@ class DiagramFlutterBinding extends BindingBase
   }
 
   /// Captures an image of the [RepaintBoundary] with the given key.
-  Future<ui.Image> takeSnapshot() {
+  Future<ui.Image> takeSnapshot() async {
     final RenderRepaintBoundary object = _boundaryKey.currentContext!
         .findRenderObject()! as RenderRepaintBoundary;
-    return object.toImage(pixelRatio: pixelRatio);
+    final ui.Image image =
+        await object.toImage(pixelRatio: outputPixelRatio * oversampleRatio);
+    if (oversampleRatio > 1.0) {
+      final ui.PictureRecorder recorder = ui.PictureRecorder();
+      final ui.Canvas canvas = ui.Canvas(recorder);
+      final double scale = 1 / oversampleRatio;
+      canvas.drawPaint(
+        Paint()
+          ..shader = ImageShader(
+            image,
+            ui.TileMode.clamp,
+            ui.TileMode.clamp,
+            Matrix4.diagonal3Values(scale, scale, 1.0).storage,
+            filterQuality: FilterQuality.medium,
+          ),
+      );
+      return recorder.endRecording().toImage(
+            image.width ~/ oversampleRatio,
+            image.height ~/ oversampleRatio,
+          );
+    } else {
+      return image;
+    }
   }
 
   /// Updates the current diagram with the given builder as the child of the
@@ -311,7 +344,7 @@ class DiagramController {
     Size screenDimensions = kDefaultDiagramViewportSize,
   })  : outputDirectory = outputDirectory ?? Directory.current,
         _builder = builder {
-    _binding.pixelRatio = pixelRatio ?? ui.window.devicePixelRatio;
+    _binding.outputPixelRatio = pixelRatio ?? ui.window.devicePixelRatio;
     _binding.screenDimensions = screenDimensions;
     if (_builder != null) {
       _binding.updateDiagram(_builder!);
@@ -349,8 +382,8 @@ class DiagramController {
   /// files.
   Directory outputDirectory;
 
-  double get pixelRatio => _binding.pixelRatio;
-  set pixelRatio(double ratio) => _binding.pixelRatio = ratio;
+  double get pixelRatio => _binding.outputPixelRatio;
+  set pixelRatio(double ratio) => _binding.outputPixelRatio = ratio;
 
   TickerProvider get vsync => _binding.vsync;
 
