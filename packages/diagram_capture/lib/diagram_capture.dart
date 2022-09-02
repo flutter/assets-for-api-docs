@@ -225,7 +225,7 @@ class DiagramFlutterBinding extends BindingBase
   /// Determines how much to oversample diagrams before they are resized to the
   /// desired [outputPixelRatio].
   double get oversampleRatio => _oversampleRatio;
-  double _oversampleRatio = 1.0;
+  double _oversampleRatio = 2.0;
   set oversampleRatio(double oversampleRatio) {
     _oversampleRatio = oversampleRatio;
     handleMetricsChanged();
@@ -272,7 +272,7 @@ class DiagramFlutterBinding extends BindingBase
             ui.TileMode.clamp,
             ui.TileMode.clamp,
             Matrix4.diagonal3Values(scale, scale, 1.0).storage,
-            filterQuality: FilterQuality.medium,
+            filterQuality: FilterQuality.high,
           ),
       );
       return recorder.endRecording().toImage(
