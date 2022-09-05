@@ -14,8 +14,8 @@ class BasicShapesDiagram extends StatelessWidget implements DiagramMetadata {
   const BasicShapesDiagram({
     required this.name,
     required this.painter,
-    this.width = 700,
-    this.height = 400,
+    required this.width,
+    required this.height,
     super.key,
   });
 
@@ -140,10 +140,6 @@ class LineDiagramPainter extends CustomPainter {
       end,
       paint,
     );
-
-    paint
-      ..color = Colors.black
-      ..style = PaintingStyle.fill;
 
     paintLabel(
       canvas,
@@ -391,6 +387,152 @@ class RectDiagramPainter extends CustomPainter {
   bool shouldRepaint(RectDiagramPainter oldDelegate) => false;
 }
 
+class OvalDiagramPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    void drawRect(Rect rect, PaintingStyle style) {
+      final Paint paint = Paint()
+        ..strokeWidth = 4.0
+        ..style = PaintingStyle.stroke
+        ..color = Colors.grey;
+
+      canvas.drawRect(
+        rect,
+        paint,
+      );
+
+      paintLabel(
+        canvas,
+        'rect',
+        offset: rect.topLeft + const Offset(0, -8),
+        alignment: Alignment.topRight,
+        style: labelStyle.copyWith(color: paint.color),
+      );
+
+      paint
+        ..color = Colors.black
+        ..style = style;
+
+      canvas.drawOval(
+        rect.deflate(
+          style == PaintingStyle.stroke
+              ? paint.strokeWidth
+              : paint.strokeWidth / 2,
+        ),
+        paint,
+      );
+
+      paintLabel(
+        canvas,
+        '$style',
+        offset: rect.center,
+        style: labelStyle.copyWith(
+          color: style == PaintingStyle.stroke ? Colors.black : Colors.white,
+          fontSize: 12,
+        ),
+      );
+    }
+
+    drawRect(
+      const Rect.fromLTRB(
+        64,
+        64,
+        64 * 4,
+        64 * 5,
+      ),
+      PaintingStyle.stroke,
+    );
+
+    drawRect(
+      const Rect.fromLTRB(
+        64 * 5,
+        64 * 1.5,
+        64 * 9,
+        64 * 4.5,
+      ),
+      PaintingStyle.fill,
+    );
+  }
+
+  @override
+  bool shouldRepaint(LineDiagramPainter oldDelegate) => false;
+}
+
+class CircleDiagramPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    canvas.save();
+    canvas.translate(56.0, 48.0);
+
+    paintCoordinateGrid(canvas, xDivisions: 13, yDivisions: 8);
+
+    final Paint paint = Paint();
+
+    final Offset center = const Offset(6.5, 4) * divisionInterval;
+    final Rect rect = Rect.fromCircle(
+      center: center,
+      radius: 3 * divisionInterval,
+    );
+
+    paintLabel(
+      canvas,
+      'center',
+      offset: center + const Offset(0, -8),
+      alignment: Alignment.topCenter,
+      style: labelStyle,
+    );
+
+    final double cx = rect.left + rect.width / 4;
+    final double cy = rect.center.dy;
+    paintLabel(
+      canvas,
+      'radius',
+      offset: Offset(cx, cy + 8),
+      alignment: Alignment.bottomCenter,
+      style: labelStyle,
+    );
+
+    paint
+      ..color = Colors.grey
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 5
+      ..strokeJoin = StrokeJoin.round
+      ..strokeCap = StrokeCap.round;
+
+    canvas.drawLine(
+      rect.center,
+      rect.centerLeft,
+      paint,
+    );
+
+    paint
+      ..style = PaintingStyle.fill
+      ..color = Colors.black;
+
+    canvas.drawCircle(
+      center,
+      3,
+      paint,
+    );
+
+    paint
+      ..strokeWidth = 5.0
+      ..style = PaintingStyle.stroke
+      ..color = Colors.black;
+
+    canvas.drawCircle(
+      center,
+      rect.width / 2,
+      paint,
+    );
+
+    canvas.restore();
+  }
+
+  @override
+  bool shouldRepaint(LineDiagramPainter oldDelegate) => false;
+}
+
 class BasicShapesStep extends DiagramStep<BasicShapesDiagram> {
   BasicShapesStep(super.controller);
 
@@ -401,13 +543,13 @@ class BasicShapesStep extends DiagramStep<BasicShapesDiagram> {
   Future<List<BasicShapesDiagram>> get diagrams async {
     return <BasicShapesDiagram>[
       BasicShapesDiagram(
-        name: 'basic_line',
+        name: 'canvas_line',
         painter: LineDiagramPainter(),
         width: 500,
         height: 325,
       ),
       BasicShapesDiagram(
-        name: 'basic_rect_ltrb',
+        name: 'rect_from_ltrb',
         painter: RectDiagramPainter(
           showLeft: true,
           showTop: true,
@@ -418,7 +560,7 @@ class BasicShapesStep extends DiagramStep<BasicShapesDiagram> {
         height: 380,
       ),
       BasicShapesDiagram(
-        name: 'basic_rect_ltwh',
+        name: 'rect_from_ltwh',
         painter: RectDiagramPainter(
           showLeft: true,
           showTop: true,
@@ -429,7 +571,7 @@ class BasicShapesStep extends DiagramStep<BasicShapesDiagram> {
         height: 370,
       ),
       BasicShapesDiagram(
-        name: 'basic_rect_points',
+        name: 'rect_from_points',
         painter: RectDiagramPainter(
           showTopLeft: true,
           showBottomRight: true,
@@ -438,7 +580,7 @@ class BasicShapesStep extends DiagramStep<BasicShapesDiagram> {
         height: 370,
       ),
       BasicShapesDiagram(
-        name: 'basic_rect_center',
+        name: 'rect_from_center',
         painter: RectDiagramPainter(
           showWidth: true,
           showHeight: true,
@@ -448,7 +590,7 @@ class BasicShapesStep extends DiagramStep<BasicShapesDiagram> {
         height: 370,
       ),
       BasicShapesDiagram(
-        name: 'basic_rect_circle',
+        name: 'rect_from_circle',
         painter: RectDiagramPainter(
           showCenter: true,
           showRadius: true,
@@ -456,6 +598,18 @@ class BasicShapesStep extends DiagramStep<BasicShapesDiagram> {
         ),
         width: 550,
         height: 370,
+      ),
+      BasicShapesDiagram(
+        name: 'canvas_oval',
+        painter: OvalDiagramPainter(),
+        width: 640,
+        height: 384,
+      ),
+      BasicShapesDiagram(
+        name: 'canvas_circle',
+        painter: CircleDiagramPainter(),
+        width: 625,
+        height: 410,
       ),
     ];
   }
