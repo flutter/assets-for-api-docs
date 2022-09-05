@@ -162,7 +162,7 @@ class LineDiagramPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(LineDiagramPainter oldDelegate) => false;
+  bool shouldRepaint(LineDiagramPainter oldDelegate) => true;
 }
 
 class RectDiagramPainter extends CustomPainter {
@@ -386,7 +386,7 @@ class RectDiagramPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(RectDiagramPainter oldDelegate) => false;
+  bool shouldRepaint(RectDiagramPainter oldDelegate) => true;
 }
 
 class OvalDiagramPainter extends CustomPainter {
@@ -458,7 +458,7 @@ class OvalDiagramPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(LineDiagramPainter oldDelegate) => false;
+  bool shouldRepaint(LineDiagramPainter oldDelegate) => true;
 }
 
 class CircleDiagramPainter extends CustomPainter {
@@ -534,7 +534,7 @@ class CircleDiagramPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(LineDiagramPainter oldDelegate) => false;
+  bool shouldRepaint(LineDiagramPainter oldDelegate) => true;
 }
 
 class BasicShapesStep extends DiagramStep<BasicShapesDiagram> {
