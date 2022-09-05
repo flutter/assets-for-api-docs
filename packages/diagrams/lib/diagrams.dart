@@ -17,6 +17,7 @@ export 'src/box_decoration.dart';
 export 'src/box_fit.dart';
 export 'src/card.dart';
 export 'src/checkbox_list_tile.dart';
+export 'src/clip_diagram.dart';
 export 'src/colors.dart';
 export 'src/column.dart';
 export 'src/container.dart';

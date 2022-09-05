@@ -101,6 +101,7 @@ Future<void> main(List<String> args) async {
     BoxFitDiagramStep(controller),
     CardDiagramStep(controller),
     CheckboxListTileDiagramStep(controller),
+    ClipDiagramStep(controller),
     ColorsDiagramStep(controller),
     ColumnDiagramStep(controller),
     ContainerDiagramStep(controller),

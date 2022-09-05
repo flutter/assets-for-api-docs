@@ -2,6 +2,9 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'dart:async';
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
 
 /// This defines a colored placeholder with padding, used to represent a
@@ -150,4 +153,25 @@ class LabelPainter extends CustomPainter {
 
   @override
   bool hitTest(Offset position) => false;
+}
+
+/// Resolves [provider] and returns an [ui.Image] that can be used in a
+/// [CustomPainter].
+Future<ui.Image> getImage(ImageProvider provider) {
+  final Completer<ui.Image> completer = Completer<ui.Image>();
+  final ImageStream stream = provider.resolve(ImageConfiguration.empty);
+  late final ImageStreamListener listener;
+  listener = ImageStreamListener(
+    (ImageInfo image, bool sync) {
+      completer.complete(image.image);
+      stream.removeListener(listener);
+    },
+    onError: (Object error, StackTrace? stack) {
+      print(error);
+      throw error; // ignore: only_throw_errors
+    },
+  );
+
+  stream.addListener(listener);
+  return completer.future;
 }
