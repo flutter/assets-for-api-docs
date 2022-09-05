@@ -122,6 +122,7 @@ void paintCoordinateGrid(
 class LineDiagramPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
+    canvas.drawColor(Colors.white, BlendMode.srcOver);
     canvas.save();
     canvas.translate(56.0, 48.0);
 
@@ -193,6 +194,7 @@ class RectDiagramPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    canvas.drawColor(Colors.white, BlendMode.srcOver);
     canvas.save();
     canvas.translate(showBottom ? 90 : 60, showBottom ? 60 : 50);
 
@@ -390,6 +392,7 @@ class RectDiagramPainter extends CustomPainter {
 class OvalDiagramPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
+    canvas.drawColor(Colors.white, BlendMode.srcOver);
     void drawRect(Rect rect, PaintingStyle style) {
       final Paint paint = Paint()
         ..strokeWidth = 4.0
@@ -461,6 +464,7 @@ class OvalDiagramPainter extends CustomPainter {
 class CircleDiagramPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
+    canvas.drawColor(Colors.white, BlendMode.srcOver);
     canvas.save();
     canvas.translate(56.0, 48.0);
 
