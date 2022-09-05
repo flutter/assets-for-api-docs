@@ -95,6 +95,7 @@ Future<void> main(List<String> args) async {
     AnimationStatusValueDiagramStep(controller),
     AppBarDiagramStep(controller),
     ArcDiagramStep(controller),
+    BasicShapesStep(controller),
     BlendModeDiagramStep(controller),
     BottomNavigationBarDiagramStep(controller),
     BoxDecorationDiagramStep(controller),

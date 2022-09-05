@@ -175,3 +175,50 @@ Future<ui.Image> getImage(ImageProvider provider) {
   stream.addListener(listener);
   return completer.future;
 }
+
+/// Paints [span] to [canvas] with a given offset and alignment.
+void paintSpan(
+  Canvas canvas,
+  TextSpan span, {
+  required Offset offset,
+  Alignment alignment = Alignment.center,
+  TextAlign textAlign = TextAlign.center,
+}) {
+  final TextPainter result = TextPainter(
+    textDirection: TextDirection.ltr,
+    text: span,
+    textAlign: textAlign,
+  );
+  result.layout();
+  result.paint(
+    canvas,
+    Offset(
+      offset.dx + (result.width / -2) + (alignment.x * result.width / 2),
+      offset.dy + (result.height / -2) + (alignment.y * result.height / 2),
+    ),
+  );
+}
+
+/// Similar to [paintSpan] but provides a default text style.
+void paintLabel(
+  Canvas canvas,
+  String label, {
+  required Offset offset,
+  Alignment alignment = Alignment.center,
+  TextAlign textAlign = TextAlign.center,
+  TextStyle? style,
+}) {
+  paintSpan(
+    canvas,
+    TextSpan(
+      text: label,
+      style: const TextStyle(
+        color: Colors.black,
+        fontSize: 14.0,
+      ).merge(style ?? const TextStyle()),
+    ),
+    offset: offset,
+    alignment: alignment,
+    textAlign: textAlign,
+  );
+}
