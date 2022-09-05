@@ -55,6 +55,7 @@ void _drawBackground(ui.Canvas canvas, ui.Size size) {
 class ClipRectPainter extends CustomPainter {
   @override
   void paint(ui.Canvas canvas, ui.Size size) {
+    canvas.drawColor(Colors.white, BlendMode.srcOver);
     canvas.saveLayer(Offset.zero & size, Paint()..color = Colors.white30);
     _drawBackground(canvas, size);
     canvas.restore();
@@ -80,6 +81,7 @@ class ClipRectPainter extends CustomPainter {
 class ClipRRectPainter extends CustomPainter {
   @override
   void paint(ui.Canvas canvas, ui.Size size) {
+    canvas.drawColor(Colors.white, BlendMode.srcOver);
     canvas.saveLayer(Offset.zero & size, Paint()..color = Colors.white30);
     _drawBackground(canvas, size);
     canvas.restore();
@@ -107,6 +109,7 @@ class ClipRRectPainter extends CustomPainter {
 class ClipPathPainter extends CustomPainter {
   @override
   void paint(ui.Canvas canvas, ui.Size size) {
+    canvas.drawColor(Colors.white, BlendMode.srcOver);
     canvas.saveLayer(Offset.zero & size, Paint()..color = Colors.white30);
     _drawBackground(canvas, size);
     canvas.restore();
