@@ -176,8 +176,6 @@ class RectDiagramPainter extends CustomPainter {
     this.showTopLeft = false,
     this.showBottomRight = false,
     this.showCenter = false,
-    this.showRadius = false,
-    this.square = false,
   });
 
   final bool showLeft;
@@ -189,8 +187,6 @@ class RectDiagramPainter extends CustomPainter {
   final bool showTopLeft;
   final bool showBottomRight;
   final bool showCenter;
-  final bool showRadius;
-  final bool square;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -203,18 +199,12 @@ class RectDiagramPainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..color = Colors.black;
 
-    final Rect rect = square
-        ? Rect.fromCircle(
-            center: const Offset(5, 3.5) * divisionInterval,
-            radius: 2 * divisionInterval,
-          )
-        : Rect.fromPoints(
-            const Offset(2, 2) * divisionInterval,
-            const Offset(8, 5) * divisionInterval,
-          );
+    final Rect rect = Rect.fromPoints(
+      const Offset(2, 2) * divisionInterval,
+      const Offset(8, 5) * divisionInterval,
+    );
     final Offset topLeft = rect.topLeft;
     final Offset bottomRight = rect.bottomRight;
-    final Offset bottomCenter = rect.bottomCenter;
 
     canvas.drawRect(
       Rect.fromPoints(topLeft, bottomRight),
@@ -355,25 +345,6 @@ class RectDiagramPainter extends CustomPainter {
         style: labelStyle,
       );
       canvas.drawCircle(rect.center, 2.5, Paint()..color = paint.color);
-    }
-
-    if (showRadius) {
-      final double cx = rect.left + rect.width / 4;
-      paintLabel(
-        canvas,
-        'radius',
-        offset: Offset(cx, rect.bottom + 42),
-        alignment: Alignment.bottomCenter,
-        style: labelStyle,
-      );
-      canvas.drawPath(
-        Path()
-          ..moveTo(topLeft.dx, bottomCenter.dy + 18)
-          ..lineTo(topLeft.dx, bottomCenter.dy + 24)
-          ..lineTo(bottomCenter.dx, bottomCenter.dy + 24)
-          ..lineTo(bottomCenter.dx, bottomCenter.dy + 18),
-        paint,
-      );
     }
 
     paintCoordinateGrid(
@@ -537,6 +508,81 @@ class CircleDiagramPainter extends CustomPainter {
   bool shouldRepaint(LineDiagramPainter oldDelegate) => true;
 }
 
+class RectSquareDiagramPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    canvas.drawColor(Colors.white, BlendMode.srcOver);
+    canvas.save();
+    canvas.translate(56.0, 48.0);
+
+    paintCoordinateGrid(canvas, xDivisions: 13, yDivisions: 8);
+
+    final Paint paint = Paint();
+
+    final Offset center = const Offset(6.5, 4) * divisionInterval;
+    final Rect rect = Rect.fromCircle(
+      center: center,
+      radius: 3 * divisionInterval,
+    );
+
+    paintLabel(
+      canvas,
+      'center',
+      offset: center + const Offset(0, -8),
+      alignment: Alignment.topCenter,
+      style: labelStyle,
+    );
+
+    final double cx = rect.left + rect.width / 4;
+    final double cy = rect.center.dy;
+    paintLabel(
+      canvas,
+      'radius',
+      offset: Offset(cx, cy + 8),
+      alignment: Alignment.bottomCenter,
+      style: labelStyle,
+    );
+
+    paint
+      ..color = Colors.grey
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 5
+      ..strokeJoin = StrokeJoin.round
+      ..strokeCap = StrokeCap.round;
+
+    canvas.drawLine(
+      rect.center,
+      rect.centerLeft,
+      paint,
+    );
+
+    paint
+      ..style = PaintingStyle.fill
+      ..color = Colors.black;
+
+    canvas.drawCircle(
+      center,
+      3,
+      paint,
+    );
+
+    paint
+      ..strokeWidth = 5.0
+      ..style = PaintingStyle.stroke
+      ..color = Colors.black;
+
+    canvas.drawRect(
+      rect,
+      paint,
+    );
+
+    canvas.restore();
+  }
+
+  @override
+  bool shouldRepaint(LineDiagramPainter oldDelegate) => true;
+}
+
 class BasicShapesStep extends DiagramStep<BasicShapesDiagram> {
   BasicShapesStep(super.controller);
 
@@ -595,13 +641,9 @@ class BasicShapesStep extends DiagramStep<BasicShapesDiagram> {
       ),
       BasicShapesDiagram(
         name: 'rect_from_circle',
-        painter: RectDiagramPainter(
-          showCenter: true,
-          showRadius: true,
-          square: true,
-        ),
-        width: 550,
-        height: 370,
+        painter: RectSquareDiagramPainter(),
+        width: 625,
+        height: 410,
       ),
       BasicShapesDiagram(
         name: 'canvas_oval',
