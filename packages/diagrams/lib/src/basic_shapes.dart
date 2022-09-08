@@ -205,8 +205,8 @@ class LineDiagramPainter extends CustomPainter {
   bool shouldRepaint(LineDiagramPainter oldDelegate) => true;
 }
 
-class RectCtorDiagramPainter extends CustomPainter {
-  RectCtorDiagramPainter({
+class RectConstructorDiagramPainter extends CustomPainter {
+  RectConstructorDiagramPainter({
     this.showLeft = false,
     this.showTop = false,
     this.showRight = false,
@@ -395,7 +395,7 @@ class RectCtorDiagramPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(RectCtorDiagramPainter oldDelegate) => true;
+  bool shouldRepaint(RectConstructorDiagramPainter oldDelegate) => true;
 }
 
 class OvalDiagramPainter extends CustomPainter {
@@ -948,7 +948,7 @@ class BasicShapesStep extends DiagramStep<BasicShapesDiagram> {
       ),
       BasicShapesDiagram(
         name: 'rect_from_ltrb',
-        painter: RectCtorDiagramPainter(
+        painter: RectConstructorDiagramPainter(
           showLeft: true,
           showTop: true,
           showRight: true,
@@ -959,7 +959,7 @@ class BasicShapesStep extends DiagramStep<BasicShapesDiagram> {
       ),
       BasicShapesDiagram(
         name: 'rect_from_ltwh',
-        painter: RectCtorDiagramPainter(
+        painter: RectConstructorDiagramPainter(
           showLeft: true,
           showTop: true,
           showWidth: true,
@@ -970,7 +970,7 @@ class BasicShapesStep extends DiagramStep<BasicShapesDiagram> {
       ),
       BasicShapesDiagram(
         name: 'rect_from_points',
-        painter: RectCtorDiagramPainter(
+        painter: RectConstructorDiagramPainter(
           showTopLeft: true,
           showBottomRight: true,
         ),
@@ -979,7 +979,7 @@ class BasicShapesStep extends DiagramStep<BasicShapesDiagram> {
       ),
       BasicShapesDiagram(
         name: 'rect_from_center',
-        painter: RectCtorDiagramPainter(
+        painter: RectConstructorDiagramPainter(
           showWidth: true,
           showHeight: true,
           showCenter: true,
