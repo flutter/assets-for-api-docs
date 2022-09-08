@@ -169,7 +169,7 @@ class LineDiagramPainter extends CustomPainter {
     final Paint paint = Paint()
       ..strokeWidth = 5.0
       ..style = PaintingStyle.stroke
-      ..color = _kPrimaryColor;
+      ..color = _kForegroundColor;
 
     final Offset start = const Offset(2, 4) * _kGridSize;
     final Offset end = const Offset(8, 2) * _kGridSize;
