@@ -12,13 +12,12 @@ import 'diagram_step.dart';
 import 'utils.dart';
 
 const double _kGridSize = 40.0;
-const Color _kPrimaryColor = Colors.blue;
-const Color _kForegroundColor = Colors.black;
+const Color _kPrimaryColor = Color(0xFF3196E3);
+const Color _kForegroundColor = Color(0xFF2548b0);
 const Color _kHintColor = Colors.grey;
-const Color _kBackgroundColor = Colors.white;
 const EdgeInsets _kLabelPadding = EdgeInsets.all(8.0);
 const TextStyle _kLabelStyle = TextStyle(
-  color: _kForegroundColor,
+  color: _kPrimaryColor,
   fontWeight: FontWeight.bold,
   fontSize: 16,
 );
@@ -40,14 +39,11 @@ class BasicShapesDiagram extends StatelessWidget implements DiagramMetadata {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: _kBackgroundColor,
-      child: CustomPaint(
-        painter: painter,
-        child: SizedBox(
-          width: width,
-          height: height,
-        ),
+    return CustomPaint(
+      painter: painter,
+      child: SizedBox(
+        width: width,
+        height: height,
       ),
     );
   }
@@ -424,26 +420,40 @@ class OvalDiagramPainter extends CustomPainter {
         ..color = _kForegroundColor
         ..style = style;
 
-      canvas.drawOval(
-        rect.deflate(
-          style == PaintingStyle.stroke
-              ? paint.strokeWidth
-              : paint.strokeWidth / 2,
-        ),
-        paint,
-      );
-
-      paintLabel(
-        canvas,
-        '$style',
-        offset: rect.center,
-        style: _kLabelStyle.copyWith(
-          color: style == PaintingStyle.stroke
-              ? _kForegroundColor
-              : _kBackgroundColor,
-          fontSize: 12,
-        ),
-      );
+      if (style == PaintingStyle.stroke) {
+        canvas.drawOval(
+          rect.deflate(paint.strokeWidth),
+          paint,
+        );
+        paintLabel(
+          canvas,
+          '$style',
+          offset: rect.center,
+          style: _kLabelStyle.copyWith(
+            color: _kForegroundColor,
+            fontSize: 12,
+          ),
+        );
+      } else {
+        canvas.saveLayer(null, Paint());
+        canvas.drawOval(
+          rect.deflate(paint.strokeWidth / 2),
+          paint,
+        );
+        // Punch a hole in the solid oval with dstOut
+        canvas.saveLayer(null, Paint()..blendMode = BlendMode.dstOut);
+        paintLabel(
+          canvas,
+          '$style',
+          offset: rect.center,
+          style: _kLabelStyle.copyWith(
+            color: Colors.white,
+            fontSize: 12,
+          ),
+        );
+        canvas.restore();
+        canvas.restore();
+      }
     }
 
     drawRect(
@@ -479,21 +489,21 @@ class RectDiagramPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    void drawRect(RRect rect, PaintingStyle style) {
+    void drawRect(RRect rrect, PaintingStyle style) {
       final Paint paint = Paint()
         ..strokeWidth = 4.0
         ..style = PaintingStyle.stroke
         ..color = _kForegroundColor;
 
       canvas.drawRRect(
-        rect,
+        rrect,
         paint,
       );
 
       paintLabel(
         canvas,
         label,
-        offset: rect.outerRect.topLeft + const Offset(0, -8),
+        offset: rrect.outerRect.topLeft + const Offset(0, -8),
         alignment: Alignment.topRight,
         style: _kLabelStyle,
       );
@@ -502,22 +512,37 @@ class RectDiagramPainter extends CustomPainter {
         ..color = _kForegroundColor
         ..style = style;
 
-      canvas.drawRRect(
-        rect,
-        paint,
-      );
-
-      paintLabel(
-        canvas,
-        '$style',
-        offset: rect.center,
-        style: _kLabelStyle.copyWith(
-          color: style == PaintingStyle.stroke
-              ? _kForegroundColor
-              : _kBackgroundColor,
-          fontSize: 12,
-        ),
-      );
+      if (style == PaintingStyle.stroke) {
+        canvas.drawRRect(
+          rrect,
+          paint,
+        );
+        paintLabel(
+          canvas,
+          '$style',
+          offset: rrect.center,
+          style: _kLabelStyle.copyWith(
+            color: _kForegroundColor,
+            fontSize: 12,
+          ),
+        );
+      } else {
+        canvas.saveLayer(null, Paint());
+        canvas.drawRRect(rrect, paint);
+        // Punch a hole in the solid rrect with dstOut
+        canvas.saveLayer(null, Paint()..blendMode = BlendMode.dstOut);
+        paintLabel(
+          canvas,
+          '$style',
+          offset: rrect.center,
+          style: _kLabelStyle.copyWith(
+            color: Colors.white,
+            fontSize: 12,
+          ),
+        );
+        canvas.restore();
+        canvas.restore();
+      }
     }
 
     drawRect(
@@ -696,7 +721,7 @@ class ConicToDiagramPainter extends CustomPainter {
       canvas,
       'w = 1',
       offset: Offset(size.width / 2, size.height * 0.48 + 8),
-      style: _kLabelStyle,
+      style: _kLabelStyle.copyWith(color: _kForegroundColor),
       alignment: Alignment.bottomCenter,
     );
 
@@ -829,6 +854,7 @@ class RadiusDiagramPainter extends CustomPainter {
     final RRect rrect = RRect.fromRectAndRadius(rect, radius);
     final Offset center = rect.topLeft + Offset(radius.x, radius.y);
 
+    canvas.saveLayer(null, Paint());
     canvas.drawLine(
       center,
       center - Offset(radius.x, 0),
@@ -873,43 +899,35 @@ class RadiusDiagramPainter extends CustomPainter {
         ..style = PaintingStyle.stroke,
     );
 
-    final ui.Rect bottomFadeRect = Rect.fromLTRB(
-      rect.left - 8,
-      size.height - 64,
-      rect.left + 8,
-      size.height,
-    );
-    canvas.drawRect(
-      bottomFadeRect,
+    canvas.drawPaint(
       Paint()
         ..shader = ui.Gradient.linear(
-          bottomFadeRect.topLeft,
-          bottomFadeRect.bottomLeft,
+          Offset.zero,
+          Offset(0, size.height),
           <Color>[
-            _kBackgroundColor.withOpacity(0),
-            _kBackgroundColor,
+            Colors.white,
+            Colors.white.withOpacity(0),
           ],
-        ),
+          <double>[1 - 64 / size.height, 1.0],
+        )
+        ..blendMode = BlendMode.dstIn,
     );
 
-    final ui.Rect rightFadeRect = Rect.fromLTRB(
-      size.width - 64,
-      rect.top - 8,
-      size.width,
-      rect.top + 8,
-    );
-    canvas.drawRect(
-      rightFadeRect,
+    canvas.drawPaint(
       Paint()
         ..shader = ui.Gradient.linear(
-          rightFadeRect.topLeft,
-          rightFadeRect.topRight,
+          Offset.zero,
+          Offset(size.width, 0),
           <Color>[
-            _kBackgroundColor.withOpacity(0),
-            _kBackgroundColor,
+            Colors.white,
+            Colors.white.withOpacity(0),
           ],
-        ),
+          <double>[1 - 64 / size.width, 1.0],
+        )
+        ..blendMode = BlendMode.dstIn,
     );
+
+    canvas.restore();
   }
 
   @override
