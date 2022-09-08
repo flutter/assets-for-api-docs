@@ -41,23 +41,23 @@ class BasicShapesDiagram extends StatelessWidget implements DiagramMetadata {
   }
 }
 
-const TextStyle labelStyle = TextStyle(
+const TextStyle _labelStyle = TextStyle(
   color: Colors.black,
   fontWeight: FontWeight.bold,
   fontSize: 16,
 );
-const double gridSize = 40.0;
-const Color primaryColor = Colors.blue;
-const EdgeInsets labelPadding = EdgeInsets.all(8.0);
+const double _gridSize = 40.0;
+const Color _primaryColor = Colors.blue;
+const EdgeInsets _labelPadding = EdgeInsets.all(8.0);
 
-void paintOffset(
+void _paintOffset(
   Canvas canvas,
   Offset offset, {
   String? label,
   Alignment alignment = Alignment.bottomCenter,
-  EdgeInsets padding = labelPadding,
+  EdgeInsets padding = _labelPadding,
   bool control = false,
-  Color color = primaryColor,
+  Color color = _primaryColor,
 }) {
   if (control) {
     final Rect rect = Rect.fromCircle(center: offset, radius: 4.0);
@@ -76,19 +76,19 @@ void paintOffset(
       offset: offset,
       padding: padding,
       alignment: alignment,
-      style: labelStyle,
+      style: _labelStyle,
     );
   }
 }
 
-void paintXYPlane(
+void _paintXYPlane(
   Canvas canvas, {
   int width = 10,
   int height = 6,
   Color color = Colors.black,
 }) {
-  final double rightEdge = gridSize * width;
-  final double bottomEdge = gridSize * height;
+  final double rightEdge = _gridSize * width;
+  final double bottomEdge = _gridSize * height;
   const double arrowNudge = 8.0;
   final double rightArrow = rightEdge - arrowNudge;
   final double bottomArrow = bottomEdge - arrowNudge;
@@ -135,7 +135,7 @@ void paintXYPlane(
     '0,0',
     offset: const Offset(-4, -4),
     alignment: Alignment.topLeft,
-    style: labelStyle,
+    style: _labelStyle,
   );
 
   paintLabel(
@@ -143,7 +143,7 @@ void paintXYPlane(
     '+x',
     offset: Offset(rightArrow, -8),
     alignment: Alignment.topCenter,
-    style: labelStyle,
+    style: _labelStyle,
   );
 
   paintLabel(
@@ -151,7 +151,7 @@ void paintXYPlane(
     '+y',
     offset: Offset(-8, bottomArrow),
     alignment: Alignment.centerLeft,
-    style: labelStyle,
+    style: _labelStyle,
   );
 }
 
@@ -161,15 +161,15 @@ class LineDiagramPainter extends CustomPainter {
     canvas.save();
     canvas.translate(56.0, 48.0);
 
-    paintXYPlane(canvas);
+    _paintXYPlane(canvas);
 
     final Paint paint = Paint()
       ..strokeWidth = 5.0
       ..style = PaintingStyle.stroke
       ..color = Colors.black;
 
-    final Offset start = const Offset(2, 4) * gridSize;
-    final Offset end = const Offset(8, 2) * gridSize;
+    final Offset start = const Offset(2, 4) * _gridSize;
+    final Offset end = const Offset(8, 2) * _gridSize;
 
     canvas.drawLine(
       start,
@@ -182,8 +182,8 @@ class LineDiagramPainter extends CustomPainter {
       'p1',
       offset: start,
       alignment: Alignment.topCenter,
-      padding: labelPadding,
-      style: labelStyle,
+      padding: _labelPadding,
+      style: _labelStyle,
     );
 
     paintLabel(
@@ -191,8 +191,8 @@ class LineDiagramPainter extends CustomPainter {
       'p2',
       offset: end,
       alignment: Alignment.topCenter,
-      padding: labelPadding,
-      style: labelStyle,
+      padding: _labelPadding,
+      style: _labelStyle,
     );
 
     canvas.restore();
@@ -236,8 +236,8 @@ class RectCtorDiagramPainter extends CustomPainter {
       ..color = Colors.black;
 
     final Rect rect = Rect.fromPoints(
-      const Offset(2, 2) * gridSize,
-      const Offset(8, 5) * gridSize,
+      const Offset(2, 2) * _gridSize,
+      const Offset(8, 5) * _gridSize,
     );
     final Offset topLeft = rect.topLeft;
     final Offset bottomRight = rect.bottomRight;
@@ -248,7 +248,7 @@ class RectCtorDiagramPainter extends CustomPainter {
     );
 
     paint
-      ..color = primaryColor
+      ..color = _primaryColor
       ..style = PaintingStyle.stroke
       ..strokeWidth = 4
       ..strokeJoin = StrokeJoin.round
@@ -260,7 +260,7 @@ class RectCtorDiagramPainter extends CustomPainter {
         'left',
         offset: Offset(topLeft.dx, -8),
         alignment: Alignment.topCenter,
-        style: labelStyle,
+        style: _labelStyle,
       );
       canvas.drawLine(
         Offset(topLeft.dx, 1),
@@ -275,7 +275,7 @@ class RectCtorDiagramPainter extends CustomPainter {
         'top',
         offset: Offset(-8, topLeft.dy),
         alignment: Alignment.centerLeft,
-        style: labelStyle,
+        style: _labelStyle,
       );
       canvas.drawLine(
         Offset(1, topLeft.dy),
@@ -290,7 +290,7 @@ class RectCtorDiagramPainter extends CustomPainter {
         'right',
         offset: Offset(bottomRight.dx, -8),
         alignment: Alignment.topCenter,
-        style: labelStyle,
+        style: _labelStyle,
       );
       canvas.drawLine(
         Offset(bottomRight.dx, 1),
@@ -305,7 +305,7 @@ class RectCtorDiagramPainter extends CustomPainter {
         'bottom',
         offset: Offset(-8, bottomRight.dy),
         alignment: Alignment.centerLeft,
-        style: labelStyle,
+        style: _labelStyle,
       );
       canvas.drawLine(
         Offset(1, bottomRight.dy),
@@ -320,7 +320,7 @@ class RectCtorDiagramPainter extends CustomPainter {
         'height',
         offset: rect.centerRight + const Offset(42, 0),
         alignment: Alignment.centerRight,
-        style: labelStyle,
+        style: _labelStyle,
       );
       canvas.drawPath(
         Path()
@@ -338,7 +338,7 @@ class RectCtorDiagramPainter extends CustomPainter {
         'width',
         offset: rect.bottomCenter + const Offset(0, 42),
         alignment: Alignment.bottomCenter,
-        style: labelStyle,
+        style: _labelStyle,
       );
       canvas.drawPath(
         Path()
@@ -356,8 +356,8 @@ class RectCtorDiagramPainter extends CustomPainter {
         'a',
         offset: topLeft,
         alignment: Alignment.topLeft,
-        padding: labelPadding,
-        style: labelStyle,
+        padding: _labelPadding,
+        style: _labelStyle,
       );
       canvas.drawCircle(topLeft, 4, Paint()..color = paint.color);
     }
@@ -368,8 +368,8 @@ class RectCtorDiagramPainter extends CustomPainter {
         'b',
         offset: bottomRight,
         alignment: Alignment.topLeft,
-        padding: labelPadding,
-        style: labelStyle,
+        padding: _labelPadding,
+        style: _labelStyle,
       );
       canvas.drawCircle(bottomRight, 4, Paint()..color = paint.color);
     }
@@ -380,13 +380,13 @@ class RectCtorDiagramPainter extends CustomPainter {
         'center',
         offset: rect.center,
         alignment: Alignment.topCenter,
-        padding: labelPadding,
-        style: labelStyle,
+        padding: _labelPadding,
+        style: _labelStyle,
       );
       canvas.drawCircle(rect.center, 4, Paint()..color = paint.color);
     }
 
-    paintXYPlane(canvas, width: 11, height: 7);
+    _paintXYPlane(canvas, width: 11, height: 7);
 
     canvas.restore();
   }
@@ -414,7 +414,7 @@ class OvalDiagramPainter extends CustomPainter {
         'rect',
         offset: rect.topLeft + const Offset(0, -8),
         alignment: Alignment.topRight,
-        style: labelStyle.copyWith(color: paint.color),
+        style: _labelStyle.copyWith(color: paint.color),
       );
 
       paint
@@ -434,7 +434,7 @@ class OvalDiagramPainter extends CustomPainter {
         canvas,
         '$style',
         offset: rect.center,
-        style: labelStyle.copyWith(
+        style: _labelStyle.copyWith(
           color: style == PaintingStyle.stroke ? Colors.black : Colors.white,
           fontSize: 12,
         ),
@@ -490,7 +490,7 @@ class RectDiagramPainter extends CustomPainter {
         label,
         offset: rect.outerRect.topLeft + const Offset(0, -8),
         alignment: Alignment.topRight,
-        style: labelStyle,
+        style: _labelStyle,
       );
 
       paint
@@ -506,7 +506,7 @@ class RectDiagramPainter extends CustomPainter {
         canvas,
         '$style',
         offset: rect.center,
-        style: labelStyle.copyWith(
+        style: _labelStyle.copyWith(
           color: style == PaintingStyle.stroke ? Colors.black : Colors.white,
           fontSize: 12,
         ),
@@ -554,14 +554,14 @@ class CircleDiagramPainter extends CustomPainter {
     canvas.save();
     canvas.translate(56, 48);
 
-    paintXYPlane(canvas, width: 13, height: 8);
+    _paintXYPlane(canvas, width: 13, height: 8);
 
     final Paint paint = Paint();
 
-    final Offset center = const Offset(6.5, 4) * gridSize;
+    final Offset center = const Offset(6.5, 4) * _gridSize;
     final Rect rect = Rect.fromCircle(
       center: center,
-      radius: 3 * gridSize,
+      radius: 3 * _gridSize,
     );
 
     paintLabel(
@@ -569,7 +569,7 @@ class CircleDiagramPainter extends CustomPainter {
       'center',
       offset: center + const Offset(0, -8),
       alignment: Alignment.topCenter,
-      style: labelStyle,
+      style: _labelStyle,
     );
 
     final double cx = rect.left + rect.width / 4;
@@ -579,11 +579,11 @@ class CircleDiagramPainter extends CustomPainter {
       'radius',
       offset: Offset(cx, cy + 8),
       alignment: Alignment.bottomCenter,
-      style: labelStyle,
+      style: _labelStyle,
     );
 
     paint
-      ..color = primaryColor
+      ..color = _primaryColor
       ..style = PaintingStyle.stroke
       ..strokeWidth = 5
       ..strokeJoin = StrokeJoin.round
@@ -669,19 +669,19 @@ class ConicToDiagramPainter extends CustomPainter {
       paint,
     );
 
-    paintOffset(
+    _paintOffset(
       canvas,
       Offset(x1, y1),
       label: 'x1,y1',
       control: true,
     );
-    paintOffset(canvas, Offset(x2, y2), label: 'x2,y2');
+    _paintOffset(canvas, Offset(x2, y2), label: 'x2,y2');
 
     paintLabel(
       canvas,
       'w = 2',
       offset: Offset(size.width / 2, size.height * 0.353 + 8),
-      style: labelStyle.copyWith(color: Colors.grey),
+      style: _labelStyle.copyWith(color: Colors.grey),
       alignment: Alignment.bottomCenter,
     );
 
@@ -689,7 +689,7 @@ class ConicToDiagramPainter extends CustomPainter {
       canvas,
       'w = 1',
       offset: Offset(size.width / 2, size.height * 0.48 + 8),
-      style: labelStyle,
+      style: _labelStyle,
       alignment: Alignment.bottomCenter,
     );
 
@@ -697,7 +697,7 @@ class ConicToDiagramPainter extends CustomPainter {
       canvas,
       'w = 0.5',
       offset: Offset(size.width / 2, size.height * 0.605 + 8),
-      style: labelStyle.copyWith(color: Colors.grey),
+      style: _labelStyle.copyWith(color: Colors.grey),
       alignment: Alignment.bottomCenter,
     );
   }
@@ -730,13 +730,13 @@ class QuadraticToDiagramPainter extends CustomPainter {
       paint,
     );
 
-    paintOffset(
+    _paintOffset(
       canvas,
       Offset(x1, y1),
       label: 'x1,y1',
       control: true,
     );
-    paintOffset(canvas, Offset(x2, y2), label: 'x2,y2');
+    _paintOffset(canvas, Offset(x2, y2), label: 'x2,y2');
   }
 
   @override
@@ -783,20 +783,20 @@ class CubicToDiagramPainter extends CustomPainter {
       paint,
     );
 
-    paintOffset(
+    _paintOffset(
       canvas,
       Offset(x1, y1),
       label: 'x1,y1',
       control: true,
       alignment: Alignment.topCenter,
     );
-    paintOffset(
+    _paintOffset(
       canvas,
       Offset(x2, y2),
       label: 'x2,y2',
       control: true,
     );
-    paintOffset(
+    _paintOffset(
       canvas,
       Offset(x3, y3),
       label: 'x3,y3',
@@ -828,16 +828,16 @@ class RadiusDiagramPainter extends CustomPainter {
       center,
       center - Offset(radius.x, 0),
       Paint()
-        ..color = primaryColor
+        ..color = _primaryColor
         ..strokeWidth = 5,
     );
     paintLabel(
       canvas,
       radius.x == radius.y ? 'radius' : 'x',
       offset: Offset(rect.left + radius.x / 2, rect.top + radius.y),
-      style: labelStyle,
+      style: _labelStyle,
       alignment: Alignment.bottomCenter,
-      padding: labelPadding,
+      padding: _labelPadding,
     );
 
     if (radius.x != radius.y) {
@@ -845,20 +845,20 @@ class RadiusDiagramPainter extends CustomPainter {
         center,
         center - Offset(0, radius.y),
         Paint()
-          ..color = primaryColor
+          ..color = _primaryColor
           ..strokeWidth = 5,
       );
       paintLabel(
         canvas,
         'y',
         offset: Offset(rect.left + radius.x, rect.top + radius.y / 2),
-        style: labelStyle,
+        style: _labelStyle,
         alignment: Alignment.centerRight,
-        padding: labelPadding,
+        padding: _labelPadding,
       );
     }
 
-    paintOffset(canvas, center, color: Colors.black);
+    _paintOffset(canvas, center, color: Colors.black);
 
     canvas.drawRRect(
       rrect,
