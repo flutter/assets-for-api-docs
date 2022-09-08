@@ -182,6 +182,7 @@ void paintSpan(
   TextSpan span, {
   required Offset offset,
   Alignment alignment = Alignment.center,
+  EdgeInsets padding = EdgeInsets.zero,
   TextAlign textAlign = TextAlign.center,
 }) {
   final TextPainter result = TextPainter(
@@ -190,11 +191,13 @@ void paintSpan(
     textAlign: textAlign,
   );
   result.layout();
+  final double width = result.width + padding.horizontal;
+  final double height = result.height + padding.vertical;
   result.paint(
     canvas,
     Offset(
-      offset.dx + (result.width / -2) + (alignment.x * result.width / 2),
-      offset.dy + (result.height / -2) + (alignment.y * result.height / 2),
+      padding.left + offset.dx + (width / -2) + (alignment.x * width / 2),
+      padding.top + offset.dy + (height / -2) + (alignment.y * height / 2),
     ),
   );
 }
@@ -205,6 +208,7 @@ void paintLabel(
   String label, {
   required Offset offset,
   Alignment alignment = Alignment.center,
+  EdgeInsets padding = EdgeInsets.zero,
   TextAlign textAlign = TextAlign.center,
   TextStyle? style,
 }) {
@@ -219,6 +223,7 @@ void paintLabel(
     ),
     offset: offset,
     alignment: alignment,
+    padding: padding,
     textAlign: textAlign,
   );
 }
