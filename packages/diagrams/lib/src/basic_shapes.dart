@@ -4,6 +4,7 @@
 
 import 'dart:async';
 import 'dart:io';
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart' hide Image;
 
@@ -56,15 +57,16 @@ void paintOffset(
   Alignment alignment = Alignment.bottomCenter,
   EdgeInsets padding = labelPadding,
   bool control = false,
+  Color color = primaryColor,
 }) {
   if (control) {
     final Rect rect = Rect.fromCircle(center: offset, radius: 4.0);
-    canvas.drawRect(rect, Paint()..color = primaryColor);
+    canvas.drawRect(rect, Paint()..color = color);
   } else {
     canvas.drawCircle(
       offset,
       4,
-      Paint()..color = primaryColor,
+      Paint()..color = color,
     );
   }
   if (label != null) {
@@ -806,6 +808,109 @@ class CubicToDiagramPainter extends CustomPainter {
   bool shouldRepaint(CubicToDiagramPainter oldDelegate) => true;
 }
 
+class RadiusDiagramPainter extends CustomPainter {
+  RadiusDiagramPainter({required this.radius});
+
+  final Radius radius;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final Rect rect = Rect.fromLTRB(
+      size.width * 0.6 - radius.x,
+      size.height * 0.6 - radius.y,
+      size.width + 200,
+      size.height + 200,
+    );
+    final RRect rrect = RRect.fromRectAndRadius(rect, radius);
+    final Offset center = rect.topLeft + Offset(radius.x, radius.y);
+
+    canvas.drawLine(
+      center,
+      center - Offset(radius.x, 0),
+      Paint()
+        ..color = primaryColor
+        ..strokeWidth = 5,
+    );
+    paintLabel(
+      canvas,
+      radius.x == radius.y ? 'radius' : 'x',
+      offset: Offset(rect.left + radius.x / 2, rect.top + radius.y),
+      style: labelStyle,
+      alignment: Alignment.bottomCenter,
+      padding: labelPadding,
+    );
+
+    if (radius.x != radius.y) {
+      canvas.drawLine(
+        center,
+        center - Offset(0, radius.y),
+        Paint()
+          ..color = primaryColor
+          ..strokeWidth = 5,
+      );
+      paintLabel(
+        canvas,
+        'y',
+        offset: Offset(rect.left + radius.x, rect.top + radius.y / 2),
+        style: labelStyle,
+        alignment: Alignment.centerRight,
+        padding: labelPadding,
+      );
+    }
+
+    paintOffset(canvas, center, color: Colors.black);
+
+    canvas.drawRRect(
+      rrect,
+      Paint()
+        ..color = Colors.black
+        ..strokeWidth = 6.0
+        ..style = PaintingStyle.stroke,
+    );
+
+    final ui.Rect bottomFadeRect = Rect.fromLTRB(
+      rect.left - 8,
+      size.height - 64,
+      rect.left + 8,
+      size.height,
+    );
+    canvas.drawRect(
+      bottomFadeRect,
+      Paint()
+        ..shader = ui.Gradient.linear(
+          bottomFadeRect.topLeft,
+          bottomFadeRect.bottomLeft,
+          <Color>[
+            Colors.white.withOpacity(0),
+            Colors.white,
+          ],
+        ),
+    );
+
+    final ui.Rect rightFadeRect = Rect.fromLTRB(
+      size.width - 64,
+      rect.top - 8,
+      size.width,
+      rect.top + 8,
+    );
+    canvas.drawRect(
+      rightFadeRect,
+      Paint()
+        ..shader = ui.Gradient.linear(
+          rightFadeRect.topLeft,
+          rightFadeRect.topRight,
+          <Color>[
+            Colors.white.withOpacity(0),
+            Colors.white,
+          ],
+        ),
+    );
+  }
+
+  @override
+  bool shouldRepaint(RadiusDiagramPainter oldDelegate) => true;
+}
+
 class BasicShapesStep extends DiagramStep<BasicShapesDiagram> {
   BasicShapesStep(super.controller);
 
@@ -831,7 +936,7 @@ class BasicShapesStep extends DiagramStep<BasicShapesDiagram> {
         name: 'canvas_rrect',
         painter: RectDiagramPainter(
           label: 'rrect',
-          radius: 16,
+          radius: 24,
         ),
         width: 640,
         height: 384,
@@ -910,6 +1015,22 @@ class BasicShapesStep extends DiagramStep<BasicShapesDiagram> {
       BasicShapesDiagram(
         name: 'path_cubic_to',
         painter: CubicToDiagramPainter(),
+        width: 500,
+        height: 350,
+      ),
+      BasicShapesDiagram(
+        name: 'radius_circular',
+        painter: RadiusDiagramPainter(
+          radius: const Radius.circular(96),
+        ),
+        width: 500,
+        height: 350,
+      ),
+      BasicShapesDiagram(
+        name: 'radius_elliptical',
+        painter: RadiusDiagramPainter(
+          radius: const Radius.elliptical(144, 96),
+        ),
         width: 500,
         height: 350,
       ),
