@@ -11,6 +11,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' hide Image;
 
 import 'diagram_step.dart';
+import 'utils.dart';
 
 final GlobalKey key = GlobalKey();
 
@@ -25,25 +26,6 @@ const String kMonospaceFont = 'Courier New';
 
 Image? destinationImage, sourceImage, gridImage;
 int pageIndex = 0;
-
-Future<Image> getImage(ImageProvider provider) {
-  final Completer<Image> completer = Completer<Image>();
-  final ImageStream stream = provider.resolve(ImageConfiguration.empty);
-  late final ImageStreamListener listener;
-  listener = ImageStreamListener(
-    (ImageInfo image, bool sync) {
-      completer.complete(image.image);
-      stream.removeListener(listener);
-    },
-    onError: (Object error, StackTrace? stack) {
-      print(error);
-      throw error; // ignore: only_throw_errors
-    },
-  );
-
-  stream.addListener(listener);
-  return completer.future;
-}
 
 class BlendModeDiagram extends StatelessWidget implements DiagramMetadata {
   const BlendModeDiagram(this.mode, {super.key});

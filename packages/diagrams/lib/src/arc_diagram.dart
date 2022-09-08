@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:vector_math/vector_math_64.dart' hide Colors;
 
 import 'diagram_step.dart';
+import 'utils.dart';
 
 class Palette {
   const Palette({
@@ -183,29 +184,6 @@ void paintTextArc(
   }
 }
 
-/// Paints [span] to [canvas] with a given offset and alignment.
-void paintSpan(
-  Canvas canvas,
-  TextSpan span, {
-  required Offset offset,
-  Alignment alignment = Alignment.center,
-  TextAlign textAlign = TextAlign.center,
-}) {
-  final TextPainter result = TextPainter(
-    textDirection: TextDirection.ltr,
-    text: span,
-    textAlign: textAlign,
-  );
-  result.layout();
-  result.paint(
-    canvas,
-    Offset(
-      offset.dx + (result.width / -2) + (alignment.x * result.width / 2),
-      offset.dy + (result.height / -2) + (alignment.y * result.height / 2),
-    ),
-  );
-}
-
 void paintArrowHead(
   Canvas canvas,
   Offset center,
@@ -235,35 +213,6 @@ void paintArrowHead(
       ..strokeJoin = StrokeJoin.round
       ..color = color
       ..strokeWidth = thickness,
-  );
-}
-
-/// Similar to [paintSpan] but provides a default text style.
-void paintLabel(
-  Canvas canvas,
-  String label, {
-  required Offset offset,
-  FontStyle style = FontStyle.normal,
-  FontWeight fontWeight = FontWeight.normal,
-  Color color = Colors.black45,
-  double fontSize = 14.0,
-  Alignment alignment = Alignment.center,
-  TextAlign textAlign = TextAlign.center,
-}) {
-  paintSpan(
-    canvas,
-    TextSpan(
-      text: label,
-      style: TextStyle(
-        color: color,
-        fontWeight: fontWeight,
-        fontStyle: style,
-        fontSize: fontSize,
-      ),
-    ),
-    offset: offset,
-    alignment: alignment,
-    textAlign: textAlign,
   );
 }
 
@@ -397,9 +346,11 @@ class ArcDiagramPainter extends CustomPainter {
       'rect',
       offset: rect.topLeft - const Offset(0, 4),
       alignment: Alignment.topRight,
-      color: palette.subtitle,
-      fontSize: 18.0,
-      fontWeight: FontWeight.bold,
+      style: TextStyle(
+        color: palette.subtitle,
+        fontSize: 18.0,
+        fontWeight: FontWeight.bold,
+      ),
     );
 
     // Draw arrow at sweepAngle
