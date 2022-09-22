@@ -133,7 +133,7 @@ class AnimatedDefaultTextStyleDiagram
   @override
   Widget buildImplicitAnimation(BuildContext context, bool selected) {
     final TextStyle selectedStyle =
-        Theme.of(context).textTheme.headline4!.copyWith(
+        Theme.of(context).textTheme.headlineMedium!.copyWith(
               color: Colors.red,
               fontSize: 50.0,
               fontWeight: FontWeight.w100,
