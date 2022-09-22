@@ -68,7 +68,7 @@ class ThemeDataDiagram extends StatelessWidget implements DiagramMetadata {
                     secondary: Colors.green,
                   ),
                   textTheme: const TextTheme(
-                      bodyText2: TextStyle(color: Colors.purple)),
+                      bodyMedium: TextStyle(color: Colors.purple)),
                 ),
                 home: Stack(
                   children: <Widget>[
