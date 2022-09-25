@@ -178,9 +178,7 @@ class BasicShapesDiagram extends StatelessWidget with DiagramMetadata {
   Widget build(BuildContext context) {
     return CustomPaint(
       painter: painter(
-        Theme.of(context).brightness == Brightness.light
-            ? ShapeDiagramTheme.light
-            : ShapeDiagramTheme.dark,
+        dark ? ShapeDiagramTheme.dark : ShapeDiagramTheme.light,
       ),
       child: SizedBox(
         width: width,
