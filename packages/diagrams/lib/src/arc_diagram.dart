@@ -647,6 +647,7 @@ class ArcDiagramStep extends DiagramStep<ArcDiagram> {
 
   @override
   Future<File> generateDiagram(ArcDiagram diagram) async {
+    controller.builder = (BuildContext context) => diagram;
     return controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }
