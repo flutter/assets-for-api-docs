@@ -188,7 +188,7 @@ class BasicShapesDiagram extends StatelessWidget with DiagramMetadata {
   }
 
   BasicShapesDiagram get asDark => BasicShapesDiagram(
-        name: name,
+        name: '${name}_dark',
         painter: painter,
         width: width,
         height: height,
