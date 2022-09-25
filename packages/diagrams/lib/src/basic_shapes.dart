@@ -163,6 +163,7 @@ class BasicShapesDiagram extends StatelessWidget with DiagramMetadata {
     required this.painter,
     required this.width,
     required this.height,
+    this.dark = false,
     super.key,
   });
 
@@ -171,6 +172,7 @@ class BasicShapesDiagram extends StatelessWidget with DiagramMetadata {
   final CustomPainter Function(ShapeDiagramTheme) painter;
   final double width;
   final double height;
+  final bool dark;
 
   @override
   Widget build(BuildContext context) {
@@ -186,6 +188,14 @@ class BasicShapesDiagram extends StatelessWidget with DiagramMetadata {
       ),
     );
   }
+
+  BasicShapesDiagram get asDark => BasicShapesDiagram(
+        name: name,
+        painter: painter,
+        width: width,
+        height: height,
+        dark: true,
+      );
 }
 
 class LineDiagramPainter extends CustomPainter {
@@ -1011,7 +1021,7 @@ class BasicShapesStep extends DiagramStep<BasicShapesDiagram> {
 
   @override
   Future<List<BasicShapesDiagram>> get diagrams async {
-    return <BasicShapesDiagram>[
+    final List<BasicShapesDiagram> lightDiagrams = <BasicShapesDiagram>[
       BasicShapesDiagram(
         name: 'canvas_line',
         painter: (ShapeDiagramTheme theme) => LineDiagramPainter(theme: theme),
@@ -1144,6 +1154,11 @@ class BasicShapesStep extends DiagramStep<BasicShapesDiagram> {
         width: 500,
         height: 350,
       ),
+    ];
+
+    return <BasicShapesDiagram>[
+      ...lightDiagrams,
+      for (final BasicShapesDiagram diagram in lightDiagrams) diagram.asDark,
     ];
   }
 
