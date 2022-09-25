@@ -679,7 +679,7 @@ class CircleDiagramPainter extends CustomPainter {
     paint
       ..color = theme.indicatorColor
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 5
+      ..strokeWidth = 4
       ..strokeJoin = StrokeJoin.round
       ..strokeCap = StrokeCap.round;
 
