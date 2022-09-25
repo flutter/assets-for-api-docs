@@ -59,7 +59,6 @@ class ArcDiagramTheme {
     theme: codeTheme,
     fontSize: 16.0,
     fontFamily: 'Ubuntu Mono',
-    package: 'diagrams',
   );
 }
 
