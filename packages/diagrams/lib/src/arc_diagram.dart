@@ -468,9 +468,7 @@ class CanvasDrawArcDiagram extends ArcDiagram {
   @override
   Widget build(BuildContext context) {
     final ArcDiagramTheme theme =
-        Theme.of(context).brightness == Brightness.light
-            ? ArcDiagramTheme.light
-            : ArcDiagramTheme.dark;
+        dark ? ArcDiagramTheme.dark : ArcDiagramTheme.light;
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
@@ -526,9 +524,7 @@ class PathAddArcDiagram extends ArcDiagram {
   @override
   Widget build(BuildContext context) {
     final ArcDiagramTheme theme =
-        Theme.of(context).brightness == Brightness.light
-            ? ArcDiagramTheme.light
-            : ArcDiagramTheme.dark;
+        dark ? ArcDiagramTheme.dark : ArcDiagramTheme.light;
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
@@ -582,9 +578,7 @@ class PathAddArcCCWDiagram extends ArcDiagram {
   @override
   Widget build(BuildContext context) {
     final ArcDiagramTheme theme =
-        Theme.of(context).brightness == Brightness.light
-            ? ArcDiagramTheme.light
-            : ArcDiagramTheme.dark;
+        dark ? ArcDiagramTheme.dark : ArcDiagramTheme.light;
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
@@ -653,7 +647,6 @@ class ArcDiagramStep extends DiagramStep<ArcDiagram> {
 
   @override
   Future<File> generateDiagram(ArcDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
     return controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }
