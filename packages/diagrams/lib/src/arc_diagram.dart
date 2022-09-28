@@ -12,12 +12,61 @@ import 'package:vector_math/vector_math_64.dart' hide Colors;
 import 'diagram_step.dart';
 import 'utils.dart';
 
-class Palette {
-  const Palette({
+class ArcDiagramTheme {
+  ArcDiagramTheme({
+    required this.hintColor,
+    required this.sweepColor,
+    required this.startColor,
+    required this.codeTheme,
+  });
+
+  final Color hintColor;
+  final Color sweepColor;
+  final Color startColor;
+  final CodeTheme codeTheme;
+
+  static final ArcDiagramTheme light = ArcDiagramTheme(
+    hintColor: const Color(0xffa0a1a7),
+    sweepColor: const Color(0xff383a42),
+    startColor: const Color(0xff447bef),
+    codeTheme: const CodeTheme(
+      primary: Color(0xff447bef),
+      text: Color(0xff383a42),
+      subtitle: Color(0xff9c9cb1),
+      method: Color(0xff447bef),
+      operator: Color(0xff1485ba),
+      literal: Color(0xffe2574e),
+      comment: Color(0xffa0a1a7),
+    ),
+  );
+
+  static final ArcDiagramTheme dark = ArcDiagramTheme(
+    hintColor: const Color(0xffa0a1a7),
+    sweepColor: const Color(0xff6a98fb),
+    startColor: const Color(0xffe3e4e8),
+    codeTheme: const CodeTheme(
+      primary: Color(0xff6a98fb),
+      text: Color(0xffe3e4e8),
+      subtitle: Color(0xff9c9cb1),
+      method: Color(0xff6a98fb),
+      operator: Color(0xff1485ba),
+      literal: Color(0xffe2574e),
+      comment: Color(0xffa0a1a7),
+    ),
+  );
+
+  late final CodeHighlighter highlighter = CodeHighlighter(
+    theme: codeTheme,
+    fontSize: 16.0,
+    fontFamily: 'Ubuntu Mono',
+  );
+}
+
+class CodeTheme {
+  const CodeTheme({
     required this.primary,
     required this.text,
     required this.subtitle,
-    required this.background,
     required this.method,
     required this.operator,
     required this.literal,
@@ -27,23 +76,11 @@ class Palette {
   final Color primary;
   final Color text;
   final Color subtitle;
-  final Color background;
   final Color method;
   final Color operator;
   final Color literal;
   final Color comment;
 }
-
-const Palette palette = Palette(
-  primary: Color(0xff447bef),
-  text: Color(0xff383a42),
-  subtitle: Color(0xff9c9cb1),
-  background: Colors.white,
-  method: Color(0xff447bef),
-  operator: Color(0xff1485ba),
-  literal: Color(0xffe2574e),
-  comment: Color(0xffa0a1a7),
-);
 
 enum SpanType {
   text,
@@ -60,21 +97,21 @@ class CodeSpan {
   final String text;
 }
 
-class CodeStyles {
-  CodeStyles({
-    required this.palette,
+class CodeHighlighter {
+  CodeHighlighter({
+    required this.theme,
     required this.fontSize,
     required this.fontFamily,
     this.package,
   });
 
-  final Palette palette;
+  final CodeTheme theme;
   final double fontSize;
   final String fontFamily;
   final String? package;
 
   late final TextStyle baseStyle = TextStyle(
-    color: palette.text,
+    color: theme.text,
     fontSize: fontSize,
     fontFamily: fontFamily,
     package: package,
@@ -82,10 +119,10 @@ class CodeStyles {
 
   late final Map<SpanType, TextStyle> styles = <SpanType, TextStyle>{
     SpanType.text: baseStyle,
-    SpanType.method: baseStyle.copyWith(color: palette.method),
-    SpanType.comment: baseStyle.copyWith(color: palette.comment),
-    SpanType.literal: baseStyle.copyWith(color: palette.literal),
-    SpanType.operator: baseStyle.copyWith(color: palette.operator),
+    SpanType.method: baseStyle.copyWith(color: theme.method),
+    SpanType.comment: baseStyle.copyWith(color: theme.comment),
+    SpanType.literal: baseStyle.copyWith(color: theme.literal),
+    SpanType.operator: baseStyle.copyWith(color: theme.operator),
   };
 
   TextSpan highlight(List<CodeSpan> spans) {
@@ -100,12 +137,6 @@ class CodeStyles {
     );
   }
 }
-
-final CodeStyles codeStyles = CodeStyles(
-  palette: palette,
-  fontSize: 16.0,
-  fontFamily: 'Ubuntu Mono',
-);
 
 /// Paints text around an arc on the given [canvas].
 ///
@@ -218,12 +249,14 @@ void paintArrowHead(
 
 class ArcDiagramPainter extends CustomPainter {
   const ArcDiagramPainter({
+    required this.theme,
     required this.startAngle,
     required this.sweepAngle,
     this.startLabelAlignment = 0.5,
     this.sweepLabelAlignment = 0.5,
   });
 
+  final ArcDiagramTheme theme;
   final double startAngle;
   final double sweepAngle;
   final double startLabelAlignment;
@@ -231,8 +264,8 @@ class ArcDiagramPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final Color startArcColor = palette.primary;
-    final Color sweepArcColor = palette.text;
+    final Color startArcColor = theme.startColor;
+    final Color sweepArcColor = theme.sweepColor;
     const double arcRectMargin = 32.0;
     const double rectLabelMargin = 8.0;
     final Rect rect = Rect.fromLTRB(
@@ -243,8 +276,8 @@ class ArcDiagramPainter extends CustomPainter {
     );
     const double arcLineThickness = 4.0;
     final bool overlaps = startAngle >= 0 != sweepAngle >= 0;
-    final double overlapNudge = overlaps ? 5 : 0.0;
-    final Rect arcRect = rect.deflate(4.0 + overlapNudge);
+    final double overlapNudge = overlaps ? 3.5 : 0.0;
+    final Rect arcRect = rect.deflate(3.0 + overlapNudge);
 
     final Offset nudgedArcStart = arcRect.center +
         Offset(
@@ -259,7 +292,7 @@ class ArcDiagramPainter extends CustomPainter {
         );
 
     final Paint paint = Paint()
-      ..color = palette.subtitle
+      ..color = theme.hintColor
       ..strokeWidth = 2.0
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round
@@ -329,7 +362,7 @@ class ArcDiagramPainter extends CustomPainter {
             ),
           ],
           style: TextStyle(
-            color: palette.subtitle,
+            color: theme.hintColor,
           ),
         ),
         offset: labelOffset,
@@ -338,7 +371,7 @@ class ArcDiagramPainter extends CustomPainter {
 
     // Draw rect + label text
     paint
-      ..color = palette.subtitle
+      ..color = theme.hintColor
       ..strokeWidth = 3.0;
     canvas.drawRect(rect, paint);
     paintLabel(
@@ -347,7 +380,7 @@ class ArcDiagramPainter extends CustomPainter {
       offset: rect.topLeft - const Offset(0, 4),
       alignment: Alignment.topRight,
       style: TextStyle(
-        color: palette.subtitle,
+        color: theme.hintColor,
         fontSize: 18.0,
         fontWeight: FontWeight.bold,
       ),
@@ -421,174 +454,179 @@ class ArcDiagramPainter extends CustomPainter {
 }
 
 abstract class ArcDiagram extends StatelessWidget implements DiagramMetadata {
-  const ArcDiagram({super.key});
+  const ArcDiagram({this.dark = false, super.key});
+
+  final bool dark;
+  String get basename;
+  @override
+  String get name => '$basename${dark ? '_dark' : ''}';
 }
 
 class CanvasDrawArcDiagram extends ArcDiagram {
-  const CanvasDrawArcDiagram({super.key});
+  const CanvasDrawArcDiagram({super.dark, super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: palette.background,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          const SizedBox(
-            width: 400,
-            height: 400,
-            child: CustomPaint(
-              foregroundPainter: ArcDiagramPainter(
-                startAngle: pi / 2,
-                sweepAngle: 3 * pi / 4,
-              ),
+    final ArcDiagramTheme theme =
+        dark ? ArcDiagramTheme.dark : ArcDiagramTheme.light;
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        SizedBox(
+          width: 400,
+          height: 400,
+          child: CustomPaint(
+            foregroundPainter: ArcDiagramPainter(
+              theme: theme,
+              startAngle: pi / 2,
+              sweepAngle: 3 * pi / 4,
             ),
           ),
-          SizedBox(
-            width: 300,
-            child: Text.rich(
-              codeStyles.highlight(const <CodeSpan>[
-                CodeSpan(SpanType.text, 'canvas.'),
-                CodeSpan(SpanType.method, 'drawArc'),
-                CodeSpan(SpanType.text, '('),
-                CodeSpan(SpanType.text, '\n  rect,'),
-                CodeSpan(SpanType.text, '\n  pi '),
-                CodeSpan(SpanType.operator, '/ '),
-                CodeSpan(SpanType.literal, '2'),
-                CodeSpan(SpanType.text, ','),
-                CodeSpan(SpanType.comment, '     // 90° startAngle'),
-                CodeSpan(SpanType.literal, '\n  3 '),
-                CodeSpan(SpanType.operator, '* '),
-                CodeSpan(SpanType.text, 'pi '),
-                CodeSpan(SpanType.operator, '/ '),
-                CodeSpan(SpanType.literal, '4'),
-                CodeSpan(SpanType.text, ','),
-                CodeSpan(SpanType.comment, ' // 135° sweepAngle'),
-                CodeSpan(SpanType.literal, '\n  false'),
-                CodeSpan(SpanType.text, ','),
-                CodeSpan(SpanType.text, '\n  paint,'),
-                CodeSpan(SpanType.text, '\n);'),
-              ]),
-            ),
-          )
-        ],
-      ),
+        ),
+        SizedBox(
+          width: 300,
+          child: Text.rich(
+            theme.highlighter.highlight(const <CodeSpan>[
+              CodeSpan(SpanType.text, 'canvas.'),
+              CodeSpan(SpanType.method, 'drawArc'),
+              CodeSpan(SpanType.text, '('),
+              CodeSpan(SpanType.text, '\n  rect,'),
+              CodeSpan(SpanType.text, '\n  pi '),
+              CodeSpan(SpanType.operator, '/ '),
+              CodeSpan(SpanType.literal, '2'),
+              CodeSpan(SpanType.text, ','),
+              CodeSpan(SpanType.comment, '     // 90° startAngle'),
+              CodeSpan(SpanType.literal, '\n  3 '),
+              CodeSpan(SpanType.operator, '* '),
+              CodeSpan(SpanType.text, 'pi '),
+              CodeSpan(SpanType.operator, '/ '),
+              CodeSpan(SpanType.literal, '4'),
+              CodeSpan(SpanType.text, ','),
+              CodeSpan(SpanType.comment, ' // 135° sweepAngle'),
+              CodeSpan(SpanType.literal, '\n  false'),
+              CodeSpan(SpanType.text, ','),
+              CodeSpan(SpanType.text, '\n  paint,'),
+              CodeSpan(SpanType.text, '\n);'),
+            ]),
+          ),
+        )
+      ],
     );
   }
 
   @override
-  String get name => 'canvas_draw_arc';
+  String get basename => 'canvas_draw_arc';
 }
 
 class PathAddArcDiagram extends ArcDiagram {
-  const PathAddArcDiagram({super.key});
+  const PathAddArcDiagram({super.dark, super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: palette.background,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          const SizedBox(
-            width: 400,
-            height: 400,
-            child: CustomPaint(
-              foregroundPainter: ArcDiagramPainter(
-                startAngle: pi / 2,
-                sweepAngle: 3 * pi / 4,
-              ),
+    final ArcDiagramTheme theme =
+        dark ? ArcDiagramTheme.dark : ArcDiagramTheme.light;
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        SizedBox(
+          width: 400,
+          height: 400,
+          child: CustomPaint(
+            foregroundPainter: ArcDiagramPainter(
+              theme: theme,
+              startAngle: pi / 2,
+              sweepAngle: 3 * pi / 4,
             ),
           ),
-          SizedBox(
-            width: 300,
-            child: Text.rich(
-              codeStyles.highlight(const <CodeSpan>[
-                CodeSpan(SpanType.comment, '// clockwise'),
-                CodeSpan(SpanType.text, '\npath.'),
-                CodeSpan(SpanType.method, 'addArc'),
-                CodeSpan(SpanType.text, '('),
-                CodeSpan(SpanType.text, '\n  rect,'),
-                CodeSpan(SpanType.text, '\n  pi '),
-                CodeSpan(SpanType.operator, '/ '),
-                CodeSpan(SpanType.literal, '2'),
-                CodeSpan(SpanType.text, ','),
-                CodeSpan(SpanType.comment, '     //  90° startAngle'),
-                CodeSpan(SpanType.literal, '\n  3 '),
-                CodeSpan(SpanType.operator, '* '),
-                CodeSpan(SpanType.text, 'pi '),
-                CodeSpan(SpanType.operator, '/ '),
-                CodeSpan(SpanType.literal, '4'),
-                CodeSpan(SpanType.text, ','),
-                CodeSpan(SpanType.comment, ' // 135° sweepAngle'),
-                CodeSpan(SpanType.text, '\n);'),
-              ]),
-            ),
-          )
-        ],
-      ),
+        ),
+        SizedBox(
+          width: 300,
+          child: Text.rich(
+            theme.highlighter.highlight(const <CodeSpan>[
+              CodeSpan(SpanType.comment, '// clockwise'),
+              CodeSpan(SpanType.text, '\npath.'),
+              CodeSpan(SpanType.method, 'addArc'),
+              CodeSpan(SpanType.text, '('),
+              CodeSpan(SpanType.text, '\n  rect,'),
+              CodeSpan(SpanType.text, '\n  pi '),
+              CodeSpan(SpanType.operator, '/ '),
+              CodeSpan(SpanType.literal, '2'),
+              CodeSpan(SpanType.text, ','),
+              CodeSpan(SpanType.comment, '     //  90° startAngle'),
+              CodeSpan(SpanType.literal, '\n  3 '),
+              CodeSpan(SpanType.operator, '* '),
+              CodeSpan(SpanType.text, 'pi '),
+              CodeSpan(SpanType.operator, '/ '),
+              CodeSpan(SpanType.literal, '4'),
+              CodeSpan(SpanType.text, ','),
+              CodeSpan(SpanType.comment, ' // 135° sweepAngle'),
+              CodeSpan(SpanType.text, '\n);'),
+            ]),
+          ),
+        )
+      ],
     );
   }
 
   @override
-  String get name => 'path_add_arc';
+  String get basename => 'path_add_arc';
 }
 
 class PathAddArcCCWDiagram extends ArcDiagram {
-  const PathAddArcCCWDiagram({super.key});
+  const PathAddArcCCWDiagram({super.dark, super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: palette.background,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          const SizedBox(
-            width: 400,
-            height: 400,
-            child: CustomPaint(
-              foregroundPainter: ArcDiagramPainter(
-                startAngle: 5 * pi / 4,
-                sweepAngle: -3 * pi / 4,
-                startLabelAlignment: 1 / 5,
-              ),
+    final ArcDiagramTheme theme =
+        dark ? ArcDiagramTheme.dark : ArcDiagramTheme.light;
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        SizedBox(
+          width: 400,
+          height: 400,
+          child: CustomPaint(
+            foregroundPainter: ArcDiagramPainter(
+              theme: theme,
+              startAngle: 5 * pi / 4,
+              sweepAngle: -3 * pi / 4,
+              startLabelAlignment: 1 / 5,
             ),
           ),
-          SizedBox(
-            width: 300,
-            child: Text.rich(
-              codeStyles.highlight(const <CodeSpan>[
-                CodeSpan(SpanType.comment, '// counter-clockwise'),
-                CodeSpan(SpanType.text, '\npath.'),
-                CodeSpan(SpanType.method, 'addArc'),
-                CodeSpan(SpanType.text, '('),
-                CodeSpan(SpanType.text, '\n  rect,'),
-                CodeSpan(SpanType.literal, '\n  5 '),
-                CodeSpan(SpanType.operator, '* '),
-                CodeSpan(SpanType.text, 'pi '),
-                CodeSpan(SpanType.operator, '/ '),
-                CodeSpan(SpanType.literal, '4'),
-                CodeSpan(SpanType.text, ','),
-                CodeSpan(SpanType.comment, '  //  225° startAngle'),
-                CodeSpan(SpanType.literal, '\n  -3 '),
-                CodeSpan(SpanType.operator, '* '),
-                CodeSpan(SpanType.text, 'pi '),
-                CodeSpan(SpanType.operator, '/ '),
-                CodeSpan(SpanType.literal, '4'),
-                CodeSpan(SpanType.text, ','),
-                CodeSpan(SpanType.comment, ' // -135° sweepAngle'),
-                CodeSpan(SpanType.text, '\n);'),
-              ]),
-            ),
-          )
-        ],
-      ),
+        ),
+        SizedBox(
+          width: 300,
+          child: Text.rich(
+            theme.highlighter.highlight(const <CodeSpan>[
+              CodeSpan(SpanType.comment, '// counter-clockwise'),
+              CodeSpan(SpanType.text, '\npath.'),
+              CodeSpan(SpanType.method, 'addArc'),
+              CodeSpan(SpanType.text, '('),
+              CodeSpan(SpanType.text, '\n  rect,'),
+              CodeSpan(SpanType.literal, '\n  5 '),
+              CodeSpan(SpanType.operator, '* '),
+              CodeSpan(SpanType.text, 'pi '),
+              CodeSpan(SpanType.operator, '/ '),
+              CodeSpan(SpanType.literal, '4'),
+              CodeSpan(SpanType.text, ','),
+              CodeSpan(SpanType.comment, '  //  225° startAngle'),
+              CodeSpan(SpanType.literal, '\n  -3 '),
+              CodeSpan(SpanType.operator, '* '),
+              CodeSpan(SpanType.text, 'pi '),
+              CodeSpan(SpanType.operator, '/ '),
+              CodeSpan(SpanType.literal, '4'),
+              CodeSpan(SpanType.text, ','),
+              CodeSpan(SpanType.comment, ' // -135° sweepAngle'),
+              CodeSpan(SpanType.text, '\n);'),
+            ]),
+          ),
+        )
+      ],
     );
   }
 
   @override
-  String get name => 'path_add_arc_ccw';
+  String get basename => 'path_add_arc_ccw';
 }
 
 class ArcDiagramStep extends DiagramStep<ArcDiagram> {
@@ -600,8 +638,11 @@ class ArcDiagramStep extends DiagramStep<ArcDiagram> {
   @override
   Future<List<ArcDiagram>> get diagrams async => const <ArcDiagram>[
         CanvasDrawArcDiagram(),
+        CanvasDrawArcDiagram(dark: true),
         PathAddArcDiagram(),
+        PathAddArcDiagram(dark: true),
         PathAddArcCCWDiagram(),
+        PathAddArcCCWDiagram(dark: true),
       ];
 
   @override
