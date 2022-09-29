@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
@@ -24,7 +23,7 @@ enum GradientMode {
   sweep,
 }
 
-class TileModeDiagram extends StatelessWidget implements DiagramMetadata {
+class TileModeDiagram extends StatelessWidget with DiagramMetadata {
   const TileModeDiagram(this.gradientMode, this.tileMode, {super.key});
 
   @override
@@ -132,26 +131,16 @@ class TileModeDiagram extends StatelessWidget implements DiagramMetadata {
   }
 }
 
-class TileModeDiagramStep extends DiagramStep<TileModeDiagram> {
-  TileModeDiagramStep(super.controller) {
-    for (final TileMode mode in TileMode.values) {
-      for (final GradientMode gradient in GradientMode.values) {
-        _diagrams.add(TileModeDiagram(gradient, mode));
-      }
-    }
-  }
-
+class TileModeDiagramStep extends DiagramStep {
   @override
   final String category = 'dart-ui';
 
-  final List<TileModeDiagram> _diagrams = <TileModeDiagram>[];
+  final List<TileModeDiagram> _diagrams = <TileModeDiagram>[
+    for (final TileMode mode in TileMode.values)
+      for (final GradientMode gradient in GradientMode.values)
+        TileModeDiagram(gradient, mode),
+  ];
 
   @override
   Future<List<TileModeDiagram>> get diagrams async => _diagrams;
-
-  @override
-  Future<File> generateDiagram(TileModeDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawDiagramToFile(File('${diagram.name}.png'));
-  }
 }

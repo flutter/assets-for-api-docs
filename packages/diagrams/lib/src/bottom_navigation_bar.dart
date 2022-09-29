@@ -3,12 +3,12 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
+
 import 'package:flutter/material.dart';
+
 import 'diagram_step.dart';
 
-class BottomNavigationBarDiagram extends StatelessWidget
-    implements DiagramMetadata {
+class BottomNavigationBarDiagram extends StatelessWidget with DiagramMetadata {
   const BottomNavigationBarDiagram(this.name, {super.key});
 
   @override
@@ -56,10 +56,7 @@ class BottomNavigationBarDiagram extends StatelessWidget
   }
 }
 
-class BottomNavigationBarDiagramStep
-    extends DiagramStep<BottomNavigationBarDiagram> {
-  BottomNavigationBarDiagramStep(super.controller);
-
+class BottomNavigationBarDiagramStep extends DiagramStep {
   @override
   final String category = 'material';
 
@@ -68,10 +65,4 @@ class BottomNavigationBarDiagramStep
       <BottomNavigationBarDiagram>[
         const BottomNavigationBarDiagram('bottom_navigation_bar'),
       ];
-
-  @override
-  Future<File> generateDiagram(BottomNavigationBarDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawDiagramToFile(File('${diagram.name}.png'));
-  }
 }

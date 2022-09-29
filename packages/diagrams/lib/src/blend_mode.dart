@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 import 'dart:math';
 import 'dart:ui' show Image;
 
@@ -27,7 +26,7 @@ const String kMonospaceFont = 'Courier New';
 Image? destinationImage, sourceImage, gridImage;
 int pageIndex = 0;
 
-class BlendModeDiagram extends StatelessWidget implements DiagramMetadata {
+class BlendModeDiagram extends StatelessWidget with DiagramMetadata {
   const BlendModeDiagram(this.mode, {super.key});
 
   final BlendMode mode;
@@ -66,6 +65,7 @@ class BlendModeDiagram extends StatelessWidget implements DiagramMetadata {
                       style: const TextStyle(
                         inherit: false,
                         fontFamily: kMonospaceFont,
+                        package: 'diagrams',
                         color: Colors.black,
                         fontSize: 10.0,
                         fontWeight: FontWeight.w900,
@@ -85,6 +85,7 @@ class BlendModeDiagram extends StatelessWidget implements DiagramMetadata {
                       style: TextStyle(
                         inherit: false,
                         fontFamily: kMonospaceFont,
+                        package: 'diagrams',
                         color: Colors.black,
                         fontSize: 8.0,
                         fontWeight: FontWeight.bold,
@@ -106,6 +107,7 @@ class BlendModeDiagram extends StatelessWidget implements DiagramMetadata {
                         style: TextStyle(
                           inherit: false,
                           fontFamily: kMonospaceFont,
+                          package: 'diagrams',
                           color: Colors.black,
                           fontSize: 8.0,
                           fontWeight: FontWeight.bold,
@@ -230,9 +232,7 @@ class BlendModePainter extends CustomPainter {
   }
 }
 
-class BlendModeDiagramStep extends DiagramStep<BlendModeDiagram> {
-  BlendModeDiagramStep(super.controller);
-
+class BlendModeDiagramStep extends DiagramStep {
   @override
   final String category = 'dart-ui';
 
@@ -250,11 +250,5 @@ class BlendModeDiagramStep extends DiagramStep<BlendModeDiagram> {
       }
     }
     return _diagrams!;
-  }
-
-  @override
-  Future<File> generateDiagram(BlendModeDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }

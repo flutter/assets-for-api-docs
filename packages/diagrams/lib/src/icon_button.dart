@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 
@@ -12,7 +11,7 @@ import 'diagram_step.dart';
 const String _iconButton = 'icon_button';
 const String _iconButtonBackground = 'icon_button_background';
 
-class IconButtonDiagram extends StatelessWidget implements DiagramMetadata {
+class IconButtonDiagram extends StatelessWidget with DiagramMetadata {
   const IconButtonDiagram(this.name, {super.key});
 
   @override
@@ -68,9 +67,7 @@ class IconButtonDiagram extends StatelessWidget implements DiagramMetadata {
   }
 }
 
-class IconButtonDiagramStep extends DiagramStep<IconButtonDiagram> {
-  IconButtonDiagramStep(super.controller);
-
+class IconButtonDiagramStep extends DiagramStep {
   @override
   final String category = 'material';
 
@@ -79,10 +76,4 @@ class IconButtonDiagramStep extends DiagramStep<IconButtonDiagram> {
         const IconButtonDiagram(_iconButton),
         const IconButtonDiagram(_iconButtonBackground),
       ];
-
-  @override
-  Future<File> generateDiagram(IconButtonDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawDiagramToFile(File('${diagram.name}.png'));
-  }
 }

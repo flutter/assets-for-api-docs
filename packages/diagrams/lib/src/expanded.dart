@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 
@@ -12,7 +11,7 @@ import 'diagram_step.dart';
 const String _column = 'expanded_column';
 const String _row = 'expanded_row';
 
-class ExpandedDiagram extends StatelessWidget implements DiagramMetadata {
+class ExpandedDiagram extends StatelessWidget with DiagramMetadata {
   const ExpandedDiagram(this.name, {super.key});
 
   @override
@@ -100,9 +99,7 @@ class ExpandedDiagram extends StatelessWidget implements DiagramMetadata {
   }
 }
 
-class ExpandedDiagramStep extends DiagramStep<ExpandedDiagram> {
-  ExpandedDiagramStep(super.controller);
-
+class ExpandedDiagramStep extends DiagramStep {
   @override
   final String category = 'widgets';
 
@@ -111,10 +108,4 @@ class ExpandedDiagramStep extends DiagramStep<ExpandedDiagram> {
         const ExpandedDiagram(_column),
         const ExpandedDiagram(_row),
       ];
-
-  @override
-  Future<File> generateDiagram(ExpandedDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawDiagramToFile(File('${diagram.name}.png'));
-  }
 }

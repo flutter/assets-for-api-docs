@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 
@@ -106,7 +105,7 @@ class StrokeCapDescription extends CustomPainter {
   }
 }
 
-class StrokeCapDiagram extends StatelessWidget implements DiagramMetadata {
+class StrokeCapDiagram extends StatelessWidget with DiagramMetadata {
   const StrokeCapDiagram(
       {required this.name, this.cap = StrokeCap.round, super.key});
 
@@ -132,34 +131,24 @@ class StrokeCapDiagram extends StatelessWidget implements DiagramMetadata {
   }
 }
 
-class StrokeCapDiagramStep extends DiagramStep<StrokeCapDiagram> {
-  StrokeCapDiagramStep(super.controller) {
-    _diagrams.addAll(<StrokeCapDiagram>[
-      const StrokeCapDiagram(
-        name: 'butt_cap',
-        cap: StrokeCap.butt,
-      ),
-      const StrokeCapDiagram(
-        name: 'round_cap',
-      ),
-      const StrokeCapDiagram(
-        name: 'square_cap',
-        cap: StrokeCap.square,
-      ),
-    ]);
-  }
-
+class StrokeCapDiagramStep extends DiagramStep {
   @override
   final String category = 'dart-ui';
 
-  final List<StrokeCapDiagram> _diagrams = <StrokeCapDiagram>[];
+  final List<StrokeCapDiagram> _diagrams = const <StrokeCapDiagram>[
+    StrokeCapDiagram(
+      name: 'butt_cap',
+      cap: StrokeCap.butt,
+    ),
+    StrokeCapDiagram(
+      name: 'round_cap',
+    ),
+    StrokeCapDiagram(
+      name: 'square_cap',
+      cap: StrokeCap.square,
+    ),
+  ];
 
   @override
   Future<List<StrokeCapDiagram>> get diagrams async => _diagrams;
-
-  @override
-  Future<File> generateDiagram(StrokeCapDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawDiagramToFile(File('${diagram.name}.png'));
-  }
 }

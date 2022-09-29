@@ -3,11 +3,12 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
+
 import 'package:flutter/material.dart';
+
 import 'diagram_step.dart';
 
-class AlignDiagram extends StatelessWidget implements DiagramMetadata {
+class AlignDiagram extends StatelessWidget with DiagramMetadata {
   const AlignDiagram(this.name, {super.key});
 
   @override
@@ -90,9 +91,7 @@ class AlignDiagram extends StatelessWidget implements DiagramMetadata {
   }
 }
 
-class AlignDiagramStep extends DiagramStep<AlignDiagram> {
-  AlignDiagramStep(super.controller);
-
+class AlignDiagramStep extends DiagramStep {
   @override
   final String category = 'widgets';
 
@@ -102,10 +101,4 @@ class AlignDiagramStep extends DiagramStep<AlignDiagram> {
         const AlignDiagram('align_alignment'),
         const AlignDiagram('align_fractional_offset'),
       ];
-
-  @override
-  Future<File> generateDiagram(AlignDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawDiagramToFile(File('${diagram.name}.png'));
-  }
 }

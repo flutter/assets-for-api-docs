@@ -3,13 +3,12 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
 
-class PaddingDiagram extends StatelessWidget implements DiagramMetadata {
+class PaddingDiagram extends StatelessWidget with DiagramMetadata {
   const PaddingDiagram(this.name, {super.key});
 
   @override
@@ -34,9 +33,7 @@ class PaddingDiagram extends StatelessWidget implements DiagramMetadata {
   }
 }
 
-class PaddingDiagramStep extends DiagramStep<PaddingDiagram> {
-  PaddingDiagramStep(super.controller);
-
+class PaddingDiagramStep extends DiagramStep {
   @override
   final String category = 'widgets';
 
@@ -44,10 +41,4 @@ class PaddingDiagramStep extends DiagramStep<PaddingDiagram> {
   Future<List<PaddingDiagram>> get diagrams async => <PaddingDiagram>[
         const PaddingDiagram('padding'),
       ];
-
-  @override
-  Future<File> generateDiagram(PaddingDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawDiagramToFile(File('${diagram.name}.png'));
-  }
 }

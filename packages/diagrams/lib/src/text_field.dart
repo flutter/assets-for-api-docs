@@ -3,13 +3,12 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
 
-class TextFieldDiagram extends StatelessWidget implements DiagramMetadata {
+class TextFieldDiagram extends StatelessWidget with DiagramMetadata {
   const TextFieldDiagram(this.name, {super.key});
 
   @override
@@ -36,9 +35,7 @@ class TextFieldDiagram extends StatelessWidget implements DiagramMetadata {
   }
 }
 
-class TextFieldDiagramStep extends DiagramStep<TextFieldDiagram> {
-  TextFieldDiagramStep(super.controller);
-
+class TextFieldDiagramStep extends DiagramStep {
   @override
   final String category = 'material';
 
@@ -46,10 +43,4 @@ class TextFieldDiagramStep extends DiagramStep<TextFieldDiagram> {
   Future<List<TextFieldDiagram>> get diagrams async => <TextFieldDiagram>[
         const TextFieldDiagram('text_field'),
       ];
-
-  @override
-  Future<File> generateDiagram(TextFieldDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawDiagramToFile(File('${diagram.name}.png'));
-  }
 }
