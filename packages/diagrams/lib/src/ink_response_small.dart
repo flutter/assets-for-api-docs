@@ -50,7 +50,6 @@ class _InkResponseSmallDiagramState extends State<InkResponseSmallDiagram> {
   @override
   Widget build(BuildContext context) {
     return ConstrainedBox(
-      key: UniqueKey(),
       constraints: BoxConstraints.tight(const Size(280.0, 180.0)),
       child: Theme(
         data: ThemeData(

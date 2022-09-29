@@ -424,8 +424,6 @@ class DiagramController {
           timestamp > framerateDuration ? framerateDuration : timestamp;
       timestamp -= advanceBy;
       await advanceTime(advanceBy);
-      await _binding.takeSnapshot();
-      print('advanced $advanceBy');
     }
     return _binding.takeSnapshot();
   }
@@ -570,15 +568,13 @@ class DiagramController {
       final ui.Image captured = await drawDiagramToImage();
       final ByteData? encoded = await captured.toByteData(format: format);
       final List<int> bytes = encoded!.buffer.asUint8List().toList();
-      // print(
-      //     'Writing frame $index ($now), ${bytes.length} bytes, ${captured.width}x${captured.height} '
-      //     '${_byteFormatToString(format)}, to: ${outputFile.absolute.path}');
       outputFile.writeAsBytesSync(bytes);
       advanceTime(frameDuration);
       outputFiles.add(outputFile);
       now += frameDuration;
       ++index;
     }
+    print('Wrote $index frames of $name to ${outputDirectory.path}');
     final File metadataFile =
         File(path.join(outputDirectory.absolute.path, '$name.json'));
     final AnimationMetadata metadata = AnimationMetadata.fromData(
