@@ -31,8 +31,8 @@ To create a new diagram:
 
     * If your diagram's state needs to wait imperatively, mix-in `LockstepStateMixin` and call `waitLockstep(duration)`.
 
-    * If your diagram needs simulated gesture input, acquire a `WidgetController` by calling
-      `DiagramWidgetController.of(context)`.
+    * If your diagram needs simulated gesture input, acquire a [WidgetController](https://api.flutter.dev/flutter/flutter_test/WidgetController-class.html)
+      by calling `DiagramWidgetController.of(context)`.
 
 4. Create a class that extends `DiagramStep`.
 
