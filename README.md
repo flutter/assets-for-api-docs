@@ -16,6 +16,35 @@ the future, if needed. Check the existing diagrams (and their generation code)
 in this repository to see examples. Avoid checking in just a static image file
 (e.g. PNG, JPEG), without a way to regenerate and update it.
 
+## Creating new diagrams
+
+To create a new diagram:
+
+1. Create a new Dart file inside `/packages/diagrams/lib/src/`.
+
+2. Export that file from `/packages/diagrams/lib/diagrams.dart`.
+
+3. Create one or more diagram widgets that mix-in `DiagramMetadata`, overriding the `name` getter to return their name,
+   which should be lower_snake_case.
+
+    * If your diagram is animated, override the `duration` getter to return the duration of the animation.
+
+    * If your diagram's state needs to wait imperatively, mix-in `LockstepStateMixin` and call `waitLockstep(duration)`.
+
+    * If your diagram needs simulated gesture input, acquire a `WidgetController` by calling
+      `DiagramWidgetController.of(context)`.
+
+4. Create a class that extends `DiagramStep`.
+
+5. Override the `diagrams` getter of `DiagramStep` to return a list containing the new diagrams.
+
+6. Override the `category` getter of `DiagramStep` to return the category it belongs in, this corresponds to the folders
+   under `/assets`.
+
+7. Add your new `DiagramStep` to the list in `packages/diagrams/lib/src/steps.dart`, sorted alphabetically.
+
+8. Generate assets with `bin/generate -s MyDiagramStep`, for more options see the [generation](#Generation) section.
+
 ## URL structure
 
 Reference the assets with this URL structure:
@@ -46,6 +75,8 @@ To limit image generation to certain categories and/or names, run:
 bin/generate -c cupertino,material
 # Filter by name
 bin/generate -n basic_material_app,blend_mode
+# Filter by step class name
+bin/generate -s MaterialAppDiagramStep,BlendModeDiagramStep
 ```
 
 `bin/generate --help` lists available arguments.
@@ -56,7 +87,7 @@ The `generate.dart` script works on macOS, Linux, and Windows, but it needs seve
 Linux and macOS run `bin/generate`. On Windows, run `bin\generate.bat`.
 
 To optimize PNG files, it needs `optipng`, which is available for macOS via Homebrew, and Linux via
-apt-get, and Windows from the [optipng website](http://optipng.sourceforge.net/). 
+apt-get, and Windows from the [optipng website](http://optipng.sourceforge.net/).
 
 To convert animations into mp4 files, it needs `ffmpeg`, available for macOS via Homebrew and Linux
 via apt-get, and for Windows from the [FFMPEG website](https://ffmpeg.org/download.html).
@@ -86,18 +117,6 @@ the `assets/tests` directory should not be optimized.
 
 The automatic generation tool will automatically apply optimization to
 the assets it generates.
-
-## Creating new diagrams
-
-To create a new diagram:
-
-1. Add a new file to `packages/diagrams/lib/src/`, and put the tests in there.
-
-2. Export that file from `packages/diagrams/lib/diagrams.dart`.
-
-3. Add your new class to the list in `assets-for-api-docs/utils/diagram_generator/lib/main.dart`.
-
-4. Run `bin/generate --name xxx` where 'xxx' is the name of your diagram.
 
 ## Issues
 
