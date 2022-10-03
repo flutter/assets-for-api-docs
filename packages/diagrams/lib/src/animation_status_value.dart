@@ -3,11 +3,10 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 
-import 'diagram_step.dart';
+import '../diagrams.dart';
 
 final Duration _kTotalDuration = _kBreakDuration +
     _kAnimationDuration +
@@ -16,10 +15,7 @@ final Duration _kTotalDuration = _kBreakDuration +
 const Duration _kAnimationDuration = Duration(seconds: 3);
 const Duration _kBreakDuration = Duration(seconds: 1, milliseconds: 500);
 
-const double _kCurveAnimationFrameRate = 60.0;
-
-class AnimationStatusValueDiagram extends StatefulWidget
-    implements DiagramMetadata {
+class AnimationStatusValueDiagram extends StatefulWidget with DiagramMetadata {
   const AnimationStatusValueDiagram({super.key});
 
   @override
@@ -28,23 +24,26 @@ class AnimationStatusValueDiagram extends StatefulWidget
 
   @override
   String get name => 'animation_status_value';
+
+  @override
+  Duration? get duration => _kTotalDuration;
 }
 
 class AnimationStatusValueDiagramState
     extends State<AnimationStatusValueDiagram>
-    with TickerProviderStateMixin<AnimationStatusValueDiagram> {
+    with TickerProviderStateMixin, LockstepStateMixin {
   late AnimationController _controller;
   String _status = 'dismissed';
-  Timer? _breakTimer;
 
   @override
   void initState() {
     super.initState();
     _controller =
         AnimationController(vsync: this, duration: _kAnimationDuration);
-    Timer(_kBreakDuration, () {
-      _controller.forward();
-    });
+    waitLockstep(_kBreakDuration).then((_) => _controller.forward());
+    waitLockstep(
+      _kBreakDuration + _kAnimationDuration + _kBreakDuration,
+    ).then((_) => _controller.reverse());
     _controller.addStatusListener((AnimationStatus status) {
       switch (status) {
         case AnimationStatus.dismissed:
@@ -58,10 +57,6 @@ class AnimationStatusValueDiagramState
           break;
         case AnimationStatus.completed:
           _status = 'completed';
-          _breakTimer = Timer(_kBreakDuration, () {
-            _breakTimer = null;
-            _controller.reverse();
-          });
           break;
       }
     });
@@ -69,8 +64,6 @@ class AnimationStatusValueDiagramState
 
   @override
   void dispose() {
-    _breakTimer?.cancel();
-    _breakTimer = null;
     _controller.dispose();
     super.dispose();
   }
@@ -149,10 +142,7 @@ class AnimationStatusValueDiagramState
   }
 }
 
-class AnimationStatusValueDiagramStep
-    extends DiagramStep<AnimationStatusValueDiagram> {
-  AnimationStatusValueDiagramStep(super.controller);
-
+class AnimationStatusValueDiagramStep extends DiagramStep {
   @override
   final String category = 'animation';
 
@@ -161,15 +151,4 @@ class AnimationStatusValueDiagramStep
       const <AnimationStatusValueDiagram>[
         AnimationStatusValueDiagram(),
       ];
-
-  @override
-  Future<File> generateDiagram(AnimationStatusValueDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawAnimatedDiagramToFiles(
-      end: _kTotalDuration,
-      frameRate: _kCurveAnimationFrameRate,
-      name: diagram.name,
-      category: category,
-    );
-  }
 }

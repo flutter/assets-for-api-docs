@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 
@@ -36,7 +35,7 @@ const String _startFloat = '_start_float';
 const String _startTop = '_start_top';
 
 class FloatingActionButtonLocationDiagram extends StatelessWidget
-    implements DiagramMetadata {
+    with DiagramMetadata {
   const FloatingActionButtonLocationDiagram(this.nameSuffix, {super.key});
 
   final String nameSuffix;
@@ -164,10 +163,7 @@ class FloatingActionButtonLocationDiagram extends StatelessWidget
   }
 }
 
-class FloatingActionButtonLocationDiagramStep
-    extends DiagramStep<FloatingActionButtonLocationDiagram> {
-  FloatingActionButtonLocationDiagramStep(super.controller);
-
+class FloatingActionButtonLocationDiagramStep extends DiagramStep {
   @override
   final String category = 'material';
 
@@ -193,11 +189,4 @@ class FloatingActionButtonLocationDiagramStep
         const FloatingActionButtonLocationDiagram(_startFloat),
         const FloatingActionButtonLocationDiagram(_startTop),
       ];
-
-  @override
-  Future<File> generateDiagram(
-      FloatingActionButtonLocationDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawDiagramToFile(File('${diagram.name}.png'));
-  }
 }

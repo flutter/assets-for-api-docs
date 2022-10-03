@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'dart:async';
 import 'dart:io';
 import 'dart:ui' as ui;
 
@@ -16,31 +17,58 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:path/path.dart' as path;
 import 'package:vector_math/vector_math_64.dart';
 
+/// Provides a [WidgetController] to diagrams, which can be used to
+/// programmatically input gestures to the widget tree.
+class DiagramWidgetController extends InheritedWidget {
+  const DiagramWidgetController({
+    super.key,
+    required this.controller,
+    required super.child,
+  });
+
+  final WidgetController controller;
+
+  @override
+  bool updateShouldNotify(DiagramWidgetController oldWidget) =>
+      controller != oldWidget.controller;
+
+  static WidgetController of(BuildContext context) {
+    return context
+        .findAncestorWidgetOfExactType<DiagramWidgetController>()!
+        .controller;
+  }
+}
+
 // The diagram host widget. Diagrams are wrapped by this widget to provide
 // the needed structure for capturing them.
 class _Diagram extends StatelessWidget {
   const _Diagram({
     required this.boundaryKey,
+    required this.widgetController,
     required this.child,
   });
 
   final GlobalKey boundaryKey;
+  final WidgetController widgetController;
   final Widget child;
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Material(
-        child: Builder(
-          builder: (BuildContext context) {
-            return Center(
-              child: RepaintBoundary(
-                key: boundaryKey,
-                child: child,
-              ),
-            );
-          },
+    return DiagramWidgetController(
+      controller: widgetController,
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: Material(
+          child: Builder(
+            builder: (BuildContext context) {
+              return Center(
+                child: RepaintBoundary(
+                  key: boundaryKey,
+                  child: child,
+                ),
+              );
+            },
+          ),
         ),
       ),
     );
@@ -257,6 +285,7 @@ class DiagramFlutterBinding extends BindingBase
   }) {
     final Widget rootWidget = _Diagram(
       boundaryKey: _boundaryKey,
+      widgetController: _controller,
       child: Builder(builder: builder),
     );
     attachRootWidget(rootWidget);
@@ -369,8 +398,12 @@ class DiagramController {
   /// Advances the animation clock by the given duration.
   ///
   /// The [increment] must be greater than, or equal to, [Duration.zero].
-  void advanceTime([Duration increment = Duration.zero]) =>
-      _binding.pump(duration: increment);
+  Future<void> advanceTime([Duration increment = Duration.zero]) {
+    _binding.pump(duration: increment);
+    final Completer<void> completer = Completer<void>();
+    _binding.addPostFrameCallback((Duration timeStamp) => completer.complete());
+    return completer.future;
+  }
 
   /// Returns an [image.Image] representing the current diagram.
   ///
@@ -378,8 +411,20 @@ class DiagramController {
   /// [builder] in logical coordinates, multiplied by the [pixelRatio].
   ///
   /// Time will be advanced to [timestamp] before taking the snapshot.
-  Future<ui.Image> drawDiagramToImage({Duration timestamp = Duration.zero}) {
-    advanceTime(timestamp);
+  Future<ui.Image> drawDiagramToImage({
+    Duration timestamp = Duration.zero,
+    double framerate = 60.0,
+  }) async {
+    // Even though we are only capturing a single frame, advance time at minimum
+    // increments to let tickers update and async tasks run.
+    final Duration framerateDuration =
+        Duration(milliseconds: 1000 ~/ framerate);
+    while (timestamp != Duration.zero) {
+      final Duration advanceBy =
+          timestamp > framerateDuration ? framerateDuration : timestamp;
+      timestamp -= advanceBy;
+      await advanceTime(advanceBy);
+    }
     return _binding.takeSnapshot();
   }
 
@@ -393,6 +438,7 @@ class DiagramController {
   Future<File> drawDiagramToFile(
     File outputFile, {
     Duration timestamp = Duration.zero,
+    double framerate = 60.0,
     ui.ImageByteFormat format = ui.ImageByteFormat.png,
   }) async {
     if (!outputFile.isAbsolute) {
@@ -401,7 +447,11 @@ class DiagramController {
           File(path.join(outputDirectory.absolute.path, outputFile.path));
     }
     assert(outputFile.path.endsWith('.png'));
-    final ui.Image captured = await drawDiagramToImage(timestamp: timestamp);
+    await advanceTime();
+    final ui.Image captured = await drawDiagramToImage(
+      timestamp: timestamp,
+      framerate: framerate,
+    );
     final ByteData? encoded = await captured.toByteData(format: format);
     final List<int> bytes = encoded!.buffer.asUint8List().toList();
     print('Writing ${bytes.length} bytes, ${captured.width}x${captured.height} '
@@ -518,15 +568,13 @@ class DiagramController {
       final ui.Image captured = await drawDiagramToImage();
       final ByteData? encoded = await captured.toByteData(format: format);
       final List<int> bytes = encoded!.buffer.asUint8List().toList();
-      print(
-          'Writing frame $index ($now), ${bytes.length} bytes, ${captured.width}x${captured.height} '
-          '${_byteFormatToString(format)}, to: ${outputFile.absolute.path}');
       outputFile.writeAsBytesSync(bytes);
       advanceTime(frameDuration);
       outputFiles.add(outputFile);
       now += frameDuration;
       ++index;
     }
+    print('Wrote $index frames of $name to ${outputDirectory.path}');
     final File metadataFile =
         File(path.join(outputDirectory.absolute.path, '$name.json'));
     final AnimationMetadata metadata = AnimationMetadata.fromData(

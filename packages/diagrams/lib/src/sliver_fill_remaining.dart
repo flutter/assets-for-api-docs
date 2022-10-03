@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -11,16 +10,14 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'diagram_step.dart';
 import 'fake_drag_scroll_activity.dart';
+import 'utils.dart';
 
 const Duration _kScrollUpDuration = Duration(seconds: 1);
 const Duration _kScrollPauseDuration = Duration(seconds: 1);
 final Duration _kTotalDuration =
     _kScrollPauseDuration + _kScrollUpDuration + _kScrollPauseDuration;
 
-const double _kCurveAnimationFrameRate = 60.0;
-
-class SliverFillRemainingDiagram extends StatefulWidget
-    implements DiagramMetadata {
+class SliverFillRemainingDiagram extends StatefulWidget with DiagramMetadata {
   const SliverFillRemainingDiagram({super.key});
 
   @override
@@ -28,10 +25,13 @@ class SliverFillRemainingDiagram extends StatefulWidget
 
   @override
   State<StatefulWidget> createState() => _SliverFillRemainingDiagramState();
+
+  @override
+  Duration? get duration => _kTotalDuration;
 }
 
 class _SliverFillRemainingDiagramState extends State<SliverFillRemainingDiagram>
-    with TickerProviderStateMixin<SliverFillRemainingDiagram> {
+    with TickerProviderStateMixin, LockstepStateMixin {
   _SliverFillRemainingDiagramState();
 
   final ScrollController _scrollController = ScrollController();
@@ -54,12 +54,12 @@ class _SliverFillRemainingDiagramState extends State<SliverFillRemainingDiagram>
   }
 
   Future<void> _play() async {
-    await Future<void>.delayed(_kScrollPauseDuration);
+    await waitLockstep(_kScrollPauseDuration);
     await _animate(
       to: 400.0,
       duration: _kScrollUpDuration,
     );
-    await Future<void>.delayed(_kScrollPauseDuration);
+    await waitLockstep(_kScrollPauseDuration);
   }
 
   Future<void> _animate({required double to, required Duration duration}) {
@@ -123,10 +123,7 @@ class _SliverFillRemainingDiagramState extends State<SliverFillRemainingDiagram>
   }
 }
 
-class SliverFillRemainingDiagramStep
-    extends DiagramStep<SliverFillRemainingDiagram> {
-  SliverFillRemainingDiagramStep(super.controller);
-
+class SliverFillRemainingDiagramStep extends DiagramStep {
   @override
   final String category = 'widgets';
 
@@ -135,15 +132,4 @@ class SliverFillRemainingDiagramStep
       <SliverFillRemainingDiagram>[
         const SliverFillRemainingDiagram(),
       ];
-
-  @override
-  Future<File> generateDiagram(SliverFillRemainingDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawAnimatedDiagramToFiles(
-      end: _kTotalDuration,
-      frameRate: _kCurveAnimationFrameRate,
-      name: diagram.name,
-      category: category,
-    );
-  }
 }

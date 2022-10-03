@@ -2,7 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'dart:io';
 import 'dart:math';
 import 'dart:ui';
 
@@ -59,6 +58,7 @@ class ArcDiagramTheme {
     theme: codeTheme,
     fontSize: 16.0,
     fontFamily: 'Ubuntu Mono',
+    package: 'diagrams',
   );
 }
 
@@ -453,7 +453,7 @@ class ArcDiagramPainter extends CustomPainter {
   }
 }
 
-abstract class ArcDiagram extends StatelessWidget implements DiagramMetadata {
+abstract class ArcDiagram extends StatelessWidget with DiagramMetadata {
   const ArcDiagram({this.dark = false, super.key});
 
   final bool dark;
@@ -629,9 +629,7 @@ class PathAddArcCCWDiagram extends ArcDiagram {
   String get basename => 'path_add_arc_ccw';
 }
 
-class ArcDiagramStep extends DiagramStep<ArcDiagram> {
-  ArcDiagramStep(super.controller);
-
+class ArcDiagramStep extends DiagramStep {
   @override
   final String category = 'dart-ui';
 
@@ -644,10 +642,4 @@ class ArcDiagramStep extends DiagramStep<ArcDiagram> {
         PathAddArcCCWDiagram(),
         PathAddArcCCWDiagram(dark: true),
       ];
-
-  @override
-  Future<File> generateDiagram(ArcDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawDiagramToFile(File('${diagram.name}.png'));
-  }
 }

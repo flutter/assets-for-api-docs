@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 
@@ -13,7 +12,7 @@ const String _scaffold = 'scaffold';
 const String _scaffoldBackgroundColor = 'scaffold_background_color';
 const String _scaffoldBottomAppBar = 'scaffold_bottom_app_bar';
 
-class ScaffoldDiagram extends StatefulWidget implements DiagramMetadata {
+class ScaffoldDiagram extends StatefulWidget with DiagramMetadata {
   const ScaffoldDiagram({super.key, required this.name});
 
   @override
@@ -94,9 +93,7 @@ class ScaffoldDiagramState extends State<ScaffoldDiagram> {
   }
 }
 
-class ScaffoldDiagramStep extends DiagramStep<ScaffoldDiagram> {
-  ScaffoldDiagramStep(super.controller);
-
+class ScaffoldDiagramStep extends DiagramStep {
   @override
   final String category = 'material';
 
@@ -106,10 +103,4 @@ class ScaffoldDiagramStep extends DiagramStep<ScaffoldDiagram> {
         const ScaffoldDiagram(name: _scaffoldBottomAppBar),
         const ScaffoldDiagram(name: _scaffoldBackgroundColor),
       ];
-
-  @override
-  Future<File> generateDiagram(ScaffoldDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawDiagramToFile(File('${diagram.name}.png'));
-  }
 }

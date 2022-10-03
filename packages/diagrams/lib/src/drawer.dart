@@ -2,12 +2,12 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'dart:io';
-
+import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'diagram_step.dart';
+import 'utils.dart';
 
 const Duration _pauseDuration = Duration(seconds: 1);
 const Duration _drawerOpenDuration = Duration(milliseconds: 300);
@@ -15,11 +15,36 @@ final Duration _totalDuration =
     _pauseDuration + _drawerOpenDuration + _pauseDuration;
 final GlobalKey _menuKey = GlobalKey();
 
-class DrawerDiagram extends StatelessWidget implements DiagramMetadata {
+class DrawerDiagram extends StatefulWidget with DiagramMetadata {
   const DrawerDiagram(this.name, {super.key});
 
   @override
   final String name;
+
+  @override
+  State<DrawerDiagram> createState() => _DrawerDiagramState();
+
+  @override
+  Duration? get duration => _totalDuration;
+}
+
+class _DrawerDiagramState extends State<DrawerDiagram>
+    with TickerProviderStateMixin, LockstepStateMixin {
+  Future<void> startAnimation() async {
+    await waitLockstep(_pauseDuration);
+    final RenderBox target =
+        _menuKey.currentContext!.findRenderObject()! as RenderBox;
+    final Offset targetOffset =
+        target.localToGlobal(target.size.center(Offset.zero));
+    final WidgetController controller = DiagramWidgetController.of(context);
+    await controller.tapAt(targetOffset);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    startAnimation();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -95,9 +120,7 @@ class DrawerDiagram extends StatelessWidget implements DiagramMetadata {
   }
 }
 
-class DrawerDiagramStep extends DiagramStep<DrawerDiagram> {
-  DrawerDiagramStep(super.controller);
-
+class DrawerDiagramStep extends DiagramStep {
   @override
   final String category = 'material';
 
@@ -105,31 +128,4 @@ class DrawerDiagramStep extends DiagramStep<DrawerDiagram> {
   Future<List<DrawerDiagram>> get diagrams async => <DrawerDiagram>[
         const DrawerDiagram('drawer'),
       ];
-
-  @override
-  Future<File> generateDiagram(DrawerDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-
-    controller.advanceTime();
-
-    final Future<File> result = controller.drawAnimatedDiagramToFiles(
-      end: _totalDuration,
-      frameRate: 60,
-      name: diagram.name,
-      category: category,
-    );
-
-    await Future<void>.delayed(_pauseDuration);
-
-    final RenderBox target =
-        _menuKey.currentContext!.findRenderObject()! as RenderBox;
-    final Offset targetOffset =
-        target.localToGlobal(target.size.center(Offset.zero));
-    final TestGesture gesture = await controller.startGesture(targetOffset);
-    await gesture.up();
-
-    await Future<void>.delayed(_drawerOpenDuration + _pauseDuration);
-
-    return result;
-  }
 }

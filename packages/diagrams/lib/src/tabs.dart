@@ -2,27 +2,22 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'dart:io';
-
 import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'diagram_step.dart';
+import 'utils.dart';
 
 const Duration _kTabAnimationDuration = Duration(milliseconds: 300);
 const Duration _kPauseDuration = Duration(seconds: 2);
-final Duration _kTotalAnimationTime = _kTabAnimationDuration +
+final Duration _kTotalAnimationTime = _kPauseDuration +
+    _kTabAnimationDuration +
     _kPauseDuration +
     _kTabAnimationDuration +
     _kPauseDuration;
-const double _kAnimationFrameRate = 60.0;
-final List<GlobalKey> _tabKeys = <GlobalKey>[
-  GlobalKey(),
-  GlobalKey(),
-];
 
-class TabsDiagram extends StatefulWidget implements DiagramMetadata {
+class TabsDiagram extends StatefulWidget with DiagramMetadata {
   const TabsDiagram(this.name, {super.key});
 
   @override
@@ -30,21 +25,48 @@ class TabsDiagram extends StatefulWidget implements DiagramMetadata {
 
   @override
   State<TabsDiagram> createState() => TabsDiagramState();
+
+  @override
+  Duration? get duration => _kTotalAnimationTime;
 }
 
 class TabsDiagramState extends State<TabsDiagram>
-    with SingleTickerProviderStateMixin {
-  final List<Tab> myTabs = <Tab>[
+    with TickerProviderStateMixin, LockstepStateMixin {
+  final List<GlobalKey> _tabKeys = <GlobalKey>[
+    GlobalKey(),
+    GlobalKey(),
+  ];
+
+  late final List<Tab> myTabs = <Tab>[
     Tab(key: _tabKeys[0], text: 'LEFT'),
     Tab(key: _tabKeys[1], text: 'RIGHT'),
   ];
 
   late TabController _tabController;
 
+  Future<void> startAnimation() async {
+    await waitLockstep(_kPauseDuration);
+
+    final RenderBox tab0 =
+        _tabKeys[0].currentContext!.findRenderObject()! as RenderBox;
+    final RenderBox tab1 =
+        _tabKeys[1].currentContext!.findRenderObject()! as RenderBox;
+    final Offset tab0Offset = tab0.localToGlobal(tab0.size.center(Offset.zero));
+    final Offset tab1Offset = tab1.localToGlobal(tab1.size.center(Offset.zero));
+    final WidgetController controller = DiagramWidgetController.of(context);
+
+    await controller.tapAt(tab1Offset);
+
+    await waitLockstep(_kPauseDuration);
+
+    await controller.tapAt(tab0Offset);
+  }
+
   @override
   void initState() {
     super.initState();
     _tabController = TabController(vsync: this, length: myTabs.length);
+    startAnimation();
   }
 
   @override
@@ -85,44 +107,12 @@ class TabsDiagramState extends State<TabsDiagram>
   }
 }
 
-class TabsDiagramStep extends DiagramStep<TabsDiagram> {
-  TabsDiagramStep(super.controller);
-
+class TabsDiagramStep extends DiagramStep {
   @override
   final String category = 'material';
 
   @override
-  Future<List<TabsDiagram>> get diagrams async => <TabsDiagram>[
-        const TabsDiagram('tabs'),
+  Future<List<TabsDiagram>> get diagrams async => const <TabsDiagram>[
+        TabsDiagram('tabs'),
       ];
-
-  Future<void> tapTabs(DiagramController controller, Duration now) async {
-    RenderBox target;
-    switch (now.inMilliseconds) {
-      case 0:
-        target = _tabKeys[1].currentContext!.findRenderObject()! as RenderBox;
-        break;
-      case 2300:
-        target = _tabKeys[0].currentContext!.findRenderObject()! as RenderBox;
-        break;
-      default:
-        return;
-    }
-    final Offset targetOffset =
-        target.localToGlobal(target.size.center(Offset.zero));
-    final TestGesture gesture = await controller.startGesture(targetOffset);
-    gesture.up();
-  }
-
-  @override
-  Future<File> generateDiagram(TabsDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawAnimatedDiagramToFiles(
-      end: _kTotalAnimationTime,
-      frameRate: _kAnimationFrameRate,
-      name: diagram.name,
-      category: category,
-      gestureCallback: tapTabs,
-    );
-  }
 }

@@ -3,8 +3,9 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
-import 'package:diagram_capture/diagram_capture.dart';
+
+import 'package:flutter/widgets.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 // Possible supported platforms that can be specified for the diagram.
 enum DiagramPlatform {
@@ -26,11 +27,7 @@ Map<String, DiagramPlatform> diagramStepPlatformNames =
 }));
 
 /// Describes a step in drawing the diagrams.
-abstract class DiagramStep<T extends DiagramMetadata> {
-  DiagramStep(this.controller);
-
-  final DiagramController controller;
-
+abstract class DiagramStep {
   /// The category that these diagrams belong in.
   ///
   /// Typically, this is the Flutter library where the corresponding topic
@@ -51,38 +48,38 @@ abstract class DiagramStep<T extends DiagramMetadata> {
   Set<DiagramPlatform> get platforms => DiagramPlatform.values.toSet();
 
   /// Returns the list of all available diagrams for this step.
-  Future<List<T>> get diagrams;
-
-  /// Generates the given diagram and returns the resulting [File].
-  Future<File> generateDiagram(T diagram);
-
-  /// Generates all diagrams for this step.
-  ///
-  /// Returns a list of Files where the diagrams were written.
-  ///
-  /// If `onlyGenerate` is supplied, then only generate diagrams which match one
-  /// of the given file's basename. Only matches the basename with no suffix,
-  /// not the path.
-  Future<List<File>> generateDiagrams(
-      {List<String> onlyGenerate = const <String>[],
-      required Set<DiagramPlatform> platforms}) async {
-    final List<File> files = <File>[];
-    if (platforms.intersection(this.platforms).isEmpty) {
-      return <File>[];
-    }
-    for (final T diagram in await diagrams) {
-      if (onlyGenerate.isNotEmpty &&
-          !onlyGenerate.any((String name) => diagram.name.contains(name))) {
-        continue;
-      }
-      files.add(await generateDiagram(diagram));
-    }
-    return files;
-  }
+  Future<List<DiagramMetadata>> get diagrams;
 }
 
 /// Mixin class for an individual diagram in a step to provide metadata about
 /// the Diagram for filtering (e.g. filename).
-abstract class DiagramMetadata {
+mixin DiagramMetadata on Widget {
+  /// The snake_case name of this diagram, without a file extension.
   String get name;
+
+  /// The frame rate this diagram should be captured at, defaults to 60 frames
+  /// per second.
+  double get frameRate => 60.0;
+
+  /// The duration of the animation that should be captured, or null if this is
+  /// a still image.
+  ///
+  /// This duration includes [startAt], so the output video will have a
+  /// duration of [duration] minus [startAt].
+  Duration? get duration => null;
+
+  /// How much time should pass before capturing the animation or image.
+  Duration get startAt => Duration.zero;
+
+  /// Called after the widget is built, blocking the diagram from being captured
+  /// until it finishes.
+  ///
+  /// Overriding this method is useful if you want to wait for assets to load
+  /// before capturing, e.g. with [precacheImage].
+  Future<void> setUp(GlobalKey key) async {}
+
+  /// A list of error patterns to expect while the diagram is being captured,
+  /// errors that match any of these patterns get ignored by the diagram
+  /// generator.
+  Set<Pattern> get expectedErrors => const <Pattern>{};
 }

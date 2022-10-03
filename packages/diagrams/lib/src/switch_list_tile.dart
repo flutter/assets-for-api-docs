@@ -3,9 +3,10 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+
 import 'diagram_step.dart';
 
 class LinkedLabelSwitch extends StatelessWidget {
@@ -95,7 +96,7 @@ class LabeledSwitch extends StatelessWidget {
   }
 }
 
-class SwitchListTileDiagram extends StatefulWidget implements DiagramMetadata {
+class SwitchListTileDiagram extends StatefulWidget with DiagramMetadata {
   const SwitchListTileDiagram(this.name, {super.key});
 
   @override
@@ -178,9 +179,7 @@ class _SwitchListTileDiagramState extends State<SwitchListTileDiagram> {
   }
 }
 
-class SwitchListTileDiagramStep extends DiagramStep<SwitchListTileDiagram> {
-  SwitchListTileDiagramStep(super.controller);
-
+class SwitchListTileDiagramStep extends DiagramStep {
   @override
   final String category = 'material';
 
@@ -191,10 +190,4 @@ class SwitchListTileDiagramStep extends DiagramStep<SwitchListTileDiagram> {
         const SwitchListTileDiagram('switch_list_tile_semantics'),
         const SwitchListTileDiagram('switch_list_tile_custom'),
       ];
-
-  @override
-  Future<File> generateDiagram(SwitchListTileDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawDiagramToFile(File('${diagram.name}.png'));
-  }
 }

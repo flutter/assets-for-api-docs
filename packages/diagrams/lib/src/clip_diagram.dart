@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart' hide Image;
@@ -16,7 +15,7 @@ const ImageProvider _backgroundImageProvider =
 
 ui.Image? _backgroundImage;
 
-class ClipDiagram extends StatelessWidget implements DiagramMetadata {
+class ClipDiagram extends StatelessWidget with DiagramMetadata {
   const ClipDiagram({required this.name, required this.painter, super.key});
 
   @override
@@ -176,9 +175,7 @@ class ClipPathPainter extends CustomPainter {
   bool shouldRepaint(ClipRectPainter oldDelegate) => false;
 }
 
-class ClipDiagramStep extends DiagramStep<ClipDiagram> {
-  ClipDiagramStep(super.controller);
-
+class ClipDiagramStep extends DiagramStep {
   @override
   final String category = 'dart-ui';
 
@@ -199,11 +196,5 @@ class ClipDiagramStep extends DiagramStep<ClipDiagram> {
         painter: ClipPathPainter(),
       ),
     ];
-  }
-
-  @override
-  Future<File> generateDiagram(ClipDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }

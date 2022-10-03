@@ -6,6 +6,7 @@ import 'dart:async';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
 /// This defines a colored placeholder with padding, used to represent a
 /// generic widget in diagrams.
@@ -226,4 +227,60 @@ void paintLabel(
     padding: padding,
     textAlign: textAlign,
   );
+}
+
+/// Mixin on diagram states which provides concise callbacks for [Ticker]s.
+///
+/// This is useful to keep actions like gestures in sync with animations since
+/// tickers in the diagram generator don't follow real-world time that [Timer]
+/// and [Future.delayed] use in a live environment.
+@optionalTypeArgs
+mixin LockstepStateMixin<T extends StatefulWidget> on State<T>
+    implements TickerProvider {
+  late final Ticker _ticker;
+  final Map<Duration, Completer<void>> _completers =
+      <Duration, Completer<void>>{};
+
+  Duration elapsed = Duration.zero;
+
+  /// Waits for the total elapsed duration to reach [duration].
+  Future<void> waitLockstepElapsed(Duration duration) {
+    if (duration <= elapsed) {
+      return Future<void>.value();
+    }
+    final Completer<void> completer =
+        _completers.putIfAbsent(duration, () => Completer<void>());
+    return completer.future;
+  }
+
+  /// Waits for the ticker to elapse [duration].
+  Future<void> waitLockstep(Duration duration) {
+    return waitLockstepElapsed(elapsed + duration);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _ticker = createTicker((Duration elapsed) {
+      this.elapsed = elapsed;
+
+      // Avoid concurrent modification of _completers by getting the durations
+      // all at once before removing them.
+      final List<Duration> ready = _completers.keys
+          .where((Duration duration) => elapsed >= duration)
+          .toList();
+
+      for (final Duration duration in ready) {
+        _completers[duration]!.complete();
+        _completers.remove(duration);
+      }
+    });
+    _ticker.start();
+  }
+
+  @override
+  void dispose() {
+    _ticker.dispose();
+    super.dispose();
+  }
 }

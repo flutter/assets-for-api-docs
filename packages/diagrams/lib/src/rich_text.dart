@@ -3,13 +3,12 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
 
-class RichTextDiagram extends StatelessWidget implements DiagramMetadata {
+class RichTextDiagram extends StatelessWidget with DiagramMetadata {
   const RichTextDiagram(this.name, {super.key});
 
   @override
@@ -40,9 +39,7 @@ class RichTextDiagram extends StatelessWidget implements DiagramMetadata {
   }
 }
 
-class RichTextDiagramStep extends DiagramStep<RichTextDiagram> {
-  RichTextDiagramStep(super.controller);
-
+class RichTextDiagramStep extends DiagramStep {
   @override
   final String category = 'widgets';
 
@@ -50,10 +47,4 @@ class RichTextDiagramStep extends DiagramStep<RichTextDiagram> {
   Future<List<RichTextDiagram>> get diagrams async => <RichTextDiagram>[
         const RichTextDiagram('rich_text'),
       ];
-
-  @override
-  Future<File> generateDiagram(RichTextDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawDiagramToFile(File('${diagram.name}.png'));
-  }
 }

@@ -3,11 +3,12 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
+
 import 'package:flutter/material.dart';
+
 import 'diagram_step.dart';
 
-class ContainerDiagram extends StatelessWidget implements DiagramMetadata {
+class ContainerDiagram extends StatelessWidget with DiagramMetadata {
   const ContainerDiagram(this.name, {super.key});
 
   @override
@@ -43,11 +44,13 @@ class ContainerDiagram extends StatelessWidget implements DiagramMetadata {
               color: Colors.blue[600],
               alignment: Alignment.center,
               transform: Matrix4.rotationZ(0.1),
-              child: Text('Hello World',
-                  style: Theme.of(context)
-                      .textTheme
-                      .headlineMedium!
-                      .copyWith(color: Colors.white)),
+              child: Text(
+                'Hello World',
+                style: Theme.of(context)
+                    .textTheme
+                    .headlineMedium!
+                    .copyWith(color: Colors.white),
+              ),
             ),
           ),
         );
@@ -57,9 +60,7 @@ class ContainerDiagram extends StatelessWidget implements DiagramMetadata {
   }
 }
 
-class ContainerDiagramStep extends DiagramStep<ContainerDiagram> {
-  ContainerDiagramStep(super.controller);
-
+class ContainerDiagramStep extends DiagramStep {
   @override
   final String category = 'widgets';
 
@@ -68,10 +69,4 @@ class ContainerDiagramStep extends DiagramStep<ContainerDiagram> {
         const ContainerDiagram('container_a'),
         const ContainerDiagram('container_b'),
       ];
-
-  @override
-  Future<File> generateDiagram(ContainerDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawDiagramToFile(File('${diagram.name}.png'));
-  }
 }

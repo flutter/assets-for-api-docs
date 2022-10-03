@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 import 'dart:math' show max;
 import 'dart:ui' as ui;
 
@@ -18,7 +17,7 @@ const String _textRich = 'text_rich';
 const String _textBorder = 'text_border';
 const String _textGradient = 'text_gradient';
 
-class TextDiagram extends StatelessWidget implements DiagramMetadata {
+class TextDiagram extends StatelessWidget with DiagramMetadata {
   const TextDiagram(this.name, {super.key});
 
   @override
@@ -135,7 +134,7 @@ class TextDiagram extends StatelessWidget implements DiagramMetadata {
   }
 }
 
-class TextHeightDiagram extends StatelessWidget implements DiagramMetadata {
+class TextHeightDiagram extends StatelessWidget with DiagramMetadata {
   const TextHeightDiagram(this.name, {super.key});
 
   @override
@@ -314,8 +313,7 @@ class TextDiagramPainter extends CustomPainter {
 }
 
 // Height values comparison.
-class TextHeightComparison extends TextHeightDiagram
-    implements DiagramMetadata {
+class TextHeightComparison extends TextHeightDiagram with DiagramMetadata {
   const TextHeightComparison(super.name, {super.key});
 
   @override
@@ -494,7 +492,7 @@ class TextHeightComparisonPainter extends CustomPainter {
 
 /// Side-by-side comparison of paragraphs with different text height
 /// configuration combinations.
-class TextHeightBreakdown extends TextHeightDiagram implements DiagramMetadata {
+class TextHeightBreakdown extends TextHeightDiagram with DiagramMetadata {
   const TextHeightBreakdown(super.name, {super.key});
 
   static const double _height = 4;
@@ -1044,9 +1042,7 @@ class RenderTextHeightBreakdown extends RenderBox
   }
 }
 
-class TextHeightDiagramStep extends DiagramStep<TextHeightDiagram> {
-  TextHeightDiagramStep(super.controller);
-
+class TextHeightDiagramStep extends DiagramStep {
   @override
   final String category = 'painting';
 
@@ -1056,17 +1052,9 @@ class TextHeightDiagramStep extends DiagramStep<TextHeightDiagram> {
         const TextHeightComparison('text_height_comparison_diagram'),
         const TextHeightBreakdown('text_height_breakdown'),
       ];
-
-  @override
-  Future<File> generateDiagram(TextHeightDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawDiagramToFile(File('${diagram.name}.png'));
-  }
 }
 
-class TextDiagramStep extends DiagramStep<TextDiagram> {
-  TextDiagramStep(super.controller);
-
+class TextDiagramStep extends DiagramStep {
   @override
   final String category = 'widgets';
 
@@ -1078,10 +1066,4 @@ class TextDiagramStep extends DiagramStep<TextDiagram> {
         const TextDiagram(_textBorder),
         const TextDiagram(_textGradient),
       ];
-
-  @override
-  Future<File> generateDiagram(TextDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawDiagramToFile(File('${diagram.name}.png'));
-  }
 }

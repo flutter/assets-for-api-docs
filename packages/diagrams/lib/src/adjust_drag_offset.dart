@@ -3,14 +3,12 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
 
-class AdjustDragOffsetDiagram extends StatelessWidget
-    implements DiagramMetadata {
+class AdjustDragOffsetDiagram extends StatelessWidget with DiagramMetadata {
   const AdjustDragOffsetDiagram({super.key});
 
   @override
@@ -66,19 +64,11 @@ class AdjustDragOffsetDiagram extends StatelessWidget
   }
 }
 
-class AdjustDragOffsetDiagramStep extends DiagramStep<AdjustDragOffsetDiagram> {
-  AdjustDragOffsetDiagramStep(super.controller);
-
+class AdjustDragOffsetDiagramStep extends DiagramStep {
   @override
   final String category = 'rendering';
 
   @override
   Future<List<AdjustDragOffsetDiagram>> get diagrams async =>
       const <AdjustDragOffsetDiagram>[AdjustDragOffsetDiagram()];
-
-  @override
-  Future<File> generateDiagram(AdjustDragOffsetDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawDiagramToFile(File('${diagram.name}.png'));
-  }
 }
