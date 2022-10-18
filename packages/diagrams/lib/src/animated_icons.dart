@@ -24,8 +24,7 @@ const String view_list = 'view_list';
 const Duration _kAnimationDuration = Duration(seconds: 1);
 
 /// A base class for AnimatedIcons diagrams.
-class AnimatedIconsDiagram extends StatefulWidget
-    with DiagramMetadata {
+class AnimatedIconsDiagram extends StatefulWidget with DiagramMetadata {
   const AnimatedIconsDiagram({
     super.key,
     required this.iconName,
@@ -73,7 +72,7 @@ class AnimatedIconsDiagramState extends State<AnimatedIconsDiagram>
       color: const Color(0xffffffff),
       child: AnimatedBuilder(
         animation: _controller,
-        builder:(BuildContext context, Widget? child) {
+        builder: (BuildContext context, Widget? child) {
           return AnimatedIcon(
             size: 72.0,
             progress: animation,
@@ -84,7 +83,6 @@ class AnimatedIconsDiagramState extends State<AnimatedIconsDiagram>
     );
   }
 }
-
 
 class AnimatedIconsStep extends DiagramStep {
   @override
