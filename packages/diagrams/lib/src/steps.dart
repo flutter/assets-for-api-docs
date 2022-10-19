@@ -8,6 +8,7 @@ final List<DiagramStep> allDiagramSteps = <DiagramStep>[
   AdjustDragOffsetDiagramStep(),
   AlertDialogDiagramStep(),
   AlignDiagramStep(),
+  AnimatedIconsStep(),
   AnimationStatusValueDiagramStep(),
   AppBarDiagramStep(),
   ArcDiagramStep(),
