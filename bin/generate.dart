@@ -98,6 +98,7 @@ class DiagramGenerator {
   Future<void> generateDiagrams({
     List<String> categories = const <String>[],
     List<String> names = const <String>[],
+    List<String> steps = const <String>[],
   }) async {
     final DateTime startTime = DateTime.now();
     if (!await _findIdForDeviceName()) {
@@ -106,7 +107,7 @@ class DiagramGenerator {
     }
 
     try {
-      await _createScreenshots(categories, names);
+      await _createScreenshots(categories, names, steps);
       final List<File> outputFiles =
           await _combineAnimations(await _transferImages());
       await _optimizeImages(outputFiles);
@@ -120,7 +121,10 @@ class DiagramGenerator {
   }
 
   Future<void> _createScreenshots(
-      List<String> categories, List<String> names) async {
+    List<String> categories,
+    List<String> names,
+    List<String> steps,
+  ) async {
     print('Creating images.');
     final List<String> filters = <String>[];
     for (final String category in categories) {
@@ -130,6 +134,10 @@ class DiagramGenerator {
     for (final String name in names) {
       filters.add('--name');
       filters.add(path.basenameWithoutExtension(name));
+    }
+    for (final String step in steps) {
+      filters.add('--step');
+      filters.add(step);
     }
     if (deviceTargetPlatform.startsWith('android')) {
       filters.add('--platform');
@@ -273,6 +281,9 @@ class DiagramGenerator {
       final File destination = File(path.join(destDir.path, '$prefix.mp4'));
       if (destination.existsSync()) {
         destination.deleteSync();
+      }
+      if (!destination.parent.existsSync()) {
+        destination.parent.createSync(recursive: true);
       }
       print('Converting ${metadata.name} animation to mp4.');
       jobs.add(WorkerJob(
@@ -491,9 +502,13 @@ Future<void> main(List<String> arguments) async {
           'DiagramStep.category property.');
   parser.addMultiOption('name',
       abbr: 'n',
-      help: 'Specify the name of diagrams that should be generated. The '
+      help: 'Specify the names of diagrams that should be generated. The '
           'name is the basename of the output file and may be specified with '
           'or without the suffix.');
+  parser.addMultiOption('step',
+      abbr: 's',
+      help:
+          'Specify the class names of the DiagramSteps that should be generated.');
   final ArgResults flags = parser.parse(arguments);
 
   if (flags['help'] as bool) {
@@ -522,6 +537,7 @@ Future<void> main(List<String> arguments) async {
     ).generateDiagrams(
       categories: flags['category'] as List<String>,
       names: flags['name'] as List<String>,
+      steps: flags['step'] as List<String>,
     );
   } on GeneratorException catch (error) {
     stderr

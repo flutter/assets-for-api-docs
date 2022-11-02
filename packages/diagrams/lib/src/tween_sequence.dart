@@ -3,11 +3,10 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 
-import 'diagram_step.dart';
+import '../diagrams.dart';
 
 final Duration _kTotalDuration = _kBreakDuration +
     _kAnimationDuration +
@@ -16,9 +15,7 @@ final Duration _kTotalDuration = _kBreakDuration +
 const Duration _kAnimationDuration = Duration(seconds: 6);
 const Duration _kBreakDuration = Duration(seconds: 1, milliseconds: 500);
 
-const double _kCurveAnimationFrameRate = 60.0;
-
-class TweenSequenceDiagram extends StatefulWidget implements DiagramMetadata {
+class TweenSequenceDiagram extends StatefulWidget with DiagramMetadata {
   const TweenSequenceDiagram({super.key});
 
   @override
@@ -26,10 +23,13 @@ class TweenSequenceDiagram extends StatefulWidget implements DiagramMetadata {
 
   @override
   String get name => 'tween_sequence';
+
+  @override
+  Duration? get duration => _kTotalDuration;
 }
 
 class TweenSequenceDiagramState extends State<TweenSequenceDiagram>
-    with TickerProviderStateMixin<TweenSequenceDiagram> {
+    with TickerProviderStateMixin, LockstepStateMixin {
   late AnimationController _controller;
   int _activeItem = 0;
 
@@ -38,36 +38,25 @@ class TweenSequenceDiagramState extends State<TweenSequenceDiagram>
     super.initState();
     _controller =
         AnimationController(vsync: this, duration: _kAnimationDuration);
-    Timer(_kBreakDuration, () {
-      _controller.forward();
+
+    waitLockstep(_kBreakDuration).then((_) => _controller.forward());
+    waitLockstep(
+      _kBreakDuration + _kAnimationDuration + _kBreakDuration,
+    ).then((_) => _controller.reverse());
+
+    _controller.addListener(() {
+      if (_controller.value == 1.0 || _controller.value == 0.0) {
+        _activeItem = 0;
+      } else if (_controller.value < 0.4) {
+        _activeItem = 1;
+      } else if (_controller.value < 0.6) {
+        _activeItem = 2;
+      } else if (_controller.value < 1.0) {
+        _activeItem = 3;
+      } else {
+        assert(false);
+      }
     });
-    _controller
-      ..addStatusListener((AnimationStatus status) {
-        switch (status) {
-          case AnimationStatus.dismissed:
-          case AnimationStatus.forward:
-          case AnimationStatus.reverse:
-            break;
-          case AnimationStatus.completed:
-            Timer(_kBreakDuration, () {
-              _controller.reverse();
-            });
-            break;
-        }
-      })
-      ..addListener(() {
-        if (_controller.value == 1.0 || _controller.value == 0.0) {
-          _activeItem = 0;
-        } else if (_controller.value < 0.4) {
-          _activeItem = 1;
-        } else if (_controller.value < 0.6) {
-          _activeItem = 2;
-        } else if (_controller.value < 1.0) {
-          _activeItem = 3;
-        } else {
-          assert(false);
-        }
-      });
   }
 
   final Animatable<Color?> _tweenSequence =
@@ -143,9 +132,7 @@ class TweenSequenceDiagramState extends State<TweenSequenceDiagram>
   }
 }
 
-class TweenSequenceDiagramStep extends DiagramStep<TweenSequenceDiagram> {
-  TweenSequenceDiagramStep(super.controller);
-
+class TweenSequenceDiagramStep extends DiagramStep {
   @override
   final String category = 'animation';
 
@@ -154,15 +141,4 @@ class TweenSequenceDiagramStep extends DiagramStep<TweenSequenceDiagram> {
       <TweenSequenceDiagram>[
         const TweenSequenceDiagram(),
       ];
-
-  @override
-  Future<File> generateDiagram(TweenSequenceDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawAnimatedDiagramToFiles(
-      end: _kTotalDuration,
-      frameRate: _kCurveAnimationFrameRate,
-      name: diagram.name,
-      category: category,
-    );
-  }
 }

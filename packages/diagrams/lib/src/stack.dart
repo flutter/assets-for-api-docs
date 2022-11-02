@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 
@@ -12,7 +11,7 @@ import 'diagram_step.dart';
 const String _stack = 'stack';
 const String _stackWithGradient = 'stack_with_gradient';
 
-class StackDiagram extends StatelessWidget implements DiagramMetadata {
+class StackDiagram extends StatelessWidget with DiagramMetadata {
   const StackDiagram(this.name, {super.key});
 
   @override
@@ -90,9 +89,7 @@ class StackDiagram extends StatelessWidget implements DiagramMetadata {
   }
 }
 
-class StackDiagramStep extends DiagramStep<StackDiagram> {
-  StackDiagramStep(super.controller);
-
+class StackDiagramStep extends DiagramStep {
   @override
   final String category = 'widgets';
 
@@ -101,10 +98,4 @@ class StackDiagramStep extends DiagramStep<StackDiagram> {
         const StackDiagram(_stack),
         const StackDiagram(_stackWithGradient),
       ];
-
-  @override
-  Future<File> generateDiagram(StackDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawDiagramToFile(File('${diagram.name}.png'));
-  }
 }

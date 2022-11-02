@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -12,7 +11,6 @@ import 'diagram_step.dart';
 
 const double _kFontSize = 14.0;
 const Duration _kAnimationDuration = Duration(seconds: 5);
-const double _kAnimationFrameRate = 60.0;
 
 class StrokeJoinDescription extends CustomPainter {
   StrokeJoinDescription({
@@ -128,7 +126,7 @@ class StrokeJoinDescription extends CustomPainter {
   }
 }
 
-class StrokeJoinDiagram extends StatefulWidget implements DiagramMetadata {
+class StrokeJoinDiagram extends StatefulWidget with DiagramMetadata {
   const StrokeJoinDiagram({
     required this.name,
     this.duration = _kAnimationDuration,
@@ -141,6 +139,7 @@ class StrokeJoinDiagram extends StatefulWidget implements DiagramMetadata {
 
   @override
   final String name;
+  @override
   final Duration duration;
   final double startAngle;
   final double endAngle;
@@ -202,47 +201,32 @@ class StrokeJoinPainterState extends State<StrokeJoinDiagram> //
   }
 }
 
-class StrokeJoinDiagramStep extends DiagramStep<StrokeJoinDiagram> {
-  StrokeJoinDiagramStep(super.controller) {
-    _diagrams.addAll(<StrokeJoinDiagram>[
-      const StrokeJoinDiagram(
-        name: 'miter_0_join',
-        strokeMiterLimit: 0.0,
-      ),
-      const StrokeJoinDiagram(
-        name: 'miter_4_join',
-      ),
-      const StrokeJoinDiagram(
-        name: 'miter_6_join',
-        strokeMiterLimit: 6.0,
-      ),
-      const StrokeJoinDiagram(
-        name: 'round_join',
-        join: StrokeJoin.round,
-      ),
-      const StrokeJoinDiagram(
-        name: 'bevel_join',
-        join: StrokeJoin.bevel,
-      ),
-    ]);
-  }
-
+class StrokeJoinDiagramStep extends DiagramStep {
   @override
   final String category = 'dart-ui';
 
-  final List<StrokeJoinDiagram> _diagrams = <StrokeJoinDiagram>[];
+  final List<StrokeJoinDiagram> _diagrams = const <StrokeJoinDiagram>[
+    StrokeJoinDiagram(
+      name: 'miter_0_join',
+      strokeMiterLimit: 0.0,
+    ),
+    StrokeJoinDiagram(
+      name: 'miter_4_join',
+    ),
+    StrokeJoinDiagram(
+      name: 'miter_6_join',
+      strokeMiterLimit: 6.0,
+    ),
+    StrokeJoinDiagram(
+      name: 'round_join',
+      join: StrokeJoin.round,
+    ),
+    StrokeJoinDiagram(
+      name: 'bevel_join',
+      join: StrokeJoin.bevel,
+    ),
+  ];
 
   @override
   Future<List<StrokeJoinDiagram>> get diagrams async => _diagrams;
-
-  @override
-  Future<File> generateDiagram(StrokeJoinDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawAnimatedDiagramToFiles(
-      end: _kAnimationDuration,
-      frameRate: _kAnimationFrameRate,
-      name: diagram.name,
-      category: category,
-    );
-  }
 }

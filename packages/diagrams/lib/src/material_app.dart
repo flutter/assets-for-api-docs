@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 
@@ -13,7 +12,7 @@ const String _basic = 'basic_material_app';
 const String _theme = 'theme_material_app';
 const String _textstyle = 'unspecified_textstyle_material_app';
 
-class MaterialAppDiagram extends StatelessWidget implements DiagramMetadata {
+class MaterialAppDiagram extends StatelessWidget with DiagramMetadata {
   const MaterialAppDiagram(this.name, {super.key});
 
   @override
@@ -68,9 +67,7 @@ class MaterialAppDiagram extends StatelessWidget implements DiagramMetadata {
   }
 }
 
-class MaterialAppDiagramStep extends DiagramStep<MaterialAppDiagram> {
-  MaterialAppDiagramStep(super.controller);
-
+class MaterialAppDiagramStep extends DiagramStep {
   @override
   final String category = 'material';
 
@@ -80,10 +77,4 @@ class MaterialAppDiagramStep extends DiagramStep<MaterialAppDiagram> {
         const MaterialAppDiagram(_theme),
         const MaterialAppDiagram(_textstyle),
       ];
-
-  @override
-  Future<File> generateDiagram(MaterialAppDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawDiagramToFile(File('${diagram.name}.png'));
-  }
 }

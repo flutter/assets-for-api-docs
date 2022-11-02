@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +11,7 @@ import 'diagram_step.dart';
 
 const String _icon = 'cupertino_icon';
 
-class CupertinoIconDiagram extends StatelessWidget implements DiagramMetadata {
+class CupertinoIconDiagram extends StatelessWidget with DiagramMetadata {
   const CupertinoIconDiagram(this.name, {super.key});
 
   @override
@@ -53,9 +52,7 @@ class CupertinoIconDiagram extends StatelessWidget implements DiagramMetadata {
   }
 }
 
-class CupertinoIconDiagramStep extends DiagramStep<CupertinoIconDiagram> {
-  CupertinoIconDiagramStep(super.controller);
-
+class CupertinoIconDiagramStep extends DiagramStep {
   @override
   final String category = 'cupertino';
 
@@ -64,10 +61,4 @@ class CupertinoIconDiagramStep extends DiagramStep<CupertinoIconDiagram> {
       <CupertinoIconDiagram>[
         const CupertinoIconDiagram(_icon),
       ];
-
-  @override
-  Future<File> generateDiagram(CupertinoIconDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawDiagramToFile(File('${diagram.name}.png'));
-  }
 }

@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 
@@ -18,7 +17,7 @@ final GlobalKey _bodyKey = GlobalKey();
 final GlobalKey _appBarKey = GlobalKey();
 final GlobalKey _fabKey = GlobalKey();
 
-class ThemeDataDiagram extends StatelessWidget implements DiagramMetadata {
+class ThemeDataDiagram extends StatelessWidget with DiagramMetadata {
   const ThemeDataDiagram(this.name, {super.key});
 
   @override
@@ -128,9 +127,7 @@ class ThemeDataDiagram extends StatelessWidget implements DiagramMetadata {
   }
 }
 
-class ThemeDataDiagramStep extends DiagramStep<ThemeDataDiagram> {
-  ThemeDataDiagramStep(super.controller);
-
+class ThemeDataDiagramStep extends DiagramStep {
   @override
   final String category = 'material';
 
@@ -139,10 +136,4 @@ class ThemeDataDiagramStep extends DiagramStep<ThemeDataDiagram> {
         const ThemeDataDiagram(_themeData),
         const ThemeDataDiagram(_materialAppThemeData),
       ];
-
-  @override
-  Future<File> generateDiagram(ThemeDataDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawDiagramToFile(File('${diagram.name}.png'));
-  }
 }

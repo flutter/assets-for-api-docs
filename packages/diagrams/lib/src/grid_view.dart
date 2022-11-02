@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 
@@ -12,7 +11,7 @@ import 'diagram_step.dart';
 const String _gridView = 'grid_view';
 const String _customScrollGridView = 'grid_view_custom_scroll';
 
-class GridViewDiagram extends StatelessWidget implements DiagramMetadata {
+class GridViewDiagram extends StatelessWidget with DiagramMetadata {
   const GridViewDiagram(this.name, {super.key});
 
   @override
@@ -124,9 +123,7 @@ class GridViewDiagram extends StatelessWidget implements DiagramMetadata {
   }
 }
 
-class GridViewDiagramStep extends DiagramStep<GridViewDiagram> {
-  GridViewDiagramStep(super.controller);
-
+class GridViewDiagramStep extends DiagramStep {
   @override
   final String category = 'widgets';
 
@@ -135,10 +132,4 @@ class GridViewDiagramStep extends DiagramStep<GridViewDiagram> {
         const GridViewDiagram(_gridView),
         const GridViewDiagram(_customScrollGridView),
       ];
-
-  @override
-  Future<File> generateDiagram(GridViewDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawDiagramToFile(File('${diagram.name}.png'));
-  }
 }

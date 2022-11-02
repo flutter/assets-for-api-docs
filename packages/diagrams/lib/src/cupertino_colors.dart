@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 
@@ -113,8 +112,7 @@ List<Map<String, CupertinoDynamicColor>> backgroundColors =
   },
 ];
 
-class CupertinoColorsDiagram extends StatelessWidget
-    implements DiagramMetadata {
+class CupertinoColorsDiagram extends StatelessWidget with DiagramMetadata {
   const CupertinoColorsDiagram(this.name, {super.key});
 
   @override
@@ -413,9 +411,7 @@ class CupertinoColorsDiagram extends StatelessWidget
   }
 }
 
-class CupertinoColorsDiagramStep extends DiagramStep<CupertinoColorsDiagram> {
-  CupertinoColorsDiagramStep(super.controller);
-
+class CupertinoColorsDiagramStep extends DiagramStep {
   @override
   final String category = 'cupertino';
 
@@ -430,12 +426,6 @@ class CupertinoColorsDiagramStep extends DiagramStep<CupertinoColorsDiagram> {
         const CupertinoColorsDiagram(_label_colors),
         const CupertinoColorsDiagram(_background_colors),
       ];
-
-  @override
-  Future<File> generateDiagram(CupertinoColorsDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawDiagramToFile(File('${diagram.name}.png'));
-  }
 }
 
 class ColorWidget extends StatelessWidget {
