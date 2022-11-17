@@ -1,8 +1,14 @@
+// Copyright 2013 The Flutter Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
 import '../logic/diagram_ticker_controller.dart';
 
+/// Controls the [TickerMode] of a diagram and observes how much time has passed
+/// from its perspective.
 class DiagramTickerMode extends StatefulWidget {
   const DiagramTickerMode({
     super.key,
@@ -26,7 +32,7 @@ class _DiagramTickerModeState extends State<DiagramTickerMode> {
         return TickerMode(
           key: widget.controller.diagramKey,
           enabled: widget.controller.ticking,
-          child: TickerDurationObserver(
+          child: _TickerDurationObserver(
             notifier: widget.controller.elapsed,
             child: widget.child,
           ),
@@ -36,9 +42,8 @@ class _DiagramTickerModeState extends State<DiagramTickerMode> {
   }
 }
 
-class TickerDurationObserver extends StatefulWidget {
-  const TickerDurationObserver({
-    super.key,
+class _TickerDurationObserver extends StatefulWidget {
+  const _TickerDurationObserver({
     required this.notifier,
     required this.child,
   });
@@ -47,10 +52,11 @@ class TickerDurationObserver extends StatefulWidget {
   final Widget child;
 
   @override
-  State<TickerDurationObserver> createState() => _TickerDurationObserverState();
+  State<_TickerDurationObserver> createState() =>
+      _TickerDurationObserverState();
 }
 
-class _TickerDurationObserverState extends State<TickerDurationObserver>
+class _TickerDurationObserverState extends State<_TickerDurationObserver>
     with TickerProviderStateMixin {
   late final Ticker ticker;
 

@@ -1,9 +1,14 @@
+// Copyright 2013 The Flutter Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 import 'dart:async';
 
 import 'package:diagrams/steps.dart';
 import 'package:flutter/widgets.dart';
 
-/// A controller that manages the tick state of a diagram and its progress.
+/// A controller that manages the tick state, global key, and progress of a
+/// diagram.
 class DiagramTickerController extends ChangeNotifier {
   DiagramTickerController({
     required this.diagram,

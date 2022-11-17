@@ -1,8 +1,14 @@
+// Copyright 2013 The Flutter Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
 
+/// Evenly packs children with arbitrary height, dividing them up into separate
+/// columns depending on the available width.
 class StaggeredList extends MultiChildRenderObjectWidget {
   StaggeredList({
     super.key,
@@ -57,15 +63,25 @@ class RenderStaggeredList extends RenderBox
 
   @override
   void performLayout() {
+    // Calculate the number and width of each column by dividing the incoming
+    // maxWidth by the minColumnWidth parameter.
     assert(
       constraints.hasBoundedWidth,
       'StaggeredList requires a bounded width',
     );
     final int columns = max(1, (constraints.maxWidth / minColumnWidth).floor());
-    final double childWidth = constraints.maxWidth / columns;
+    final double columnWidth = constraints.maxWidth / columns;
+
     final List<double> columnHeights = List<double>.filled(columns, 0.0);
     RenderBox? child = firstChild;
     while (child != null) {
+      // Give each child the same width but an unbounded height.
+      child.layout(
+        BoxConstraints.tightFor(width: columnWidth),
+        parentUsesSize: true,
+      );
+
+      // Find the column with the lowest height.
       int lowestIndex = 0;
       double lowestHeight = columnHeights[0];
       for (int i = 1; i < columns; i++) {
@@ -74,19 +90,20 @@ class RenderStaggeredList extends RenderBox
           lowestHeight = columnHeights[i];
         }
       }
-      child.layout(
-        BoxConstraints.tightFor(width: childWidth),
-        parentUsesSize: true,
-      );
+
+      // Position the child to the end of that column and increment
+      // columnHeights[lowestIndex].
       final StaggeredListParentData parentData =
           child.parentData! as StaggeredListParentData;
       parentData.offset = Offset(
-        childWidth * lowestIndex,
+        columnWidth * lowestIndex,
         columnHeights[lowestIndex],
       );
       columnHeights[lowestIndex] += child.size.height;
+
       child = parentData.nextSibling;
     }
+
     size = Size(
       constraints.maxWidth,
       columnHeights.reduce(max),

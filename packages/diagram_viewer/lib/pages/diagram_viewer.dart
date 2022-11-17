@@ -1,3 +1,7 @@
+// Copyright 2013 The Flutter Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 import 'package:diagrams/steps.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -246,11 +250,13 @@ class _DiagramViewerPageState extends State<DiagramViewerPage>
       ],
     );
 
-    return Scaffold(
-      body: LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) {
-          if (constraints.maxWidth >= 1050) {
-            return Row(
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        if (constraints.maxWidth >= 1050) {
+          // Wide layouts: No app bar, instead diagrams are selected with a
+          // dedicated drawer.
+          return Scaffold(
+            body: Row(
               children: <Widget>[
                 DiagramSwitchDrawer(
                   step: widget.step,
@@ -268,9 +274,17 @@ class _DiagramViewerPageState extends State<DiagramViewerPage>
                   ),
                 ),
               ],
-            );
-          } else {
-            return Column(
+            ),
+          );
+        } else {
+          // Narrow layouts: DropdownButton in the AppBar for selecting
+          // diagrams.
+          return Scaffold(
+            appBar: DiagramSwitchAppBar(
+              tabController: tabController,
+              diagrams: diagrams,
+            ),
+            body: Column(
               children: <Widget>[
                 Expanded(
                   child: SafeArea(
@@ -279,29 +293,59 @@ class _DiagramViewerPageState extends State<DiagramViewerPage>
                   ),
                 ),
               ],
-            );
-          }
-        },
-      ),
+            ),
+          );
+        }
+      },
     );
   }
 }
 
-class DiagramSwitchHeader extends StatefulWidget {
-  const DiagramSwitchHeader({super.key});
+class DiagramSwitchAppBar extends StatelessWidget
+    implements PreferredSizeWidget {
+  const DiagramSwitchAppBar({
+    super.key,
+    required this.tabController,
+    required this.diagrams,
+  });
 
-  @override
-  State<DiagramSwitchHeader> createState() => _DiagramSwitchHeaderState();
-}
+  final TabController tabController;
+  final List<DiagramMetadata> diagrams;
 
-class _DiagramSwitchHeaderState extends State<DiagramSwitchHeader> {
   @override
   Widget build(BuildContext context) {
-    return AppBar(
-      elevation: 0,
-      backgroundColor: Colors.transparent,
+    final ThemeData theme = Theme.of(context);
+    final TextTheme primaryTextTheme = theme.primaryTextTheme;
+    final TextStyle textStyle = primaryTextTheme.headline6!;
+    return AnimatedBuilder(
+      animation: tabController,
+      builder: (BuildContext context, Widget? child) {
+        return AppBar(
+          title: DropdownButton<int>(
+            value: tabController.index,
+            onChanged: (int? i) => tabController.animateTo(i!),
+            isExpanded: true,
+            style: textStyle,
+            dropdownColor: theme.primaryColor,
+            iconEnabledColor: textStyle.color,
+            items: <DropdownMenuItem<int>>[
+              for (int i = 0; i < diagrams.length; i++)
+                DropdownMenuItem<int>(
+                  value: i,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Text(diagrams[i].name),
+                  ),
+                ),
+            ],
+          ),
+        );
+      },
     );
   }
+
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
 
 class DiagramSwitchDrawer extends StatelessWidget {
@@ -336,7 +380,6 @@ class DiagramSwitchDrawer extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               AppBar(
-                // backgroundColor: Colors.transparent,
                 elevation: 0,
                 title: Text('${step.runtimeType}'),
               ),
