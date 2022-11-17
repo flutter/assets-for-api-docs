@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:diagram_capture/diagram_capture.dart';
 import 'package:diagrams/steps.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -9,6 +10,7 @@ import 'package:flutter/scheduler.dart';
 import '../components/brightness_toggle.dart';
 import '../components/diagram_ticker_mode.dart';
 import '../logic/diagram_ticker_controller.dart';
+import '../logic/subtree_widget_controller.dart';
 
 class DiagramViewerPage extends StatefulWidget {
   const DiagramViewerPage({
@@ -31,6 +33,11 @@ class _DiagramViewerPageState extends State<DiagramViewerPage>
   late final List<DiagramTickerController> controllers;
   late ModalRoute<void> route;
   late final Ticker ticker;
+  final GlobalKey tabBarViewKey = GlobalKey();
+
+  // Only allow the body of the viewer to receive pointer events from diagrams.
+  late final SubtreeWidgetController widgetController =
+      SubtreeWidgetController(WidgetsBinding.instance, tabBarViewKey);
 
   @override
   void initState() {
@@ -203,6 +210,7 @@ class _DiagramViewerPageState extends State<DiagramViewerPage>
   @override
   Widget build(BuildContext context) {
     final Widget tabBarView = TabBarView(
+      key: tabBarViewKey,
       // The diagram has a big shadow that looks nicer without a clip.
       clipBehavior: Clip.none,
       controller: tabController,
@@ -239,7 +247,10 @@ class _DiagramViewerPageState extends State<DiagramViewerPage>
             right: 8,
             bottom: 48,
           ),
-          child: tabBarView,
+          child: DiagramWidgetController(
+            controller: widgetController,
+            child: tabBarView,
+          ),
         ),
         Positioned(
           bottom: 0,

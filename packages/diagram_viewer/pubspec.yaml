@@ -10,6 +10,7 @@ environment:
   flutter: ">=1.0.0 <4.0.0"
 
 dependencies:
+  clock: ^1.1.1
   flutter:
     sdk: flutter
   flutter_test:

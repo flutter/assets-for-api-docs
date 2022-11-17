@@ -60,7 +60,7 @@ class _DiagramCatalogPageState extends State<DiagramCatalogPage> {
         body: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.only(
-              top: min(100, extraWidth / 2),
+              top: max(8, min(75, extraWidth / 2)),
             ),
             child: Center(
               child: SizedBox(
