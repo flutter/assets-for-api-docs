@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 import 'dart:ui' show FontFeature;
 
 import 'package:flutter/material.dart';
@@ -19,7 +18,7 @@ const double _margin = 5.0;
 const double _gap = _margin * 5;
 
 abstract class FontFeatureDiagram<T> extends StatelessWidget
-    implements DiagramMetadata {
+    with DiagramMetadata {
   const FontFeatureDiagram({super.key});
 
   Iterable<T> get entries;
@@ -117,6 +116,7 @@ class FontFeatureValueDiagram extends FontFeatureDiagram<int> {
         sampleText,
         style: textStyle.copyWith(
           fontFamily: font,
+          package: 'diagrams',
           fontFeatures: <FontFeature>[
             FontFeature(feature, entry),
             ...?additionalFontFeatures,
@@ -153,6 +153,7 @@ class HistoricalFontFeatureDiagram
         sampleText,
         style: textStyle.copyWith(
           fontFamily: font,
+          package: 'diagrams',
           fontFeatures: entry,
         ),
         textAlign: TextAlign.left,
@@ -184,6 +185,7 @@ class LocalizedFontFeatureDiagram extends FontFeatureDiagram<Locale> {
         '次 化 刃 直 入 令',
         style: textStyle.copyWith(
           fontFamily: 'Noto Sans',
+          package: 'diagrams',
           fontFeatures: <FontFeature>[
             const FontFeature('locl'), // redundant, this is the default anyway
           ],
@@ -291,6 +293,7 @@ class CharacterVariantsFontFeatureDiagram
         demos[entry]!,
         style: textStyle.copyWith(
           fontFamily: font,
+          package: 'diagrams',
           fontFeatures: enable
               ? <FontFeature>[
                   FontFeature(entry),
@@ -331,6 +334,7 @@ class StylisticSetsFontFeatureDiagram1
         demos[entry]!,
         style: textStyle.copyWith(
           fontFamily: font,
+          package: 'diagrams',
           fontFeatures: enable
               ? <FontFeature>[
                   FontFeature(entry),
@@ -362,6 +366,7 @@ class StylisticSetsFontFeatureDiagram2 extends FontFeatureDiagram<int> {
         '-> MCMXCVII <-', // the year SG-1 started
         style: textStyle.copyWith(
           fontFamily: font,
+          package: 'diagrams',
           fontFeatures: <FontFeature>[
             if (0x01 & entry > 0) const FontFeature('ss01'),
             if (0x02 & entry > 0) const FontFeature('ss02', 2),
@@ -386,9 +391,7 @@ class StylisticSetsFontFeatureDiagram2 extends FontFeatureDiagram<int> {
   }
 }
 
-class FontFeatureDiagramStep extends DiagramStep<FontFeatureDiagram<Object>> {
-  FontFeatureDiagramStep(super.controller);
-
+class FontFeatureDiagramStep extends DiagramStep {
   @override
   final String category = 'dart-ui';
 
@@ -440,10 +443,4 @@ class FontFeatureDiagramStep extends DiagramStep<FontFeatureDiagram<Object>> {
         const FontFeatureValueDiagram('zero', <int>[0, 1], 'Source Code Pro',
             sampleText: 'One million is: 1,000,000.00'),
       ];
-
-  @override
-  Future<File> generateDiagram(FontFeatureDiagram<Object> diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawDiagramToFile(File('${diagram.name}.png'));
-  }
 }

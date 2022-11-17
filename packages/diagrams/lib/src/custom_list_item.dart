@@ -3,8 +3,9 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
+
 import 'package:flutter/material.dart';
+
 import 'diagram_step.dart';
 
 /// Since users are misusing ListTile material widget, this example was created
@@ -220,7 +221,7 @@ class CustomListItemTwo extends StatelessWidget {
   }
 }
 
-class CustomListItemDiagram extends StatelessWidget implements DiagramMetadata {
+class CustomListItemDiagram extends StatelessWidget with DiagramMetadata {
   const CustomListItemDiagram(this.name, {super.key});
 
   @override
@@ -305,9 +306,7 @@ class CustomListItemDiagram extends StatelessWidget implements DiagramMetadata {
   }
 }
 
-class CustomListItemDiagramStep extends DiagramStep<CustomListItemDiagram> {
-  CustomListItemDiagramStep(super.controller);
-
+class CustomListItemDiagramStep extends DiagramStep {
   @override
   final String category = 'widgets';
 
@@ -317,12 +316,4 @@ class CustomListItemDiagramStep extends DiagramStep<CustomListItemDiagram> {
         const CustomListItemDiagram('custom_list_item_a'),
         const CustomListItemDiagram('custom_list_item_b'),
       ];
-
-  @override
-  Future<File> generateDiagram(CustomListItemDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawDiagramToFile(
-      File('${diagram.name}.png'),
-    );
-  }
 }

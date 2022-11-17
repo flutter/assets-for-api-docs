@@ -3,14 +3,13 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
 import 'utils.dart';
 
-class HeroesDiagram extends StatefulWidget implements DiagramMetadata {
+class HeroesDiagram extends StatefulWidget with DiagramMetadata {
   const HeroesDiagram({super.key});
 
   @override
@@ -250,19 +249,11 @@ class RightArrowPainter extends CustomPainter {
   bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
 
-class HeroesDiagramStep extends DiagramStep<HeroesDiagram> {
-  HeroesDiagramStep(super.controller);
-
+class HeroesDiagramStep extends DiagramStep {
   @override
   final String category = 'interaction';
 
   @override
   Future<List<HeroesDiagram>> get diagrams async =>
       <HeroesDiagram>[const HeroesDiagram()];
-
-  @override
-  Future<File> generateDiagram(HeroesDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawDiagramToFile(File('${diagram.name}.png'));
-  }
 }

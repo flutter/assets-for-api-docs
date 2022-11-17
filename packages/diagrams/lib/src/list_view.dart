@@ -3,11 +3,12 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
+
 import 'package:flutter/material.dart';
+
 import 'diagram_step.dart';
 
-class ListViewDiagram extends StatelessWidget implements DiagramMetadata {
+class ListViewDiagram extends StatelessWidget with DiagramMetadata {
   const ListViewDiagram(this.name, {super.key});
 
   @override
@@ -84,9 +85,7 @@ class ListViewDiagram extends StatelessWidget implements DiagramMetadata {
   }
 }
 
-class ListViewDiagramStep extends DiagramStep<ListViewDiagram> {
-  ListViewDiagramStep(super.controller);
-
+class ListViewDiagramStep extends DiagramStep {
   @override
   final String category = 'widgets';
 
@@ -96,10 +95,4 @@ class ListViewDiagramStep extends DiagramStep<ListViewDiagram> {
         const ListViewDiagram('list_view_builder'),
         const ListViewDiagram('list_view_separated'),
       ];
-
-  @override
-  Future<File> generateDiagram(ListViewDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawDiagramToFile(File('${diagram.name}.png'));
-  }
 }

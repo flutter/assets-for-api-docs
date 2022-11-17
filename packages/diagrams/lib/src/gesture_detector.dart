@@ -2,19 +2,18 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'dart:io';
-
+import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'diagram_step.dart';
+import 'utils.dart';
 
 const String _gestureDetector = 'gesture_detector';
 const Duration _pauseDuration = Duration(seconds: 1);
 final Duration _totalDuration = _pauseDuration + _pauseDuration;
-final GlobalKey _gestureDetectorKey = GlobalKey();
 
-class GestureDetectorDiagram extends StatefulWidget implements DiagramMetadata {
+class GestureDetectorDiagram extends StatefulWidget with DiagramMetadata {
   const GestureDetectorDiagram(this.name, {super.key});
 
   @override
@@ -22,10 +21,32 @@ class GestureDetectorDiagram extends StatefulWidget implements DiagramMetadata {
 
   @override
   State<GestureDetectorDiagram> createState() => _GestureDetectorDiagramState();
+
+  @override
+  Duration? get duration => _totalDuration;
 }
 
-class _GestureDetectorDiagramState extends State<GestureDetectorDiagram> {
+class _GestureDetectorDiagramState extends State<GestureDetectorDiagram>
+    with TickerProviderStateMixin, LockstepStateMixin {
+  final GlobalKey _gestureDetectorKey = GlobalKey();
   bool _lights = false;
+
+  Future<void> startAnimation() async {
+    await waitLockstep(_pauseDuration);
+
+    final RenderBox target =
+        _gestureDetectorKey.currentContext!.findRenderObject()! as RenderBox;
+    final Offset targetOffset =
+        target.localToGlobal(target.size.center(Offset.zero));
+    final WidgetController controller = DiagramWidgetController.of(context);
+    await controller.tapAt(targetOffset);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    startAnimation();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,9 +87,7 @@ class _GestureDetectorDiagramState extends State<GestureDetectorDiagram> {
   }
 }
 
-class GestureDetectorDiagramStep extends DiagramStep<GestureDetectorDiagram> {
-  GestureDetectorDiagramStep(super.controller);
-
+class GestureDetectorDiagramStep extends DiagramStep {
   @override
   final String category = 'widgets';
 
@@ -77,31 +96,4 @@ class GestureDetectorDiagramStep extends DiagramStep<GestureDetectorDiagram> {
       <GestureDetectorDiagram>[
         const GestureDetectorDiagram(_gestureDetector),
       ];
-
-  @override
-  Future<File> generateDiagram(GestureDetectorDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-
-    controller.advanceTime();
-
-    final Future<File> result = controller.drawAnimatedDiagramToFiles(
-      end: _totalDuration,
-      frameRate: 60,
-      name: diagram.name,
-      category: category,
-    );
-
-    await Future<void>.delayed(_pauseDuration);
-
-    final RenderBox target =
-        _gestureDetectorKey.currentContext!.findRenderObject()! as RenderBox;
-    final Offset targetOffset =
-        target.localToGlobal(target.size.center(Offset.zero));
-    final TestGesture gesture = await controller.startGesture(targetOffset);
-    await gesture.up();
-
-    await Future<void>.delayed(_pauseDuration);
-
-    return result;
-  }
 }

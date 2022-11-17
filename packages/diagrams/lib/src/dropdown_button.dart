@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -12,7 +11,7 @@ import 'diagram_step.dart';
 
 const String _basic = 'dropdown_button';
 
-class DropdownButtonDiagram extends StatelessWidget implements DiagramMetadata {
+class DropdownButtonDiagram extends StatelessWidget with DiagramMetadata {
   const DropdownButtonDiagram(this.name, this.buttonKey, {super.key});
 
   @override
@@ -54,9 +53,7 @@ class DropdownButtonDiagram extends StatelessWidget implements DiagramMetadata {
   }
 }
 
-class DropdownButtonDiagramStep extends DiagramStep<DropdownButtonDiagram> {
-  DropdownButtonDiagramStep(super.controller);
-
+class DropdownButtonDiagramStep extends DiagramStep {
   @override
   final String category = 'material';
 
@@ -65,10 +62,4 @@ class DropdownButtonDiagramStep extends DiagramStep<DropdownButtonDiagram> {
       <DropdownButtonDiagram>[
         DropdownButtonDiagram(_basic, GlobalKey()),
       ];
-
-  @override
-  Future<File> generateDiagram(DropdownButtonDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawDiagramToFile(File('${diagram.name}.png'));
-  }
 }

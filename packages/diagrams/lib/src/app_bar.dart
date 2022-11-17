@@ -3,14 +3,13 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
 import 'utils.dart';
 
-class AppBarDiagram extends StatefulWidget implements DiagramMetadata {
+class AppBarDiagram extends StatefulWidget with DiagramMetadata {
   const AppBarDiagram({super.key, required this.name});
 
   @override
@@ -113,19 +112,11 @@ class _DiagramState extends State<AppBarDiagram> {
   }
 }
 
-class AppBarDiagramStep extends DiagramStep<AppBarDiagram> {
-  AppBarDiagramStep(super.controller);
-
+class AppBarDiagramStep extends DiagramStep {
   @override
   final String category = 'material';
 
   @override
   Future<List<AppBarDiagram>> get diagrams async =>
       <AppBarDiagram>[const AppBarDiagram(name: 'app_bar')];
-
-  @override
-  Future<File> generateDiagram(AppBarDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawDiagramToFile(File('${diagram.name}.png'));
-  }
 }

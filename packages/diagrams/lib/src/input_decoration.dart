@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 
@@ -14,8 +13,7 @@ const String _inputDecorationError = 'input_decoration_error';
 const String _inputDecorationPrefixSuffix = 'input_decoration_prefix_suffix';
 const String _inputDecorationCollapsed = 'input_decoration_collapsed';
 
-class InputDecorationDiagram extends StatelessWidget
-    implements DiagramMetadata {
+class InputDecorationDiagram extends StatelessWidget with DiagramMetadata {
   const InputDecorationDiagram(this.name, {super.key});
 
   @override
@@ -108,9 +106,7 @@ class InputDecorationDiagram extends StatelessWidget
   }
 }
 
-class InputDecorationDiagramStep extends DiagramStep<InputDecorationDiagram> {
-  InputDecorationDiagramStep(super.controller);
-
+class InputDecorationDiagramStep extends DiagramStep {
   @override
   final String category = 'material';
 
@@ -122,10 +118,4 @@ class InputDecorationDiagramStep extends DiagramStep<InputDecorationDiagram> {
         const InputDecorationDiagram(_inputDecorationPrefixSuffix),
         const InputDecorationDiagram(_inputDecorationCollapsed),
       ];
-
-  @override
-  Future<File> generateDiagram(InputDecorationDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawDiagramToFile(File('${diagram.name}.png'));
-  }
 }

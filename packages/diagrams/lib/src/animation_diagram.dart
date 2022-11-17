@@ -36,7 +36,7 @@ String getName(Type type) {
 /// A base class for diagrams that show explicit animation transitions, like
 /// [FadeTransition]. See transitions.dart for more examples.
 abstract class TransitionDiagram<T> extends StatefulWidget
-    implements DiagramMetadata {
+    with DiagramMetadata {
   const TransitionDiagram({
     super.key,
     this.decorate = true,
@@ -157,8 +157,14 @@ class TransitionDiagramState<T> extends State<TransitionDiagram<T>>
 }
 
 abstract class ImplicitAnimationDiagram<T> extends StatefulWidget
-    implements DiagramMetadata {
-  const ImplicitAnimationDiagram({super.key});
+    with DiagramMetadata {
+  const ImplicitAnimationDiagram({
+    super.key,
+    this.duration = _kAnimationDuration,
+  });
+
+  @override
+  final Duration duration;
 
   /// The animation curve for the animation to use.
   Curve get curve;

@@ -3,13 +3,12 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
 
-class CardDiagram extends StatelessWidget implements DiagramMetadata {
+class CardDiagram extends StatelessWidget with DiagramMetadata {
   const CardDiagram({super.key});
 
   @override
@@ -54,19 +53,11 @@ class CardDiagram extends StatelessWidget implements DiagramMetadata {
   }
 }
 
-class CardDiagramStep extends DiagramStep<CardDiagram> {
-  CardDiagramStep(super.controller);
-
+class CardDiagramStep extends DiagramStep {
   @override
   final String category = 'material';
 
   @override
   Future<List<CardDiagram>> get diagrams async =>
       <CardDiagram>[const CardDiagram()];
-
-  @override
-  Future<File> generateDiagram(CardDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawDiagramToFile(File('${diagram.name}.png'));
-  }
 }

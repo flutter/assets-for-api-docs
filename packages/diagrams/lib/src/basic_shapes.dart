@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart' hide Image;
@@ -1011,9 +1010,7 @@ class RadiusDiagramPainter extends CustomPainter {
   bool shouldRepaint(RadiusDiagramPainter oldDelegate) => true;
 }
 
-class BasicShapesStep extends DiagramStep<BasicShapesDiagram> {
-  BasicShapesStep(super.controller);
-
+class BasicShapesStep extends DiagramStep {
   @override
   final String category = 'dart-ui';
 
@@ -1158,11 +1155,5 @@ class BasicShapesStep extends DiagramStep<BasicShapesDiagram> {
       ...lightDiagrams,
       for (final BasicShapesDiagram diagram in lightDiagrams) diagram.asDark,
     ];
-  }
-
-  @override
-  Future<File> generateDiagram(BasicShapesDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }

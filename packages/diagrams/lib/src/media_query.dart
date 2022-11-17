@@ -3,13 +3,12 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
 
-class MediaQueryDiagram extends StatefulWidget implements DiagramMetadata {
+class MediaQueryDiagram extends StatefulWidget with DiagramMetadata {
   const MediaQueryDiagram({super.key, required this.name});
 
   @override
@@ -121,19 +120,11 @@ class _MediaQueryDiagramState extends State<MediaQueryDiagram> {
   }
 }
 
-class MediaQueryDiagramStep extends DiagramStep<MediaQueryDiagram> {
-  MediaQueryDiagramStep(super.controller);
-
+class MediaQueryDiagramStep extends DiagramStep {
   @override
   final String category = 'widgets';
 
   @override
   Future<List<MediaQueryDiagram>> get diagrams async =>
       <MediaQueryDiagram>[const MediaQueryDiagram(name: 'media_query')];
-
-  @override
-  Future<File> generateDiagram(MediaQueryDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawDiagramToFile(File('${diagram.name}.png'));
-  }
 }
