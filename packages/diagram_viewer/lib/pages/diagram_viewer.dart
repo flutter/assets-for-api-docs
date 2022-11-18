@@ -327,7 +327,7 @@ class DiagramSwitchAppBar extends StatelessWidget
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final TextTheme primaryTextTheme = theme.primaryTextTheme;
-    final TextStyle textStyle = primaryTextTheme.headline6!;
+    final TextStyle textStyle = primaryTextTheme.titleLarge!;
     return AnimatedBuilder(
       animation: tabController,
       builder: (BuildContext context, Widget? child) {
