@@ -27,8 +27,8 @@ class BoxFitDiagram extends StatelessWidget with DiagramMetadata {
       child: FittedBox(
         fit: fit,
         child: Container(
-          width: 5.0 * 12.0,
-          height: 5.0 * 12.0,
+          width: 5.0 * 13.0,
+          height: 5.0 * 13.0,
           decoration: BoxDecoration(
             border: Border.all(width: 2.0, color: Colors.teal[700]!),
             color: Colors.teal[600],
