@@ -1,3 +1,7 @@
+// Copyright 2013 The Flutter Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 import 'package:diagram_viewer/components/diagram_ticker_mode.dart';
 import 'package:diagram_viewer/components/ticker_duration_observer.dart';
 import 'package:diagram_viewer/logic/diagram_ticker_controller.dart';
