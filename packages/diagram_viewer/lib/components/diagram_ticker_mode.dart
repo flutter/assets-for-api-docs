@@ -3,9 +3,9 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 
 import '../logic/diagram_ticker_controller.dart';
+import 'ticker_duration_observer.dart';
 
 /// Controls the [TickerMode] of a diagram and observes how much time has passed
 /// from its perspective.
@@ -32,51 +32,13 @@ class _DiagramTickerModeState extends State<DiagramTickerMode> {
         return TickerMode(
           key: widget.controller.diagramKey,
           enabled: widget.controller.ticking,
-          child: _TickerDurationObserver(
+          child: TickerDurationObserver(
+            enabled: widget.controller.ticking,
             notifier: widget.controller.elapsed,
             child: widget.child,
           ),
         );
       },
     );
-  }
-}
-
-class _TickerDurationObserver extends StatefulWidget {
-  const _TickerDurationObserver({
-    required this.notifier,
-    required this.child,
-  });
-
-  final ValueNotifier<Duration> notifier;
-  final Widget child;
-
-  @override
-  State<_TickerDurationObserver> createState() =>
-      _TickerDurationObserverState();
-}
-
-class _TickerDurationObserverState extends State<_TickerDurationObserver>
-    with TickerProviderStateMixin {
-  late final Ticker ticker;
-
-  @override
-  void initState() {
-    super.initState();
-    ticker = createTicker((Duration elapsed) {
-      widget.notifier.value = elapsed;
-    });
-    ticker.start();
-  }
-
-  @override
-  void dispose() {
-    ticker.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return widget.child;
   }
 }

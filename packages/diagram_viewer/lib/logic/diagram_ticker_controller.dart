@@ -5,11 +5,12 @@
 import 'dart:async';
 
 import 'package:diagrams/steps.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
 /// A controller that manages the tick state, global key, and progress of a
 /// diagram.
-class DiagramTickerController extends ChangeNotifier {
+class DiagramTickerController extends ChangeNotifier with Diagnosticable {
   DiagramTickerController({
     required this.diagram,
   }) {
@@ -171,5 +172,23 @@ class DiagramTickerController extends ChangeNotifier {
     ticking = false;
     selected = false;
     notifyListeners();
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(
+      DiagnosticsProperty<Duration>('elapsed', elapsed.value),
+    );
+    properties.add(DiagnosticsProperty<bool>('ticking', ticking));
+    properties.add(DiagnosticsProperty<bool>('settingUp', settingUp));
+    properties.add(DiagnosticsProperty<bool>('ready', ready));
+    properties.add(DiagnosticsProperty<bool>('selected', selected));
+    properties.add(
+      DiagnosticsProperty<Duration>('animationDuration', animationDuration),
+    );
+    properties.add(DiagnosticsProperty<bool>('showProgress', showProgress));
+    properties.add(DoubleProperty('progress', progress));
+    properties.add(DiagnosticsProperty<bool>('animationDone', animationDone));
   }
 }

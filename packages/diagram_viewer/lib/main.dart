@@ -11,7 +11,12 @@ void main() {
 }
 
 class DiagramViewerApp extends StatefulWidget {
-  const DiagramViewerApp({super.key});
+  const DiagramViewerApp({
+    super.key,
+    this.home,
+  });
+
+  final Widget? home;
 
   @override
   State<DiagramViewerApp> createState() => DiagramViewerAppState();
@@ -33,7 +38,7 @@ class DiagramViewerAppState extends State<DiagramViewerApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(brightness: _dark ? Brightness.dark : Brightness.light),
-      home: const DiagramCatalogPage(),
+      home: widget.home ?? const DiagramCatalogPage(),
       debugShowCheckedModeBanner: false,
     );
   }
