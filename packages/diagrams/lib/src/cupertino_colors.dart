@@ -35,15 +35,18 @@ List<Map<String, CupertinoDynamicColor>> activeColors =
 ];
 List<Map<String, CupertinoDynamicColor>> systemColors1 =
     <Map<String, CupertinoDynamicColor>>[
-  <String, CupertinoDynamicColor>{'systemBlue': CupertinoColors.systemBlue},
-  <String, CupertinoDynamicColor>{'systemGreen': CupertinoColors.systemGreen},
-  <String, CupertinoDynamicColor>{'systemIndigo': CupertinoColors.systemIndigo},
-  <String, CupertinoDynamicColor>{'systemOrange': CupertinoColors.systemOrange},
-  <String, CupertinoDynamicColor>{'systemPink': CupertinoColors.systemPink},
-  <String, CupertinoDynamicColor>{'systemPurple': CupertinoColors.systemPurple},
   <String, CupertinoDynamicColor>{'systemRed': CupertinoColors.systemRed},
-  <String, CupertinoDynamicColor>{'systemTeal': CupertinoColors.systemTeal},
+  <String, CupertinoDynamicColor>{'systemOrange': CupertinoColors.systemOrange},
   <String, CupertinoDynamicColor>{'systemYellow': CupertinoColors.systemYellow},
+  <String, CupertinoDynamicColor>{'systemGreen': CupertinoColors.systemGreen},
+  <String, CupertinoDynamicColor>{'systemMint': CupertinoColors.systemMint},
+  <String, CupertinoDynamicColor>{'systemTeal': CupertinoColors.systemTeal},
+  <String, CupertinoDynamicColor>{'systemCyan': CupertinoColors.systemCyan},
+  <String, CupertinoDynamicColor>{'systemBlue': CupertinoColors.systemBlue},
+  <String, CupertinoDynamicColor>{'systemIndigo': CupertinoColors.systemIndigo},
+  <String, CupertinoDynamicColor>{'systemPurple': CupertinoColors.systemPurple},
+  <String, CupertinoDynamicColor>{'systemPink': CupertinoColors.systemPink},
+  <String, CupertinoDynamicColor>{'systemBrown': CupertinoColors.systemBrown},
 ];
 List<Map<String, CupertinoDynamicColor>> systemColors2 =
     <Map<String, CupertinoDynamicColor>>[

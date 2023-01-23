@@ -86,7 +86,7 @@ Future<void> main(List<String> args) async {
 
   final DiagramController controller = DiagramController(
     outputDirectory: outputDirectory,
-    screenDimensions: const Size(1000.0, 1000.0),
+    screenDimensions: const Size(1300.0, 1300.0),
     pixelRatio: 1.0,
   );
 
