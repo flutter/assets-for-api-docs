@@ -1,7 +1,7 @@
 gcp_credentials: ENCRYPTED[!9c8e92e8da192ce2a51b7d4ed9948c4250d0bae3660193d9b901196c9692abbebe784d4a32e9f38b328571d65f6e7aed!]
 
 env:
-  CHANNEL: "dev" # Default to dev when not explicitly set by a task.
+  CHANNEL: "master" # Default to dev when not explicitly set by a task.
 
 tool_setup_template: &TOOL_SETUP_TEMPLATE
   tool_setup_script:
@@ -26,7 +26,7 @@ flutter_upgrade_template: &FLUTTER_UPGRADE_TEMPLATE
     - git reset --hard @{u}
     # Run doctor to allow auditing of what version of Flutter the run is using.
     - flutter doctor -v
-  << : *TOOL_SETUP_TEMPLATE
+  <<: *TOOL_SETUP_TEMPLATE
 
 task:
   gke_container:
@@ -38,7 +38,7 @@ task:
     namespace: default
     cpu: 4
     memory: 8G
-  << : *FLUTTER_UPGRADE_TEMPLATE
+  <<: *FLUTTER_UPGRADE_TEMPLATE
   matrix:
     - name: analyze+format
       always:
@@ -55,4 +55,3 @@ task:
       script: ./ci/tool_runner test
       depends_on:
         - analyze+format
-
