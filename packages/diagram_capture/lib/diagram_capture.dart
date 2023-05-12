@@ -598,6 +598,8 @@ class DiagramController {
         return 'PNG';
       case ui.ImageByteFormat.rawStraightRgba:
         return 'RAW STRAIGHT RGBA';
+      case ui.ImageByteFormat.rawExtendedRgba128:
+        return 'RAW EXTENDED RGBA 128';
     }
   }
 
