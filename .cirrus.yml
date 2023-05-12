@@ -26,7 +26,7 @@ flutter_upgrade_template: &FLUTTER_UPGRADE_TEMPLATE
     - git reset --hard @{u}
     # Run doctor to allow auditing of what version of Flutter the run is using.
     - flutter doctor -v
-  <<: *TOOL_SETUP_TEMPLATE
+  << : *TOOL_SETUP_TEMPLATE
 
 task:
   gke_container:
@@ -38,7 +38,7 @@ task:
     namespace: default
     cpu: 4
     memory: 8G
-  <<: *FLUTTER_UPGRADE_TEMPLATE
+  << : *FLUTTER_UPGRADE_TEMPLATE
   matrix:
     - name: analyze+format
       always:
