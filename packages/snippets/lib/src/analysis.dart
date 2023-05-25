@@ -159,8 +159,8 @@ class _SourceVisitor<T> extends RecursiveAstVisitor<T> {
       List<SourceLine> comment = <SourceLine>[];
       if (node.documentationComment != null &&
           node.documentationComment!.tokens.isNotEmpty) {
-        comment =
-            _processComment(declaration.name2.lexeme, node.documentationComment!);
+        comment = _processComment(
+            declaration.name2.lexeme, node.documentationComment!);
       }
       elements.add(
         SourceElement(
@@ -182,7 +182,8 @@ class _SourceVisitor<T> extends RecursiveAstVisitor<T> {
       List<SourceLine> comment = <SourceLine>[];
       if (node.documentationComment != null &&
           node.documentationComment!.tokens.isNotEmpty) {
-        comment = _processComment(node.name2.lexeme, node.documentationComment!);
+        comment =
+            _processComment(node.name2.lexeme, node.documentationComment!);
       }
       elements.add(
         SourceElement(
@@ -260,7 +261,8 @@ class _SourceVisitor<T> extends RecursiveAstVisitor<T> {
       if (!isInsideMethod(node)) {
         if (node.documentationComment != null &&
             node.documentationComment!.tokens.isNotEmpty) {
-          comment = _processComment(node.name2.lexeme, node.documentationComment!);
+          comment =
+              _processComment(node.name2.lexeme, node.documentationComment!);
         }
         elements.add(
           SourceElement(
@@ -316,7 +318,8 @@ class _SourceVisitor<T> extends RecursiveAstVisitor<T> {
       List<SourceLine> comment = <SourceLine>[];
       if (node.documentationComment != null &&
           node.documentationComment!.tokens.isNotEmpty) {
-        comment = _processComment(node.name2.lexeme, node.documentationComment!);
+        comment =
+            _processComment(node.name2.lexeme, node.documentationComment!);
       }
       elements.add(
         SourceElement(
@@ -341,7 +344,8 @@ class _SourceVisitor<T> extends RecursiveAstVisitor<T> {
       List<SourceLine> comment = <SourceLine>[];
       if (node.documentationComment != null &&
           node.documentationComment!.tokens.isNotEmpty) {
-        comment = _processComment(node.name2.lexeme, node.documentationComment!);
+        comment =
+            _processComment(node.name2.lexeme, node.documentationComment!);
       }
       elements.add(
         SourceElement(

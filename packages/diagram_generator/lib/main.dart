@@ -42,7 +42,9 @@ Future<void> main(List<String> args) async {
   late final List<String> arguments;
   if (platform.isAndroid) {
     arguments = PlatformDispatcher.instance.defaultRouteName.length > 5
-        ? Uri.decodeComponent(PlatformDispatcher.instance.defaultRouteName.substring(5)).split(' ')
+        ? Uri.decodeComponent(
+                PlatformDispatcher.instance.defaultRouteName.substring(5))
+            .split(' ')
         : <String>[];
   } else {
     arguments = args;

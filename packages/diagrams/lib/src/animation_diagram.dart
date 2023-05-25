@@ -286,7 +286,10 @@ class SparklinePainter extends CustomPainter {
 
     // The sparkline itself.
     final Path sparkline = Path()..moveTo(area.left, area.bottom);
-    final double stepSize = 1.0 / (area.width * (ui.PlatformDispatcher.instance.implicitView?.devicePixelRatio ?? 1.0));
+    final double stepSize = 1.0 /
+        (area.width *
+            (ui.PlatformDispatcher.instance.implicitView?.devicePixelRatio ??
+                1.0));
 
     void lineToPoint(Path path, double t) {
       final Offset point =

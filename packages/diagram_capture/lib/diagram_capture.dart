@@ -84,12 +84,17 @@ const Size _kDefaultDiagramViewportSize = Size(1280.0, 1024.0);
 class _DiagramViewConfiguration extends ViewConfiguration {
   _DiagramViewConfiguration({
     super.size = _kDefaultDiagramViewportSize,
-  }) : _paintMatrix = _getMatrix(size, ui.PlatformDispatcher.instance.implicitView?.devicePixelRatio ?? 1.0);
+  }) : _paintMatrix = _getMatrix(
+            size,
+            ui.PlatformDispatcher.instance.implicitView?.devicePixelRatio ??
+                1.0);
 
   static Matrix4 _getMatrix(Size size, double devicePixelRatio) {
-    final double baseRatio = ui.PlatformDispatcher.instance.implicitView?.devicePixelRatio ?? 1.0;
+    final double baseRatio =
+        ui.PlatformDispatcher.instance.implicitView?.devicePixelRatio ?? 1.0;
     final double inverseRatio = devicePixelRatio / baseRatio;
-    final Size implicitSize = ui.PlatformDispatcher.instance.implicitView?.physicalSize ?? Size.zero;
+    final Size implicitSize =
+        ui.PlatformDispatcher.instance.implicitView?.physicalSize ?? Size.zero;
     final double actualWidth = implicitSize.width * inverseRatio;
     final double actualHeight = implicitSize.height * inverseRatio;
     final double desiredWidth = size.width;
@@ -340,7 +345,9 @@ class DiagramController {
     Size screenDimensions = _kDefaultDiagramViewportSize,
   })  : outputDirectory = outputDirectory ?? Directory.current,
         _builder = builder {
-    _binding.pixelRatio = pixelRatio ?? ui.PlatformDispatcher.instance.implicitView?.devicePixelRatio ?? 1.0;
+    _binding.pixelRatio = pixelRatio ??
+        ui.PlatformDispatcher.instance.implicitView?.devicePixelRatio ??
+        1.0;
     _binding.screenDimensions = screenDimensions;
     if (_builder != null) {
       _binding.updateDiagram(_builder!);
