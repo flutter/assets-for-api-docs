@@ -290,11 +290,11 @@ class DiagramFlutterBinding extends BindingBase
     WidgetBuilder builder, {
     Duration duration = Duration.zero,
   }) {
-    final Widget rootWidget = _Diagram(
+    final Widget rootWidget = wrapWithDefaultView(_Diagram(
       boundaryKey: _boundaryKey,
       widgetController: _controller,
       child: Builder(builder: builder),
-    );
+    ));
     attachRootWidget(rootWidget);
     pump();
   }
