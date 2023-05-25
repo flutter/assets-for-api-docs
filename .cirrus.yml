@@ -1,7 +1,7 @@
 gcp_credentials: ENCRYPTED[!9c8e92e8da192ce2a51b7d4ed9948c4250d0bae3660193d9b901196c9692abbebe784d4a32e9f38b328571d65f6e7aed!]
 
 env:
-  CHANNEL: "dev" # Default to dev when not explicitly set by a task.
+  CHANNEL: "beta" # Default to beta when not explicitly set by a task.
 
 tool_setup_template: &TOOL_SETUP_TEMPLATE
   tool_setup_script:
