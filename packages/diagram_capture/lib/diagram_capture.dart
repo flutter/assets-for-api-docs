@@ -2,6 +2,10 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// TODO(TahaTesser): Update this package for deprecated SingletonFlutterWindow API
+// https://github.com/flutter/flutter/issues/127585 and remove this ignore.
+// ignore_for_file: deprecated_member_use
+
 import 'dart:async';
 import 'dart:io';
 import 'dart:ui' as ui;
@@ -588,7 +592,7 @@ class DiagramController {
     return metadata.saveToFile();
   }
 
-  String _byteFormatToString(ui.ImageByteFormat format) {
+  String? _byteFormatToString(ui.ImageByteFormat format) {
     switch (format) {
       case ui.ImageByteFormat.rawRgba:
         return 'RAW RGBA';
@@ -598,7 +602,12 @@ class DiagramController {
         return 'PNG';
       case ui.ImageByteFormat.rawStraightRgba:
         return 'RAW STRAIGHT RGBA';
+      case ui.ImageByteFormat.rawExtendedRgba128:
+        // TODO(TahaTesser): Handle this case.
+        break;
     }
+
+    return null;
   }
 
   File _getFrameFilename(Duration timestamp, int index, String name) {

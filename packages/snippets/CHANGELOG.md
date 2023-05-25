@@ -1,3 +1,8 @@
+## 0.3.1
+
+* Bump minimum Dart SDK version to 3.0.0.
+* Updates some dependencies to latest version.
+
 ## 0.3.0
 
 * Removes obsolete `extract_sample.dart` script.

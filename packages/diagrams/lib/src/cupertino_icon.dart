@@ -25,10 +25,10 @@ class CupertinoIconDiagram extends StatelessWidget with DiagramMetadata {
       child: Container(
         padding: const EdgeInsets.all(5.0),
         color: Colors.white,
-        child: Center(
+        child: const Center(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: const <Widget>[
+            children: <Widget>[
               Icon(
                 CupertinoIcons.heart_fill,
                 color: Colors.pink,

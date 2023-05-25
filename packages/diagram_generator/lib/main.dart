@@ -2,6 +2,10 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// TODO(TahaTesser): Update this package for deprecated SingletonFlutterWindow API
+// https://github.com/flutter/flutter/issues/127586 and remove this ignore.
+// ignore_for_file: deprecated_member_use
+
 import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
