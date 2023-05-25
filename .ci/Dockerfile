@@ -1,5 +1,5 @@
-# Last updated 10/01/2021 (to rebuild the docker image, update this timestamp)
-FROM cirrusci/flutter:dev
+# Last updated 25th May, 2023 (to rebuild the docker image, update this timestamp)
+FROM docker pull ghcr.io/cirruslabs/flutter:stable
 
 RUN sudo apt-get update && \
     sudo apt-get upgrade --yes && \
