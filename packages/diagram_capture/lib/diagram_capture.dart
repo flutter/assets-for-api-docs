@@ -2,10 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// TODO(TahaTesser): Update this package for deprecated SingletonFlutterWindow API
-// https://github.com/flutter/flutter/issues/127585 and remove this ignore.
-// ignore_for_file: deprecated_member_use
-
 import 'dart:async';
 import 'dart:io';
 import 'dart:ui' as ui;
@@ -88,12 +84,19 @@ const Size _kDefaultDiagramViewportSize = Size(1280.0, 1024.0);
 class _DiagramViewConfiguration extends ViewConfiguration {
   _DiagramViewConfiguration({
     super.size = _kDefaultDiagramViewportSize,
+  // TODO(TahaTesser): Update this as SingletonFlutterWindow deprecated
+  // https://github.com/flutter/flutter/issues/127585.
+  // ignore: deprecated_member_use
   }) : _paintMatrix = _getMatrix(size, ui.window.devicePixelRatio);
 
   static Matrix4 _getMatrix(Size size, double devicePixelRatio) {
-    final double inverseRatio = devicePixelRatio / ui.window.devicePixelRatio;
-    final double actualWidth = ui.window.physicalSize.width * inverseRatio;
-    final double actualHeight = ui.window.physicalSize.height * inverseRatio;
+    // TODO(TahaTesser): Update this as SingletonFlutterWindow is deprecated
+    // https://github.com/flutter/flutter/issues/127585.
+    // ignore: deprecated_member_use
+    final SingletonFlutterWindow window = ui.window;
+    final double inverseRatio = devicePixelRatio / window.devicePixelRatio;
+    final double actualWidth = window.physicalSize.width * inverseRatio;
+    final double actualHeight = window.physicalSize.height * inverseRatio;
     final double desiredWidth = size.width;
     final double desiredHeight = size.height;
     double scale, shiftX, shiftY;
@@ -240,6 +243,9 @@ class DiagramFlutterBinding extends BindingBase
   ///
   /// The [pixelRatio] describes the scale between the logical pixels and the
   /// size of the output image. It is independent of the
+  // TODO(TahaTesser): Update this as SingletonFlutterWindow is deprecated
+  // https://github.com/flutter/flutter/issues/127585.
+  // ignore: deprecated_member_use
   /// [window.devicePixelRatio] for the device, so specifying 1.0 (the default)
   /// will give you a 1:1 mapping between logical pixels and the output pixels
   /// in the image.
@@ -342,6 +348,9 @@ class DiagramController {
     Size screenDimensions = _kDefaultDiagramViewportSize,
   })  : outputDirectory = outputDirectory ?? Directory.current,
         _builder = builder {
+    // TODO(TahaTesser): Update this as SingletonFlutterWindow is deprecated
+    // https://github.com/flutter/flutter/issues/127585.
+    // ignore: deprecated_member_use
     _binding.pixelRatio = pixelRatio ?? ui.window.devicePixelRatio;
     _binding.screenDimensions = screenDimensions;
     if (_builder != null) {
@@ -603,7 +612,7 @@ class DiagramController {
       case ui.ImageByteFormat.rawStraightRgba:
         return 'RAW STRAIGHT RGBA';
       case ui.ImageByteFormat.rawExtendedRgba128:
-        // TODO(TahaTesser): Handle this case.
+        assert(false, 'RAW EXTENDED RGBA 128 is not supported');
         break;
     }
 

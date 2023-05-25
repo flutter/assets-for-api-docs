@@ -2,10 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// TODO(TahaTesser): Update this package for deprecated SingletonFlutterWindow API
-// https://github.com/flutter/flutter/issues/127588 and remove this ignore.
-// ignore_for_file: deprecated_member_use
-
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
@@ -290,6 +286,9 @@ class SparklinePainter extends CustomPainter {
 
     // The sparkline itself.
     final Path sparkline = Path()..moveTo(area.left, area.bottom);
+    // TODO(TahaTesser): Update this as SingletonFlutterWindow is deprecated
+    // https://github.com/flutter/flutter/issues/127585.
+    // ignore: deprecated_member_use
     final double stepSize = 1.0 / (area.width * ui.window.devicePixelRatio);
 
     void lineToPoint(Path path, double t) {

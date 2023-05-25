@@ -2,10 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// TODO(TahaTesser): Update this package for deprecated SingletonFlutterWindow API
-// https://github.com/flutter/flutter/issues/127586 and remove this ignore.
-// ignore_for_file: deprecated_member_use
-
 import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
@@ -45,7 +41,13 @@ Future<void> main(List<String> args) async {
   DiagramFlutterBinding.ensureInitialized();
   late final List<String> arguments;
   if (platform.isAndroid) {
+    // TODO(TahaTesser): Update this as SingletonFlutterWindow is deprecated
+    // https://github.com/flutter/flutter/issues/127586.
+    // ignore: deprecated_member_use
     arguments = window.defaultRouteName.length > 5
+        // TODO(TahaTesser): Update this as SingletonFlutterWindow is deprecated
+        // https://github.com/flutter/flutter/issues/127586.
+        // ignore: deprecated_member_use
         ? Uri.decodeComponent(window.defaultRouteName.substring(5)).split(' ')
         : <String>[];
   } else {

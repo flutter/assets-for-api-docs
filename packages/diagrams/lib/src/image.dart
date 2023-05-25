@@ -38,8 +38,9 @@ class DiagramImage extends ImageProvider<DiagramImage>
 
   @override
   ImageStreamCompleter loadBuffer(
-      // ignore: deprecated_member_use
       DiagramImage key,
+      // TODO(TahaTesser): Update this as DecoderBufferCallback is deprecated.
+      // ignore: deprecated_member_use
       DecoderBufferCallback decode) {
     return MultiFrameImageStreamCompleter(
       codec: _loadAsync(),
