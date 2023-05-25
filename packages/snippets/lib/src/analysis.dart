@@ -153,19 +153,19 @@ class _SourceVisitor<T> extends RecursiveAstVisitor<T> {
   @override
   T? visitTopLevelVariableDeclaration(TopLevelVariableDeclaration node) {
     for (final VariableDeclaration declaration in node.variables.variables) {
-      if (!isPublic(declaration.name2.lexeme)) {
+      if (!isPublic(declaration.name.lexeme)) {
         continue;
       }
       List<SourceLine> comment = <SourceLine>[];
       if (node.documentationComment != null &&
           node.documentationComment!.tokens.isNotEmpty) {
         comment = _processComment(
-            declaration.name2.lexeme, node.documentationComment!);
+            declaration.name.lexeme, node.documentationComment!);
       }
       elements.add(
         SourceElement(
           SourceElementType.topLevelVariableType,
-          declaration.name2.lexeme,
+          declaration.name.lexeme,
           node.beginToken.charOffset,
           file: file,
           className: enclosingClass,
@@ -178,17 +178,16 @@ class _SourceVisitor<T> extends RecursiveAstVisitor<T> {
 
   @override
   T? visitGenericTypeAlias(GenericTypeAlias node) {
-    if (isPublic(node.name2.lexeme)) {
+    if (isPublic(node.name.lexeme)) {
       List<SourceLine> comment = <SourceLine>[];
       if (node.documentationComment != null &&
           node.documentationComment!.tokens.isNotEmpty) {
-        comment =
-            _processComment(node.name2.lexeme, node.documentationComment!);
+        comment = _processComment(node.name.lexeme, node.documentationComment!);
       }
       elements.add(
         SourceElement(
           SourceElementType.typedefType,
-          node.name2.lexeme,
+          node.name.lexeme,
           node.beginToken.charOffset,
           file: file,
           comment: comment,
@@ -201,20 +200,20 @@ class _SourceVisitor<T> extends RecursiveAstVisitor<T> {
   @override
   T? visitFieldDeclaration(FieldDeclaration node) {
     for (final VariableDeclaration declaration in node.fields.variables) {
-      if (!isPublic(declaration.name2.lexeme) || !isPublic(enclosingClass)) {
+      if (!isPublic(declaration.name.lexeme) || !isPublic(enclosingClass)) {
         continue;
       }
       List<SourceLine> comment = <SourceLine>[];
       if (node.documentationComment != null &&
           node.documentationComment!.tokens.isNotEmpty) {
         assert(enclosingClass.isNotEmpty);
-        comment = _processComment('$enclosingClass.${declaration.name2.lexeme}',
+        comment = _processComment('$enclosingClass.${declaration.name.lexeme}',
             node.documentationComment!);
       }
       elements.add(
         SourceElement(
           SourceElementType.fieldType,
-          declaration.name2.lexeme,
+          declaration.name.lexeme,
           node.beginToken.charOffset,
           file: file,
           className: enclosingClass,
@@ -230,9 +229,9 @@ class _SourceVisitor<T> extends RecursiveAstVisitor<T> {
   @override
   T? visitConstructorDeclaration(ConstructorDeclaration node) {
     final String fullName =
-        '$enclosingClass${node.name2 == null ? '' : '.${node.name2}'}';
+        '$enclosingClass${node.name == null ? '' : '.${node.name}'}';
     if (isPublic(enclosingClass) &&
-        (node.name2 == null || isPublic(node.name2!.lexeme))) {
+        (node.name == null || isPublic(node.name!.lexeme))) {
       List<SourceLine> comment = <SourceLine>[];
       if (node.documentationComment != null &&
           node.documentationComment!.tokens.isNotEmpty) {
@@ -255,19 +254,19 @@ class _SourceVisitor<T> extends RecursiveAstVisitor<T> {
 
   @override
   T? visitFunctionDeclaration(FunctionDeclaration node) {
-    if (isPublic(node.name2.lexeme)) {
+    if (isPublic(node.name.lexeme)) {
       List<SourceLine> comment = <SourceLine>[];
       // Skip functions that are defined inside of methods.
       if (!isInsideMethod(node)) {
         if (node.documentationComment != null &&
             node.documentationComment!.tokens.isNotEmpty) {
           comment =
-              _processComment(node.name2.lexeme, node.documentationComment!);
+              _processComment(node.name.lexeme, node.documentationComment!);
         }
         elements.add(
           SourceElement(
             SourceElementType.functionType,
-            node.name2.lexeme,
+            node.name.lexeme,
             node.beginToken.charOffset,
             file: file,
             comment: comment,
@@ -281,18 +280,18 @@ class _SourceVisitor<T> extends RecursiveAstVisitor<T> {
 
   @override
   T? visitMethodDeclaration(MethodDeclaration node) {
-    if (isPublic(node.name2.lexeme) && isPublic(enclosingClass)) {
+    if (isPublic(node.name.lexeme) && isPublic(enclosingClass)) {
       List<SourceLine> comment = <SourceLine>[];
       if (node.documentationComment != null &&
           node.documentationComment!.tokens.isNotEmpty) {
         assert(enclosingClass.isNotEmpty);
         comment = _processComment(
-            '$enclosingClass.${node.name2.lexeme}', node.documentationComment!);
+            '$enclosingClass.${node.name.lexeme}', node.documentationComment!);
       }
       elements.add(
         SourceElement(
           SourceElementType.methodType,
-          node.name2.lexeme,
+          node.name.lexeme,
           node.beginToken.charOffset,
           file: file,
           className: enclosingClass,
@@ -312,19 +311,18 @@ class _SourceVisitor<T> extends RecursiveAstVisitor<T> {
 
   @override
   T? visitMixinDeclaration(MixinDeclaration node) {
-    enclosingClass = node.name2.lexeme;
-    if (!node.name2.lexeme.startsWith('_')) {
-      enclosingClass = node.name2.lexeme;
+    enclosingClass = node.name.lexeme;
+    if (!node.name.lexeme.startsWith('_')) {
+      enclosingClass = node.name.lexeme;
       List<SourceLine> comment = <SourceLine>[];
       if (node.documentationComment != null &&
           node.documentationComment!.tokens.isNotEmpty) {
-        comment =
-            _processComment(node.name2.lexeme, node.documentationComment!);
+        comment = _processComment(node.name.lexeme, node.documentationComment!);
       }
       elements.add(
         SourceElement(
           SourceElementType.classType,
-          node.name2.lexeme,
+          node.name.lexeme,
           node.beginToken.charOffset,
           file: file,
           comment: comment,
@@ -338,19 +336,18 @@ class _SourceVisitor<T> extends RecursiveAstVisitor<T> {
 
   @override
   T? visitClassDeclaration(ClassDeclaration node) {
-    enclosingClass = node.name2.lexeme;
-    if (!node.name2.lexeme.startsWith('_')) {
-      enclosingClass = node.name2.lexeme;
+    enclosingClass = node.name.lexeme;
+    if (!node.name.lexeme.startsWith('_')) {
+      enclosingClass = node.name.lexeme;
       List<SourceLine> comment = <SourceLine>[];
       if (node.documentationComment != null &&
           node.documentationComment!.tokens.isNotEmpty) {
-        comment =
-            _processComment(node.name2.lexeme, node.documentationComment!);
+        comment = _processComment(node.name.lexeme, node.documentationComment!);
       }
       elements.add(
         SourceElement(
           SourceElementType.classType,
-          node.name2.lexeme,
+          node.name.lexeme,
           node.beginToken.charOffset,
           file: file,
           comment: comment,
