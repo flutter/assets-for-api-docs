@@ -22,8 +22,8 @@ class ColumnDiagram extends StatelessWidget with DiagramMetadata {
     Widget returnWidget;
     switch (name) {
       case _column:
-        returnWidget = Column(
-          children: const <Widget>[
+        returnWidget = const Column(
+          children: <Widget>[
             Text('Deliver features faster'),
             Text('Craft beautiful UIs'),
             Expanded(

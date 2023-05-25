@@ -41,8 +41,8 @@ Future<void> main(List<String> args) async {
   DiagramFlutterBinding.ensureInitialized();
   late final List<String> arguments;
   if (platform.isAndroid) {
-    arguments = window.defaultRouteName.length > 5
-        ? Uri.decodeComponent(window.defaultRouteName.substring(5)).split(' ')
+    arguments = PlatformDispatcher.instance.defaultRouteName.length > 5
+        ? Uri.decodeComponent(PlatformDispatcher.instance.defaultRouteName.substring(5)).split(' ')
         : <String>[];
   } else {
     arguments = args;
