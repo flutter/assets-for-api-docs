@@ -33,8 +33,8 @@ class AlignDiagram extends StatelessWidget with DiagramMetadata {
         break;
       case 'align_alignment':
         heading = const Text('Alignment Origin');
-        containerChild = Stack(
-          children: const <Widget>[
+        containerChild = const Stack(
+          children: <Widget>[
             Align(
               alignment: Alignment(0.2, 0.6),
               child: logo,
@@ -48,8 +48,8 @@ class AlignDiagram extends StatelessWidget with DiagramMetadata {
         break;
       case 'align_fractional_offset':
         heading = const Text('Fractional Offset Origin');
-        containerChild = Stack(
-          children: const <Widget>[
+        containerChild = const Stack(
+          children: <Widget>[
             Align(
               alignment: FractionalOffset(0.2, 0.6),
               child: logo,

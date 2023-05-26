@@ -109,7 +109,7 @@ void main() {
     await tester.pump(const Duration(minutes: 1));
     for (final DiagramMetadata diagram in diagrams) {
       expect(
-        find.widgetWithText(InkWell, diagram.name),
+        find.widgetWithText(InkWell, diagram.name, skipOffstage: false),
         findsWidgets,
         reason: 'Looking for ${step.runtimeType}',
       );

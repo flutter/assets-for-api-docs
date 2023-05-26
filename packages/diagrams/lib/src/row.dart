@@ -24,8 +24,8 @@ class RowDiagram extends StatelessWidget with DiagramMetadata {
     Widget returnWidget;
     switch (name) {
       case _row:
-        returnWidget = Row(
-          children: const <Widget>[
+        returnWidget = const Row(
+          children: <Widget>[
             Expanded(
               child: Text(
                 'Deliver features faster',
@@ -47,8 +47,8 @@ class RowDiagram extends StatelessWidget with DiagramMetadata {
         );
         break;
       case _rowError:
-        returnWidget = Row(
-          children: const <Widget>[
+        returnWidget = const Row(
+          children: <Widget>[
             FlutterLogo(),
             Text(
               "Flutter's hot reload helps you quickly and easily experiment, build UIs, add features, and fix bug faster. Experience sub-second reload times, without losing state, on emulators, simulators, and hardware for iOS and Android.",
@@ -58,8 +58,8 @@ class RowDiagram extends StatelessWidget with DiagramMetadata {
         );
         break;
       case _rowFixed:
-        returnWidget = Row(
-          children: const <Widget>[
+        returnWidget = const Row(
+          children: <Widget>[
             FlutterLogo(),
             Expanded(
               child: Text(
@@ -71,9 +71,9 @@ class RowDiagram extends StatelessWidget with DiagramMetadata {
         );
         break;
       case _rowTextDirection:
-        returnWidget = Row(
+        returnWidget = const Row(
           textDirection: TextDirection.rtl,
-          children: const <Widget>[
+          children: <Widget>[
             FlutterLogo(),
             Expanded(
               child: Text(
