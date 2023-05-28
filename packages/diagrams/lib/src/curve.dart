@@ -165,7 +165,10 @@ class CurveDescription extends CustomPainter {
       canvas.drawPath(valueMarker, _valueMarkerPaint);
     }
     final Path graph = Path()..moveTo(area.left, area.bottom);
-    final double stepSize = 1.0 / (area.width * ui.window.devicePixelRatio);
+    final double stepSize = 1.0 /
+        (area.width *
+            (ui.PlatformDispatcher.instance.implicitView?.devicePixelRatio ??
+                1.0));
     for (double t = 0.0;
         t <= (position == 0.0 ? 1.0 : position);
         t += stepSize) {
