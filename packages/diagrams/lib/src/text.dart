@@ -504,10 +504,10 @@ class TextHeightBreakdown extends TextHeightDiagram with DiagramMetadata {
     return Container(
       alignment: Alignment.center,
       height: 500,
-      child: Column(
+      child: const Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          const Center(
+          Center(
             child: Text(
               'Roboto, fontSize: $_fontSize, height: $_height',
               style: TextStyle(fontSize: 30, fontWeight: FontWeight.w700),
@@ -522,7 +522,7 @@ class TextHeightBreakdown extends TextHeightDiagram with DiagramMetadata {
                 children: <Widget>[
                   Column(
                     mainAxisSize: MainAxisSize.min,
-                    children: const <Widget>[
+                    children: <Widget>[
                       // This must be the first child of the column for the Row
                       // elements to be properly baseline-aligned.
                       TextHeightBreakdownRow(
@@ -549,7 +549,7 @@ class TextHeightBreakdown extends TextHeightDiagram with DiagramMetadata {
                   ),
                   Column(
                     mainAxisSize: MainAxisSize.min,
-                    children: const <Widget>[
+                    children: <Widget>[
                       TextHeightBreakdownRow(
                         text: _text,
                         backgroundColor: Colors.transparent,
@@ -576,7 +576,7 @@ class TextHeightBreakdown extends TextHeightDiagram with DiagramMetadata {
                 children: <Widget>[
                   Column(
                     mainAxisSize: MainAxisSize.min,
-                    children: const <Widget>[
+                    children: <Widget>[
                       TextHeightBreakdownRow(
                         text: _text,
                         backgroundColor: Colors.transparent,
@@ -594,7 +594,7 @@ class TextHeightBreakdown extends TextHeightDiagram with DiagramMetadata {
                   ),
                   Column(
                     mainAxisSize: MainAxisSize.min,
-                    children: const <Widget>[
+                    children: <Widget>[
                       TextHeightBreakdownRow(
                         text: _text,
                         backgroundColor: Colors.transparent,

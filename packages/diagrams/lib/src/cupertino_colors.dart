@@ -457,9 +457,9 @@ class ColorWidget extends StatelessWidget {
           width: 90.0,
           child: Row(
             children: <Widget>[
-              Column(
+              const Column(
                 mainAxisSize: MainAxisSize.min,
-                children: const <Widget>[
+                children: <Widget>[
                   Text('R'),
                   Text('G'),
                   Text('B'),
