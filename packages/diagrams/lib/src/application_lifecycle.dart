@@ -17,6 +17,7 @@ class AppLifecycleDiagram extends StatefulWidget with DiagramMetadata {
   static const Color arrowBorderColor = Color(0xFF858585);
   static const Color arrowColor = arrowBorderColor;
   static const Color transitionLabelColor = arrowBorderColor;
+  static const Color mobileTransitionColor = Color(0xff6d9eeb);
   static const double arrowThickness = 20;
   static const double stateBoxWidth = 240;
   static const double stateBoxHeight = 100;
@@ -51,10 +52,13 @@ class _DiagramState extends State<AppLifecycleDiagram> {
                 Padding(
                   padding: EdgeInsetsDirectional.only(start: 90.0),
                   child: LabeledArrow(
-                    fillColor: AppLifecycleDiagram.arrowColor,
+                    fillColor: AppLifecycleDiagram.mobileTransitionColor,
                     length: AppLifecycleDiagram.verticalArrowHeight,
                     orientation: AxisDirection.up,
-                    label: TransitionLabel('onDetach'),
+                    label: TransitionLabel(
+                      'onDetach',
+                      color: AppLifecycleDiagram.mobileTransitionColor,
+                    ),
                   ),
                 ),
                 AppLifecycleStateBox(appState: AppLifecycleState.paused),
@@ -83,14 +87,20 @@ class _DiagramState extends State<AppLifecycleDiagram> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           LabeledArrow(
-                            fillColor: AppLifecycleDiagram.arrowColor,
+                            fillColor: AppLifecycleDiagram.mobileTransitionColor,
                             length: AppLifecycleDiagram.middleArrowWidth,
-                            label: TransitionLabel('onRestart'),
+                            label: TransitionLabel(
+                              'onRestart',
+                              color: AppLifecycleDiagram.mobileTransitionColor,
+                            ),
                           ),
                           LabeledArrow(
-                            fillColor: AppLifecycleDiagram.arrowColor,
+                            fillColor: AppLifecycleDiagram.mobileTransitionColor,
                             length: AppLifecycleDiagram.middleArrowWidth,
-                            label: TransitionLabel('onPause'),
+                            label: TransitionLabel(
+                              'onPause',
+                              color: AppLifecycleDiagram.mobileTransitionColor,
+                            ),
                             orientation: AxisDirection.left,
                           ),
                         ],
@@ -147,17 +157,18 @@ class _DiagramState extends State<AppLifecycleDiagram> {
 }
 
 class TransitionLabel extends StatelessWidget {
-  const TransitionLabel(this.label, {super.key});
+  const TransitionLabel(this.label, {super.key, this.color = AppLifecycleDiagram.transitionLabelColor});
 
   final String label;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
     return Text(
       label,
-      style: const TextStyle(
+      style: TextStyle(
         fontFamily: 'Noto Sans',
-        color: AppLifecycleDiagram.transitionLabelColor,
+        color: color,
         fontSize: 20,
       ),
     );
