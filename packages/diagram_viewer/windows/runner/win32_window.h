@@ -15,7 +15,7 @@
 // inherited from by classes that wish to specialize with custom
 // rendering and input handling
 class Win32Window {
-public:
+ public:
   struct Point {
     unsigned int x;
     unsigned int y;
@@ -57,7 +57,7 @@ public:
   // Return a RECT representing the bounds of the current client area.
   RECT GetClientArea();
 
-protected:
+ protected:
   // Processes and route salient window messages for mouse handling,
   // size change and DPI. Delegates handling of these to member overloads that
   // inheriting classes can handle.
@@ -72,7 +72,7 @@ protected:
   // Called when Destroy is called.
   virtual void OnDestroy();
 
-private:
+ private:
   friend class WindowClassRegistrar;
 
   // OS callback called by message pump. Handles the WM_NCCREATE message which
@@ -96,4 +96,4 @@ private:
   HWND child_content_ = nullptr;
 };
 
-#endif // RUNNER_WIN32_WINDOW_H_
+#endif  // RUNNER_WIN32_WINDOW_H_

@@ -39,11 +39,11 @@ void EnableFullDpiSupportIfAvailable(HWND hwnd) {
   }
 }
 
-} // namespace
+}  // namespace
 
 // Manages the Win32Window's window class registration.
 class WindowClassRegistrar {
-public:
+ public:
   ~WindowClassRegistrar() = default;
 
   // Returns the singleton registar instance.
@@ -62,7 +62,7 @@ public:
   // instances of the window.
   void UnregisterWindowClass();
 
-private:
+ private:
   WindowClassRegistrar() = default;
 
   static WindowClassRegistrar *instance_;
@@ -153,39 +153,39 @@ LRESULT
 Win32Window::MessageHandler(HWND hwnd, UINT const message, WPARAM const wparam,
                             LPARAM const lparam) noexcept {
   switch (message) {
-  case WM_DESTROY:
-    window_handle_ = nullptr;
-    Destroy();
-    if (quit_on_close_) {
-      PostQuitMessage(0);
+    case WM_DESTROY:
+      window_handle_ = nullptr;
+      Destroy();
+      if (quit_on_close_) {
+        PostQuitMessage(0);
+      }
+      return 0;
+
+    case WM_DPICHANGED: {
+      auto newRectSize = reinterpret_cast<RECT *>(lparam);
+      LONG newWidth = newRectSize->right - newRectSize->left;
+      LONG newHeight = newRectSize->bottom - newRectSize->top;
+
+      SetWindowPos(hwnd, nullptr, newRectSize->left, newRectSize->top, newWidth,
+                   newHeight, SWP_NOZORDER | SWP_NOACTIVATE);
+
+      return 0;
     }
-    return 0;
-
-  case WM_DPICHANGED: {
-    auto newRectSize = reinterpret_cast<RECT *>(lparam);
-    LONG newWidth = newRectSize->right - newRectSize->left;
-    LONG newHeight = newRectSize->bottom - newRectSize->top;
-
-    SetWindowPos(hwnd, nullptr, newRectSize->left, newRectSize->top, newWidth,
-                 newHeight, SWP_NOZORDER | SWP_NOACTIVATE);
-
-    return 0;
-  }
-  case WM_SIZE: {
-    RECT rect = GetClientArea();
-    if (child_content_ != nullptr) {
-      // Size and position the child window.
-      MoveWindow(child_content_, rect.left, rect.top, rect.right - rect.left,
-                 rect.bottom - rect.top, TRUE);
+    case WM_SIZE: {
+      RECT rect = GetClientArea();
+      if (child_content_ != nullptr) {
+        // Size and position the child window.
+        MoveWindow(child_content_, rect.left, rect.top, rect.right - rect.left,
+                   rect.bottom - rect.top, TRUE);
+      }
+      return 0;
     }
-    return 0;
-  }
 
-  case WM_ACTIVATE:
-    if (child_content_ != nullptr) {
-      SetFocus(child_content_);
-    }
-    return 0;
+    case WM_ACTIVATE:
+      if (child_content_ != nullptr) {
+        SetFocus(child_content_);
+      }
+      return 0;
   }
 
   return DefWindowProc(window_handle_, message, wparam, lparam);

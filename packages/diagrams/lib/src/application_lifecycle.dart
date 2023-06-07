@@ -87,7 +87,8 @@ class _DiagramState extends State<AppLifecycleDiagram> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           LabeledArrow(
-                            fillColor: AppLifecycleDiagram.mobileTransitionColor,
+                            fillColor:
+                                AppLifecycleDiagram.mobileTransitionColor,
                             length: AppLifecycleDiagram.middleArrowWidth,
                             label: TransitionLabel(
                               'onRestart',
@@ -95,7 +96,8 @@ class _DiagramState extends State<AppLifecycleDiagram> {
                             ),
                           ),
                           LabeledArrow(
-                            fillColor: AppLifecycleDiagram.mobileTransitionColor,
+                            fillColor:
+                                AppLifecycleDiagram.mobileTransitionColor,
                             length: AppLifecycleDiagram.middleArrowWidth,
                             label: TransitionLabel(
                               'onPause',
@@ -157,7 +159,8 @@ class _DiagramState extends State<AppLifecycleDiagram> {
 }
 
 class TransitionLabel extends StatelessWidget {
-  const TransitionLabel(this.label, {super.key, this.color = AppLifecycleDiagram.transitionLabelColor});
+  const TransitionLabel(this.label,
+      {super.key, this.color = AppLifecycleDiagram.transitionLabelColor});
 
   final String label;
   final Color color;
@@ -280,7 +283,10 @@ class LabeledArrow extends StatelessWidget {
 }
 
 class ArrowPainter extends CustomPainter {
-  const ArrowPainter({required this.fillColor, this.thickness = 10, this.orientation = AxisDirection.right});
+  const ArrowPainter(
+      {required this.fillColor,
+      this.thickness = 10,
+      this.orientation = AxisDirection.right});
 
   final Color fillColor;
   final AxisDirection orientation;
