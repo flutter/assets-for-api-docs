@@ -11,6 +11,7 @@ export 'src/animated_icons.dart';
 export 'src/animation_diagram.dart';
 export 'src/animation_status_value.dart';
 export 'src/app_bar.dart';
+export 'src/application_lifecycle.dart';
 export 'src/arc_diagram.dart';
 export 'src/basic_shapes.dart';
 export 'src/blend_mode.dart';

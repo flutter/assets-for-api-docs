@@ -7,4 +7,4 @@ REPO_DIR="$(dirname "$SCRIPT_DIR")"
 
 # Dart needs to be in the path already...
 (cd ${REPO_DIR}/bin; dart pub get)
-dart --no-sound-null-safety "${REPO_DIR}/bin/generate.dart" "$@"
+dart "${REPO_DIR}/bin/generate.dart" "$@"

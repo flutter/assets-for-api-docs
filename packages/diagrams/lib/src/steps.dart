@@ -11,6 +11,7 @@ final List<DiagramStep> allDiagramSteps = <DiagramStep>[
   AnimatedIconsStep(),
   AnimationStatusValueDiagramStep(),
   AppBarDiagramStep(),
+  AppLifecycleDiagramStep(),
   ArcDiagramStep(),
   BasicShapesStep(),
   BlendModeDiagramStep(),
