@@ -1,4 +1,4 @@
-# Last updated 05/25/2023 (to rebuild the docker image, update this timestamp)
+# Last updated 06/07/2023 (to rebuild the docker image, update this timestamp)
 FROM cirrusci/flutter:beta
 
 RUN sudo apt-get update && \
@@ -16,3 +16,4 @@ RUN sudo apt-get install --yes cmake ninja-build pkg-config libgtk-3-dev && \
     sudo apt-get clean --yes
 
 RUN sudo "$FLUTTER_HOME/bin/flutter" config --enable-linux-desktop --enable-windows-desktop --enable-macos-desktop
+RUN sudo (cd "$FLUTTER_HOME" && "/usr/bin/git" checkout main && "$FLUTTER_HOME/bin/flutter" precache --force --linux && "$FLUTTER_HOME/bin/flutter" --version)
