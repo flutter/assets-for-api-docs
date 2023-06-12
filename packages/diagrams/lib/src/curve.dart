@@ -602,6 +602,10 @@ class CurveDiagramStep extends DiagramStep {
         name: 'fast_linear_to_slow_ease_in',
         caption: 'Curves.fastLinearToSlowEaseIn',
         curve: Curves.fastLinearToSlowEaseIn),
+    const CurveDiagram(
+        name: 'fast_ease_in_to_slow_ease_out',
+        caption: 'Curves.fastEaseInToSlowEaseOut',
+        curve: Curves.fastEaseInToSlowEaseOut)
   ];
 
   @override
