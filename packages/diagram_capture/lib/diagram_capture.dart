@@ -297,7 +297,7 @@ class DiagramFlutterBinding extends BindingBase
     );
     attachRootWidget(wrapWithDefaultView(rootWidget));
     pump();
-  }
+  );
 
   /// Advances time by the given duration, and generates a frame.
   ///
