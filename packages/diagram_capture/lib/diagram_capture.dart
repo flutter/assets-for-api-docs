@@ -294,8 +294,8 @@ class DiagramFlutterBinding extends BindingBase
       boundaryKey: _boundaryKey,
       widgetController: _controller,
       child: Builder(builder: builder),
-    ));
-    attachRootWidget(rootWidget);
+    );
+    attachRootWidget(wrapWithDefaultView(rootWidget));
     pump();
   }
 
