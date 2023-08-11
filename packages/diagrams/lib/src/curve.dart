@@ -3,18 +3,15 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 import 'dart:math' as math;
 import 'dart:ui' as ui;
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
 
 const double _kFontSize = 14.0;
 const Duration _kCurveAnimationDuration = Duration(seconds: 2);
-const double _kCurveAnimationFrameRate = 60.0;
 
 /// A custom painter to draw the graph of the curve.
 class CurveDescription extends CustomPainter {
@@ -168,7 +165,10 @@ class CurveDescription extends CustomPainter {
       canvas.drawPath(valueMarker, _valueMarkerPaint);
     }
     final Path graph = Path()..moveTo(area.left, area.bottom);
-    final double stepSize = 1.0 / (area.width * ui.window.devicePixelRatio);
+    final double stepSize = 1.0 /
+        (area.width *
+            (ui.PlatformDispatcher.instance.implicitView?.devicePixelRatio ??
+                1.0));
     for (double t = 0.0;
         t <= (position == 0.0 ? 1.0 : position);
         t += stepSize) {
@@ -203,10 +203,10 @@ class CurveDescription extends CustomPainter {
 /// A sample tile that shows the effect of a curve on translation.
 class TranslateSampleTile extends StatelessWidget {
   const TranslateSampleTile({
-    Key? key,
+    super.key,
     required this.animation,
     required this.name,
-  }) : super(key: key);
+  });
 
   static const double blockHeight = 20.0;
   static const double blockWidth = 30.0;
@@ -245,7 +245,6 @@ class TranslateSampleTile extends StatelessWidget {
                 borderRadius: outerRadius,
                 border: Border.all(
                   color: Colors.black45,
-                  width: 1.0,
                 ),
               ),
               child: mutate(
@@ -266,7 +265,7 @@ class TranslateSampleTile extends StatelessWidget {
         Text(
           name,
           textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.bodyText1!.copyWith(
+          style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                 color: Colors.black,
                 fontSize: 12.0,
               ),
@@ -279,18 +278,12 @@ class TranslateSampleTile extends StatelessWidget {
 /// A sample tile that shows the effect of a curve on rotation.
 class RotateSampleTile extends TranslateSampleTile {
   const RotateSampleTile(
-      {Key? key, required Animation<double> animation, required String name})
-      : super(
-          key: key,
-          animation: animation,
-          name: name,
-        );
+      {super.key, required super.animation, required super.name});
 
   @override
   Widget mutate({required Widget child}) {
     return Transform.rotate(
       angle: animation.value * math.pi / 2.0,
-      alignment: Alignment.center,
       child: child,
     );
   }
@@ -299,12 +292,7 @@ class RotateSampleTile extends TranslateSampleTile {
 /// A sample tile that shows the effect of a curve on scale.
 class ScaleSampleTile extends TranslateSampleTile {
   const ScaleSampleTile(
-      {Key? key, required Animation<double> animation, required String name})
-      : super(
-          key: key,
-          animation: animation,
-          name: name,
-        );
+      {super.key, required super.animation, required super.name});
 
   @override
   Widget mutate({required Widget child}) {
@@ -318,12 +306,7 @@ class ScaleSampleTile extends TranslateSampleTile {
 /// A sample tile that shows the effect of a curve on opacity.
 class OpacitySampleTile extends TranslateSampleTile {
   const OpacitySampleTile(
-      {Key? key, required Animation<double> animation, required String name})
-      : super(
-          key: key,
-          animation: animation,
-          name: name,
-        );
+      {super.key, required super.animation, required super.name});
 
   @override
   Widget mutate({required Widget child}) {
@@ -331,20 +314,21 @@ class OpacitySampleTile extends TranslateSampleTile {
   }
 }
 
-class CurveDiagram extends StatefulWidget implements DiagramMetadata {
+class CurveDiagram extends StatefulWidget with DiagramMetadata {
   const CurveDiagram({
     required String name,
     required this.caption,
     this.duration = _kCurveAnimationDuration,
     required this.curve,
-    Key? key,
-  })  : name = 'curve_$name',
-        super(key: key);
+    super.key,
+  }) : name = 'curve_$name';
 
   @override
   final String name;
   final String caption;
   final Curve curve;
+
+  @override
   final Duration duration;
 
   @override
@@ -372,8 +356,6 @@ class CurveDiagramState extends State<CurveDiagram>
     controller = AnimationController(
       duration: widget.duration,
       vsync: this,
-      lowerBound: 0.0,
-      upperBound: 1.0,
     )..addListener(() {
         setState(() {});
       });
@@ -413,12 +395,10 @@ class CurveDiagramState extends State<CurveDiagram>
               alignment: Alignment.center,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       TranslateSampleTile(
                           animation: animation, name: 'translation'),
@@ -428,7 +408,6 @@ class CurveDiagramState extends State<CurveDiagram>
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       ScaleSampleTile(animation: animation, name: 'scale'),
                       OpacitySampleTile(animation: animation, name: 'opacity'),
@@ -444,206 +423,191 @@ class CurveDiagramState extends State<CurveDiagram>
   }
 }
 
-class CurveDiagramStep extends DiagramStep<CurveDiagram> {
-  CurveDiagramStep(DiagramController controller) : super(controller) {
-    _diagrams.addAll(<CurveDiagram>[
-      const CurveDiagram(
-          name: 'bounce_in',
-          caption: 'Curves.bounceIn',
-          curve: Curves.bounceIn),
-      const CurveDiagram(
-          name: 'bounce_in_out',
-          caption: 'Curves.bounceInOut',
-          curve: Curves.bounceInOut),
-      const CurveDiagram(
-          name: 'bounce_out',
-          caption: 'Curves.bounceOut',
-          curve: Curves.bounceOut),
-      const CurveDiagram(
-          name: 'decelerate',
-          caption: 'Curves.decelerate',
-          curve: Curves.decelerate),
-      const CurveDiagram(
-          name: 'ease', caption: 'Curves.ease', curve: Curves.ease),
-      const CurveDiagram(
-          name: 'ease_in', caption: 'Curves.easeIn', curve: Curves.easeIn),
-      const CurveDiagram(
-          name: 'ease_in_sine',
-          caption: 'Curves.easeInSine',
-          curve: Curves.easeInSine),
-      const CurveDiagram(
-          name: 'ease_in_quad',
-          caption: 'Curves.easeInQuad',
-          curve: Curves.easeInSine),
-      const CurveDiagram(
-          name: 'ease_in_cubic',
-          caption: 'Curves.easeInCubic',
-          curve: Curves.easeInCubic),
-      const CurveDiagram(
-          name: 'ease_in_quart',
-          caption: 'Curves.easeInQuart',
-          curve: Curves.easeInQuart),
-      const CurveDiagram(
-          name: 'ease_in_quint',
-          caption: 'Curves.easeInQuint',
-          curve: Curves.easeInQuint),
-      const CurveDiagram(
-          name: 'ease_in_expo',
-          caption: 'Curves.easeInExpo',
-          curve: Curves.easeInExpo),
-      const CurveDiagram(
-          name: 'ease_in_circ',
-          caption: 'Curves.easeInCirc',
-          curve: Curves.easeInCirc),
-      const CurveDiagram(
-          name: 'ease_in_back',
-          caption: 'Curves.easeInBack',
-          curve: Curves.easeInBack),
-      const CurveDiagram(
-          name: 'ease_in_out',
-          caption: 'Curves.easeInOut',
-          curve: Curves.easeInOut),
-      const CurveDiagram(
-          name: 'ease_in_out_sine',
-          caption: 'Curves.easeInOutSine',
-          curve: Curves.easeInOutSine),
-      const CurveDiagram(
-          name: 'ease_in_out_quad',
-          caption: 'Curves.easeInOutQuad',
-          curve: Curves.easeInOutSine),
-      const CurveDiagram(
-          name: 'ease_in_out_cubic',
-          caption: 'Curves.easeInOutCubic',
-          curve: Curves.easeInOutCubic),
-      const CurveDiagram(
-          name: 'ease_in_out_cubic_emphasized',
-          caption: 'Curves.easeInOutCubicEmphasized',
-          curve: Curves.easeInOutCubicEmphasized),
-      const CurveDiagram(
-          name: 'ease_in_out_quart',
-          caption: 'Curves.easeInOutQuart',
-          curve: Curves.easeInOutQuart),
-      const CurveDiagram(
-          name: 'ease_in_out_quint',
-          caption: 'Curves.easeInOutQuint',
-          curve: Curves.easeInOutQuint),
-      const CurveDiagram(
-          name: 'ease_in_out_expo',
-          caption: 'Curves.easeInOutExpo',
-          curve: Curves.easeInOutExpo),
-      const CurveDiagram(
-          name: 'ease_in_out_circ',
-          caption: 'Curves.easeInOutCirc',
-          curve: Curves.easeInOutCirc),
-      const CurveDiagram(
-          name: 'ease_in_out_back',
-          caption: 'Curves.easeInOutBack',
-          curve: Curves.easeInOutBack),
-      const CurveDiagram(
-          name: 'ease_out', caption: 'Curves.easeOut', curve: Curves.easeOut),
-      const CurveDiagram(
-          name: 'ease_out_sine',
-          caption: 'Curves.easeOutSine',
-          curve: Curves.easeOutSine),
-      const CurveDiagram(
-          name: 'ease_out_quad',
-          caption: 'Curves.easeOutQuad',
-          curve: Curves.easeOutSine),
-      const CurveDiagram(
-          name: 'ease_out_cubic',
-          caption: 'Curves.easeOutCubic',
-          curve: Curves.easeOutCubic),
-      const CurveDiagram(
-          name: 'ease_out_quart',
-          caption: 'Curves.easeOutQuart',
-          curve: Curves.easeOutQuart),
-      const CurveDiagram(
-          name: 'ease_out_quint',
-          caption: 'Curves.easeOutQuint',
-          curve: Curves.easeOutQuint),
-      const CurveDiagram(
-          name: 'ease_out_expo',
-          caption: 'Curves.easeOutExpo',
-          curve: Curves.easeOutExpo),
-      const CurveDiagram(
-          name: 'ease_out_circ',
-          caption: 'Curves.easeOutCirc',
-          curve: Curves.easeOutCirc),
-      const CurveDiagram(
-          name: 'ease_out_back',
-          caption: 'Curves.easeOutBack',
-          curve: Curves.easeOutBack),
-      const CurveDiagram(
-          name: 'elastic_in',
-          caption: 'Curves.elasticIn',
-          curve: Curves.elasticIn),
-      const CurveDiagram(
-          name: 'elastic_in_out',
-          caption: 'Curves.elasticInOut',
-          curve: Curves.elasticInOut),
-      const CurveDiagram(
-          name: 'elastic_out',
-          caption: 'Curves.elasticOut',
-          curve: Curves.elasticOut),
-      const CurveDiagram(
-          name: 'fast_out_slow_in',
-          caption: 'Curves.fastOutSlowIn',
-          curve: Curves.fastOutSlowIn),
-      const CurveDiagram(
-          name: 'slow_middle',
-          caption: 'Curves.slowMiddle',
-          curve: Curves.slowMiddle),
-      CurveDiagram(
-          name: 'flipped',
-          caption: 'Curves.bounceIn.flipped',
-          curve: Curves.bounceIn.flipped),
-      const CurveDiagram(
-          name: 'flipped_curve',
-          caption: 'FlippedCurve(Curves.bounceIn)',
-          curve: FlippedCurve(Curves.bounceIn)),
-      const CurveDiagram(
-          name: 'interval',
-          caption: 'Interval(0.25, 0.75)',
-          curve: Interval(0.25, 0.75)),
-      const CurveDiagram(
-          name: 'linear', caption: 'Curves.linear', curve: Curves.linear),
-      const CurveDiagram(
-          name: 'sawtooth', caption: 'SawTooth(3)', curve: SawTooth(3)),
-      const CurveDiagram(
-          name: 'threshold',
-          caption: 'Threshold(0.75)',
-          curve: Threshold(0.75)),
-      const CurveDiagram(
-          name: 'linear_to_ease_out',
-          caption: 'Curves.linearToEaseOut',
-          curve: Curves.linearToEaseOut),
-      const CurveDiagram(
-          name: 'ease_in_to_linear',
-          caption: 'Curves.easeInToLinear',
-          curve: Curves.easeInToLinear),
-      const CurveDiagram(
-          name: 'fast_linear_to_slow_ease_in',
-          caption: 'Curves.fastLinearToSlowEaseIn',
-          curve: Curves.fastLinearToSlowEaseIn),
-    ]);
-  }
-
+class CurveDiagramStep extends DiagramStep {
   @override
   final String category = 'animation';
 
-  final List<CurveDiagram> _diagrams = <CurveDiagram>[];
+  final List<CurveDiagram> _diagrams = <CurveDiagram>[
+    const CurveDiagram(
+        name: 'bounce_in', caption: 'Curves.bounceIn', curve: Curves.bounceIn),
+    const CurveDiagram(
+        name: 'bounce_in_out',
+        caption: 'Curves.bounceInOut',
+        curve: Curves.bounceInOut),
+    const CurveDiagram(
+        name: 'bounce_out',
+        caption: 'Curves.bounceOut',
+        curve: Curves.bounceOut),
+    const CurveDiagram(
+        name: 'decelerate',
+        caption: 'Curves.decelerate',
+        curve: Curves.decelerate),
+    const CurveDiagram(
+        name: 'ease', caption: 'Curves.ease', curve: Curves.ease),
+    const CurveDiagram(
+        name: 'ease_in', caption: 'Curves.easeIn', curve: Curves.easeIn),
+    const CurveDiagram(
+        name: 'ease_in_sine',
+        caption: 'Curves.easeInSine',
+        curve: Curves.easeInSine),
+    const CurveDiagram(
+        name: 'ease_in_quad',
+        caption: 'Curves.easeInQuad',
+        curve: Curves.easeInSine),
+    const CurveDiagram(
+        name: 'ease_in_cubic',
+        caption: 'Curves.easeInCubic',
+        curve: Curves.easeInCubic),
+    const CurveDiagram(
+        name: 'ease_in_quart',
+        caption: 'Curves.easeInQuart',
+        curve: Curves.easeInQuart),
+    const CurveDiagram(
+        name: 'ease_in_quint',
+        caption: 'Curves.easeInQuint',
+        curve: Curves.easeInQuint),
+    const CurveDiagram(
+        name: 'ease_in_expo',
+        caption: 'Curves.easeInExpo',
+        curve: Curves.easeInExpo),
+    const CurveDiagram(
+        name: 'ease_in_circ',
+        caption: 'Curves.easeInCirc',
+        curve: Curves.easeInCirc),
+    const CurveDiagram(
+        name: 'ease_in_back',
+        caption: 'Curves.easeInBack',
+        curve: Curves.easeInBack),
+    const CurveDiagram(
+        name: 'ease_in_out',
+        caption: 'Curves.easeInOut',
+        curve: Curves.easeInOut),
+    const CurveDiagram(
+        name: 'ease_in_out_sine',
+        caption: 'Curves.easeInOutSine',
+        curve: Curves.easeInOutSine),
+    const CurveDiagram(
+        name: 'ease_in_out_quad',
+        caption: 'Curves.easeInOutQuad',
+        curve: Curves.easeInOutSine),
+    const CurveDiagram(
+        name: 'ease_in_out_cubic',
+        caption: 'Curves.easeInOutCubic',
+        curve: Curves.easeInOutCubic),
+    const CurveDiagram(
+        name: 'ease_in_out_cubic_emphasized',
+        caption: 'Curves.easeInOutCubicEmphasized',
+        curve: Curves.easeInOutCubicEmphasized),
+    const CurveDiagram(
+        name: 'ease_in_out_quart',
+        caption: 'Curves.easeInOutQuart',
+        curve: Curves.easeInOutQuart),
+    const CurveDiagram(
+        name: 'ease_in_out_quint',
+        caption: 'Curves.easeInOutQuint',
+        curve: Curves.easeInOutQuint),
+    const CurveDiagram(
+        name: 'ease_in_out_expo',
+        caption: 'Curves.easeInOutExpo',
+        curve: Curves.easeInOutExpo),
+    const CurveDiagram(
+        name: 'ease_in_out_circ',
+        caption: 'Curves.easeInOutCirc',
+        curve: Curves.easeInOutCirc),
+    const CurveDiagram(
+        name: 'ease_in_out_back',
+        caption: 'Curves.easeInOutBack',
+        curve: Curves.easeInOutBack),
+    const CurveDiagram(
+        name: 'ease_out', caption: 'Curves.easeOut', curve: Curves.easeOut),
+    const CurveDiagram(
+        name: 'ease_out_sine',
+        caption: 'Curves.easeOutSine',
+        curve: Curves.easeOutSine),
+    const CurveDiagram(
+        name: 'ease_out_quad',
+        caption: 'Curves.easeOutQuad',
+        curve: Curves.easeOutSine),
+    const CurveDiagram(
+        name: 'ease_out_cubic',
+        caption: 'Curves.easeOutCubic',
+        curve: Curves.easeOutCubic),
+    const CurveDiagram(
+        name: 'ease_out_quart',
+        caption: 'Curves.easeOutQuart',
+        curve: Curves.easeOutQuart),
+    const CurveDiagram(
+        name: 'ease_out_quint',
+        caption: 'Curves.easeOutQuint',
+        curve: Curves.easeOutQuint),
+    const CurveDiagram(
+        name: 'ease_out_expo',
+        caption: 'Curves.easeOutExpo',
+        curve: Curves.easeOutExpo),
+    const CurveDiagram(
+        name: 'ease_out_circ',
+        caption: 'Curves.easeOutCirc',
+        curve: Curves.easeOutCirc),
+    const CurveDiagram(
+        name: 'ease_out_back',
+        caption: 'Curves.easeOutBack',
+        curve: Curves.easeOutBack),
+    const CurveDiagram(
+        name: 'elastic_in',
+        caption: 'Curves.elasticIn',
+        curve: Curves.elasticIn),
+    const CurveDiagram(
+        name: 'elastic_in_out',
+        caption: 'Curves.elasticInOut',
+        curve: Curves.elasticInOut),
+    const CurveDiagram(
+        name: 'elastic_out',
+        caption: 'Curves.elasticOut',
+        curve: Curves.elasticOut),
+    const CurveDiagram(
+        name: 'fast_out_slow_in',
+        caption: 'Curves.fastOutSlowIn',
+        curve: Curves.fastOutSlowIn),
+    const CurveDiagram(
+        name: 'slow_middle',
+        caption: 'Curves.slowMiddle',
+        curve: Curves.slowMiddle),
+    CurveDiagram(
+        name: 'flipped',
+        caption: 'Curves.bounceIn.flipped',
+        curve: Curves.bounceIn.flipped),
+    const CurveDiagram(
+        name: 'flipped_curve',
+        caption: 'FlippedCurve(Curves.bounceIn)',
+        curve: FlippedCurve(Curves.bounceIn)),
+    const CurveDiagram(
+        name: 'interval',
+        caption: 'Interval(0.25, 0.75)',
+        curve: Interval(0.25, 0.75)),
+    const CurveDiagram(
+        name: 'linear', caption: 'Curves.linear', curve: Curves.linear),
+    const CurveDiagram(
+        name: 'sawtooth', caption: 'SawTooth(3)', curve: SawTooth(3)),
+    const CurveDiagram(
+        name: 'threshold', caption: 'Threshold(0.75)', curve: Threshold(0.75)),
+    const CurveDiagram(
+        name: 'linear_to_ease_out',
+        caption: 'Curves.linearToEaseOut',
+        curve: Curves.linearToEaseOut),
+    const CurveDiagram(
+        name: 'ease_in_to_linear',
+        caption: 'Curves.easeInToLinear',
+        curve: Curves.easeInToLinear),
+    const CurveDiagram(
+        name: 'fast_linear_to_slow_ease_in',
+        caption: 'Curves.fastLinearToSlowEaseIn',
+        curve: Curves.fastLinearToSlowEaseIn),
+    const CurveDiagram(
+        name: 'fast_ease_in_to_slow_ease_out',
+        caption: 'Curves.fastEaseInToSlowEaseOut',
+        curve: Curves.fastEaseInToSlowEaseOut)
+  ];
 
   @override
   Future<List<CurveDiagram>> get diagrams async => _diagrams;
-
-  @override
-  Future<File> generateDiagram(CurveDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawAnimatedDiagramToFiles(
-      end: _kCurveAnimationDuration,
-      frameRate: _kCurveAnimationFrameRate,
-      name: diagram.name,
-      category: category,
-    );
-  }
 }

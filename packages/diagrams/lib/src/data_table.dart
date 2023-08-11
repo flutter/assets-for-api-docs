@@ -3,15 +3,13 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
 
-class DataTableDiagram extends StatelessWidget implements DiagramMetadata {
-  const DataTableDiagram(this.name, {Key? key}) : super(key: key);
+class DataTableDiagram extends StatelessWidget with DiagramMetadata {
+  const DataTableDiagram(this.name, {super.key});
 
   @override
   final String name;
@@ -76,9 +74,7 @@ class DataTableDiagram extends StatelessWidget implements DiagramMetadata {
   }
 }
 
-class DataTableDiagramStep extends DiagramStep<DataTableDiagram> {
-  DataTableDiagramStep(DiagramController controller) : super(controller);
-
+class DataTableDiagramStep extends DiagramStep {
   @override
   final String category = 'material';
 
@@ -86,10 +82,4 @@ class DataTableDiagramStep extends DiagramStep<DataTableDiagram> {
   Future<List<DataTableDiagram>> get diagrams async => <DataTableDiagram>[
         const DataTableDiagram('data_table'),
       ];
-
-  @override
-  Future<File> generateDiagram(DataTableDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawDiagramToFile(File('${diagram.name}.png'));
-  }
 }

@@ -3,14 +3,11 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 import 'dart:ui' as ui;
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import 'animation_diagram.dart';
 import 'diagram_step.dart';
 
 @immutable
@@ -40,7 +37,8 @@ class DiagramImage extends ImageProvider<DiagramImage>
   }
 
   @override
-  ImageStreamCompleter load(DiagramImage key, DecoderCallback decode) {
+  ImageStreamCompleter loadImage(
+      DiagramImage key, ImageDecoderCallback decode) {
     return MultiFrameImageStreamCompleter(
       codec: _loadAsync(),
       chunkEvents: chunkEvents.stream,
@@ -105,20 +103,103 @@ class DiagramImage extends ImageProvider<DiagramImage>
   }
 
   @override
-  int get hashCode => hashValues(image, scale);
+  int get hashCode => Object.hash(image, scale);
 }
 
-class FrameBuilderImageDiagram extends ImageDiagram {
-  FrameBuilderImageDiagram(DiagramController controller) : super(controller);
+class FrameBuilderImageDiagram extends StatelessWidget {
+  const FrameBuilderImageDiagram({super.key, required this.image});
+
+  final ImageProvider image;
 
   @override
-  Duration get animationDuration => const Duration(seconds: 4);
+  Widget build(BuildContext context) {
+    return Image(
+      image: image,
+      frameBuilder: (
+        BuildContext context,
+        Widget child,
+        int? frame,
+        bool wasSynchronouslyLoaded,
+      ) {
+        if (wasSynchronouslyLoaded) {
+          return child;
+        }
+        return AnimatedOpacity(
+          opacity: frame == null ? 0 : 1,
+          duration: const Duration(seconds: 1),
+          curve: Curves.easeOut,
+          child: child,
+        );
+      },
+    );
+  }
+}
+
+class LoadingProgressImageDiagram extends StatelessWidget {
+  const LoadingProgressImageDiagram({super.key, required this.image});
+
+  final ImageProvider image;
 
   @override
-  Duration get imageLoadingDuration => const Duration(milliseconds: 500);
+  Widget build(BuildContext context) {
+    return Image(
+      image: image,
+      loadingBuilder: (
+        BuildContext context,
+        Widget child,
+        ImageChunkEvent? loadingProgress,
+      ) {
+        if (loadingProgress == null) {
+          return child;
+        }
+        return Center(
+          child: CircularProgressIndicator(
+            value: loadingProgress.cumulativeBytesLoaded /
+                loadingProgress.expectedTotalBytes!,
+          ),
+        );
+      },
+    );
+  }
+}
+
+class ImageDiagram extends StatefulWidget with DiagramMetadata {
+  const ImageDiagram({
+    super.key,
+    required this.name,
+    required this.image,
+    required this.loadingDuration,
+    required this.shownDuration,
+    required this.builder,
+  });
 
   @override
-  Widget build(BuildContext context, ImageProvider image) {
+  final String name;
+
+  final ui.Image image;
+
+  final Duration loadingDuration;
+  final Duration shownDuration;
+
+  @override
+  Duration get duration => loadingDuration + shownDuration;
+
+  final Widget Function(BuildContext context, ImageProvider image) builder;
+
+  @override
+  State<ImageDiagram> createState() => _ImageDiagramState();
+}
+
+class _ImageDiagramState extends State<ImageDiagram>
+    with TickerProviderStateMixin {
+  late final DiagramImage provider = DiagramImage(
+    widget.image,
+    vsync: this,
+    loadingDuration: widget.loadingDuration,
+  );
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(10),
       color: Colors.white,
@@ -129,127 +210,54 @@ class FrameBuilderImageDiagram extends ImageDiagram {
             border: Border.all(),
             borderRadius: BorderRadius.circular(20),
           ),
-          child: Image(
-            image: image,
-            frameBuilder: (BuildContext context, Widget child, int? frame,
-                bool wasSynchronouslyLoaded) {
-              if (wasSynchronouslyLoaded) {
-                return child;
-              }
-              return AnimatedOpacity(
-                child: child,
-                opacity: frame == null ? 0 : 1,
-                duration: const Duration(seconds: 1),
-                curve: Curves.easeOut,
-              );
-            },
-          ),
+          child: widget.builder(context, provider),
         ),
       ),
     );
   }
 }
 
-class LoadingProgressImageDiagram extends ImageDiagram {
-  const LoadingProgressImageDiagram(DiagramController controller)
-      : super(controller);
-
-  @override
-  Widget build(BuildContext context, ImageProvider image) {
-    return Container(
-      padding: const EdgeInsets.all(10),
-      color: Colors.white,
-      child: ConstrainedBox(
-        constraints: BoxConstraints.tight(const Size(400, 400)),
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            border: Border.all(),
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: Image(
-            image: image,
-            loadingBuilder: (BuildContext context, Widget child,
-                ImageChunkEvent? loadingProgress) {
-              if (loadingProgress == null) {
-                return child;
-              }
-              return Center(
-                child: CircularProgressIndicator(
-                  value: loadingProgress.cumulativeBytesLoaded /
-                      loadingProgress.expectedTotalBytes!,
-                ),
-              );
-            },
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class ImageDiagramsStep extends DiagramStep<ImageDiagram> {
-  ImageDiagramsStep(DiagramController controller) : super(controller);
-
+class ImageDiagramsStep extends DiagramStep {
   @override
   final String category = 'widgets';
 
-  @override
-  Future<List<ImageDiagram>> get diagrams async => <ImageDiagram>[
-        FrameBuilderImageDiagram(controller),
-        LoadingProgressImageDiagram(controller),
-      ];
-
-  @override
-  Future<File> generateDiagram(ImageDiagram diagram) async {
-    controller.builder = (BuildContext context) {
-      return SizedBox(
-        width: diagram.imageSize.width,
-        height: diagram.imageSize.height,
-        child: const FlutterLogo(),
-      );
-    };
-    final ui.Image image = await controller.drawDiagramToImage();
-
-    final ImageProvider imageProvider = DiagramImage(
-      image,
-      vsync: controller.vsync,
-      loadingDuration: diagram.imageLoadingDuration,
+  static Future<ui.Image> renderFlutterLogo(int width, int height) {
+    final BoxPainter boxPainter =
+        const FlutterLogoDecoration().createBoxPainter();
+    final ui.PictureRecorder recorder = ui.PictureRecorder();
+    boxPainter.paint(
+      ui.Canvas(recorder),
+      Offset.zero,
+      ImageConfiguration(
+        size: Size(
+          width.toDouble(),
+          height.toDouble(),
+        ),
+      ),
     );
-
-    controller.builder =
-        (BuildContext context) => diagram.build(context, imageProvider);
-    final File result = await controller.drawAnimatedDiagramToFiles(
-      end: diagram.animationDuration,
-      frameRate: diagram.frameRate,
-      name: diagram.name,
-      category: category,
-    );
-    diagram.dispose();
-
-    return result;
+    final ui.Picture picture = recorder.endRecording();
+    return picture.toImage(width, height);
   }
-}
-
-abstract class ImageDiagram implements DiagramMetadata {
-  const ImageDiagram(this.controller);
-
-  final DiagramController controller;
 
   @override
-  String get name => getName(runtimeType);
-
-  TickerProvider get vsync => controller.vsync;
-
-  Size get imageSize => const Size(300, 300);
-
-  Duration get imageLoadingDuration => const Duration(seconds: 1);
-
-  Duration get animationDuration => const Duration(seconds: 2);
-
-  double get frameRate => 60;
-
-  Widget build(BuildContext context, ImageProvider image);
-
-  @mustCallSuper
-  void dispose() {}
+  Future<List<DiagramMetadata>> get diagrams async {
+    return <DiagramMetadata>[
+      ImageDiagram(
+        name: 'frame_builder_image',
+        image: await renderFlutterLogo(300, 300),
+        shownDuration: const Duration(seconds: 4),
+        loadingDuration: const Duration(milliseconds: 500),
+        builder: (BuildContext context, ImageProvider image) =>
+            FrameBuilderImageDiagram(image: image),
+      ),
+      ImageDiagram(
+        name: 'loading_progress_image',
+        image: await renderFlutterLogo(300, 300),
+        shownDuration: const Duration(seconds: 1),
+        loadingDuration: const Duration(seconds: 2),
+        builder: (BuildContext context, ImageProvider image) =>
+            LoadingProgressImageDiagram(image: image),
+      ),
+    ];
+  }
 }

@@ -3,21 +3,21 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
-import 'package:diagram_capture/diagram_capture.dart';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart' show timeDilation;
+
 import 'diagram_step.dart';
 
 class LinkedLabelCheckbox extends StatelessWidget {
   const LinkedLabelCheckbox({
-    Key? key,
+    super.key,
     required this.label,
     required this.padding,
     required this.value,
     required this.onChanged,
-  }) : super(key: key);
+  });
 
   final String label;
   final EdgeInsets padding;
@@ -59,12 +59,12 @@ class LinkedLabelCheckbox extends StatelessWidget {
 
 class LabeledCheckbox extends StatelessWidget {
   const LabeledCheckbox({
-    Key? key,
+    super.key,
     required this.label,
     required this.padding,
     required this.value,
     required this.onChanged,
-  }) : super(key: key);
+  });
 
   final String label;
   final EdgeInsets padding;
@@ -95,9 +95,8 @@ class LabeledCheckbox extends StatelessWidget {
   }
 }
 
-class CheckboxListTileDiagram extends StatefulWidget
-    implements DiagramMetadata {
-  const CheckboxListTileDiagram(this.name, {Key? key}) : super(key: key);
+class CheckboxListTileDiagram extends StatefulWidget with DiagramMetadata {
+  const CheckboxListTileDiagram(this.name, {super.key});
 
   @override
   final String name;
@@ -178,9 +177,7 @@ class _CheckboxListTileDiagramState extends State<CheckboxListTileDiagram> {
   }
 }
 
-class CheckboxListTileDiagramStep extends DiagramStep<CheckboxListTileDiagram> {
-  CheckboxListTileDiagramStep(DiagramController controller) : super(controller);
-
+class CheckboxListTileDiagramStep extends DiagramStep {
   @override
   final String category = 'material';
 
@@ -191,10 +188,4 @@ class CheckboxListTileDiagramStep extends DiagramStep<CheckboxListTileDiagram> {
         const CheckboxListTileDiagram('checkbox_list_tile_semantics'),
         const CheckboxListTileDiagram('checkbox_list_tile_custom'),
       ];
-
-  @override
-  Future<File> generateDiagram(CheckboxListTileDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawDiagramToFile(File('${diagram.name}.png'));
-  }
 }

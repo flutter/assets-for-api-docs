@@ -3,12 +3,10 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 
-import 'diagram_step.dart';
+import '../diagrams.dart';
 
 const Duration _kBreakDuration = Duration(seconds: 1, milliseconds: 500);
 const Duration _kAnimationDuration = Duration(seconds: 3);
@@ -18,22 +16,22 @@ final Duration _kTotalDuration = _kBreakDuration +
     _kBreakDuration +
     _kAnimationDuration;
 
-const double _kCurveAnimationFrameRate = 60.0;
-
-class TweensDiagram extends StatefulWidget implements DiagramMetadata {
-  const TweensDiagram({Key? key}) : super(key: key);
+class TweensDiagram extends StatefulWidget with DiagramMetadata {
+  const TweensDiagram({super.key});
 
   @override
   State<TweensDiagram> createState() => TweensDiagramState();
 
   @override
   String get name => 'tweens';
+
+  @override
+  Duration? get duration => _kTotalDuration;
 }
 
 class TweensDiagramState extends State<TweensDiagram>
-    with TickerProviderStateMixin<TweensDiagram> {
+    with TickerProviderStateMixin, LockstepStateMixin {
   late AnimationController _controller;
-  Timer? _timer;
 
   @override
   void initState() {
@@ -42,31 +40,14 @@ class TweensDiagramState extends State<TweensDiagram>
       vsync: this,
       duration: _kAnimationDuration,
     );
-    _timer = Timer(_kBreakDuration, () {
-      _controller.forward();
-      _timer = null;
-    });
-    _controller.addStatusListener((AnimationStatus status) {
-      switch (status) {
-        case AnimationStatus.dismissed:
-        case AnimationStatus.forward:
-        case AnimationStatus.reverse:
-          break;
-        case AnimationStatus.completed:
-          assert(_timer == null);
-          _timer = Timer(_kBreakDuration, () {
-            _controller.reverse();
-            _timer = null;
-          });
-          break;
-      }
-    });
+    waitLockstep(_kBreakDuration).then((_) => _controller.forward());
+    waitLockstep(_kBreakDuration + _kAnimationDuration + _kBreakDuration)
+        .then((_) => _controller.reverse());
   }
 
   @override
   void dispose() {
     _controller.dispose();
-    _timer?.cancel();
     super.dispose();
   }
 
@@ -168,25 +149,14 @@ class TweensDiagramState extends State<TweensDiagram>
   }
 }
 
-class TweensDiagramStep extends DiagramStep<TweensDiagram> {
-  TweensDiagramStep(DiagramController controller) : super(controller);
-
+class TweensDiagramStep extends DiagramStep {
   @override
   final String category = 'animation';
 
   @override
-  Future<List<TweensDiagram>> get diagrams async => <TweensDiagram>[
-        const TweensDiagram(),
-      ];
-
-  @override
-  Future<File> generateDiagram(TweensDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawAnimatedDiagramToFiles(
-      end: _kTotalDuration,
-      frameRate: _kCurveAnimationFrameRate,
-      name: diagram.name,
-      category: category,
-    );
+  Future<List<DiagramMetadata>> get diagrams async {
+    return const <TweensDiagram>[
+      TweensDiagram(),
+    ];
   }
 }

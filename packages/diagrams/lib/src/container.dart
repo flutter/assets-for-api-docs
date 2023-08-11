@@ -3,13 +3,13 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
-import 'package:diagram_capture/diagram_capture.dart';
+
 import 'package:flutter/material.dart';
+
 import 'diagram_step.dart';
 
-class ContainerDiagram extends StatelessWidget implements DiagramMetadata {
-  const ContainerDiagram(this.name, {Key? key}) : super(key: key);
+class ContainerDiagram extends StatelessWidget with DiagramMetadata {
+  const ContainerDiagram(this.name, {super.key});
 
   @override
   final String name;
@@ -43,12 +43,14 @@ class ContainerDiagram extends StatelessWidget implements DiagramMetadata {
               padding: const EdgeInsets.all(8.0),
               color: Colors.blue[600],
               alignment: Alignment.center,
-              child: Text('Hello World',
-                  style: Theme.of(context)
-                      .textTheme
-                      .headline4!
-                      .copyWith(color: Colors.white)),
               transform: Matrix4.rotationZ(0.1),
+              child: Text(
+                'Hello World',
+                style: Theme.of(context)
+                    .textTheme
+                    .headlineMedium!
+                    .copyWith(color: Colors.white),
+              ),
             ),
           ),
         );
@@ -58,9 +60,7 @@ class ContainerDiagram extends StatelessWidget implements DiagramMetadata {
   }
 }
 
-class ContainerDiagramStep extends DiagramStep<ContainerDiagram> {
-  ContainerDiagramStep(DiagramController controller) : super(controller);
-
+class ContainerDiagramStep extends DiagramStep {
   @override
   final String category = 'widgets';
 
@@ -69,10 +69,4 @@ class ContainerDiagramStep extends DiagramStep<ContainerDiagram> {
         const ContainerDiagram('container_a'),
         const ContainerDiagram('container_b'),
       ];
-
-  @override
-  Future<File> generateDiagram(ContainerDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawDiagramToFile(File('${diagram.name}.png'));
-  }
 }

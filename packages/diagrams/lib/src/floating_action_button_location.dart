@@ -3,9 +3,7 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
@@ -37,9 +35,8 @@ const String _startFloat = '_start_float';
 const String _startTop = '_start_top';
 
 class FloatingActionButtonLocationDiagram extends StatelessWidget
-    implements DiagramMetadata {
-  const FloatingActionButtonLocationDiagram(this.nameSuffix, {Key? key})
-      : super(key: key);
+    with DiagramMetadata {
+  const FloatingActionButtonLocationDiagram(this.nameSuffix, {super.key});
 
   final String nameSuffix;
 
@@ -141,8 +138,8 @@ class FloatingActionButtonLocationDiagram extends StatelessWidget
       floatingActionButton: FloatingActionButton(
         mini: isMini,
         onPressed: () {},
-        child: const Icon(Icons.navigation),
         backgroundColor: Colors.green,
+        child: const Icon(Icons.navigation),
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
@@ -166,11 +163,7 @@ class FloatingActionButtonLocationDiagram extends StatelessWidget
   }
 }
 
-class FloatingActionButtonLocationDiagramStep
-    extends DiagramStep<FloatingActionButtonLocationDiagram> {
-  FloatingActionButtonLocationDiagramStep(DiagramController controller)
-      : super(controller);
-
+class FloatingActionButtonLocationDiagramStep extends DiagramStep {
   @override
   final String category = 'material';
 
@@ -196,11 +189,4 @@ class FloatingActionButtonLocationDiagramStep
         const FloatingActionButtonLocationDiagram(_startFloat),
         const FloatingActionButtonLocationDiagram(_startTop),
       ];
-
-  @override
-  Future<File> generateDiagram(
-      FloatingActionButtonLocationDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawDiagramToFile(File('${diagram.name}.png'));
-  }
 }

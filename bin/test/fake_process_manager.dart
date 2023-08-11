@@ -243,7 +243,7 @@ class StringStreamConsumer implements StreamConsumer<List<int>> {
       }),
     );
     subscriptions.last.onDone(() => completers.last.complete(null));
-    return Future<dynamic>.value(null);
+    return Future<dynamic>.value();
   }
 
   @override
@@ -254,6 +254,6 @@ class StringStreamConsumer implements StreamConsumer<List<int>> {
     completers.clear();
     streams.clear();
     subscriptions.clear();
-    return Future<dynamic>.value(null);
+    return Future<dynamic>.value();
   }
 }

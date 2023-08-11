@@ -3,15 +3,13 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
 
-class DividerDiagram extends StatelessWidget implements DiagramMetadata {
-  const DividerDiagram(this.name, {Key? key}) : super(key: key);
+class DividerDiagram extends StatelessWidget with DiagramMetadata {
+  const DividerDiagram(this.name, {super.key});
 
   @override
   final String name;
@@ -58,9 +56,7 @@ class DividerDiagram extends StatelessWidget implements DiagramMetadata {
   }
 }
 
-class DividerDiagramStep extends DiagramStep<DividerDiagram> {
-  DividerDiagramStep(DiagramController controller) : super(controller);
-
+class DividerDiagramStep extends DiagramStep {
   @override
   final String category = 'material';
 
@@ -68,10 +64,4 @@ class DividerDiagramStep extends DiagramStep<DividerDiagram> {
   Future<List<DividerDiagram>> get diagrams async => <DividerDiagram>[
         const DividerDiagram('divider'),
       ];
-
-  @override
-  Future<File> generateDiagram(DividerDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawDiagramToFile(File('${diagram.name}.png'));
-  }
 }

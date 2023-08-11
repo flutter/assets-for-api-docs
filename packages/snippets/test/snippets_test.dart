@@ -43,7 +43,7 @@ void main() {
     late Directory tmpDir;
     late File template;
 
-    void _writeSkeleton(String type) {
+    void writeSkeleton(String type) {
       switch (type) {
         case 'dartpad':
           configuration.getHtmlSkeletonFile('dartpad').writeAsStringSync('''
@@ -88,7 +88,7 @@ void main() {
 
 {{code}}
 ''');
-      <String>['dartpad', 'sample', 'snippet'].forEach(_writeSkeleton);
+      <String>['dartpad', 'sample', 'snippet'].forEach(writeSkeleton);
       FlutterInformation.instance =
           FakeFlutterInformation(configuration.flutterRoot);
       generator = SnippetGenerator(

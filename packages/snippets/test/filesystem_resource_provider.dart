@@ -36,27 +36,6 @@ String? _getStandardStateLocation() {
       : null;
 }
 
-/// Return modification times for every file path in [paths].
-///
-/// If a path is `null`, the modification time is also `null`.
-///
-/// If any exception happens, the file is considered as a not existing and
-/// `-1` is its modification time.
-List<int?> _pathsToTimes(List<String?> paths) {
-  return paths.map((String? path) {
-    if (path != null) {
-      try {
-        final io.File file = io.File(path);
-        return file.lastModifiedSync().millisecondsSinceEpoch;
-      } catch (_) {
-        return -1;
-      }
-    } else {
-      return null;
-    }
-  }).toList();
-}
-
 /// A `dart:io` based implementation of [ResourceProvider].
 class FileSystemResourceProvider implements ResourceProvider {
   FileSystemResourceProvider(this.filesystem, {String? stateLocation})
@@ -83,13 +62,6 @@ class FileSystemResourceProvider implements ResourceProvider {
   Folder getFolder(String path) {
     _ensureAbsoluteAndNormalized(path);
     return _PhysicalFolder(filesystem.directory(path));
-  }
-
-  @override
-  Future<List<int?>> getModificationTimes(List<Source> sources) async {
-    final List<String> paths =
-        sources.map((Source source) => source.fullName).toList();
-    return _pathsToTimes(paths);
   }
 
   @override
@@ -130,7 +102,7 @@ class FileSystemResourceProvider implements ResourceProvider {
 
 /// A `dart:io` based implementation of [File].
 class _PhysicalFile extends _PhysicalResource implements File {
-  const _PhysicalFile(io.File file) : super(file);
+  const _PhysicalFile(io.File super.file);
 
   @override
   Stream<WatchEvent> get changes => FileWatcher(_entry.path).events;
@@ -232,11 +204,16 @@ class _PhysicalFile extends _PhysicalResource implements File {
       throw _wrapException(exception);
     }
   }
+
+  @override
+  ResourceWatcher watch() {
+    throw UnimplementedError();
+  }
 }
 
 /// A `dart:io` based implementation of [Folder].
 class _PhysicalFolder extends _PhysicalResource implements Folder {
-  const _PhysicalFolder(io.Directory directory) : super(directory);
+  const _PhysicalFolder(io.Directory super.directory);
 
   @override
   Stream<WatchEvent> get changes =>
@@ -308,8 +285,7 @@ class _PhysicalFolder extends _PhysicalResource implements Folder {
     try {
       final List<Resource> children = <Resource>[];
       final io.Directory directory = _entry as io.Directory;
-      final List<io.FileSystemEntity> entries =
-          directory.listSync(recursive: false);
+      final List<io.FileSystemEntity> entries = directory.listSync();
       final int numEntries = entries.length;
       for (int i = 0; i < numEntries; i++) {
         final io.FileSystemEntity entity = entries[i];
@@ -345,6 +321,11 @@ class _PhysicalFolder extends _PhysicalResource implements Folder {
 
   @override
   Uri toUri() => Uri.directory(path);
+
+  @override
+  ResourceWatcher watch() {
+    throw UnimplementedError();
+  }
 }
 
 /// A `dart:io` based implementation of [Resource].
@@ -368,11 +349,8 @@ abstract class _PhysicalResource implements Resource {
 
   @Deprecated('Use parent2 instead')
   @override
-  Folder? get parent {
+  Folder get parent {
     final String parentPath = pathContext.dirname(path);
-    if (parentPath == path) {
-      return null;
-    }
     return _PhysicalFolder(io.Directory(parentPath));
   }
 

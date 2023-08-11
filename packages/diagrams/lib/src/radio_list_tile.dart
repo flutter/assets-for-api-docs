@@ -3,10 +3,10 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
-import 'package:diagram_capture/diagram_capture.dart';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+
 import 'diagram_step.dart';
 
 enum SingingCharacter { lafayette, jefferson }
@@ -18,8 +18,8 @@ class LinkedLabelRadio extends StatelessWidget {
     required this.groupValue,
     required this.value,
     required this.onChanged,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final String label;
   final EdgeInsets padding;
@@ -65,8 +65,8 @@ class LabeledRadio extends StatelessWidget {
     required this.groupValue,
     required this.value,
     required this.onChanged,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final String label;
   final EdgeInsets padding;
@@ -101,8 +101,8 @@ class LabeledRadio extends StatelessWidget {
   }
 }
 
-class RadioListTileDiagram extends StatefulWidget implements DiagramMetadata {
-  const RadioListTileDiagram(this.name, {Key? key}) : super(key: key);
+class RadioListTileDiagram extends StatefulWidget with DiagramMetadata {
+  const RadioListTileDiagram(this.name, {super.key});
 
   @override
   final String name;
@@ -230,9 +230,7 @@ class _RadioListTileDiagramState extends State<RadioListTileDiagram> {
   }
 }
 
-class RadioListTileDiagramStep extends DiagramStep<RadioListTileDiagram> {
-  RadioListTileDiagramStep(DiagramController controller) : super(controller);
-
+class RadioListTileDiagramStep extends DiagramStep {
   @override
   final String category = 'material';
 
@@ -243,10 +241,4 @@ class RadioListTileDiagramStep extends DiagramStep<RadioListTileDiagram> {
         const RadioListTileDiagram('radio_list_tile_semantics'),
         const RadioListTileDiagram('radio_list_tile_custom'),
       ];
-
-  @override
-  Future<File> generateDiagram(RadioListTileDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawDiagramToFile(File('${diagram.name}.png'));
-  }
 }

@@ -3,15 +3,14 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 import 'dart:math';
 import 'dart:ui' show Image;
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' hide Image;
 
 import 'diagram_step.dart';
+import 'utils.dart';
 
 final GlobalKey key = GlobalKey();
 
@@ -27,27 +26,8 @@ const String kMonospaceFont = 'Courier New';
 Image? destinationImage, sourceImage, gridImage;
 int pageIndex = 0;
 
-Future<Image> getImage(ImageProvider provider) {
-  final Completer<Image> completer = Completer<Image>();
-  final ImageStream stream = provider.resolve(ImageConfiguration.empty);
-  late final ImageStreamListener listener;
-  listener = ImageStreamListener(
-    (ImageInfo image, bool sync) {
-      completer.complete(image.image);
-      stream.removeListener(listener);
-    },
-    onError: (Object error, StackTrace? stack) {
-      print(error);
-      throw error;
-    },
-  );
-
-  stream.addListener(listener);
-  return completer.future;
-}
-
-class BlendModeDiagram extends StatelessWidget implements DiagramMetadata {
-  const BlendModeDiagram(this.mode, {Key? key}) : super(key: key);
+class BlendModeDiagram extends StatelessWidget with DiagramMetadata {
+  const BlendModeDiagram(this.mode, {super.key});
 
   final BlendMode mode;
 
@@ -61,8 +41,7 @@ class BlendModeDiagram extends StatelessWidget implements DiagramMetadata {
       constraints: BoxConstraints.tight(const Size.square(400.0)),
       child: DecoratedBox(
         decoration: ShapeDecoration(
-          shape: Border.all(width: 1.0, color: Colors.white) +
-              Border.all(width: 1.0, color: Colors.black),
+          shape: Border.all(color: Colors.white) + Border.all(),
           image: const DecorationImage(
             image: gridImageProvider,
             repeat: ImageRepeat.repeat,
@@ -86,6 +65,7 @@ class BlendModeDiagram extends StatelessWidget implements DiagramMetadata {
                       style: const TextStyle(
                         inherit: false,
                         fontFamily: kMonospaceFont,
+                        package: 'diagrams',
                         color: Colors.black,
                         fontSize: 10.0,
                         fontWeight: FontWeight.w900,
@@ -105,6 +85,7 @@ class BlendModeDiagram extends StatelessWidget implements DiagramMetadata {
                       style: TextStyle(
                         inherit: false,
                         fontFamily: kMonospaceFont,
+                        package: 'diagrams',
                         color: Colors.black,
                         fontSize: 8.0,
                         fontWeight: FontWeight.bold,
@@ -126,6 +107,7 @@ class BlendModeDiagram extends StatelessWidget implements DiagramMetadata {
                         style: TextStyle(
                           inherit: false,
                           fontFamily: kMonospaceFont,
+                          package: 'diagrams',
                           color: Colors.black,
                           fontSize: 8.0,
                           fontWeight: FontWeight.bold,
@@ -250,9 +232,7 @@ class BlendModePainter extends CustomPainter {
   }
 }
 
-class BlendModeDiagramStep extends DiagramStep<BlendModeDiagram> {
-  BlendModeDiagramStep(DiagramController controller) : super(controller);
-
+class BlendModeDiagramStep extends DiagramStep {
   @override
   final String category = 'dart-ui';
 
@@ -270,11 +250,5 @@ class BlendModeDiagramStep extends DiagramStep<BlendModeDiagram> {
       }
     }
     return _diagrams!;
-  }
-
-  @override
-  Future<File> generateDiagram(BlendModeDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawDiagramToFile(File('${diagram.name}.png'));
   }
 }

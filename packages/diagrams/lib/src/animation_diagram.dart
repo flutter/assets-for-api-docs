@@ -36,11 +36,11 @@ String getName(Type type) {
 /// A base class for diagrams that show explicit animation transitions, like
 /// [FadeTransition]. See transitions.dart for more examples.
 abstract class TransitionDiagram<T> extends StatefulWidget
-    implements DiagramMetadata {
+    with DiagramMetadata {
   const TransitionDiagram({
-    Key? key,
+    super.key,
     this.decorate = true,
-  }) : super(key: key);
+  });
 
   /// Whether or not to decorate this diagram with an animation curve and top label.
   final bool decorate;
@@ -108,7 +108,7 @@ class TransitionDiagramState<T> extends State<TransitionDiagram<T>>
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                border: Border.all(color: Colors.black26, width: 1.0),
+                border: Border.all(color: Colors.black26),
               ),
               constraints: const BoxConstraints.tightFor(
                 width: 250.0,
@@ -157,8 +157,14 @@ class TransitionDiagramState<T> extends State<TransitionDiagram<T>>
 }
 
 abstract class ImplicitAnimationDiagram<T> extends StatefulWidget
-    implements DiagramMetadata {
-  const ImplicitAnimationDiagram({Key? key}) : super(key: key);
+    with DiagramMetadata {
+  const ImplicitAnimationDiagram({
+    super.key,
+    this.duration = _kAnimationDuration,
+  });
+
+  @override
+  final Duration duration;
 
   /// The animation curve for the animation to use.
   Curve get curve;
@@ -280,7 +286,10 @@ class SparklinePainter extends CustomPainter {
 
     // The sparkline itself.
     final Path sparkline = Path()..moveTo(area.left, area.bottom);
-    final double stepSize = 1.0 / (area.width * ui.window.devicePixelRatio);
+    final double stepSize = 1.0 /
+        (area.width *
+            (ui.PlatformDispatcher.instance.implicitView?.devicePixelRatio ??
+                1.0));
 
     void lineToPoint(Path path, double t) {
       final Offset point =
@@ -317,8 +326,7 @@ class SparklinePainter extends CustomPainter {
 }
 
 class Sparkline extends StatelessWidget {
-  const Sparkline({Key? key, required this.curve, required this.position})
-      : super(key: key);
+  const Sparkline({super.key, required this.curve, required this.position});
 
   final Curve curve;
   final double position;
@@ -330,7 +338,7 @@ class Sparkline extends StatelessWidget {
 }
 
 class SampleWidget extends StatelessWidget {
-  const SampleWidget({Key? key, this.small = false}) : super(key: key);
+  const SampleWidget({super.key, this.small = false});
 
   final bool small;
 

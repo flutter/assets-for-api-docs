@@ -8,8 +8,9 @@ import 'dart:ui';
 
 import 'package:args/args.dart';
 import 'package:diagram_capture/diagram_capture.dart';
-import 'package:diagrams/diagrams.dart';
+import 'package:diagrams/steps.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:platform/platform.dart' as platform_pkg;
@@ -40,8 +41,10 @@ Future<void> main(List<String> args) async {
   DiagramFlutterBinding.ensureInitialized();
   late final List<String> arguments;
   if (platform.isAndroid) {
-    arguments = window.defaultRouteName.length > 5
-        ? Uri.decodeComponent(window.defaultRouteName.substring(5)).split(' ')
+    arguments = PlatformDispatcher.instance.defaultRouteName.length > 5
+        ? Uri.decodeComponent(
+                PlatformDispatcher.instance.defaultRouteName.substring(5))
+            .split(' ')
         : <String>[];
   } else {
     arguments = args;
@@ -50,6 +53,7 @@ Future<void> main(List<String> args) async {
   parser.addMultiOption('category');
   parser.addMultiOption('platform');
   parser.addMultiOption('name');
+  parser.addMultiOption('step');
   parser.addOption('output-dir', defaultsTo: '/tmp/diagrams');
   final ArgResults flags = parser.parse(arguments);
 
@@ -66,6 +70,7 @@ Future<void> main(List<String> args) async {
 
   final List<String> categories = flags['category'] as List<String>;
   final List<String> names = flags['name'] as List<String>;
+  final List<String> steps = flags['step'] as List<String>;
   final Set<DiagramPlatform> platforms = (flags['platform'] as List<String>)
       .map<DiagramPlatform>((String platformStr) {
     assert(diagramStepPlatformNames.containsKey(platformStr),
@@ -73,7 +78,9 @@ Future<void> main(List<String> args) async {
     return diagramStepPlatformNames[platformStr]!;
   }).toSet();
 
-  print('Filters:\n  categories: $categories\n  names: $names');
+  print(
+    'Filters:\n  categories: $categories\n  names: $names\n  steps: $steps',
+  );
 
   final DateTime start = DateTime.now();
   final Directory outputDirectory = await prepareOutputDirectory(
@@ -81,84 +88,9 @@ Future<void> main(List<String> args) async {
 
   final DiagramController controller = DiagramController(
     outputDirectory: outputDirectory,
-    screenDimensions: const Size(1000.0, 1000.0),
+    screenDimensions: const Size(1300.0, 1300.0),
     pixelRatio: 1.0,
   );
-
-  // Add the diagram steps here.
-  final List<DiagramStep<DiagramMetadata>> steps =
-      <DiagramStep<DiagramMetadata>>[
-    AlertDialogDiagramStep(controller),
-    AlignDiagramStep(controller),
-    AnimationStatusValueDiagramStep(controller),
-    AppBarDiagramStep(controller),
-    BlendModeDiagramStep(controller),
-    BottomNavigationBarDiagramStep(controller),
-    BoxDecorationDiagramStep(controller),
-    BoxFitDiagramStep(controller),
-    CardDiagramStep(controller),
-    CheckboxListTileDiagramStep(controller),
-    ColorsDiagramStep(controller),
-    ColumnDiagramStep(controller),
-    ContainerDiagramStep(controller),
-    CupertinoAppDiagramStep(controller),
-    CupertinoIconDiagramStep(controller),
-    CurveDiagramStep(controller),
-    CustomListItemDiagramStep(controller),
-    CustomScrollViewDiagramStep(controller),
-    DataTableDiagramStep(controller),
-    DividerDiagramStep(controller),
-    DrawerDiagramStep(controller),
-    DropdownButtonDiagramStep(controller),
-    ExpandedDiagramStep(controller),
-    FilterQualityDiagramStep(controller),
-    FlatButtonDiagramStep(controller),
-    FloatingActionButtonDiagramStep(controller),
-    FloatingActionButtonLocationDiagramStep(controller),
-    FormDiagramStep(controller),
-    FontFeatureDiagramStep(controller),
-    GestureDetectorDiagramStep(controller),
-    GridViewDiagramStep(controller),
-    HeroesDiagramStep(controller),
-    IconButtonDiagramStep(controller),
-    IconButtonDiagramStep(controller),
-    IconDiagramStep(controller),
-    ImageDiagramsStep(controller),
-    ImplicitAnimationDiagramStep(controller),
-    InkResponseLargeDiagramStep(controller),
-    InkResponseSmallDiagramStep(controller),
-    InkWellDiagramStep(controller),
-    InputDecorationDiagramStep(controller),
-    ListTileDiagramStep(controller),
-    ListViewDiagramStep(controller),
-    MaterialAppDiagramStep(controller),
-    MediaQueryDiagramStep(controller),
-    PaddingDiagramStep(controller),
-    RadioListTileDiagramStep(controller),
-    RaisedButtonDiagramStep(controller),
-    RichTextDiagramStep(controller),
-    RowDiagramStep(controller),
-    ScaffoldDiagramStep(controller),
-    SimpleDialogDiagramStep(controller),
-    SliverAppBarDiagramStep(controller),
-    SliverFillRemainingDiagramStep(controller),
-    StackDiagramStep(controller),
-    StrokeCapDiagramStep(controller),
-    StrokeJoinDiagramStep(controller),
-    SwitchListTileDiagramStep(controller),
-    TabsDiagramStep(controller),
-    TextDiagramStep(controller),
-    TextFieldDiagramStep(controller),
-    TextFormFieldDiagramStep(controller),
-    TextHeightDiagramStep(controller),
-    TextStyleDiagramStep(controller),
-    ThemeDataDiagramStep(controller),
-    TileModeDiagramStep(controller),
-    ToggleButtonsDiagramStep(controller),
-    TransitionDiagramStep(controller),
-    TweensDiagramStep(controller),
-    TweenSequenceDiagramStep(controller),
-  ];
 
   final Completer<void> done = Completer<void>();
   Zone.current.fork(specification: ZoneSpecification(
@@ -174,8 +106,14 @@ Future<void> main(List<String> args) async {
       errorLog.writeln(stackTrace);
     },
   )).runGuarded(() async {
-    for (final DiagramStep<DiagramMetadata> step in steps) {
-      if (categories.isNotEmpty && !categories.contains(step.category)) {
+    for (final DiagramStep step in allDiagramSteps) {
+      if ((categories.isNotEmpty && !categories.contains(step.category)) ||
+          (platforms.isNotEmpty &&
+              platforms.intersection(step.platforms).isEmpty) ||
+          (steps.isNotEmpty &&
+              !steps.any((String name) =>
+                  step.runtimeType.toString().toLowerCase() ==
+                  name.toLowerCase()))) {
         continue;
       }
       final Directory stepOutputDirectory =
@@ -185,7 +123,54 @@ Future<void> main(List<String> args) async {
       controller.pixelRatio = 1.0;
       print('Working on step ${step.runtimeType}');
 
-      await step.generateDiagrams(onlyGenerate: names, platforms: platforms);
+      for (final DiagramMetadata diagram in await step.diagrams) {
+        if (names.isNotEmpty && !names.contains(diagram.name)) {
+          continue;
+        }
+
+        // Set up a custom onError to hide errors that the diagram expects, like
+        // RenderFlex overflows.
+        final FlutterExceptionHandler? oldOnError = FlutterError.onError;
+        FlutterError.onError = (FlutterErrorDetails details) {
+          final String exception = details.exception.toString();
+          for (final Pattern pattern in diagram.expectedErrors) {
+            if (pattern.allMatches(exception).isNotEmpty) {
+              return;
+            }
+          }
+          if (oldOnError != null) {
+            oldOnError(details);
+          }
+        };
+
+        try {
+          final GlobalKey key = GlobalKey();
+          controller.builder = (BuildContext context) {
+            return KeyedSubtree(
+              key: key,
+              child: diagram,
+            );
+          };
+          await diagram.setUp(key);
+          if (diagram.duration != null) {
+            await controller.drawAnimatedDiagramToFiles(
+              end: diagram.duration!,
+              frameRate: diagram.frameRate,
+              category: step.category,
+              name: diagram.name,
+              start: diagram.startAt,
+            );
+          } else {
+            await controller.drawDiagramToFile(
+              File('${diagram.name}.png'),
+              timestamp: diagram.startAt,
+              framerate: diagram.frameRate,
+            );
+          }
+        } finally {
+          FlutterError.onError = oldOnError;
+        }
+      }
     }
     done.complete();
   });
@@ -213,4 +198,17 @@ Future<void> main(List<String> args) async {
   // Have to actually exit the app, otherwise flutter run won't ever exit,
   // and the generation script won't continue.
   exit(0);
+}
+
+// This is used by the `integration_test/smoke_test.dart`.
+class SmokeTestApp extends StatelessWidget {
+  const SmokeTestApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      title: 'Smoke Test',
+      home: Placeholder(),
+    );
+  }
 }

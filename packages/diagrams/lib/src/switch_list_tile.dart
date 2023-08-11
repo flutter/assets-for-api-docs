@@ -3,10 +3,10 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
-import 'package:diagram_capture/diagram_capture.dart';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+
 import 'diagram_step.dart';
 
 class LinkedLabelSwitch extends StatelessWidget {
@@ -15,8 +15,8 @@ class LinkedLabelSwitch extends StatelessWidget {
     required this.padding,
     required this.value,
     required this.onChanged,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final String label;
   final EdgeInsets padding;
@@ -63,8 +63,8 @@ class LabeledSwitch extends StatelessWidget {
     this.groupValue = false,
     required this.value,
     required this.onChanged,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final String label;
   final EdgeInsets padding;
@@ -96,8 +96,8 @@ class LabeledSwitch extends StatelessWidget {
   }
 }
 
-class SwitchListTileDiagram extends StatefulWidget implements DiagramMetadata {
-  const SwitchListTileDiagram(this.name, {Key? key}) : super(key: key);
+class SwitchListTileDiagram extends StatefulWidget with DiagramMetadata {
+  const SwitchListTileDiagram(this.name, {super.key});
 
   @override
   final String name;
@@ -179,9 +179,7 @@ class _SwitchListTileDiagramState extends State<SwitchListTileDiagram> {
   }
 }
 
-class SwitchListTileDiagramStep extends DiagramStep<SwitchListTileDiagram> {
-  SwitchListTileDiagramStep(DiagramController controller) : super(controller);
-
+class SwitchListTileDiagramStep extends DiagramStep {
   @override
   final String category = 'material';
 
@@ -192,10 +190,4 @@ class SwitchListTileDiagramStep extends DiagramStep<SwitchListTileDiagram> {
         const SwitchListTileDiagram('switch_list_tile_semantics'),
         const SwitchListTileDiagram('switch_list_tile_custom'),
       ];
-
-  @override
-  Future<File> generateDiagram(SwitchListTileDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawDiagramToFile(File('${diagram.name}.png'));
-  }
 }

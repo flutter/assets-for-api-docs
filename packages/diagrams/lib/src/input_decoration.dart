@@ -3,9 +3,7 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
@@ -15,9 +13,8 @@ const String _inputDecorationError = 'input_decoration_error';
 const String _inputDecorationPrefixSuffix = 'input_decoration_prefix_suffix';
 const String _inputDecorationCollapsed = 'input_decoration_collapsed';
 
-class InputDecorationDiagram extends StatelessWidget
-    implements DiagramMetadata {
-  const InputDecorationDiagram(this.name, {Key? key}) : super(key: key);
+class InputDecorationDiagram extends StatelessWidget with DiagramMetadata {
+  const InputDecorationDiagram(this.name, {super.key});
 
   @override
   final String name;
@@ -109,9 +106,7 @@ class InputDecorationDiagram extends StatelessWidget
   }
 }
 
-class InputDecorationDiagramStep extends DiagramStep<InputDecorationDiagram> {
-  InputDecorationDiagramStep(DiagramController controller) : super(controller);
-
+class InputDecorationDiagramStep extends DiagramStep {
   @override
   final String category = 'material';
 
@@ -123,10 +118,4 @@ class InputDecorationDiagramStep extends DiagramStep<InputDecorationDiagram> {
         const InputDecorationDiagram(_inputDecorationPrefixSuffix),
         const InputDecorationDiagram(_inputDecorationCollapsed),
       ];
-
-  @override
-  Future<File> generateDiagram(InputDecorationDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawDiagramToFile(File('${diagram.name}.png'));
-  }
 }

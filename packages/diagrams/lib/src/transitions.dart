@@ -2,84 +2,85 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'dart:io';
-
 import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'animation_diagram.dart';
 import 'diagram_step.dart';
-
-final GlobalKey _transitionKey = GlobalKey();
+import 'utils.dart';
 
 const Duration _kOverallAnimationDuration = Duration(seconds: 6);
-const double _kAnimationFrameRate = 60.0;
 const double _kLogoSize = 150.0;
 
-class TransitionDiagramStep extends DiagramStep<TransitionDiagram<dynamic>> {
-  TransitionDiagramStep(DiagramController controller) : super(controller) {
-    _diagrams.add(const AlignTransitionDiagram());
-    _diagrams.add(const DecoratedBoxTransitionDiagram());
-    _diagrams.add(const FadeTransitionDiagram());
-    _diagrams.add(const PositionedTransitionDiagram());
-    _diagrams.add(const RelativePositionedTransitionDiagram());
-    _diagrams.add(const RotationTransitionDiagram());
-    _diagrams.add(const ScaleTransitionDiagram());
-    _diagrams.add(const SizeTransitionDiagram());
-    _diagrams.add(const SlideTransitionDiagram());
-    _diagrams.add(const AlignTransitionDiagram(decorate: false));
-    _diagrams.add(const DecoratedBoxTransitionDiagram(decorate: false));
-    _diagrams.add(const FadeTransitionDiagram(decorate: false));
-    _diagrams.add(const PositionedTransitionDiagram(decorate: false));
-    _diagrams.add(const RelativePositionedTransitionDiagram(decorate: false));
-    _diagrams.add(const RotationTransitionDiagram(decorate: false));
-    _diagrams.add(const ScaleTransitionDiagram(decorate: false));
-    _diagrams.add(const SizeTransitionDiagram(decorate: false));
-    _diagrams.add(const SlideTransitionDiagram(decorate: false));
+class TransitionDiagramTapper extends StatefulWidget {
+  const TransitionDiagramTapper({
+    super.key,
+    required this.child,
+  });
+
+  final Widget child;
+
+  @override
+  State<TransitionDiagramTapper> createState() =>
+      _TransitionDiagramTapperState();
+}
+
+class _TransitionDiagramTapperState extends State<TransitionDiagramTapper>
+    with TickerProviderStateMixin, LockstepStateMixin {
+  Future<void> startAnimation() async {
+    // Wait for the tree to finish building before attempting to find our
+    // RenderObject.
+    await Future<void>.delayed(Duration.zero);
+
+    final WidgetController controller = DiagramWidgetController.of(context);
+
+    final RenderBox target = context.findRenderObject()! as RenderBox;
+    Offset targetOffset = target.localToGlobal(target.size.center(Offset.zero));
+    await controller.tapAt(targetOffset);
+
+    await waitLockstep(const Duration(seconds: 3));
+
+    targetOffset = target.localToGlobal(target.size.center(Offset.zero));
+    await controller.tapAt(targetOffset);
   }
 
-  final List<TransitionDiagram<dynamic>> _diagrams =
-      <TransitionDiagram<dynamic>>[];
+  @override
+  void initState() {
+    super.initState();
+    startAnimation();
+  }
 
+  @override
+  Widget build(BuildContext context) => widget.child;
+}
+
+class TransitionDiagramStep extends DiagramStep {
   @override
   final String category = 'widgets';
 
   @override
-  Future<List<TransitionDiagram<dynamic>>> get diagrams async => _diagrams;
-
-  @override
-  Future<File> generateDiagram(TransitionDiagram<dynamic> diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-
-    final Map<Duration, DiagramKeyframe> keyframes =
-        <Duration, DiagramKeyframe>{
-      Duration.zero: (Duration now) async {
-        final RenderBox target =
-            _transitionKey.currentContext!.findRenderObject()! as RenderBox;
-        final Offset targetOffset =
-            target.localToGlobal(target.size.center(Offset.zero));
-        final TestGesture gesture = await controller.startGesture(targetOffset);
-        await gesture.up();
-      },
-      const Duration(seconds: 3): (Duration now) async {
-        final RenderBox target =
-            _transitionKey.currentContext!.findRenderObject()! as RenderBox;
-        final Offset targetOffset =
-            target.localToGlobal(target.size.center(Offset.zero));
-        final TestGesture gesture = await controller.startGesture(targetOffset);
-        await gesture.up();
-      },
-    };
-
-    final File result = await controller.drawAnimatedDiagramToFiles(
-      end: _kOverallAnimationDuration,
-      frameRate: _kAnimationFrameRate,
-      name: diagram.name,
-      category: category,
-      keyframes: keyframes,
-    );
-    return result;
+  Future<List<DiagramMetadata>> get diagrams async {
+    return const <DiagramMetadata>[
+      AlignTransitionDiagram(),
+      DecoratedBoxTransitionDiagram(),
+      FadeTransitionDiagram(),
+      PositionedTransitionDiagram(),
+      RelativePositionedTransitionDiagram(),
+      RotationTransitionDiagram(),
+      ScaleTransitionDiagram(),
+      SizeTransitionDiagram(),
+      SlideTransitionDiagram(),
+      AlignTransitionDiagram(decorate: false),
+      DecoratedBoxTransitionDiagram(decorate: false),
+      FadeTransitionDiagram(decorate: false),
+      PositionedTransitionDiagram(decorate: false),
+      RelativePositionedTransitionDiagram(decorate: false),
+      RotationTransitionDiagram(decorate: false),
+      ScaleTransitionDiagram(decorate: false),
+      SizeTransitionDiagram(decorate: false),
+      SlideTransitionDiagram(decorate: false),
+    ];
   }
 }
 
@@ -97,8 +98,10 @@ class _NonNullableAlignmentGeometryTween extends Tween<AlignmentGeometry> {
 }
 
 class AlignTransitionDiagram extends TransitionDiagram<AlignmentGeometry> {
-  const AlignTransitionDiagram({Key? key, bool decorate = true})
-      : super(key: key, decorate: decorate);
+  const AlignTransitionDiagram({super.key, super.decorate});
+
+  @override
+  Duration get duration => _kOverallAnimationDuration;
 
   @override
   Curve get curve => Curves.fastOutSlowIn;
@@ -121,20 +124,25 @@ class AlignTransitionDiagram extends TransitionDiagram<AlignmentGeometry> {
 
   @override
   Widget buildTransition(
-      BuildContext context, Animation<AlignmentGeometry> animation) {
+    BuildContext context,
+    Animation<AlignmentGeometry> animation,
+  ) {
     return Center(
-      child: AlignTransition(
-        key: _transitionKey,
-        alignment: animation,
-        child: const SampleWidget(small: true),
+      child: TransitionDiagramTapper(
+        child: AlignTransition(
+          alignment: animation,
+          child: const SampleWidget(small: true),
+        ),
       ),
     );
   }
 }
 
 class DecoratedBoxTransitionDiagram extends TransitionDiagram<Decoration> {
-  const DecoratedBoxTransitionDiagram({Key? key, bool decorate = true})
-      : super(key: key, decorate: decorate);
+  const DecoratedBoxTransitionDiagram({super.key, super.decorate});
+
+  @override
+  Duration get duration => _kOverallAnimationDuration;
 
   @override
   Curve get curve => Curves.decelerate;
@@ -165,21 +173,24 @@ class DecoratedBoxTransitionDiagram extends TransitionDiagram<Decoration> {
   @override
   Widget buildTransition(
       BuildContext context, Animation<Decoration> animation) {
-    return DecoratedBoxTransition(
-      key: _transitionKey,
-      decoration: animation,
-      child: const SizedBox(
-        width: 158.0,
-        height: 158.0,
-        child: SampleWidget(),
+    return TransitionDiagramTapper(
+      child: DecoratedBoxTransition(
+        decoration: animation,
+        child: const SizedBox(
+          width: 158.0,
+          height: 158.0,
+          child: SampleWidget(),
+        ),
       ),
     );
   }
 }
 
 class FadeTransitionDiagram extends TransitionDiagram<double> {
-  const FadeTransitionDiagram({Key? key, bool decorate = true})
-      : super(key: key, decorate: decorate);
+  const FadeTransitionDiagram({super.key, super.decorate});
+
+  @override
+  Duration get duration => _kOverallAnimationDuration;
 
   @override
   Curve get curve => Curves.fastOutSlowIn;
@@ -194,17 +205,20 @@ class FadeTransitionDiagram extends TransitionDiagram<double> {
 
   @override
   Widget buildTransition(BuildContext context, Animation<double> animation) {
-    return FadeTransition(
-      key: _transitionKey,
-      opacity: animation,
-      child: const SampleWidget(),
+    return TransitionDiagramTapper(
+      child: FadeTransition(
+        opacity: animation,
+        child: const SampleWidget(),
+      ),
     );
   }
 }
 
 class PositionedTransitionDiagram extends TransitionDiagram<RelativeRect> {
-  const PositionedTransitionDiagram({Key? key, bool decorate = true})
-      : super(key: key, decorate: decorate);
+  const PositionedTransitionDiagram({super.key, super.decorate});
+
+  @override
+  Duration get duration => _kOverallAnimationDuration;
 
   @override
   Curve get curve => Curves.elasticInOut;
@@ -229,10 +243,11 @@ class PositionedTransitionDiagram extends TransitionDiagram<RelativeRect> {
       child: Stack(
         children: <Widget>[
           const SizedBox(width: 250.0, height: 250.0),
-          PositionedTransition(
-            key: _transitionKey,
-            rect: animation,
-            child: const SampleWidget(small: true),
+          TransitionDiagramTapper(
+            child: PositionedTransition(
+              rect: animation,
+              child: const SampleWidget(small: true),
+            ),
           ),
         ],
       ),
@@ -252,8 +267,10 @@ class _NonNullableRectTween extends Tween<Rect> {
 }
 
 class RelativePositionedTransitionDiagram extends TransitionDiagram<Rect> {
-  const RelativePositionedTransitionDiagram({Key? key, bool decorate = true})
-      : super(key: key, decorate: decorate);
+  const RelativePositionedTransitionDiagram({super.key, super.decorate});
+
+  @override
+  Duration get duration => _kOverallAnimationDuration;
 
   @override
   Curve get curve => Curves.elasticInOut;
@@ -278,11 +295,12 @@ class RelativePositionedTransitionDiagram extends TransitionDiagram<Rect> {
         children: <Widget>[
           Container(
               color: const Color(0xffffffff), width: 200.0, height: 200.0),
-          RelativePositionedTransition(
-            key: _transitionKey,
-            size: const Size(150.0, 150.0),
-            rect: animation,
-            child: const SampleWidget(small: true),
+          TransitionDiagramTapper(
+            child: RelativePositionedTransition(
+              size: const Size(150.0, 150.0),
+              rect: animation,
+              child: const SampleWidget(small: true),
+            ),
           ),
         ],
       ),
@@ -291,8 +309,10 @@ class RelativePositionedTransitionDiagram extends TransitionDiagram<Rect> {
 }
 
 class RotationTransitionDiagram extends TransitionDiagram<double> {
-  const RotationTransitionDiagram({Key? key, bool decorate = true})
-      : super(key: key, decorate: decorate);
+  const RotationTransitionDiagram({super.key, super.decorate});
+
+  @override
+  Duration get duration => _kOverallAnimationDuration;
 
   @override
   Curve get curve => Curves.elasticOut;
@@ -307,17 +327,20 @@ class RotationTransitionDiagram extends TransitionDiagram<double> {
 
   @override
   Widget buildTransition(BuildContext context, Animation<double> animation) {
-    return RotationTransition(
-      key: _transitionKey,
-      turns: animation,
-      child: const SampleWidget(),
+    return TransitionDiagramTapper(
+      child: RotationTransition(
+        turns: animation,
+        child: const SampleWidget(),
+      ),
     );
   }
 }
 
 class ScaleTransitionDiagram extends TransitionDiagram<double> {
-  const ScaleTransitionDiagram({Key? key, bool decorate = true})
-      : super(key: key, decorate: decorate);
+  const ScaleTransitionDiagram({super.key, super.decorate});
+
+  @override
+  Duration get duration => _kOverallAnimationDuration;
 
   @override
   Curve get curve => Curves.fastOutSlowIn;
@@ -332,17 +355,20 @@ class ScaleTransitionDiagram extends TransitionDiagram<double> {
 
   @override
   Widget buildTransition(BuildContext context, Animation<double> animation) {
-    return ScaleTransition(
-      key: _transitionKey,
-      scale: animation,
-      child: const SampleWidget(),
+    return TransitionDiagramTapper(
+      child: ScaleTransition(
+        scale: animation,
+        child: const SampleWidget(),
+      ),
     );
   }
 }
 
 class SizeTransitionDiagram extends TransitionDiagram<double> {
-  const SizeTransitionDiagram({Key? key, bool decorate = true})
-      : super(key: key, decorate: decorate);
+  const SizeTransitionDiagram({super.key, super.decorate});
+
+  @override
+  Duration get duration => _kOverallAnimationDuration;
 
   @override
   Curve get curve => Curves.fastOutSlowIn;
@@ -367,12 +393,11 @@ class SizeTransitionDiagram extends TransitionDiagram<double> {
           // SizeTransition hard codes alignment at the beginning, so we have
           // to restrict the width to make it look centered.
           constraints: const BoxConstraints.tightFor(width: _kLogoSize),
-          child: SizeTransition(
-            key: _transitionKey,
-            axis: Axis.vertical,
-            axisAlignment: 0.0,
-            sizeFactor: animation,
-            child: const SampleWidget(),
+          child: TransitionDiagramTapper(
+            child: SizeTransition(
+              sizeFactor: animation,
+              child: const SampleWidget(),
+            ),
           ),
         ),
       ],
@@ -381,8 +406,10 @@ class SizeTransitionDiagram extends TransitionDiagram<double> {
 }
 
 class SlideTransitionDiagram extends TransitionDiagram<Offset> {
-  const SlideTransitionDiagram({Key? key, bool decorate = true})
-      : super(key: key, decorate: decorate);
+  const SlideTransitionDiagram({super.key, super.decorate});
+
+  @override
+  Duration get duration => _kOverallAnimationDuration;
 
   @override
   Curve get curve => Curves.elasticIn;
@@ -405,10 +432,11 @@ class SlideTransitionDiagram extends TransitionDiagram<Offset> {
   @override
   Widget buildTransition(BuildContext context, Animation<Offset> animation) {
     return Center(
-      child: SlideTransition(
-        key: _transitionKey,
-        position: animation,
-        child: const SampleWidget(),
+      child: TransitionDiagramTapper(
+        child: SlideTransition(
+          position: animation,
+          child: const SampleWidget(),
+        ),
       ),
     );
   }

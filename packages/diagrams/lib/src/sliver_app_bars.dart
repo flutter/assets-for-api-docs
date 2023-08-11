@@ -3,16 +3,16 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
 import 'diagram_step.dart';
 import 'fake_drag_scroll_activity.dart';
+import 'utils.dart';
 
-final Duration _kTotalDuration = _kScrollUpDuration +
+final Duration _kTotalDuration = _kScrollPauseDuration +
+    _kScrollUpDuration +
     _kScrollPauseDuration +
     _kScrollDownDurationPartOne +
     _kScrollPauseDuration +
@@ -23,16 +23,14 @@ const Duration _kScrollDownDurationPartOne = Duration(milliseconds: 800);
 const Duration _kScrollDownDurationPartTwo = Duration(seconds: 1);
 const Duration _kScrollPauseDuration = Duration(milliseconds: 900);
 
-const double _kCurveAnimationFrameRate = 60.0;
-
-class SliverAppBarDiagram extends StatefulWidget implements DiagramMetadata {
+class SliverAppBarDiagram extends StatefulWidget with DiagramMetadata {
   const SliverAppBarDiagram({
     this.pinned = false,
     this.floating = false,
     this.snap = false,
     this.repeatAnimation = false,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final bool pinned;
   final bool floating;
@@ -56,31 +54,27 @@ class SliverAppBarDiagram extends StatefulWidget implements DiagramMetadata {
     }
     return name;
   }
+
+  @override
+  Duration? get duration => _kTotalDuration;
 }
 
 class SliverAppBarDiagramState extends State<SliverAppBarDiagram>
-    with TickerProviderStateMixin<SliverAppBarDiagram> {
+    with TickerProviderStateMixin, LockstepStateMixin {
   final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    SchedulerBinding.instance!.scheduleFrameCallback((Duration _) {
-      _play();
-    });
-  }
-
-  @override
-  void didUpdateWidget(SliverAppBarDiagram oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    _scrollController.jumpTo(0.0);
-    SchedulerBinding.instance!.scheduleFrameCallback((Duration _) {
-      _play();
+    SchedulerBinding.instance.scheduleFrameCallback((Duration _) {
+      if (mounted) {
+        _play();
+      }
     });
   }
 
   Future<void> _play() async {
-    await Future<void>.delayed(_kScrollPauseDuration);
+    await waitLockstep(_kScrollPauseDuration);
     if (!mounted) {
       return;
     }
@@ -88,7 +82,7 @@ class SliverAppBarDiagramState extends State<SliverAppBarDiagram>
       to: 600.0,
       duration: _kScrollUpDuration,
     );
-    await Future<void>.delayed(_kScrollPauseDuration);
+    await waitLockstep(_kScrollPauseDuration);
     if (!mounted) {
       return;
     }
@@ -96,7 +90,7 @@ class SliverAppBarDiagramState extends State<SliverAppBarDiagram>
       to: 490.0,
       duration: _kScrollDownDurationPartOne,
     );
-    await Future<void>.delayed(_kScrollPauseDuration);
+    await waitLockstep(_kScrollPauseDuration);
     if (!mounted) {
       return;
     }
@@ -160,39 +154,22 @@ class SliverAppBarDiagramState extends State<SliverAppBarDiagram>
   }
 }
 
-class SliverAppBarDiagramStep extends DiagramStep<SliverAppBarDiagram> {
-  SliverAppBarDiagramStep(DiagramController controller) : super(controller) {
-    for (final bool pinned in <bool>[false, true]) {
-      for (final bool floating in <bool>[false, true]) {
-        // snap is only a legal option if floating is true.
-        for (final bool snap
-            in floating ? <bool>[false, true] : <bool>[false]) {
-          _diagrams.add(SliverAppBarDiagram(
-            pinned: pinned,
-            floating: floating,
-            snap: snap,
-          ));
-        }
-      }
-    }
-  }
-
+class SliverAppBarDiagramStep extends DiagramStep {
   @override
   final String category = 'material';
 
-  final List<SliverAppBarDiagram> _diagrams = <SliverAppBarDiagram>[];
+  final List<SliverAppBarDiagram> _diagrams = <SliverAppBarDiagram>[
+    for (final bool pinned in <bool>[false, true])
+      for (final bool floating in <bool>[false, true])
+        // snap is only a legal option if floating is true.
+        for (final bool snap in floating ? <bool>[false, true] : <bool>[false])
+          SliverAppBarDiagram(
+            pinned: pinned,
+            floating: floating,
+            snap: snap,
+          ),
+  ];
 
   @override
   Future<List<SliverAppBarDiagram>> get diagrams async => _diagrams;
-
-  @override
-  Future<File> generateDiagram(SliverAppBarDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawAnimatedDiagramToFiles(
-      end: _kTotalDuration,
-      frameRate: _kCurveAnimationFrameRate,
-      name: diagram.name,
-      category: category,
-    );
-  }
 }

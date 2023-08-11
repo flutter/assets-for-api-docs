@@ -6,19 +6,18 @@ version: 0.1.0
 publish_to: none
 
 environment:
-  sdk: ">=2.12.2 <3.0.0"
-  flutter: ">=0.1.4 <2.0.0"
+  sdk: ">=3.0.0 <4.0.0"
+  flutter: ">=1.0.0 <4.0.0"
 
 dependencies:
   diagram_capture:
     path: ..
   flutter:
     sdk: flutter
-  path_provider: ^2.0.1
-
-dev_dependencies:
   flutter_test:
     sdk: flutter
+  path: ^1.8.0
+  path_provider: ^2.0.1
 
 flutter:
   uses-material-design: true

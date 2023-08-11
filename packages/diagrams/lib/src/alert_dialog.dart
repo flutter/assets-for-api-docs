@@ -2,24 +2,54 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'dart:io';
-
 import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'diagram_step.dart';
+import 'utils.dart';
 
 const Duration _pauseDuration = Duration(seconds: 1);
 const Duration _openDuration = Duration(milliseconds: 300);
 final Duration _totalDuration = _pauseDuration + _openDuration + _pauseDuration;
-final GlobalKey _openDialogKey = GlobalKey();
 
-class AlertDialogDiagram extends StatelessWidget implements DiagramMetadata {
-  const AlertDialogDiagram(this.name, {Key? key}) : super(key: key);
+class AlertDialogDiagram extends StatefulWidget with DiagramMetadata {
+  const AlertDialogDiagram(this.name, {super.key});
 
   @override
   final String name;
+
+  @override
+  State<AlertDialogDiagram> createState() => _AlertDialogDiagramState();
+
+  @override
+  Duration? get duration => _totalDuration;
+}
+
+class _AlertDialogDiagramState extends State<AlertDialogDiagram>
+    with TickerProviderStateMixin, LockstepStateMixin {
+  final GlobalKey _openDialogKey = GlobalKey();
+
+  Future<void> startAnimation() async {
+    await waitLockstep(_pauseDuration);
+
+    final RenderBox target =
+        _openDialogKey.currentContext!.findRenderObject()! as RenderBox;
+    final Offset targetOffset =
+        target.localToGlobal(target.size.center(Offset.zero));
+    final WidgetController controller = DiagramWidgetController.of(context);
+    final TestGesture gesture = await controller.startGesture(targetOffset);
+
+    await waitLockstep(_openDuration);
+
+    await gesture.up();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    startAnimation();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,9 +96,9 @@ class AlertDialogDiagram extends StatelessWidget implements DiagramMetadata {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('AlertDialog'),
-          content: SingleChildScrollView(
+          content: const SingleChildScrollView(
             child: ListBody(
-              children: const <Widget>[
+              children: <Widget>[
                 Text('This is a demo alert dialog.'),
                 Text('Would you like to approve of this message?'),
               ],
@@ -86,9 +116,7 @@ class AlertDialogDiagram extends StatelessWidget implements DiagramMetadata {
   }
 }
 
-class AlertDialogDiagramStep extends DiagramStep<AlertDialogDiagram> {
-  AlertDialogDiagramStep(DiagramController controller) : super(controller);
-
+class AlertDialogDiagramStep extends DiagramStep {
   @override
   final String category = 'material';
 
@@ -96,32 +124,4 @@ class AlertDialogDiagramStep extends DiagramStep<AlertDialogDiagram> {
   Future<List<AlertDialogDiagram>> get diagrams async => <AlertDialogDiagram>[
         const AlertDialogDiagram('alert_dialog'),
       ];
-
-  @override
-  Future<File> generateDiagram(AlertDialogDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-
-    controller.advanceTime(Duration.zero);
-
-    final Future<File> result = controller.drawAnimatedDiagramToFiles(
-      end: _totalDuration,
-      frameRate: 60,
-      name: diagram.name,
-      category: category,
-    );
-
-    await Future<void>.delayed(_pauseDuration);
-
-    final RenderBox target =
-        _openDialogKey.currentContext!.findRenderObject()! as RenderBox;
-    final Offset targetOffset =
-        target.localToGlobal(target.size.center(Offset.zero));
-    final TestGesture gesture = await controller.startGesture(targetOffset);
-    await Future<void>.delayed(_pauseDuration);
-    await gesture.up();
-
-    await Future<void>.delayed(_openDuration + _pauseDuration);
-
-    return result;
-  }
 }
