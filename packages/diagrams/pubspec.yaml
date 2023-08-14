@@ -1,5 +1,5 @@
 name: diagrams
-description: Main app for building API doc assets.
+description: Main app for drawing API doc diagrams.
 repository: https://github.com/flutter/assets-for-api-docs/tree/master/packages/diagrams
 issue_tracker: https://github.com/flutter/flutter/issues
 version: 0.1.0

@@ -271,7 +271,7 @@ class DiagramFlutterBinding extends BindingBase
   }
 
   @override
-  ViewConfiguration createViewConfiguration() {
+  ViewConfiguration createViewConfigurationFor(RenderView renderView) {
     return _DiagramViewConfiguration(
       size: screenDimensions,
     );

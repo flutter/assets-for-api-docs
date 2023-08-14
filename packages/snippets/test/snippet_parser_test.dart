@@ -267,7 +267,7 @@ class DocumentedClass {
   /// ```
   /// {@end-tool}
   const DocumentedClass.name();
-  
+
   /// Member variable comment
   /// {@tool snippet}
   /// Description
@@ -275,7 +275,7 @@ class DocumentedClass {
   /// String elementName = 'DocumentedClass.intMember';
   /// ```
   /// {@end-tool}
-  int intMember;  
+  int intMember;
 
   /// Member comment
   /// {@tool snippet}
@@ -284,7 +284,7 @@ class DocumentedClass {
   /// String elementName = 'DocumentedClass.member';
   /// ```
   /// {@end-tool}
-  void member() {}  
+  void member() {}
 }
 ''');
 }

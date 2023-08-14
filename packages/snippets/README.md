@@ -4,7 +4,7 @@ The Flutter API documentation contains code blocks that help provide context or
 a good starting point when learning to use any of Flutter's APIs.
 
 To generate these code blocks, Flutter uses dartdoc tools to turn documentation
-in the source code into API documentation, as seen on https://api.flutter.dev/.
+in the source code into API documentation, as seen on [https://api.flutter.dev/]
 
 ## Table of Contents
 
@@ -18,14 +18,14 @@ in the source code into API documentation, as seen on https://api.flutter.dev/.
 
 There are three kinds of code blocks.
 
-* A `snippet`, which is a more or less context-free code snippet that we
+- A `snippet`, which is a more or less context-free code snippet that we
   magically determine how to analyze.
 
-* A `dartpad` sample, which gets placed into a full-fledged application, and can
+- A `dartpad` sample, which gets placed into a full-fledged application, and can
   be executed inline in the documentation on the web page using
   DartPad.
 
-* A `sample`, which gets placed into a full-fledged application, but isn't
+- A `sample`, which gets placed into a full-fledged application, but isn't
   placed into DartPad in the documentation because it doesn't make sense to do
   so.
 
@@ -71,13 +71,13 @@ snippet` sections and uses the Dart analyzer to check them.
 
 There are several kinds of sample code you can specify:
 
-* Constructor calls, typically showing what might exist in a build method. These
+- Constructor calls, typically showing what might exist in a build method. These
   will be inserted into an assignment expression assigning to a variable of type
   "dynamic" and followed by a semicolon, for analysis.
 
-* Class definitions. These start with "class", and are analyzed verbatim.
+- Class definitions. These start with "class", and are analyzed verbatim.
 
-* Other code. It gets included verbatim, though any line that says `// ...` is
+- Other code. It gets included verbatim, though any line that says `// ...` is
   considered to separate the block into multiple blocks to be processed
   individually.
 
@@ -168,7 +168,7 @@ contains a list of templates. These templates represent an entire app that the
 For more information about how to create, use, or update templates, see the
 [templates README.md](https://github.com/flutter/flutter/blob/master/dev/snippets/config/templates/README.md).
 
-#### Analysis
+#### Template Analysis
 
 The `../bots/analyze_sample_code.dart` script finds code inside the `@tool
 sample` sections and uses the Dart analyzer to check them after applying the
@@ -208,10 +208,11 @@ that your code blocks are showing up correctly:
 1. Make an update to a code block or create a new code block.
 2. From the root directory, run `./dev/bots/docs.sh`. This should start
    generating a local copy of the API documentation.
-3. Once complete, check `./dev/docs/doc` to check your API documentation. The
-   search bar will not work locally, so open `./dev/docs/doc/index.html` to
-   navigate through the documentation, or search `./dev/docs/doc/flutter` for
-   your page of interest.
+   Supplying the "--output" argument allows you to specify the output zip file
+   for the completed documentation. Defaults to `api_docs.zip`` in the current
+   directory.
+3. Once complete, unzip the files to the desired location and open the `index.html`
+   within.
 
 Note that generating the sample output will not allow you to run your code in
 DartPad, because DartPad pulls the code it runs from the appropriate docs server
@@ -220,7 +221,7 @@ DartPad, because DartPad pulls the code it runs from the appropriate docs server
 Copy the generated code and paste it into a regular DartPad instance to test if
 it runs in DartPad. To get the code that will be produced by your documentation
 changes, run sample analysis locally (see the next section) and paste the output
-into a DartPad at https://dartpad.dartlang.org.
+into a DartPad at [https://dartpad.dartlang.org].
 
 ## Running sample analysis locally
 
@@ -229,7 +230,7 @@ generating the entire docs output takes a long time.
 
 Instead, you can run the analysis locally with this command from the Flutter root:
 
-```
+```bash
 TMPDIR=/tmp bin/cache/dart-sdk/bin/dart dev/bots/analyze_sample_code.dart --temp=samples
 ```
 

@@ -5,7 +5,6 @@
 import 'dart:async';
 import 'dart:math' as math;
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
@@ -27,14 +26,13 @@ class TileModeDiagram extends StatelessWidget with DiagramMetadata {
   const TileModeDiagram(this.gradientMode, this.tileMode, {super.key});
 
   @override
-  String get name =>
-      'tile_mode_${describeEnum(tileMode)}_${describeEnum(gradientMode)}';
+  String get name => 'tile_mode_${tileMode.name}_${gradientMode.name}';
 
   final GradientMode gradientMode;
   final TileMode tileMode;
 
   String get gradientModeName {
-    final String s = describeEnum(gradientMode);
+    final String s = gradientMode.name;
     return s[0].toUpperCase() + s.substring(1);
   }
 
