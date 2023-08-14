@@ -128,7 +128,7 @@ void main() {
       expect(decodedImage.height, equals(50));
       expect(decodedImage.length, equals(5000));
       expect(decodedImage[decodedImage.index(50, 10)],
-          equals(0xdd000000)); // Check a pixel value
+          equals(0xff1f1b1c)); // Check a pixel value
     });
 
     test('can create images from an animated widget', () async {
@@ -224,7 +224,7 @@ void main() {
       expect(decodedImage.height, equals(150));
       expect(decodedImage.length, equals(45000));
       expect(decodedImage[decodedImage.index(150, 20)],
-          equals(0xdd000000)); // Check a pixel value
+          equals(0xff1f1b1c)); // Check a pixel value
     });
 
     test('can inject gestures', () async {

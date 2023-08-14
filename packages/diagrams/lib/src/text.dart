@@ -544,7 +544,7 @@ class TextHeightBreakdown extends TextHeightDiagram with DiagramMetadata {
                       // centered. This is a hack to offset the "Configuration 1"
                       // caption so it looks more aligned with the glyph.
                       Text('                        Configuration 1',
-                          textScaleFactor: 1.5),
+                          textScaler: TextScaler.linear(1.5)),
                     ],
                   ),
                   Column(
@@ -565,7 +565,8 @@ class TextHeightBreakdown extends TextHeightDiagram with DiagramMetadata {
                         paintCaptions: true,
                       ),
                       SizedBox(height: 30),
-                      Text('Configuration 2', textScaleFactor: 1.5),
+                      Text('Configuration 2',
+                          textScaler: TextScaler.linear(1.5)),
                     ],
                   ),
                 ],
@@ -589,7 +590,8 @@ class TextHeightBreakdown extends TextHeightDiagram with DiagramMetadata {
                         paintLeadingIndicator: true,
                       ),
                       SizedBox(height: 30),
-                      Text('Configuration 3', textScaleFactor: 1.5),
+                      Text('Configuration 3',
+                          textScaler: TextScaler.linear(1.5)),
                     ],
                   ),
                   Column(
@@ -608,7 +610,8 @@ class TextHeightBreakdown extends TextHeightDiagram with DiagramMetadata {
                             TextHeightBehavior(applyHeightToLastDescent: false),
                       ),
                       SizedBox(height: 30),
-                      Text('Configuration 4', textScaleFactor: 1.5),
+                      Text('Configuration 4',
+                          textScaler: TextScaler.linear(1.5)),
                     ],
                   ),
                 ],

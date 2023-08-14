@@ -2,13 +2,13 @@ name: snippets
 description: A package for parsing and manipulating code samples in Flutter repo dartdoc comments.
 repository: https://github.com/flutter/assets-for-api-docs/tree/main/packages/snippets
 issue_tracker: https://github.com/flutter/flutter/issues?q=is%3Aissue+is%3Aopen+label%3A%22p%3A+snippets%22
-version: 0.3.1
+version: 0.4.0
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
 
 dependencies:
-  analyzer: ^5.13.0
+  analyzer: ^6.1.0
   args: ^2.0.0
   dart_style: ^2.3.1
   file: ^6.1.0

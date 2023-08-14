@@ -147,7 +147,7 @@ class CupertinoColorsDiagram extends StatelessWidget with DiagramMetadata {
                   ),
                 ],
               ),
-              for (Map<String, Color> basicColor in basicColors)
+              for (final Map<String, Color> basicColor in basicColors)
                 TableRow(
                   children: <Widget>[
                     Text(
@@ -186,7 +186,7 @@ class CupertinoColorsDiagram extends StatelessWidget with DiagramMetadata {
                   ),
                 ],
               ),
-              for (Map<String, CupertinoDynamicColor> activeColor
+              for (final Map<String, CupertinoDynamicColor> activeColor
                   in activeColors)
                 TableRow(
                   children: <Widget>[
@@ -231,7 +231,7 @@ class CupertinoColorsDiagram extends StatelessWidget with DiagramMetadata {
                   ),
                 ],
               ),
-              for (Map<String, CupertinoDynamicColor> systemColor
+              for (final Map<String, CupertinoDynamicColor> systemColor
                   in systemColors1)
                 TableRow(
                   children: <Widget>[
@@ -258,7 +258,7 @@ class CupertinoColorsDiagram extends StatelessWidget with DiagramMetadata {
           child: Table(
             defaultVerticalAlignment: TableCellVerticalAlignment.middle,
             children: <TableRow>[
-              for (Map<String, CupertinoDynamicColor> systemColor
+              for (final Map<String, CupertinoDynamicColor> systemColor
                   in systemColors2)
                 TableRow(
                   children: <Widget>[
@@ -285,7 +285,7 @@ class CupertinoColorsDiagram extends StatelessWidget with DiagramMetadata {
           child: Table(
             defaultVerticalAlignment: TableCellVerticalAlignment.middle,
             children: <TableRow>[
-              for (Map<String, CupertinoDynamicColor> systemColor
+              for (final Map<String, CupertinoDynamicColor> systemColor
                   in systemColors3)
                 TableRow(
                   children: <Widget>[
@@ -330,7 +330,8 @@ class CupertinoColorsDiagram extends StatelessWidget with DiagramMetadata {
                   ),
                 ],
               ),
-              for (Map<String, CupertinoDynamicColor> labelColor in labelColors)
+              for (final Map<String, CupertinoDynamicColor> labelColor
+                  in labelColors)
                 TableRow(
                   children: <Widget>[
                     Text(
@@ -378,7 +379,7 @@ class CupertinoColorsDiagram extends StatelessWidget with DiagramMetadata {
                 ),
               ],
             ),
-            for (Map<String, CupertinoDynamicColor> backgroundColor
+            for (final Map<String, CupertinoDynamicColor> backgroundColor
                 in backgroundColors)
               TableRow(
                 children: <Widget>[

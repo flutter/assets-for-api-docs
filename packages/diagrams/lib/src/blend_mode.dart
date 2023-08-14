@@ -6,7 +6,6 @@ import 'dart:async';
 import 'dart:math';
 import 'dart:ui' show Image;
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' hide Image;
 
 import 'diagram_step.dart';
@@ -32,7 +31,7 @@ class BlendModeDiagram extends StatelessWidget with DiagramMetadata {
   final BlendMode mode;
 
   @override
-  String get name => 'blend_mode_${describeEnum(mode)}';
+  String get name => 'blend_mode_${mode.name}';
 
   @override
   Widget build(BuildContext context) {
