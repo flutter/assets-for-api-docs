@@ -10,7 +10,6 @@ import 'package:path/path.dart' as path;
 class SnippetConfiguration {
   const SnippetConfiguration({
     required this.configDirectory,
-    required this.outputDirectory,
     required this.skeletonsDirectory,
     required this.templatesDirectory,
     this.filesystem = const LocalFileSystem(),
@@ -22,10 +21,6 @@ class SnippetConfiguration {
   /// the skeletons and templates.
   final Directory configDirectory;
 
-  /// This is where the snippets themselves will be written, in order to be
-  /// uploaded to the docs site.
-  final Directory outputDirectory;
-
   /// The directory containing the HTML skeletons to be filled out with metadata
   /// and returned to dartdoc for insertion in the output.
   final Directory skeletonsDirectory;
@@ -33,14 +28,6 @@ class SnippetConfiguration {
   /// The directory containing the code templates that can be referenced by the
   /// dartdoc.
   final Directory templatesDirectory;
-
-  /// This makes sure that the output directory exists, and creates it if it
-  /// doesn't.
-  void createOutputDirectoryIfNeeded() {
-    if (!outputDirectory.existsSync()) {
-      outputDirectory.createSync(recursive: true);
-    }
-  }
 
   /// Gets the skeleton file to use for the given [SampleType] and DartPad
   /// preference.
@@ -58,8 +45,6 @@ class FlutterRepoSnippetConfiguration extends SnippetConfiguration {
       : super(
           configDirectory: _underRoot(filesystem, flutterRoot,
               const <String>['dev', 'snippets', 'config']),
-          outputDirectory: _underRoot(filesystem, flutterRoot,
-              const <String>['dev', 'docs', 'doc', 'snippets']),
           skeletonsDirectory: _underRoot(filesystem, flutterRoot,
               const <String>['dev', 'snippets', 'config', 'skeletons']),
           templatesDirectory: _underRoot(

@@ -74,7 +74,6 @@ void main() {
           flutterRoot: memoryFileSystem
               .directory(path.join(tmpDir.absolute.path, 'flutter')),
           filesystem: memoryFileSystem);
-      configuration.createOutputDirectoryIfNeeded();
       configuration.templatesDirectory.createSync(recursive: true);
       configuration.skeletonsDirectory.createSync(recursive: true);
       template = memoryFileSystem.file(
@@ -351,6 +350,7 @@ void main() {
 
       snippets_main.platform = platform;
       snippets_main.filesystem = memoryFileSystem;
+      snippets_main.processManager = fakeProcessManager;
       final File input = memoryFileSystem
           .file(tmpDir.childFile('input.snippet'))
         ..writeAsString('/// Test file');

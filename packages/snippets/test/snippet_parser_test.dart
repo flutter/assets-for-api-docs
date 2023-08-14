@@ -71,7 +71,6 @@ void main() {
           .directory(path.join(tmpDir.absolute.path, 'flutter'));
       configuration = FlutterRepoSnippetConfiguration(
           flutterRoot: flutterRoot, filesystem: memoryFileSystem);
-      configuration.createOutputDirectoryIfNeeded();
       configuration.templatesDirectory.createSync(recursive: true);
       configuration.skeletonsDirectory.createSync(recursive: true);
       template = memoryFileSystem.file(
