@@ -47,7 +47,7 @@ SnippetGenerator snippetGenerator = SnippetGenerator();
 /// parsing.
 Platform platform = const LocalPlatform();
 
-/// A singleton process manager that can be set by tests for use in testing
+/// A singleton process manager that can be set by tests for use in testing.
 ProcessManager processManager = const LocalProcessManager();
 
 /// Get the name of the channel these docs are from.
