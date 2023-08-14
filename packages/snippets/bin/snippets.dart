@@ -47,6 +47,9 @@ SnippetGenerator snippetGenerator = SnippetGenerator();
 /// parsing.
 Platform platform = const LocalPlatform();
 
+/// A singleton process manager that can be set by tests for use in testing
+ProcessManager processManager = const LocalProcessManager();
+
 /// Get the name of the channel these docs are from.
 ///
 /// First check env variable LUCI_BRANCH, then refer to the currently
@@ -61,10 +64,13 @@ String getChannelName({
   }
 
   final RegExp gitBranchRegexp = RegExp(r'^## (?<branch>.*)');
-  // Adding extra debugging output to help debug why git status inexplicably fails
-  // (random non-zero error code) about 2% of the time.
   final ProcessResult gitResult = processManager.runSync(
       <String>['git', 'status', '-b', '--porcelain'],
+      // Use the FLUTTER_ROOT, if defined.
+      workingDirectory: platform.environment['FLUTTER_ROOT']?.trim() ??
+          filesystem.currentDirectory.path,
+      // Adding extra debugging output to help debug why git status inexplicably fails
+      // (random non-zero error code) about 2% of the time.
       environment: <String, String>{'GIT_TRACE': '2', 'GIT_TRACE_SETUP': '2'});
   if (gitResult.exitCode != 0) {
     throw GitStatusFailed(gitResult);
@@ -85,12 +91,15 @@ const List<String> sampleTypes = <String>[
 
 // This is a hack to workaround the fact that git status inexplicably fails
 // (with random non-zero error code) about 2% of the time.
-String getChannelNameWithRetries() {
+String getChannelNameWithRetries({
+  Platform platform = const LocalPlatform(),
+  ProcessManager processManager = const LocalProcessManager(),
+}) {
   int retryCount = 0;
 
   while (retryCount < 2) {
     try {
-      return getChannelName();
+      return getChannelName(platform: platform, processManager: processManager);
     } on GitStatusFailed catch (e) {
       retryCount += 1;
       stderr.write(
@@ -98,7 +107,7 @@ String getChannelNameWithRetries() {
     }
   }
 
-  return getChannelName();
+  return getChannelName(platform: platform, processManager: processManager);
 }
 
 /// Generates snippet dartdoc output for a given input, and creates any sample
@@ -248,8 +257,9 @@ void main(List<String> argList) {
       return;
     }
     id = idParts.join('.');
-    output = filesystem.file(outputDirectory.childFile('$id.dart'));
+    output = outputDirectory.childFile('$id.dart');
   }
+  output.parent.createSync(recursive: true);
 
   final int? sourceLine = environment['SOURCE_LINE'] != null
       ? int.tryParse(environment['SOURCE_LINE']!)
@@ -265,7 +275,8 @@ void main(List<String> argList) {
     type: sampleType,
   );
   final Map<String, Object?> metadata = <String, Object?>{
-    'channel': getChannelNameWithRetries(),
+    'channel': getChannelNameWithRetries(
+        platform: platform, processManager: processManager),
     'serial': serial,
     'id': id,
     'package': packageName,

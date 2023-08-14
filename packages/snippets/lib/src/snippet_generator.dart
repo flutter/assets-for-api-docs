@@ -43,11 +43,6 @@ class SnippetGenerator {
   static DartFormatter formatter =
       DartFormatter(pageWidth: 80, fixes: StyleFix.all);
 
-  /// This returns the output file for a given snippet ID. Only used for
-  /// [SampleType.sample] snippets.
-  File getOutputFile(String id) => configuration.filesystem
-      .file(path.join(configuration.outputDirectory.path, '$id.dart'));
-
   /// Gets the path to the template file requested.
   File? getTemplatePath(String templateName, {Directory? templatesDir}) {
     final Directory templateDir =
@@ -349,8 +344,6 @@ class SnippetGenerator {
     bool addSectionMarkers = false,
     bool includeAssumptions = false,
   }) {
-    configuration.createOutputDirectoryIfNeeded();
-
     sample.metadata['copyright'] ??= copyright;
     final List<TemplateInjection> snippetData = parseInput(sample);
     sample.description = description ?? sample.description;
