@@ -20,11 +20,11 @@ jobs:
         uses: subosito/flutter-action@48cafc24713cca54bbe03cdc3a423187d413aafa
         with:
           channel: master
-      - run: flutter doctor -v
-      # Pinned version of the plugin tools, to avoid breakage in this repository
-      # when pushing updates from flutter/plugins.
-      - run: dart pub global activate flutter_plugin_tools 0.13.4+3
-
+      - name: Setup environment
+        run: flutter doctor -v
+        # Pinned version of the plugin tools, to avoid breakage in this repository
+        # when pushing updates from flutter/plugins.
+        run: dart pub global activate flutter_plugin_tools 0.13.4+3
       # Checkout assets-for-api-docs code and get packages.
       - name: Checkout Assets for APIs code
         uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
@@ -34,7 +34,7 @@ jobs:
       - name: analyze+format - license 
         run: dart pub global run flutter_plugin_tools license-check
       - name: analyze+format - analyze 
-      - run: ./ci/tool_runner analyze --custom-analysis=web_benchmarks/testing/test_app,flutter_lints/example
+        run: ./ci/tool_runner analyze --custom-analysis=web_benchmarks/testing/test_app,flutter_lints/example
       - name: analyze+format - pubspec 
         run: ./ci/tool_runner pubspec-check
       # Publishable
