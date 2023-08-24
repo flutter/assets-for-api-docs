@@ -1,0 +1,27 @@
+name: Builds
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+# Declare default permissions as read only.
+permissions: read-all
+
+jobs:
+  build:
+    name: Test Assets for APIs
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+    steps:
+      # Set up Flutter.
+      - name: Clone Flutter repository with master channel
+        uses: subosito/flutter-action@48cafc24713cca54bbe03cdc3a423187d413aafa
+        with:
+          channel: master
+      - run: flutter doctor -v
+
+      # Checkout gallery code and get packages.
+      - name: Checkout Assets for APIs code
+        uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
