@@ -21,6 +21,7 @@ jobs:
         with:
           channel: master
       - run: flutter doctor -v
+      - run: dart pub global activate flutter_plugin_tools 0.13.4+3
 
       # Checkout gallery code and get packages.
       - name: Checkout Assets for APIs code
