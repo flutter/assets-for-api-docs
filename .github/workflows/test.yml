@@ -13,7 +13,7 @@ jobs:
     name: Test Assets for APIs
     runs-on: ubuntu-latest
     strategy:
-      fail-fast: false
+      fail-fast: true
     steps:
       # Set up Flutter.
       - name: Clone Flutter repository with master channel
@@ -21,19 +21,27 @@ jobs:
         with:
           channel: master
       - run: flutter doctor -v
+      # Pinned version of the plugin tools, to avoid breakage in this repository
+      # when pushing updates from flutter/plugins.
       - run: dart pub global activate flutter_plugin_tools 0.13.4+3
 
-      # Checkout gallery code and get packages.
+      # Checkout assets-for-api-docs code and get packages.
       - name: Checkout Assets for APIs code
         uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
-      - run: ./ci/tool_runner format --fail-on-change --clang-format=clang-format-12
-      - run: dart pub global run flutter_plugin_tools license-check
+      - name: analyze+format - format 
+        run: ./ci/tool_runner format --fail-on-change --clang-format=clang-format-12
+      # Analize+format
+      - name: analyze+format - license 
+        run: dart pub global run flutter_plugin_tools license-check
+      - name: analyze+format - analyze 
       - run: ./ci/tool_runner analyze --custom-analysis=web_benchmarks/testing/test_app,flutter_lints/example
-      - run: ./ci/tool_runner pubspec-check
-      - run: ./ci/tool_runner version-check
-      - run: ./ci/tool_runner publish-check --allow-pre-release
-        #depends_on:
-        #- analyze+format
-      - run: ./ci/tool_runner test
-        #depends_on:
-        # - analyze+format
+      - name: analyze+format - pubspec 
+        run: ./ci/tool_runner pubspec-check
+      # Publishable
+      - name: publishable - version 
+        run: ./ci/tool_runner version-check
+      - name: publishable - publishable 
+        run: ./ci/tool_runner publish-check --allow-pre-release
+      # Tests
+      - name: publishable - publishable 
+        run: ./ci/tool_runner test
