@@ -25,8 +25,7 @@ jobs:
       # Checkout gallery code and get packages.
       - name: Checkout Assets for APIs code
         uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
-          - name: analyze+format
-      - name: format
+      - name: analyze+format
       - run: ./ci/tool_runner format --fail-on-change --clang-format=clang-format-12
       - name:  license_script
       - run: dart pub global run flutter_plugin_tools license-check
