@@ -24,8 +24,8 @@ class FakeProcessManager extends LocalProcessManager {
     Map<String, String>? environment,
     bool includeParentEnvironment = true,
     bool runInShell = false,
-    Encoding stdoutEncoding = systemEncoding,
-    Encoding stderrEncoding = systemEncoding,
+    Encoding? stdoutEncoding = systemEncoding,
+    Encoding? stderrEncoding = systemEncoding,
   }) {
     runs++;
     return ProcessResult(pid, exitCode, stdout, stderr);

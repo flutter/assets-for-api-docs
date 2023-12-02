@@ -12,7 +12,7 @@ dartdoc:
 
 dependencies:
   args: ^2.0.0
-  file: ^6.1.0
+  file: ^7.0.0
   snippets:
     path: ..
 

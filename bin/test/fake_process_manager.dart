@@ -133,13 +133,13 @@ class FakeProcessManager implements ProcessManager {
 
   @override
   Future<ProcessResult> run(
-    List<dynamic> command, {
+    List<Object> command, {
     String? workingDirectory,
     Map<String, String>? environment,
     bool includeParentEnvironment = true,
     bool runInShell = false,
-    Encoding stdoutEncoding = systemEncoding,
-    Encoding stderrEncoding = systemEncoding,
+    Encoding? stdoutEncoding = systemEncoding,
+    Encoding? stderrEncoding = systemEncoding,
   }) {
     if (commandsThrow) {
       throw const ProcessException('failed_executable', <String>[]);
@@ -149,13 +149,13 @@ class FakeProcessManager implements ProcessManager {
 
   @override
   ProcessResult runSync(
-    List<dynamic> command, {
+    List<Object> command, {
     String? workingDirectory,
     Map<String, String>? environment,
     bool includeParentEnvironment = true,
     bool runInShell = false,
-    Encoding stdoutEncoding = systemEncoding,
-    Encoding stderrEncoding = systemEncoding,
+    Encoding? stdoutEncoding = systemEncoding,
+    Encoding? stderrEncoding = systemEncoding,
   }) {
     if (commandsThrow) {
       throw const ProcessException('failed_executable', <String>[]);

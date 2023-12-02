@@ -75,7 +75,19 @@ class _Diagram extends StatelessWidget {
   }
 }
 
-const Size _kDefaultDiagramViewportSize = Size(1280.0, 1024.0);
+const double _kDefaultDiagramViewportWidth = 1280;
+const double _kDefaultDiagramViewportHeight = 1024;
+const Size _kDefaultDiagramViewportSize = Size(
+  _kDefaultDiagramViewportWidth,
+  _kDefaultDiagramViewportHeight,
+);
+const ui.ViewConstraints _kDefaultDiagramViewportConstraints =
+    ui.ViewConstraints(
+  minWidth: _kDefaultDiagramViewportWidth,
+  minHeight: _kDefaultDiagramViewportHeight,
+  maxWidth: _kDefaultDiagramViewportWidth,
+  maxHeight: _kDefaultDiagramViewportHeight,
+);
 
 // View configuration that allows diagrams to not match the physical dimensions
 // of the device. This will change the view used to display the flutter surface
@@ -83,13 +95,14 @@ const Size _kDefaultDiagramViewportSize = Size(1280.0, 1024.0);
 // captured image pixels.
 class _DiagramViewConfiguration extends ViewConfiguration {
   _DiagramViewConfiguration({
-    super.size = _kDefaultDiagramViewportSize,
+    super.constraints = _kDefaultDiagramViewportConstraints,
   }) : _paintMatrix = _getMatrix(
-            size,
+            constraints,
             ui.PlatformDispatcher.instance.implicitView?.devicePixelRatio ??
                 1.0);
 
-  static Matrix4 _getMatrix(Size size, double devicePixelRatio) {
+  static Matrix4 _getMatrix(
+      ui.ViewConstraints constraints, double devicePixelRatio) {
     final double baseRatio =
         ui.PlatformDispatcher.instance.implicitView?.devicePixelRatio ?? 1.0;
     final double inverseRatio = devicePixelRatio / baseRatio;
@@ -97,8 +110,12 @@ class _DiagramViewConfiguration extends ViewConfiguration {
         ui.PlatformDispatcher.instance.implicitView?.physicalSize ?? Size.zero;
     final double actualWidth = implicitSize.width * inverseRatio;
     final double actualHeight = implicitSize.height * inverseRatio;
-    final double desiredWidth = size.width;
-    final double desiredHeight = size.height;
+    final double desiredWidth = constraints.maxWidth == double.infinity
+        ? constraints.minWidth
+        : constraints.maxWidth;
+    final double desiredHeight = constraints.maxHeight == double.infinity
+        ? constraints.minHeight
+        : constraints.maxHeight;
     double scale, shiftX, shiftY;
     if ((actualWidth / actualHeight) > (desiredWidth / desiredHeight)) {
       scale = actualHeight / desiredHeight;
@@ -260,8 +277,10 @@ class DiagramFlutterBinding extends BindingBase
   Size get screenDimensions => _screenDimensions;
   Size _screenDimensions = _kDefaultDiagramViewportSize;
   set screenDimensions(Size screenDimensions) {
-    _screenDimensions = screenDimensions;
-    handleMetricsChanged();
+    if (_screenDimensions != screenDimensions) {
+      _screenDimensions = screenDimensions;
+      handleMetricsChanged();
+    }
   }
 
   TickerProvider get vsync => _controller;
@@ -273,7 +292,12 @@ class DiagramFlutterBinding extends BindingBase
   @override
   ViewConfiguration createViewConfigurationFor(RenderView renderView) {
     return _DiagramViewConfiguration(
-      size: screenDimensions,
+      constraints: ui.ViewConstraints(
+        minWidth: screenDimensions.width,
+        minHeight: screenDimensions.height,
+        maxWidth: screenDimensions.width,
+        maxHeight: screenDimensions.height,
+      ),
     );
   }
 
