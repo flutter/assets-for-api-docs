@@ -4,8 +4,8 @@
 # This file should be version controlled and should not be manually edited.
 
 version:
-  revision: "865be95f7b4b33f33427bba3fc1f9541a9fd1e42"
-  channel: "app_lifecycle_listener"
+  revision: "f808aaa12f3a32d316f0ee476ffc24502f7c3d25"
+  channel: "main"
 
 project_type: app
 
@@ -13,11 +13,20 @@ project_type: app
 migration:
   platforms:
     - platform: root
-      create_revision: 865be95f7b4b33f33427bba3fc1f9541a9fd1e42
-      base_revision: 865be95f7b4b33f33427bba3fc1f9541a9fd1e42
+      create_revision: f808aaa12f3a32d316f0ee476ffc24502f7c3d25
+      base_revision: f808aaa12f3a32d316f0ee476ffc24502f7c3d25
+    - platform: android
+      create_revision: f808aaa12f3a32d316f0ee476ffc24502f7c3d25
+      base_revision: f808aaa12f3a32d316f0ee476ffc24502f7c3d25
+    - platform: ios
+      create_revision: f808aaa12f3a32d316f0ee476ffc24502f7c3d25
+      base_revision: f808aaa12f3a32d316f0ee476ffc24502f7c3d25
+    - platform: linux
+      create_revision: f808aaa12f3a32d316f0ee476ffc24502f7c3d25
+      base_revision: f808aaa12f3a32d316f0ee476ffc24502f7c3d25
     - platform: macos
-      create_revision: 865be95f7b4b33f33427bba3fc1f9541a9fd1e42
-      base_revision: 865be95f7b4b33f33427bba3fc1f9541a9fd1e42
+      create_revision: f808aaa12f3a32d316f0ee476ffc24502f7c3d25
+      base_revision: f808aaa12f3a32d316f0ee476ffc24502f7c3d25
 
   # User provided section
 

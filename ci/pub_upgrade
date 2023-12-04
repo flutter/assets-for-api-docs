@@ -13,9 +13,11 @@ REPO_DIR="$(dirname "$SCRIPT_DIR")"
 
 function pub_upgrade() {
   local dir="$1"
+  shift
+  local args=("$@")
   if [[ -e "$dir/pubspec.yaml" ]]; then
-    echo "Running 'flutter pub upgrade' in $dir"
-    output=$(cd "$dir"; flutter pub upgrade)
+    echo "Running 'flutter pub upgrade ${args[@]}' in $dir"
+    output=$(cd "$dir"; flutter pub upgrade "${args[@]}")
     if [[ $? != 0 ]]; then
       echo "$output"
     fi
@@ -25,8 +27,8 @@ function pub_upgrade() {
 function main() {
   local dir
   for dir in $(find "$REPO_DIR" -type d); do
-    pub_upgrade "$dir"
+    pub_upgrade "$dir" "$@"
   done
 }
 
-main
+main "$@"

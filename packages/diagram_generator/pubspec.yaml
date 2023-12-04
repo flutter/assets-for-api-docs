@@ -22,7 +22,7 @@ dependencies:
   path: ^1.8.2
   path_provider: ^2.0.1
   platform: ^3.0.0
-  process: ^4.2.1
+  process: ^5.0.1
 
 dev_dependencies:
   integration_test:
