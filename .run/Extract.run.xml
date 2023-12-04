@@ -1,3 +1,7 @@
+<!-- Copyright 2013 The Flutter Authors. All rights reserved.
+Use of this source code is governed by a BSD-style license that can be
+found in the LICENSE file. -->
+
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Extract" type="DartCommandLineRunConfigurationType" factoryName="Dart Command Line Application">
     <option name="arguments" value="--verbose --input=&quot;$PROJECT_DIR$/../flutter/packages/flutter/lib/src/widgets/scrollbar.dart&quot;" />
