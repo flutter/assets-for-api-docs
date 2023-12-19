@@ -41,6 +41,7 @@ final List<DiagramStep> allDiagramSteps = <DiagramStep>[
   FormDiagramStep(),
   FontFeatureDiagramStep(),
   GestureDetectorDiagramStep(),
+  GoRouterDiagramStep(),
   GridViewDiagramStep(),
   HeroesDiagramStep(),
   IconButtonDiagramStep(),
