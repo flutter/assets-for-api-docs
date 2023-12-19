@@ -46,7 +46,8 @@ class AnimationMetadata {
       duration: duration,
       frameRate: metadata[_frameRateKey]! as double,
       frameFiles: frameFiles,
-      videoFormat: VideoFormat.values.byName(metadata[_videoFormatKey]! as String),
+      videoFormat:
+          VideoFormat.values.byName(metadata[_videoFormatKey]! as String),
     );
   }
 
