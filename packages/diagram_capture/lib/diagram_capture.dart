@@ -541,6 +541,7 @@ class DiagramController {
     String? category,
     Map<Duration, DiagramKeyframe>? keyframes,
     DiagramGestureCallback? gestureCallback,
+    VideoFormat videoFormat = VideoFormat.mp4,
   }) async {
     assert(end >= start);
     assert(frameRate > 0.0);
@@ -592,6 +593,7 @@ class DiagramController {
       frameRate: 1e6 / frameDuration.inMicroseconds,
       frameFiles: outputFiles,
       metadataFile: metadataFile,
+      videoFormat: videoFormat,
     );
     return metadata.saveToFile();
   }

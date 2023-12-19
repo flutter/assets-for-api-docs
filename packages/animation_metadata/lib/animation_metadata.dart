@@ -7,6 +7,11 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:path/path.dart' as path;
 
+enum VideoFormat {
+  mp4,
+  gif,
+}
+
 /// Container class to read and write a JSON file containing metadata generated
 /// by the [DiagramController.drawAnimatedDiagramToFiles] method.
 class AnimationMetadata {
@@ -17,6 +22,7 @@ class AnimationMetadata {
     required this.frameRate,
     required this.frameFiles,
     required this.metadataFile,
+    required this.videoFormat,
   });
 
   factory AnimationMetadata.fromFile(File metadataFile) {
@@ -40,6 +46,7 @@ class AnimationMetadata {
       duration: duration,
       frameRate: metadata[_frameRateKey]! as double,
       frameFiles: frameFiles,
+      videoFormat: VideoFormat.values.byName(metadata[_videoFormatKey]! as String),
     );
   }
 
@@ -48,12 +55,14 @@ class AnimationMetadata {
   static const String _nameKey = 'name';
   static const String _frameRateKey = 'frame_rate';
   static const String _durationMsKey = 'duration_ms';
+  static const String _videoFormatKey = 'format';
 
   Future<File> saveToFile() async {
     final Map<String, dynamic> metadata = <String, dynamic>{
       _nameKey: name ?? 'unknown',
       _categoryKey: category ?? 'unknown',
       _durationMsKey: duration.inMilliseconds,
+      _videoFormatKey: videoFormat.name,
       _frameRateKey: frameRate,
       _frameFilesKey: frameFiles.map<String>((File file) {
         return path.relative(file.path,
@@ -89,4 +98,7 @@ class AnimationMetadata {
   /// the [saveToFile] method, depending on whether this wrapper class is being
   /// used to read or write the metadata.
   final File metadataFile;
+
+  /// The video format of the output file.
+  final VideoFormat videoFormat;
 }

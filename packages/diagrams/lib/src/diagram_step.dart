@@ -4,6 +4,7 @@
 
 import 'dart:async';
 
+import 'package:animation_metadata/animation_metadata.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -67,6 +68,11 @@ mixin DiagramMetadata on Widget {
   /// This duration includes [startAt], so the output video will have a
   /// duration of [duration] minus [startAt].
   Duration? get duration => null;
+
+  /// The format of the output video.
+  ///
+  /// This is only used when this diagram generates a video.
+  VideoFormat get videoFormat => VideoFormat.mp4;
 
   /// How much time should pass before capturing the animation or image.
   Duration get startAt => Duration.zero;

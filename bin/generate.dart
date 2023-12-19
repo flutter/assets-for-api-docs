@@ -278,14 +278,15 @@ class DiagramGenerator {
     final List<WorkerJob> jobs = <WorkerJob>[];
     for (final AnimationMetadata metadata in metadataList) {
       final String prefix = '${metadata.category}/${metadata.name}';
-      final File destination = File(path.join(destDir.path, '$prefix.mp4'));
+
+      final File destination = File(path.join(destDir.path, '$prefix.${metadata.videoFormat.name}'));
       if (destination.existsSync()) {
         destination.deleteSync();
       }
       if (!destination.parent.existsSync()) {
         destination.parent.createSync(recursive: true);
       }
-      print('Converting ${metadata.name} animation to mp4.');
+      print('Converting ${metadata.name} animation to ${metadata.videoFormat.name}.');
       jobs.add(WorkerJob(
         <String>[
           ffmpegCommand,
@@ -301,7 +302,10 @@ class DiagramGenerator {
           // Almost lossless quality (can't use lossless '0' because Safari
           // doesn't support it).
           '-crf', '1',
-          '-c:v', 'libx264', // encode to mp4 H.264
+          if (metadata.videoFormat == VideoFormat.mp4)
+            '-c:v',
+          if (metadata.videoFormat == VideoFormat.mp4)
+            'libx264', // encode to mp4 H.264
           '-y', // overwrite output
           // Video format set to YUV420 color space for compatibility.
           '-vf', 'format=yuv420p',
@@ -428,9 +432,11 @@ void _checkJobResults(String command, List<WorkerJob> jobs) {
 /// exited with a non-zero exit code.
 bool _hasJobFailed(WorkerJob job) {
   if (job.exception != null) {
+    print('job.result ${job.result.stdout}');
     return true;
   }
   if (job.result.exitCode != 0) {
+    print('job.result ${job.result.stdout}');
     return true;
   }
   return false;
