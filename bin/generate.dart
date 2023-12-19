@@ -432,11 +432,9 @@ void _checkJobResults(String command, List<WorkerJob> jobs) {
 /// exited with a non-zero exit code.
 bool _hasJobFailed(WorkerJob job) {
   if (job.exception != null) {
-    print('job.result ${job.result.stdout}');
     return true;
   }
   if (job.result.exitCode != 0) {
-    print('job.result ${job.result.stdout}');
     return true;
   }
   return false;
