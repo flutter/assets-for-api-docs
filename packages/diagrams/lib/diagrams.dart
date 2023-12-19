@@ -42,6 +42,7 @@ export 'src/floating_action_button_location.dart';
 export 'src/font_feature.dart';
 export 'src/form.dart';
 export 'src/gesture_detector.dart';
+export 'src/go_router_push_animation.dart';
 export 'src/grid_view.dart';
 export 'src/heroes.dart';
 export 'src/icon.dart';
