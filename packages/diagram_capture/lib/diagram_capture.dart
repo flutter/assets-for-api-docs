@@ -4,6 +4,7 @@
 
 import 'dart:async';
 import 'dart:io';
+import 'dart:math';
 import 'dart:ui' as ui;
 
 import 'package:animation_metadata/animation_metadata.dart';
@@ -557,6 +558,7 @@ class DiagramController {
     if (keyframes != null) {
       keys = keyframes.keys.toList()..sort();
     }
+    int width = 0;
     // Add an half-frame to account for possible rounding error: we want
     // to make sure to get the last frame.
     while (now <=
@@ -575,6 +577,7 @@ class DiagramController {
       }
       final File outputFile = _getFrameFilename(now, index, name);
       final ui.Image captured = await drawDiagramToImage();
+      width = max(width, captured.width);
       final ByteData? encoded = await captured.toByteData(format: format);
       final List<int> bytes = encoded!.buffer.asUint8List().toList();
       outputFile.writeAsBytesSync(bytes);
@@ -594,6 +597,7 @@ class DiagramController {
       frameFiles: outputFiles,
       metadataFile: metadataFile,
       videoFormat: videoFormat,
+      width: width,
     );
     return metadata.saveToFile();
   }

@@ -23,6 +23,7 @@ class AnimationMetadata {
     required this.frameFiles,
     required this.metadataFile,
     required this.videoFormat,
+    required this.width,
   });
 
   factory AnimationMetadata.fromFile(File metadataFile) {
@@ -46,6 +47,7 @@ class AnimationMetadata {
       duration: duration,
       frameRate: metadata[_frameRateKey]! as double,
       frameFiles: frameFiles,
+      width: metadata[_widthKey]! as int,
       videoFormat:
           VideoFormat.values.byName(metadata[_videoFormatKey]! as String),
     );
@@ -57,6 +59,7 @@ class AnimationMetadata {
   static const String _frameRateKey = 'frame_rate';
   static const String _durationMsKey = 'duration_ms';
   static const String _videoFormatKey = 'format';
+  static const String _widthKey = 'width';
 
   Future<File> saveToFile() async {
     final Map<String, dynamic> metadata = <String, dynamic>{
@@ -65,6 +68,7 @@ class AnimationMetadata {
       _durationMsKey: duration.inMilliseconds,
       _videoFormatKey: videoFormat.name,
       _frameRateKey: frameRate,
+      _widthKey: width,
       _frameFilesKey: frameFiles.map<String>((File file) {
         return path.relative(file.path,
             from: path.dirname(metadataFile.absolute.path));
@@ -102,4 +106,7 @@ class AnimationMetadata {
 
   /// The video format of the output file.
   final VideoFormat videoFormat;
+
+  /// The width of the video in pixel.
+  final int width;
 }
