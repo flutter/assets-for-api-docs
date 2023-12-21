@@ -94,8 +94,9 @@ via apt-get, and for Windows from the [FFMPEG website](https://ffmpeg.org/downlo
 
 Both `optipng` and `ffmpeg` need to be in your path when you run the generate script.
 
-`flutter`, `dart` (and when using an Android device, `adb`) commands also need to be available
-in a directory in the `PATH` environment variable. (e.g. `PATH=~/<path_to_flutter>/flutter/bin/cache/dart-sdk/bin:~/Android/Sdk/platform-tools:$PATH`)
+The commands `flutter`, `dart`, and (when using an Android device) `adb` need to be available
+in a directory in the `PATH` environment variable (e.g. `PATH=~/<path_to_flutter>/flutter/bin/cache/dart-sdk/bin:~/Android/Sdk/platform-tools:$PATH`).
+The script needs the most recent development version of Flutter and is _not_ intended to work with released Flutter versions.
 
 When using an Android device, be sure that the  `adb` command is the same as the one running
 as a server (which is often started by your IDE, so use the same `adb` the IDE is running).
