@@ -9,4 +9,4 @@ REPO_DIR="$(dirname "$SCRIPT_DIR")"
 
 "$SCRIPT_DIR"/tool_runner test
 cd "$REPO_DIR"/bin
-flutter test
+dart test
