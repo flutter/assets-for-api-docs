@@ -45,7 +45,7 @@ class DiagramGenerator {
   /// The path to the dart program to be run for generating the diagram.
   static final String generatorDir = path.join(
     projectDir,
-    'utils',
+    'packages',
     'diagram_generator',
   );
 
