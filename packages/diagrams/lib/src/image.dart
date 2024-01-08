@@ -93,7 +93,7 @@ class DiagramImage extends ImageProvider<DiagramImage>
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     if (other.runtimeType != runtimeType) {
       return false;
     }

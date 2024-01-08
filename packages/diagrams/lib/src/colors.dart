@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
 
-const double _kSwatchWidth = 450.0;
+const double _kSwatchWidth = 460.0;
 const double _kFontSize = 18.0;
 const double _kPadding = 10.0;
 

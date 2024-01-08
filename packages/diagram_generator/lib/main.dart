@@ -159,6 +159,7 @@ Future<void> main(List<String> args) async {
               category: step.category,
               name: diagram.name,
               start: diagram.startAt,
+              videoFormat: diagram.videoFormat,
             );
           } else {
             await controller.drawDiagramToFile(

@@ -19,7 +19,7 @@ class AppLifecycleDiagram extends StatefulWidget with DiagramMetadata {
   static const Color transitionLabelColor = arrowBorderColor;
   static const Color mobileTransitionColor = Color(0xff6d9eeb);
   static const double arrowThickness = 20;
-  static const double stateBoxWidth = 240;
+  static const double stateBoxWidth = 244;
   static const double stateBoxHeight = 100;
   static const double overallWidth = 1000;
   static const double overallHeight = 360;
@@ -194,7 +194,9 @@ class AppLifecycleStateBox extends StatelessWidget {
       width: AppLifecycleDiagram.stateBoxWidth,
       height: AppLifecycleDiagram.stateBoxHeight,
       decoration: ShapeDecoration(
-        color: Colors.blue.shade100,
+        color: Theme.of(context).brightness == Brightness.light
+            ? Colors.blue.shade100
+            : Colors.blue.shade800,
         shape: RoundedRectangleBorder(
           side: const BorderSide(width: 3),
           borderRadius: BorderRadius.circular(10),

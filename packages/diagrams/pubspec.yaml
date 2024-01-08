@@ -12,6 +12,8 @@ environment:
 dependencies:
   archive: ^3.1.2
   cupertino_icons: ^1.0.3
+  animation_metadata:
+    path: ../animation_metadata
   diagram_capture:
     path: ../diagram_capture
   flutter:
@@ -19,7 +21,7 @@ dependencies:
   flutter_test:
     sdk: flutter
   path_provider: ^2.0.1
-  process: ^4.2.1
+  process: ^5.0.1
   vector_math: ^2.1.2
 
 dev_dependencies:
