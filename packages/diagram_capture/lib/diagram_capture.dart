@@ -297,10 +297,10 @@ class DiagramFlutterBinding extends BindingBase
       boundaryKey: _boundaryKey,
       widgetController: _controller,
       child: Builder(builder: builder),
-    );
-    attachRootWidget(wrapWithDefaultView(rootWidget));
+    ));
+    attachRootWidget(rootWidget);
     pump();
-  );
+  }
 
   /// Advances time by the given duration, and generates a frame.
   ///
