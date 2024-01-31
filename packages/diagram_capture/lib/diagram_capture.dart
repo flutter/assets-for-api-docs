@@ -84,11 +84,26 @@ const Size _kDefaultDiagramViewportSize = Size(1280.0, 1024.0);
 // captured image pixels.
 class _DiagramViewConfiguration extends ViewConfiguration {
   _DiagramViewConfiguration({
-    super.size = _kDefaultDiagramViewportSize,
-  }) : _paintMatrix = _getMatrix(
+    Size size = _kDefaultDiagramViewportSize,
+  })  : _paintMatrix = _getMatrix(
             size,
             ui.PlatformDispatcher.instance.implicitView?.devicePixelRatio ??
-                1.0);
+                1.0),
+        super(
+          physicalConstraints: BoxConstraints.tightFor(
+                width: size.width,
+                height: size.height,
+              ) *
+              (ui.PlatformDispatcher.instance.implicitView?.devicePixelRatio ??
+                  1.0),
+          logicalConstraints: BoxConstraints.tightFor(
+            width: size.width,
+            height: size.height,
+          ),
+          devicePixelRatio:
+              ui.PlatformDispatcher.instance.implicitView?.devicePixelRatio ??
+                  1.0,
+        );
 
   static Matrix4 _getMatrix(Size size, double devicePixelRatio) {
     final double baseRatio =
