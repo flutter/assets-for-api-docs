@@ -65,7 +65,7 @@ void main() {
               temporaryDirectory.path,
             ],
             workingDirectory: path.join(
-                DiagramGenerator.projectDir, 'utils', 'diagram_generator'),
+                DiagramGenerator.projectDir, 'packages', 'diagram_generator'),
           ): <ProcessResult>[
             ProcessResult(0, 0, '', ''),
           ],

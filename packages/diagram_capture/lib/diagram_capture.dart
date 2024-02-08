@@ -4,6 +4,7 @@
 
 import 'dart:async';
 import 'dart:io';
+import 'dart:math';
 import 'dart:ui' as ui;
 
 import 'package:animation_metadata/animation_metadata.dart';
@@ -83,11 +84,26 @@ const Size _kDefaultDiagramViewportSize = Size(1280.0, 1024.0);
 // captured image pixels.
 class _DiagramViewConfiguration extends ViewConfiguration {
   _DiagramViewConfiguration({
-    super.size = _kDefaultDiagramViewportSize,
-  }) : _paintMatrix = _getMatrix(
+    Size size = _kDefaultDiagramViewportSize,
+  })  : _paintMatrix = _getMatrix(
             size,
             ui.PlatformDispatcher.instance.implicitView?.devicePixelRatio ??
-                1.0);
+                1.0),
+        super(
+          physicalConstraints: BoxConstraints.tightFor(
+                width: size.width,
+                height: size.height,
+              ) *
+              (ui.PlatformDispatcher.instance.implicitView?.devicePixelRatio ??
+                  1.0),
+          logicalConstraints: BoxConstraints.tightFor(
+            width: size.width,
+            height: size.height,
+          ),
+          devicePixelRatio:
+              ui.PlatformDispatcher.instance.implicitView?.devicePixelRatio ??
+                  1.0,
+        );
 
   static Matrix4 _getMatrix(Size size, double devicePixelRatio) {
     final double baseRatio =
@@ -541,6 +557,7 @@ class DiagramController {
     String? category,
     Map<Duration, DiagramKeyframe>? keyframes,
     DiagramGestureCallback? gestureCallback,
+    VideoFormat videoFormat = VideoFormat.mp4,
   }) async {
     assert(end >= start);
     assert(frameRate > 0.0);
@@ -556,6 +573,7 @@ class DiagramController {
     if (keyframes != null) {
       keys = keyframes.keys.toList()..sort();
     }
+    int width = 0;
     // Add an half-frame to account for possible rounding error: we want
     // to make sure to get the last frame.
     while (now <=
@@ -574,6 +592,7 @@ class DiagramController {
       }
       final File outputFile = _getFrameFilename(now, index, name);
       final ui.Image captured = await drawDiagramToImage();
+      width = max(width, captured.width);
       final ByteData? encoded = await captured.toByteData(format: format);
       final List<int> bytes = encoded!.buffer.asUint8List().toList();
       outputFile.writeAsBytesSync(bytes);
@@ -592,6 +611,8 @@ class DiagramController {
       frameRate: 1e6 / frameDuration.inMicroseconds,
       frameFiles: outputFiles,
       metadataFile: metadataFile,
+      videoFormat: videoFormat,
+      width: width,
     );
     return metadata.saveToFile();
   }

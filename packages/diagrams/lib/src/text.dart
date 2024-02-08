@@ -11,8 +11,9 @@ import 'package:flutter/rendering.dart';
 
 import 'diagram_step.dart';
 
-const String _text = 'text';
 const String _textEllipsis = 'text_ellipsis';
+const String _textFadeMaxLines = 'text_fade_max_lines';
+const String _textFadeSoftWrap = 'text_fade_soft_wrap';
 const String _textRich = 'text_rich';
 const String _textBorder = 'text_border';
 const String _textGradient = 'text_gradient';
@@ -28,24 +29,30 @@ class TextDiagram extends StatelessWidget with DiagramMetadata {
     Widget returnWidget;
 
     switch (name) {
-      case _text:
-        returnWidget = const Text(
-          'Hello, Ruth! How are you?',
-          textAlign: TextAlign.center,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(fontWeight: FontWeight.bold),
-        );
-        break;
       case _textEllipsis:
-        returnWidget = ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 100),
-          child: const Text(
-            'Hello, Ruth! How are you?',
-            textAlign: TextAlign.center,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-        );
+        returnWidget = Container(
+            width: 100,
+            decoration: BoxDecoration(border: Border.all()),
+            child: const Text(
+                overflow: TextOverflow.ellipsis, 'Hello Ruth, how are you?'));
+        break;
+      case _textFadeMaxLines:
+        returnWidget = Container(
+            width: 100,
+            decoration: BoxDecoration(border: Border.all()),
+            child: const Text(
+                overflow: TextOverflow.fade,
+                maxLines: 1,
+                'Hello Ruth, how are you?'));
+        break;
+      case _textFadeSoftWrap:
+        returnWidget = Container(
+            width: 100,
+            decoration: BoxDecoration(border: Border.all()),
+            child: const Text(
+                overflow: TextOverflow.fade,
+                softWrap: false,
+                'Hello Ruth, how are you?'));
         break;
       case _textRich:
         returnWidget = const Text.rich(
@@ -1063,8 +1070,9 @@ class TextDiagramStep extends DiagramStep {
 
   @override
   Future<List<TextDiagram>> get diagrams async => <TextDiagram>[
-        const TextDiagram(_text),
         const TextDiagram(_textEllipsis),
+        const TextDiagram(_textFadeMaxLines),
+        const TextDiagram(_textFadeSoftWrap),
         const TextDiagram(_textRich),
         const TextDiagram(_textBorder),
         const TextDiagram(_textGradient),

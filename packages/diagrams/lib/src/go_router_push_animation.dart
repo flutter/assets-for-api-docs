@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:animation_metadata/animation_metadata.dart';
 import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -31,6 +32,9 @@ class PushRegularRouteDiagram extends StatefulWidget with DiagramMetadata {
 
   @override
   String get name => 'push_regular_route';
+
+  @override
+  VideoFormat get videoFormat => VideoFormat.gif;
 
   @override
   State<PushRegularRouteDiagram> createState() =>
@@ -86,6 +90,9 @@ class PushSameShellDiagram extends StatefulWidget with DiagramMetadata {
   String get name => 'push_same_shell';
 
   @override
+  VideoFormat get videoFormat => VideoFormat.gif;
+
+  @override
   State<PushSameShellDiagram> createState() => _PushSameShellDiagramState();
 
   @override
@@ -136,6 +143,9 @@ class PushDifferentShellDiagram extends StatefulWidget with DiagramMetadata {
 
   @override
   String get name => 'push_different_shell';
+
+  @override
+  VideoFormat get videoFormat => VideoFormat.gif;
 
   @override
   State<PushDifferentShellDiagram> createState() =>
