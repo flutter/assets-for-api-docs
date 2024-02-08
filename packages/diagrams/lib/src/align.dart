@@ -3,13 +3,13 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
-import 'package:diagram_capture/diagram_capture.dart';
+
 import 'package:flutter/material.dart';
+
 import 'diagram_step.dart';
 
-class AlignDiagram extends StatelessWidget implements DiagramMetadata {
-  const AlignDiagram(this.name, {Key? key}) : super(key: key);
+class AlignDiagram extends StatelessWidget with DiagramMetadata {
+  const AlignDiagram(this.name, {super.key});
 
   @override
   final String name;
@@ -33,14 +33,13 @@ class AlignDiagram extends StatelessWidget implements DiagramMetadata {
         break;
       case 'align_alignment':
         heading = const Text('Alignment Origin');
-        containerChild = Stack(
-          children: const <Widget>[
+        containerChild = const Stack(
+          children: <Widget>[
             Align(
               alignment: Alignment(0.2, 0.6),
               child: logo,
             ),
             Align(
-              alignment: Alignment.center,
               child: origin,
             ),
           ],
@@ -49,8 +48,8 @@ class AlignDiagram extends StatelessWidget implements DiagramMetadata {
         break;
       case 'align_fractional_offset':
         heading = const Text('Fractional Offset Origin');
-        containerChild = Stack(
-          children: const <Widget>[
+        containerChild = const Stack(
+          children: <Widget>[
             Align(
               alignment: FractionalOffset(0.2, 0.6),
               child: logo,
@@ -75,7 +74,6 @@ class AlignDiagram extends StatelessWidget implements DiagramMetadata {
         color: Colors.white,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.only(bottom: 10.0),
@@ -93,9 +91,7 @@ class AlignDiagram extends StatelessWidget implements DiagramMetadata {
   }
 }
 
-class AlignDiagramStep extends DiagramStep<AlignDiagram> {
-  AlignDiagramStep(DiagramController controller) : super(controller);
-
+class AlignDiagramStep extends DiagramStep {
   @override
   final String category = 'widgets';
 
@@ -105,10 +101,4 @@ class AlignDiagramStep extends DiagramStep<AlignDiagram> {
         const AlignDiagram('align_alignment'),
         const AlignDiagram('align_fractional_offset'),
       ];
-
-  @override
-  Future<File> generateDiagram(AlignDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawDiagramToFile(File('${diagram.name}.png'));
-  }
 }

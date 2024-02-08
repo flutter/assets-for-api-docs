@@ -3,10 +3,7 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 
-import 'package:diagram_capture/diagram_capture.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
@@ -16,22 +13,19 @@ const String _rowError = 'row_error';
 const String _rowFixed = 'row_fixed';
 const String _rowTextDirection = 'row_textDirection';
 
-class RowDiagram extends StatelessWidget implements DiagramMetadata {
-  const RowDiagram(this.name, {this.ignoreErrors = false, Key? key})
-      : super(key: key);
+class RowDiagram extends StatelessWidget with DiagramMetadata {
+  const RowDiagram(this.name, {super.key});
 
   @override
   final String name;
-
-  final bool ignoreErrors;
 
   @override
   Widget build(BuildContext context) {
     Widget returnWidget;
     switch (name) {
       case _row:
-        returnWidget = Row(
-          children: const <Widget>[
+        returnWidget = const Row(
+          children: <Widget>[
             Expanded(
               child: Text(
                 'Deliver features faster',
@@ -46,7 +40,6 @@ class RowDiagram extends StatelessWidget implements DiagramMetadata {
             ),
             Expanded(
               child: FittedBox(
-                fit: BoxFit.contain, // otherwise the logo will be tiny
                 child: FlutterLogo(),
               ),
             ),
@@ -54,9 +47,8 @@ class RowDiagram extends StatelessWidget implements DiagramMetadata {
         );
         break;
       case _rowError:
-        assert(ignoreErrors);
-        returnWidget = Row(
-          children: const <Widget>[
+        returnWidget = const Row(
+          children: <Widget>[
             FlutterLogo(),
             Text(
               "Flutter's hot reload helps you quickly and easily experiment, build UIs, add features, and fix bug faster. Experience sub-second reload times, without losing state, on emulators, simulators, and hardware for iOS and Android.",
@@ -66,8 +58,8 @@ class RowDiagram extends StatelessWidget implements DiagramMetadata {
         );
         break;
       case _rowFixed:
-        returnWidget = Row(
-          children: const <Widget>[
+        returnWidget = const Row(
+          children: <Widget>[
             FlutterLogo(),
             Expanded(
               child: Text(
@@ -79,9 +71,9 @@ class RowDiagram extends StatelessWidget implements DiagramMetadata {
         );
         break;
       case _rowTextDirection:
-        returnWidget = Row(
+        returnWidget = const Row(
           textDirection: TextDirection.rtl,
-          children: const <Widget>[
+          children: <Widget>[
             FlutterLogo(),
             Expanded(
               child: Text(
@@ -106,44 +98,25 @@ class RowDiagram extends StatelessWidget implements DiagramMetadata {
       ),
     );
   }
+
+  @override
+  Set<Pattern> get expectedErrors {
+    return <Pattern>{
+      if (name == _rowError)
+        RegExp(r'A RenderFlex overflowed by \d+ pixels on the right.'),
+    };
+  }
 }
 
-class RowDiagramStep extends DiagramStep<RowDiagram> {
-  RowDiagramStep(DiagramController controller) : super(controller);
-
+class RowDiagramStep extends DiagramStep {
   @override
   final String category = 'widgets';
 
   @override
   Future<List<RowDiagram>> get diagrams async => <RowDiagram>[
         const RowDiagram(_row),
-        const RowDiagram(_rowError, ignoreErrors: true),
+        const RowDiagram(_rowError),
         const RowDiagram(_rowFixed),
         const RowDiagram(_rowTextDirection),
       ];
-
-  @override
-  Future<File> generateDiagram(RowDiagram diagram) async {
-    final FlutterExceptionHandler? oldHandler = FlutterError.onError;
-    int errorCount = 0;
-    if (diagram.ignoreErrors) {
-      FlutterError.onError = (FlutterErrorDetails details) {
-        debugPrint('Ignoring one error ("${details.exception}").');
-        errorCount += 1;
-      };
-    }
-    try {
-      controller.builder = (BuildContext context) => diagram;
-      return controller.drawDiagramToFile(File('${diagram.name}.png'));
-    } finally {
-      FlutterError.onError = oldHandler;
-      if (diagram.ignoreErrors && errorCount == 0) {
-        FlutterError.reportError(FlutterErrorDetails(
-          exception: Exception(
-              'Expected an error but did not get any errors for "${diagram.name}".'),
-          library: 'diagrams',
-        ));
-      }
-    }
-  }
 }

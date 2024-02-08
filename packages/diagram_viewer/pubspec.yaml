@@ -1,0 +1,29 @@
+name: diagram_viewer
+description: Flutter app for viewing diagrams interactively.
+repository: https://github.com/flutter/assets-for-api-docs/tree/master/packages/diagram_viewer
+issue_tracker: https://github.com/flutter/flutter/issues
+version: 0.1.0
+publish_to: none
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+  flutter: ">=1.0.0 <4.0.0"
+
+dependencies:
+  clock: ^1.1.1
+  flutter:
+    sdk: flutter
+  flutter_test:
+    sdk: flutter
+  shared_preferences: ^2.0.15
+  diagram_capture:
+    path: ../../packages/diagram_capture
+  diagrams:
+    path: ../../packages/diagrams
+
+dev_dependencies:
+
+  flutter_lints: ^3.0.1
+
+flutter:
+  uses-material-design: true

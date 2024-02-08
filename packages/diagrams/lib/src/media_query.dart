@@ -3,15 +3,13 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
 
-class MediaQueryDiagram extends StatefulWidget implements DiagramMetadata {
-  const MediaQueryDiagram({Key? key, required this.name}) : super(key: key);
+class MediaQueryDiagram extends StatefulWidget with DiagramMetadata {
+  const MediaQueryDiagram({super.key, required this.name});
 
   @override
   final String name;
@@ -36,9 +34,7 @@ class _MediaQueryDiagramState extends State<MediaQueryDiagram> {
         child: Material(
           color: const Color(0xFFFFFFFF),
           child: MediaQuery(
-            data: const MediaQueryData(
-              padding: EdgeInsets.zero,
-            ),
+            data: const MediaQueryData(),
             child: Center(
               child: Stack(
                 alignment: Alignment.topCenter,
@@ -124,19 +120,11 @@ class _MediaQueryDiagramState extends State<MediaQueryDiagram> {
   }
 }
 
-class MediaQueryDiagramStep extends DiagramStep<MediaQueryDiagram> {
-  MediaQueryDiagramStep(DiagramController controller) : super(controller);
-
+class MediaQueryDiagramStep extends DiagramStep {
   @override
   final String category = 'widgets';
 
   @override
   Future<List<MediaQueryDiagram>> get diagrams async =>
       <MediaQueryDiagram>[const MediaQueryDiagram(name: 'media_query')];
-
-  @override
-  Future<File> generateDiagram(MediaQueryDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawDiagramToFile(File('${diagram.name}.png'));
-  }
 }

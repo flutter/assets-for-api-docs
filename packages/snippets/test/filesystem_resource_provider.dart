@@ -102,7 +102,7 @@ class FileSystemResourceProvider implements ResourceProvider {
 
 /// A `dart:io` based implementation of [File].
 class _PhysicalFile extends _PhysicalResource implements File {
-  const _PhysicalFile(io.File file) : super(file);
+  const _PhysicalFile(io.File super.file);
 
   @override
   Stream<WatchEvent> get changes => FileWatcher(_entry.path).events;
@@ -213,7 +213,7 @@ class _PhysicalFile extends _PhysicalResource implements File {
 
 /// A `dart:io` based implementation of [Folder].
 class _PhysicalFolder extends _PhysicalResource implements Folder {
-  const _PhysicalFolder(io.Directory directory) : super(directory);
+  const _PhysicalFolder(io.Directory super.directory);
 
   @override
   Stream<WatchEvent> get changes =>
@@ -285,8 +285,7 @@ class _PhysicalFolder extends _PhysicalResource implements Folder {
     try {
       final List<Resource> children = <Resource>[];
       final io.Directory directory = _entry as io.Directory;
-      final List<io.FileSystemEntity> entries =
-          directory.listSync(recursive: false);
+      final List<io.FileSystemEntity> entries = directory.listSync();
       final int numEntries = entries.length;
       for (int i = 0; i < numEntries; i++) {
         final io.FileSystemEntity entity = entries[i];

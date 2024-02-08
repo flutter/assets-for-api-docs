@@ -3,24 +3,23 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 import 'dart:math' show max;
 import 'dart:ui' as ui;
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 import 'diagram_step.dart';
 
-const String _text = 'text';
 const String _textEllipsis = 'text_ellipsis';
+const String _textFadeMaxLines = 'text_fade_max_lines';
+const String _textFadeSoftWrap = 'text_fade_soft_wrap';
 const String _textRich = 'text_rich';
 const String _textBorder = 'text_border';
 const String _textGradient = 'text_gradient';
 
-class TextDiagram extends StatelessWidget implements DiagramMetadata {
-  const TextDiagram(this.name, {Key? key}) : super(key: key);
+class TextDiagram extends StatelessWidget with DiagramMetadata {
+  const TextDiagram(this.name, {super.key});
 
   @override
   final String name;
@@ -30,24 +29,30 @@ class TextDiagram extends StatelessWidget implements DiagramMetadata {
     Widget returnWidget;
 
     switch (name) {
-      case _text:
-        returnWidget = const Text(
-          'Hello, Ruth! How are you?',
-          textAlign: TextAlign.center,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(fontWeight: FontWeight.bold),
-        );
-        break;
       case _textEllipsis:
-        returnWidget = ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 100),
-          child: const Text(
-            'Hello, Ruth! How are you?',
-            textAlign: TextAlign.center,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-        );
+        returnWidget = Container(
+            width: 100,
+            decoration: BoxDecoration(border: Border.all()),
+            child: const Text(
+                overflow: TextOverflow.ellipsis, 'Hello Ruth, how are you?'));
+        break;
+      case _textFadeMaxLines:
+        returnWidget = Container(
+            width: 100,
+            decoration: BoxDecoration(border: Border.all()),
+            child: const Text(
+                overflow: TextOverflow.fade,
+                maxLines: 1,
+                'Hello Ruth, how are you?'));
+        break;
+      case _textFadeSoftWrap:
+        returnWidget = Container(
+            width: 100,
+            decoration: BoxDecoration(border: Border.all()),
+            child: const Text(
+                overflow: TextOverflow.fade,
+                softWrap: false,
+                'Hello Ruth, how are you?'));
         break;
       case _textRich:
         returnWidget = const Text.rich(
@@ -136,8 +141,8 @@ class TextDiagram extends StatelessWidget implements DiagramMetadata {
   }
 }
 
-class TextHeightDiagram extends StatelessWidget implements DiagramMetadata {
-  const TextHeightDiagram(this.name, {Key? key}) : super(key: key);
+class TextHeightDiagram extends StatelessWidget with DiagramMetadata {
+  const TextHeightDiagram(this.name, {super.key});
 
   @override
   final String name;
@@ -315,9 +320,8 @@ class TextDiagramPainter extends CustomPainter {
 }
 
 // Height values comparison.
-class TextHeightComparison extends TextHeightDiagram
-    implements DiagramMetadata {
-  const TextHeightComparison(String name, {Key? key}) : super(name, key: key);
+class TextHeightComparison extends TextHeightDiagram with DiagramMetadata {
+  const TextHeightComparison(super.name, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -495,8 +499,8 @@ class TextHeightComparisonPainter extends CustomPainter {
 
 /// Side-by-side comparison of paragraphs with different text height
 /// configuration combinations.
-class TextHeightBreakdown extends TextHeightDiagram implements DiagramMetadata {
-  const TextHeightBreakdown(String name, {Key? key}) : super(name, key: key);
+class TextHeightBreakdown extends TextHeightDiagram with DiagramMetadata {
+  const TextHeightBreakdown(super.name, {super.key});
 
   static const double _height = 4;
   static const double _fontSize = 85;
@@ -507,10 +511,10 @@ class TextHeightBreakdown extends TextHeightDiagram implements DiagramMetadata {
     return Container(
       alignment: Alignment.center,
       height: 500,
-      child: Column(
+      child: const Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          const Center(
+          Center(
             child: Text(
               'Roboto, fontSize: $_fontSize, height: $_height',
               style: TextStyle(fontSize: 30, fontWeight: FontWeight.w700),
@@ -518,7 +522,6 @@ class TextHeightBreakdown extends TextHeightDiagram implements DiagramMetadata {
           ),
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               Row(
                 crossAxisAlignment: CrossAxisAlignment.baseline,
@@ -526,7 +529,7 @@ class TextHeightBreakdown extends TextHeightDiagram implements DiagramMetadata {
                 children: <Widget>[
                   Column(
                     mainAxisSize: MainAxisSize.min,
-                    children: const <Widget>[
+                    children: <Widget>[
                       // This must be the first child of the column for the Row
                       // elements to be properly baseline-aligned.
                       TextHeightBreakdownRow(
@@ -548,12 +551,12 @@ class TextHeightBreakdown extends TextHeightDiagram implements DiagramMetadata {
                       // centered. This is a hack to offset the "Configuration 1"
                       // caption so it looks more aligned with the glyph.
                       Text('                        Configuration 1',
-                          textScaleFactor: 1.5),
+                          textScaler: TextScaler.linear(1.5)),
                     ],
                   ),
                   Column(
                     mainAxisSize: MainAxisSize.min,
-                    children: const <Widget>[
+                    children: <Widget>[
                       TextHeightBreakdownRow(
                         text: _text,
                         backgroundColor: Colors.transparent,
@@ -569,7 +572,8 @@ class TextHeightBreakdown extends TextHeightDiagram implements DiagramMetadata {
                         paintCaptions: true,
                       ),
                       SizedBox(height: 30),
-                      Text('Configuration 2', textScaleFactor: 1.5),
+                      Text('Configuration 2',
+                          textScaler: TextScaler.linear(1.5)),
                     ],
                   ),
                 ],
@@ -580,7 +584,7 @@ class TextHeightBreakdown extends TextHeightDiagram implements DiagramMetadata {
                 children: <Widget>[
                   Column(
                     mainAxisSize: MainAxisSize.min,
-                    children: const <Widget>[
+                    children: <Widget>[
                       TextHeightBreakdownRow(
                         text: _text,
                         backgroundColor: Colors.transparent,
@@ -593,12 +597,13 @@ class TextHeightBreakdown extends TextHeightDiagram implements DiagramMetadata {
                         paintLeadingIndicator: true,
                       ),
                       SizedBox(height: 30),
-                      Text('Configuration 3', textScaleFactor: 1.5),
+                      Text('Configuration 3',
+                          textScaler: TextScaler.linear(1.5)),
                     ],
                   ),
                   Column(
                     mainAxisSize: MainAxisSize.min,
-                    children: const <Widget>[
+                    children: <Widget>[
                       TextHeightBreakdownRow(
                         text: _text,
                         backgroundColor: Colors.transparent,
@@ -612,7 +617,8 @@ class TextHeightBreakdown extends TextHeightDiagram implements DiagramMetadata {
                             TextHeightBehavior(applyHeightToLastDescent: false),
                       ),
                       SizedBox(height: 30),
-                      Text('Configuration 4', textScaleFactor: 1.5),
+                      Text('Configuration 4',
+                          textScaler: TextScaler.linear(1.5)),
                     ],
                   ),
                 ],
@@ -627,7 +633,7 @@ class TextHeightBreakdown extends TextHeightDiagram implements DiagramMetadata {
 
 class TextHeightBreakdownRow extends LeafRenderObjectWidget {
   const TextHeightBreakdownRow({
-    Key? key,
+    super.key,
     required this.text,
     required this.backgroundColor,
     required this.style,
@@ -635,7 +641,7 @@ class TextHeightBreakdownRow extends LeafRenderObjectWidget {
     this.paintHeightIndicator = false,
     this.paintLeadingIndicator = false,
     this.paintCaptions = false,
-  }) : super(key: key);
+  });
 
   final String text;
   final TextStyle style;
@@ -764,21 +770,19 @@ class RenderTextHeightBreakdown extends RenderBox
 
   late final TextPainter heightCaptionTextPainter =
       TextPainter(textDirection: textDirection, textAlign: TextAlign.center);
-  static late final TextStyle heightCaptionTextStyle =
+  static final TextStyle heightCaptionTextStyle =
       TextStyle(fontSize: 20, color: Colors.blue[900]);
   static const Offset fontMetricsLabelPadding = Offset(0, 3);
   static const double heightCaptionBracketMinX = -25;
 
   @override
   Size computeDryLayout(BoxConstraints constraints) {
-    _textPainter.layout(
-        minWidth: constraints.minWidth, maxWidth: double.infinity);
+    _textPainter.layout(minWidth: constraints.minWidth);
     if (paintHeightIndicator) {
       heightCaptionTextPainter.text = TextSpan(
           text: 'Text Height:\n${_textPainter.height} px',
           style: heightCaptionTextStyle);
-      heightCaptionTextPainter.layout(
-          minWidth: constraints.minWidth, maxWidth: double.infinity);
+      heightCaptionTextPainter.layout(minWidth: constraints.minWidth);
       return constraints.constrain(Size(
         heightCaptionTextPainter.width +
             _textPainter.width +
@@ -1048,9 +1052,7 @@ class RenderTextHeightBreakdown extends RenderBox
   }
 }
 
-class TextHeightDiagramStep extends DiagramStep<TextHeightDiagram> {
-  TextHeightDiagramStep(DiagramController controller) : super(controller);
-
+class TextHeightDiagramStep extends DiagramStep {
   @override
   final String category = 'painting';
 
@@ -1060,32 +1062,19 @@ class TextHeightDiagramStep extends DiagramStep<TextHeightDiagram> {
         const TextHeightComparison('text_height_comparison_diagram'),
         const TextHeightBreakdown('text_height_breakdown'),
       ];
-
-  @override
-  Future<File> generateDiagram(TextHeightDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawDiagramToFile(File('${diagram.name}.png'));
-  }
 }
 
-class TextDiagramStep extends DiagramStep<TextDiagram> {
-  TextDiagramStep(DiagramController controller) : super(controller);
-
+class TextDiagramStep extends DiagramStep {
   @override
   final String category = 'widgets';
 
   @override
   Future<List<TextDiagram>> get diagrams async => <TextDiagram>[
-        const TextDiagram(_text),
         const TextDiagram(_textEllipsis),
+        const TextDiagram(_textFadeMaxLines),
+        const TextDiagram(_textFadeSoftWrap),
         const TextDiagram(_textRich),
         const TextDiagram(_textBorder),
         const TextDiagram(_textGradient),
       ];
-
-  @override
-  Future<File> generateDiagram(TextDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawDiagramToFile(File('${diagram.name}.png'));
-  }
 }

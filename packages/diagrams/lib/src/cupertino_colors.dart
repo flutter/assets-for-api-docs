@@ -3,9 +3,7 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'diagram_step.dart';
@@ -37,15 +35,18 @@ List<Map<String, CupertinoDynamicColor>> activeColors =
 ];
 List<Map<String, CupertinoDynamicColor>> systemColors1 =
     <Map<String, CupertinoDynamicColor>>[
-  <String, CupertinoDynamicColor>{'systemBlue': CupertinoColors.systemBlue},
-  <String, CupertinoDynamicColor>{'systemGreen': CupertinoColors.systemGreen},
-  <String, CupertinoDynamicColor>{'systemIndigo': CupertinoColors.systemIndigo},
-  <String, CupertinoDynamicColor>{'systemOrange': CupertinoColors.systemOrange},
-  <String, CupertinoDynamicColor>{'systemPink': CupertinoColors.systemPink},
-  <String, CupertinoDynamicColor>{'systemPurple': CupertinoColors.systemPurple},
   <String, CupertinoDynamicColor>{'systemRed': CupertinoColors.systemRed},
-  <String, CupertinoDynamicColor>{'systemTeal': CupertinoColors.systemTeal},
+  <String, CupertinoDynamicColor>{'systemOrange': CupertinoColors.systemOrange},
   <String, CupertinoDynamicColor>{'systemYellow': CupertinoColors.systemYellow},
+  <String, CupertinoDynamicColor>{'systemGreen': CupertinoColors.systemGreen},
+  <String, CupertinoDynamicColor>{'systemMint': CupertinoColors.systemMint},
+  <String, CupertinoDynamicColor>{'systemTeal': CupertinoColors.systemTeal},
+  <String, CupertinoDynamicColor>{'systemCyan': CupertinoColors.systemCyan},
+  <String, CupertinoDynamicColor>{'systemBlue': CupertinoColors.systemBlue},
+  <String, CupertinoDynamicColor>{'systemIndigo': CupertinoColors.systemIndigo},
+  <String, CupertinoDynamicColor>{'systemPurple': CupertinoColors.systemPurple},
+  <String, CupertinoDynamicColor>{'systemPink': CupertinoColors.systemPink},
+  <String, CupertinoDynamicColor>{'systemBrown': CupertinoColors.systemBrown},
 ];
 List<Map<String, CupertinoDynamicColor>> systemColors2 =
     <Map<String, CupertinoDynamicColor>>[
@@ -114,9 +115,8 @@ List<Map<String, CupertinoDynamicColor>> backgroundColors =
   },
 ];
 
-class CupertinoColorsDiagram extends StatelessWidget
-    implements DiagramMetadata {
-  const CupertinoColorsDiagram(this.name, {Key? key}) : super(key: key);
+class CupertinoColorsDiagram extends StatelessWidget with DiagramMetadata {
+  const CupertinoColorsDiagram(this.name, {super.key});
 
   @override
   final String name;
@@ -147,7 +147,7 @@ class CupertinoColorsDiagram extends StatelessWidget
                   ),
                 ],
               ),
-              for (Map<String, Color> basicColor in basicColors)
+              for (final Map<String, Color> basicColor in basicColors)
                 TableRow(
                   children: <Widget>[
                     Text(
@@ -186,7 +186,7 @@ class CupertinoColorsDiagram extends StatelessWidget
                   ),
                 ],
               ),
-              for (Map<String, CupertinoDynamicColor> activeColor
+              for (final Map<String, CupertinoDynamicColor> activeColor
                   in activeColors)
                 TableRow(
                   children: <Widget>[
@@ -231,7 +231,7 @@ class CupertinoColorsDiagram extends StatelessWidget
                   ),
                 ],
               ),
-              for (Map<String, CupertinoDynamicColor> systemColor
+              for (final Map<String, CupertinoDynamicColor> systemColor
                   in systemColors1)
                 TableRow(
                   children: <Widget>[
@@ -258,7 +258,7 @@ class CupertinoColorsDiagram extends StatelessWidget
           child: Table(
             defaultVerticalAlignment: TableCellVerticalAlignment.middle,
             children: <TableRow>[
-              for (Map<String, CupertinoDynamicColor> systemColor
+              for (final Map<String, CupertinoDynamicColor> systemColor
                   in systemColors2)
                 TableRow(
                   children: <Widget>[
@@ -285,7 +285,7 @@ class CupertinoColorsDiagram extends StatelessWidget
           child: Table(
             defaultVerticalAlignment: TableCellVerticalAlignment.middle,
             children: <TableRow>[
-              for (Map<String, CupertinoDynamicColor> systemColor
+              for (final Map<String, CupertinoDynamicColor> systemColor
                   in systemColors3)
                 TableRow(
                   children: <Widget>[
@@ -330,7 +330,8 @@ class CupertinoColorsDiagram extends StatelessWidget
                   ),
                 ],
               ),
-              for (Map<String, CupertinoDynamicColor> labelColor in labelColors)
+              for (final Map<String, CupertinoDynamicColor> labelColor
+                  in labelColors)
                 TableRow(
                   children: <Widget>[
                     Text(
@@ -378,7 +379,7 @@ class CupertinoColorsDiagram extends StatelessWidget
                 ),
               ],
             ),
-            for (Map<String, CupertinoDynamicColor> backgroundColor
+            for (final Map<String, CupertinoDynamicColor> backgroundColor
                 in backgroundColors)
               TableRow(
                 children: <Widget>[
@@ -414,9 +415,7 @@ class CupertinoColorsDiagram extends StatelessWidget
   }
 }
 
-class CupertinoColorsDiagramStep extends DiagramStep<CupertinoColorsDiagram> {
-  CupertinoColorsDiagramStep(DiagramController controller) : super(controller);
-
+class CupertinoColorsDiagramStep extends DiagramStep {
   @override
   final String category = 'cupertino';
 
@@ -431,16 +430,10 @@ class CupertinoColorsDiagramStep extends DiagramStep<CupertinoColorsDiagram> {
         const CupertinoColorsDiagram(_label_colors),
         const CupertinoColorsDiagram(_background_colors),
       ];
-
-  @override
-  Future<File> generateDiagram(CupertinoColorsDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawDiagramToFile(File('${diagram.name}.png'));
-  }
 }
 
 class ColorWidget extends StatelessWidget {
-  const ColorWidget({Key? key, required this.color}) : super(key: key);
+  const ColorWidget({super.key, required this.color});
 
   final Color color;
 
@@ -465,9 +458,9 @@ class ColorWidget extends StatelessWidget {
           width: 90.0,
           child: Row(
             children: <Widget>[
-              Column(
+              const Column(
                 mainAxisSize: MainAxisSize.min,
-                children: const <Widget>[
+                children: <Widget>[
                   Text('R'),
                   Text('G'),
                   Text('B'),

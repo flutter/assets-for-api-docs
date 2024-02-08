@@ -3,17 +3,15 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
 
 const String _icon = 'icon';
 
-class IconDiagram extends StatelessWidget implements DiagramMetadata {
-  const IconDiagram(this.name, {Key? key}) : super(key: key);
+class IconDiagram extends StatelessWidget with DiagramMetadata {
+  const IconDiagram(this.name, {super.key});
 
   @override
   final String name;
@@ -26,10 +24,10 @@ class IconDiagram extends StatelessWidget implements DiagramMetadata {
       child: Container(
         padding: const EdgeInsets.all(5.0),
         color: Colors.white,
-        child: Center(
+        child: const Center(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: const <Widget>[
+            children: <Widget>[
               Icon(
                 Icons.favorite,
                 color: Colors.pink,
@@ -53,9 +51,7 @@ class IconDiagram extends StatelessWidget implements DiagramMetadata {
   }
 }
 
-class IconDiagramStep extends DiagramStep<IconDiagram> {
-  IconDiagramStep(DiagramController controller) : super(controller);
-
+class IconDiagramStep extends DiagramStep {
   @override
   final String category = 'widgets';
 
@@ -63,10 +59,4 @@ class IconDiagramStep extends DiagramStep<IconDiagram> {
   Future<List<IconDiagram>> get diagrams async => <IconDiagram>[
         const IconDiagram(_icon),
       ];
-
-  @override
-  Future<File> generateDiagram(IconDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawDiagramToFile(File('${diagram.name}.png'));
-  }
 }

@@ -3,11 +3,8 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 import 'dart:math' as math;
 
-import 'package:diagram_capture/diagram_capture.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
@@ -25,19 +22,17 @@ enum GradientMode {
   sweep,
 }
 
-class TileModeDiagram extends StatelessWidget implements DiagramMetadata {
-  const TileModeDiagram(this.gradientMode, this.tileMode, {Key? key})
-      : super(key: key);
+class TileModeDiagram extends StatelessWidget with DiagramMetadata {
+  const TileModeDiagram(this.gradientMode, this.tileMode, {super.key});
 
   @override
-  String get name =>
-      'tile_mode_${describeEnum(tileMode)}_${describeEnum(gradientMode)}';
+  String get name => 'tile_mode_${tileMode.name}_${gradientMode.name}';
 
   final GradientMode gradientMode;
   final TileMode tileMode;
 
   String get gradientModeName {
-    final String s = describeEnum(gradientMode);
+    final String s = gradientMode.name;
     return s[0].toUpperCase() + s.substring(1);
   }
 
@@ -65,7 +60,6 @@ class TileModeDiagram extends StatelessWidget implements DiagramMetadata {
       case GradientMode.sweep:
         gradient = SweepGradient(
           center: FractionalOffset.center,
-          startAngle: 0.0,
           endAngle: math.pi / 2,
           colors: const <Color>[Color(0xFF0000FF), Color(0xFF00FF00)],
           stops: const <double>[0.0, 1.0],
@@ -103,7 +97,7 @@ class TileModeDiagram extends StatelessWidget implements DiagramMetadata {
               margin: const EdgeInsets.all(spacing),
               width: width,
               decoration: BoxDecoration(
-                border: Border.all(width: borderSize),
+                border: Border.all(),
                 color: const Color(0xFFFFFFFF),
               ),
               child: Column(
@@ -113,7 +107,7 @@ class TileModeDiagram extends StatelessWidget implements DiagramMetadata {
                       decoration: BoxDecoration(
                         gradient: _buildGradient(),
                         border: const Border(
-                          bottom: BorderSide(width: 1.0),
+                          bottom: BorderSide(),
                         ),
                       ),
                     ),
@@ -135,26 +129,16 @@ class TileModeDiagram extends StatelessWidget implements DiagramMetadata {
   }
 }
 
-class TileModeDiagramStep extends DiagramStep<TileModeDiagram> {
-  TileModeDiagramStep(DiagramController controller) : super(controller) {
-    for (final TileMode mode in TileMode.values) {
-      for (final GradientMode gradient in GradientMode.values) {
-        _diagrams.add(TileModeDiagram(gradient, mode));
-      }
-    }
-  }
-
+class TileModeDiagramStep extends DiagramStep {
   @override
   final String category = 'dart-ui';
 
-  final List<TileModeDiagram> _diagrams = <TileModeDiagram>[];
+  final List<TileModeDiagram> _diagrams = <TileModeDiagram>[
+    for (final TileMode mode in TileMode.values)
+      for (final GradientMode gradient in GradientMode.values)
+        TileModeDiagram(gradient, mode),
+  ];
 
   @override
   Future<List<TileModeDiagram>> get diagrams async => _diagrams;
-
-  @override
-  Future<File> generateDiagram(TileModeDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawDiagramToFile(File('${diagram.name}.png'));
-  }
 }

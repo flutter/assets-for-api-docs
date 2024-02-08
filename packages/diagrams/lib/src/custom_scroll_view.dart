@@ -3,15 +3,14 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'diagram_step.dart';
 import 'fake_drag_scroll_activity.dart';
+import 'utils.dart';
 
 final Duration _kTotalDuration = _kScrollUpDuration +
     _kScrollPauseDuration +
@@ -24,22 +23,23 @@ const Duration _kScrollDownDurationPartOne = Duration(milliseconds: 800);
 const Duration _kScrollDownDurationPartTwo = Duration(seconds: 1);
 const Duration _kScrollPauseDuration = Duration(milliseconds: 900);
 
-const double _kCurveAnimationFrameRate = 60.0;
 const String _customScrollView = 'custom_scroll_view';
 
-class CustomScrollViewDiagram extends StatefulWidget
-    implements DiagramMetadata {
-  const CustomScrollViewDiagram(this.name, {Key? key}) : super(key: key);
+class CustomScrollViewDiagram extends StatefulWidget with DiagramMetadata {
+  const CustomScrollViewDiagram(this.name, {super.key});
 
   @override
   final String name;
 
   @override
   State<StatefulWidget> createState() => _CustomScrollViewDiagramState();
+
+  @override
+  Duration? get duration => _kTotalDuration;
 }
 
 class _CustomScrollViewDiagramState extends State<CustomScrollViewDiagram>
-    with TickerProviderStateMixin<CustomScrollViewDiagram> {
+    with TickerProviderStateMixin, LockstepStateMixin {
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -60,17 +60,17 @@ class _CustomScrollViewDiagramState extends State<CustomScrollViewDiagram>
   }
 
   Future<void> _play() async {
-    await Future<void>.delayed(_kScrollPauseDuration);
+    await waitLockstep(_kScrollPauseDuration);
     await _animate(
       to: 650.0,
       duration: _kScrollUpDuration,
     );
-    await Future<void>.delayed(_kScrollPauseDuration);
+    await waitLockstep(_kScrollPauseDuration);
     await _animate(
       to: 500.0,
       duration: _kScrollDownDurationPartOne,
     );
-    await Future<void>.delayed(_kScrollPauseDuration);
+    await waitLockstep(_kScrollPauseDuration);
     await _animate(
       to: 0.0,
       duration: _kScrollDownDurationPartTwo,
@@ -144,9 +144,7 @@ class _CustomScrollViewDiagramState extends State<CustomScrollViewDiagram>
   }
 }
 
-class CustomScrollViewDiagramStep extends DiagramStep<CustomScrollViewDiagram> {
-  CustomScrollViewDiagramStep(DiagramController controller) : super(controller);
-
+class CustomScrollViewDiagramStep extends DiagramStep {
   @override
   final String category = 'widgets';
 
@@ -155,15 +153,4 @@ class CustomScrollViewDiagramStep extends DiagramStep<CustomScrollViewDiagram> {
       <CustomScrollViewDiagram>[
         const CustomScrollViewDiagram(_customScrollView),
       ];
-
-  @override
-  Future<File> generateDiagram(CustomScrollViewDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawAnimatedDiagramToFiles(
-      end: _kTotalDuration,
-      frameRate: _kCurveAnimationFrameRate,
-      name: diagram.name,
-      category: category,
-    );
-  }
 }

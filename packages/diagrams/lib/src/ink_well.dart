@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'dart:io';
-
 import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -13,15 +11,45 @@ import 'utils.dart';
 
 final GlobalKey _splashKey = GlobalKey();
 
-class InkWellDiagram extends StatelessWidget implements DiagramMetadata {
-  InkWellDiagram({Key? key}) : super(key: key);
+class InkWellDiagram extends StatefulWidget with DiagramMetadata {
+  const InkWellDiagram({super.key});
 
+  @override
+  String get name => 'ink_well';
+
+  @override
+  Duration get startAt => const Duration(milliseconds: 550);
+
+  @override
+  State<InkWellDiagram> createState() => _InkWellDiagramState();
+}
+
+class _InkWellDiagramState extends State<InkWellDiagram>
+    with TickerProviderStateMixin, LockstepStateMixin {
   final GlobalKey canvasKey = GlobalKey();
   final GlobalKey childKey = GlobalKey();
   final GlobalKey heroKey = GlobalKey();
 
+  Future<void> startAnimation() async {
+    // Wait for the tree to finish building before attempting to find our
+    // RenderObject.
+    await Future<void>.delayed(Duration.zero);
+
+    final WidgetController controller = DiagramWidgetController.of(context);
+    final RenderBox target =
+        _splashKey.currentContext!.findRenderObject()! as RenderBox;
+    final Offset targetOffset =
+        target.localToGlobal(target.size.bottomRight(Offset.zero));
+    final TestGesture gesture = await controller.startGesture(targetOffset);
+    await waitLockstep(const Duration(seconds: 1));
+    gesture.up();
+  }
+
   @override
-  String get name => 'ink_well';
+  void initState() {
+    super.initState();
+    startAnimation();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -82,34 +110,14 @@ class InkWellDiagram extends StatelessWidget implements DiagramMetadata {
   }
 }
 
-class InkWellDiagramStep extends DiagramStep<InkWellDiagram> {
-  InkWellDiagramStep(DiagramController controller) : super(controller) {
-    _diagrams.add(InkWellDiagram());
-  }
-
-  final List<InkWellDiagram> _diagrams = <InkWellDiagram>[];
-
+class InkWellDiagramStep extends DiagramStep {
   @override
   final String category = 'material';
 
   @override
-  Future<List<InkWellDiagram>> get diagrams async => _diagrams;
-
-  @override
-  Future<File> generateDiagram(InkWellDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-
-    controller.advanceTime(Duration.zero);
-    final RenderBox target =
-        _splashKey.currentContext!.findRenderObject()! as RenderBox;
-    final Offset targetOffset =
-        target.localToGlobal(target.size.bottomRight(Offset.zero));
-    final TestGesture gesture = await controller.startGesture(targetOffset);
-    final File result = await controller.drawDiagramToFile(
-      File('${diagram.name}.png'),
-      timestamp: const Duration(milliseconds: 550),
-    );
-    gesture.up();
-    return result;
+  Future<List<DiagramMetadata>> get diagrams async {
+    return const <DiagramMetadata>[
+      InkWellDiagram(),
+    ];
   }
 }

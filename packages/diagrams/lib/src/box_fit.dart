@@ -3,21 +3,18 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 
-import 'package:diagram_capture/diagram_capture.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
 
-class BoxFitDiagram extends StatelessWidget implements DiagramMetadata {
-  const BoxFitDiagram(this.fit, {Key? key}) : super(key: key);
+class BoxFitDiagram extends StatelessWidget with DiagramMetadata {
+  const BoxFitDiagram(this.fit, {super.key});
 
   final BoxFit fit;
 
   @override
-  String get name => 'box_fit_${describeEnum(fit)}';
+  String get name => 'box_fit_${fit.name}';
 
   @override
   Widget build(BuildContext context) {
@@ -29,8 +26,8 @@ class BoxFitDiagram extends StatelessWidget implements DiagramMetadata {
       child: FittedBox(
         fit: fit,
         child: Container(
-          width: 5.0 * 12.0,
-          height: 5.0 * 12.0,
+          width: 5.0 * 13.0,
+          height: 5.0 * 13.0,
           decoration: BoxDecoration(
             border: Border.all(width: 2.0, color: Colors.teal[700]!),
             color: Colors.teal[600],
@@ -80,24 +77,14 @@ class BoxFitDiagram extends StatelessWidget implements DiagramMetadata {
   }
 }
 
-class BoxFitDiagramStep extends DiagramStep<BoxFitDiagram> {
-  BoxFitDiagramStep(DiagramController controller) : super(controller) {
-    for (final BoxFit fit in BoxFit.values) {
-      _diagrams.add(BoxFitDiagram(fit));
-    }
-  }
-
+class BoxFitDiagramStep extends DiagramStep {
   @override
   final String category = 'painting';
 
-  final List<BoxFitDiagram> _diagrams = <BoxFitDiagram>[];
+  final List<BoxFitDiagram> _diagrams = <BoxFitDiagram>[
+    for (final BoxFit fit in BoxFit.values) BoxFitDiagram(fit),
+  ];
 
   @override
   Future<List<BoxFitDiagram>> get diagrams async => _diagrams;
-
-  @override
-  Future<File> generateDiagram(BoxFitDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawDiagramToFile(File('${diagram.name}.png'));
-  }
 }

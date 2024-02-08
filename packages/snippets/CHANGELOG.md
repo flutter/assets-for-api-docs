@@ -1,3 +1,12 @@
+## 0.4.0
+
+* Fix absolute path usage for --output-directory.
+* Update dependencies.
+
+## 0.3.1
+
+* Upgrade to Dart 3.0
+
 ## 0.3.0
 
 * Removes obsolete `extract_sample.dart` script.

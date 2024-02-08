@@ -3,9 +3,7 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
@@ -13,8 +11,8 @@ import 'diagram_step.dart';
 const String _column = 'column';
 const String _columnWithProperties = 'column_properties';
 
-class ColumnDiagram extends StatelessWidget implements DiagramMetadata {
-  const ColumnDiagram(this.name, {Key? key}) : super(key: key);
+class ColumnDiagram extends StatelessWidget with DiagramMetadata {
+  const ColumnDiagram(this.name, {super.key});
 
   @override
   final String name;
@@ -24,13 +22,12 @@ class ColumnDiagram extends StatelessWidget implements DiagramMetadata {
     Widget returnWidget;
     switch (name) {
       case _column:
-        returnWidget = Column(
-          children: const <Widget>[
+        returnWidget = const Column(
+          children: <Widget>[
             Text('Deliver features faster'),
             Text('Craft beautiful UIs'),
             Expanded(
               child: FittedBox(
-                fit: BoxFit.contain, // otherwise the logo will be tiny
                 child: FlutterLogo(),
               ),
             ),
@@ -76,9 +73,7 @@ class ColumnDiagram extends StatelessWidget implements DiagramMetadata {
   }
 }
 
-class ColumnDiagramStep extends DiagramStep<ColumnDiagram> {
-  ColumnDiagramStep(DiagramController controller) : super(controller);
-
+class ColumnDiagramStep extends DiagramStep {
   @override
   final String category = 'widgets';
 
@@ -87,10 +82,4 @@ class ColumnDiagramStep extends DiagramStep<ColumnDiagram> {
         const ColumnDiagram(_column),
         const ColumnDiagram(_columnWithProperties),
       ];
-
-  @override
-  Future<File> generateDiagram(ColumnDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawDiagramToFile(File('${diagram.name}.png'));
-  }
 }

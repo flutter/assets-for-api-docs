@@ -3,16 +3,14 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
 import 'utils.dart';
 
-class AppBarDiagram extends StatefulWidget implements DiagramMetadata {
-  const AppBarDiagram({Key? key, required this.name}) : super(key: key);
+class AppBarDiagram extends StatefulWidget with DiagramMetadata {
+  const AppBarDiagram({super.key, required this.name});
 
   @override
   final String name;
@@ -45,9 +43,7 @@ class _DiagramState extends State<AppBarDiagram> {
         child: Material(
           color: const Color(0xFFFFFFFF),
           child: MediaQuery(
-            data: const MediaQueryData(
-              padding: EdgeInsets.zero,
-            ),
+            data: const MediaQueryData(),
             child: Stack(
               children: <Widget>[
                 Center(
@@ -83,7 +79,6 @@ class _DiagramState extends State<AppBarDiagram> {
                           height: 50.0,
                           padding: const EdgeInsets.all(4.0),
                           child: const Placeholder(
-                            strokeWidth: 2.0,
                             color: Color(0xFFFFFFFF),
                           ),
                         ),
@@ -117,19 +112,11 @@ class _DiagramState extends State<AppBarDiagram> {
   }
 }
 
-class AppBarDiagramStep extends DiagramStep<AppBarDiagram> {
-  AppBarDiagramStep(DiagramController controller) : super(controller);
-
+class AppBarDiagramStep extends DiagramStep {
   @override
   final String category = 'material';
 
   @override
   Future<List<AppBarDiagram>> get diagrams async =>
       <AppBarDiagram>[const AppBarDiagram(name: 'app_bar')];
-
-  @override
-  Future<File> generateDiagram(AppBarDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawDiagramToFile(File('${diagram.name}.png'));
-  }
 }

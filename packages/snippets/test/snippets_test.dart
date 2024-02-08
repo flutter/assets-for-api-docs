@@ -43,7 +43,7 @@ void main() {
     late Directory tmpDir;
     late File template;
 
-    void _writeSkeleton(String type) {
+    void writeSkeleton(String type) {
       switch (type) {
         case 'dartpad':
           configuration.getHtmlSkeletonFile('dartpad').writeAsStringSync('''
@@ -74,7 +74,6 @@ void main() {
           flutterRoot: memoryFileSystem
               .directory(path.join(tmpDir.absolute.path, 'flutter')),
           filesystem: memoryFileSystem);
-      configuration.createOutputDirectoryIfNeeded();
       configuration.templatesDirectory.createSync(recursive: true);
       configuration.skeletonsDirectory.createSync(recursive: true);
       template = memoryFileSystem.file(
@@ -88,7 +87,7 @@ void main() {
 
 {{code}}
 ''');
-      <String>['dartpad', 'sample', 'snippet'].forEach(_writeSkeleton);
+      <String>['dartpad', 'sample', 'snippet'].forEach(writeSkeleton);
       FlutterInformation.instance =
           FakeFlutterInformation(configuration.flutterRoot);
       generator = SnippetGenerator(
@@ -351,6 +350,7 @@ void main() {
 
       snippets_main.platform = platform;
       snippets_main.filesystem = memoryFileSystem;
+      snippets_main.processManager = fakeProcessManager;
       final File input = memoryFileSystem
           .file(tmpDir.childFile('input.snippet'))
         ..writeAsString('/// Test file');

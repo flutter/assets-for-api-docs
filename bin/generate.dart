@@ -98,6 +98,7 @@ class DiagramGenerator {
   Future<void> generateDiagrams({
     List<String> categories = const <String>[],
     List<String> names = const <String>[],
+    List<String> steps = const <String>[],
   }) async {
     final DateTime startTime = DateTime.now();
     if (!await _findIdForDeviceName()) {
@@ -106,7 +107,7 @@ class DiagramGenerator {
     }
 
     try {
-      await _createScreenshots(categories, names);
+      await _createScreenshots(categories, names, steps);
       final List<File> outputFiles =
           await _combineAnimations(await _transferImages());
       await _optimizeImages(outputFiles);
@@ -120,7 +121,10 @@ class DiagramGenerator {
   }
 
   Future<void> _createScreenshots(
-      List<String> categories, List<String> names) async {
+    List<String> categories,
+    List<String> names,
+    List<String> steps,
+  ) async {
     print('Creating images.');
     final List<String> filters = <String>[];
     for (final String category in categories) {
@@ -130,6 +134,10 @@ class DiagramGenerator {
     for (final String name in names) {
       filters.add('--name');
       filters.add(path.basenameWithoutExtension(name));
+    }
+    for (final String step in steps) {
+      filters.add('--step');
+      filters.add(step);
     }
     if (deviceTargetPlatform.startsWith('android')) {
       filters.add('--platform');
@@ -267,15 +275,56 @@ class DiagramGenerator {
       List<AnimationMetadata> metadataList) async {
     final Directory destDir = Directory(assetDir);
     final List<File> outputs = <File>[];
-    final List<WorkerJob> jobs = <WorkerJob>[];
+    // The key represent the iterations and starts with 0. Iterations are
+    // executed sequentially.
+    //
+    // This can be useful if one job relies on the product of another job.
+    // TODO(chunhtai): figure out how to `join` WorkJob[s] so that this iteration
+    // logic is not needed.
+    final Map<int, List<WorkerJob>> jobs = <int, List<WorkerJob>>{};
     for (final AnimationMetadata metadata in metadataList) {
       final String prefix = '${metadata.category}/${metadata.name}';
-      final File destination = File(path.join(destDir.path, '$prefix.mp4'));
+
+      final File destination = File(path.join(destDir.path, '$prefix.${metadata.videoFormat.name}'));
       if (destination.existsSync()) {
         destination.deleteSync();
       }
-      print('Converting ${metadata.name} animation to mp4.');
-      jobs.add(WorkerJob(
+      if (!destination.parent.existsSync()) {
+        destination.parent.createSync(recursive: true);
+      }
+      print('Converting ${metadata.name} animation to ${metadata.videoFormat.name}.');
+      _generateCommands(metadata: metadata, destination: destination.path, jobs: jobs);
+      outputs.add(destination);
+    }
+    final ProcessPool pool = ProcessPool(processRunner: processRunner);
+    for (int iteration = 0; jobs.containsKey(iteration); iteration += 1) {
+      final List<WorkerJob> currentIteration = jobs[iteration]!;
+      await pool.runToCompletion(currentIteration);
+      _checkJobResults(ffmpegCommand, currentIteration);
+    }
+    return outputs;
+  }
+
+  void _generateCommands({
+    required AnimationMetadata metadata,
+    required String destination,
+    required Map<int, List<WorkerJob>> jobs,
+  }) {
+    switch(metadata.videoFormat) {
+      case VideoFormat.mp4:
+        _generateMp4Commands(metadata: metadata, destination: destination, jobs: jobs);
+      case VideoFormat.gif:
+        _generateGifCommands(metadata: metadata, destination: destination, jobs: jobs);
+    }
+  }
+
+  void _generateMp4Commands({
+    required AnimationMetadata metadata,
+    required String destination,
+    required Map<int, List<WorkerJob>> jobs,
+  }) {
+    jobs.putIfAbsent(0, () => <WorkerJob>[]).add(
+      WorkerJob(
         <String>[
           ffmpegCommand,
           '-loglevel', 'fatal', // Only print fatal errors.
@@ -294,18 +343,52 @@ class DiagramGenerator {
           '-y', // overwrite output
           // Video format set to YUV420 color space for compatibility.
           '-vf', 'format=yuv420p',
-          destination.path, // output movie.
+          destination, // output movie.
         ],
         workingDirectory: temporaryDirectory,
         stdinRaw: _concatInputs(metadata.frameFiles),
         printOutput: true,
-      ));
-      outputs.add(destination);
-    }
-    final ProcessPool pool = ProcessPool(processRunner: processRunner);
-    await pool.runToCompletion(jobs);
-    _checkJobResults(ffmpegCommand, jobs);
-    return outputs;
+      ),
+    );
+  }
+
+  void _generateGifCommands({
+    required AnimationMetadata metadata,
+    required String destination,
+    required Map<int, List<WorkerJob>> jobs,
+  }) {
+    final String palette = path.join(temporaryDirectory.path, '${metadata.category}_${metadata.name}.png');
+    // Generate palette.
+    jobs.putIfAbsent(0, () => <WorkerJob>[]).add(
+      WorkerJob(
+        <String>[
+          ffmpegCommand,
+          '-loglevel', 'fatal', // Only print fatal errors.
+          '-i', '-', // read in the concatenated frame files from stdin.
+          '-vf', 'fps=${metadata.frameRate.toStringAsFixed(0)},scale=${metadata.width}:-1:flags=lanczos,palettegen',
+          palette,
+        ],
+        workingDirectory: temporaryDirectory,
+        stdinRaw: _concatInputs(metadata.frameFiles),
+        printOutput: true,
+      ),
+    );
+    // Create the final gif with the palette.
+    jobs.putIfAbsent(1, () => <WorkerJob>[]).add(
+      WorkerJob(
+        <String>[
+          ffmpegCommand,
+          '-loglevel', 'fatal', // Only print fatal errors.
+          '-i', '-',
+          '-i', palette,
+          '-filter_complex', 'fps=${metadata.frameRate.toStringAsFixed(0)},scale=${metadata.width}:-1:flags=lanczos[x];[x][1:v]paletteuse',
+          destination,
+        ],
+        workingDirectory: temporaryDirectory,
+        stdinRaw: _concatInputs(metadata.frameFiles),
+        printOutput: true,
+      ),
+    );
   }
 
   Future<List<File>> _combineAnimations(List<File> inputFiles) async {
@@ -313,8 +396,9 @@ class DiagramGenerator {
         .where((File input) => path.basename(input.path) == 'error.log')
         .toList();
 
-    if (errorFiles.length != 1)
+    if (errorFiles.length != 1) {
       throw GeneratorException('Subprocess did not complete cleanly!');
+    }
 
     print('Processing ${inputFiles.length - 1} files...');
 
@@ -490,9 +574,13 @@ Future<void> main(List<String> arguments) async {
           'DiagramStep.category property.');
   parser.addMultiOption('name',
       abbr: 'n',
-      help: 'Specify the name of diagrams that should be generated. The '
+      help: 'Specify the names of diagrams that should be generated. The '
           'name is the basename of the output file and may be specified with '
           'or without the suffix.');
+  parser.addMultiOption('step',
+      abbr: 's',
+      help:
+          'Specify the class names of the DiagramSteps that should be generated.');
   final ArgResults flags = parser.parse(arguments);
 
   if (flags['help'] as bool) {
@@ -521,6 +609,7 @@ Future<void> main(List<String> arguments) async {
     ).generateDiagrams(
       categories: flags['category'] as List<String>,
       names: flags['name'] as List<String>,
+      steps: flags['step'] as List<String>,
     );
   } on GeneratorException catch (error) {
     stderr

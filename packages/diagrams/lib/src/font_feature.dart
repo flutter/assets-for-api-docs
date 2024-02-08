@@ -3,10 +3,7 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
-import 'dart:ui' show FontFeature;
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
@@ -20,8 +17,8 @@ const double _margin = 5.0;
 const double _gap = _margin * 5;
 
 abstract class FontFeatureDiagram<T> extends StatelessWidget
-    implements DiagramMetadata {
-  const FontFeatureDiagram({Key? key}) : super(key: key);
+    with DiagramMetadata {
+  const FontFeatureDiagram({super.key});
 
   Iterable<T> get entries;
   Widget buildEntry(BuildContext context, T entry);
@@ -97,8 +94,8 @@ class FontFeatureValueDiagram extends FontFeatureDiagram<int> {
     this.sampleText = 'The infamous Tuna Torture.', // from s03e09, of course
     this.style,
     this.additionalFontFeatures,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   String get name => 'font_feature_$feature';
@@ -118,6 +115,7 @@ class FontFeatureValueDiagram extends FontFeatureDiagram<int> {
         sampleText,
         style: textStyle.copyWith(
           fontFamily: font,
+          package: 'diagrams',
           fontFeatures: <FontFeature>[
             FontFeature(feature, entry),
             ...?additionalFontFeatures,
@@ -133,8 +131,7 @@ class FontFeatureValueDiagram extends FontFeatureDiagram<int> {
 class HistoricalFontFeatureDiagram
     extends FontFeatureDiagram<List<FontFeature>> {
   const HistoricalFontFeatureDiagram(this.font,
-      {required this.sampleText, Key? key})
-      : super(key: key);
+      {required this.sampleText, super.key});
 
   @override
   String get name => 'font_feature_historical';
@@ -145,9 +142,9 @@ class HistoricalFontFeatureDiagram
   @override
   Iterable<List<FontFeature>> get entries => const <List<FontFeature>>[
         <FontFeature>[FontFeature('hist', 0), FontFeature('hlig', 0)],
-        <FontFeature>[FontFeature('hist', 1), FontFeature('hlig', 0)],
-        <FontFeature>[FontFeature('hist', 0), FontFeature('hlig', 1)],
-        <FontFeature>[FontFeature('hist', 1), FontFeature('hlig', 1)],
+        <FontFeature>[FontFeature('hist'), FontFeature('hlig', 0)],
+        <FontFeature>[FontFeature('hist', 0), FontFeature('hlig')],
+        <FontFeature>[FontFeature('hist'), FontFeature('hlig')],
       ];
 
   @override
@@ -155,6 +152,7 @@ class HistoricalFontFeatureDiagram
         sampleText,
         style: textStyle.copyWith(
           fontFamily: font,
+          package: 'diagrams',
           fontFeatures: entry,
         ),
         textAlign: TextAlign.left,
@@ -168,7 +166,7 @@ class HistoricalFontFeatureDiagram
 }
 
 class LocalizedFontFeatureDiagram extends FontFeatureDiagram<Locale> {
-  const LocalizedFontFeatureDiagram({Key? key}) : super(key: key);
+  const LocalizedFontFeatureDiagram({super.key});
 
   @override
   String get name => 'font_feature_locl';
@@ -186,9 +184,9 @@ class LocalizedFontFeatureDiagram extends FontFeatureDiagram<Locale> {
         '次 化 刃 直 入 令',
         style: textStyle.copyWith(
           fontFamily: 'Noto Sans',
+          package: 'diagrams',
           fontFeatures: <FontFeature>[
-            const FontFeature(
-                'locl', 1), // redundant, this is the default anyway
+            const FontFeature('locl'), // redundant, this is the default anyway
           ],
         ),
         textAlign: TextAlign.left,
@@ -200,7 +198,7 @@ class LocalizedFontFeatureDiagram extends FontFeatureDiagram<Locale> {
 }
 
 abstract class SideBySideFontFeatureDiagram<T> extends FontFeatureDiagram<T> {
-  const SideBySideFontFeatureDiagram({Key? key}) : super(key: key);
+  const SideBySideFontFeatureDiagram({super.key});
 
   String get font;
 
@@ -209,7 +207,7 @@ abstract class SideBySideFontFeatureDiagram<T> extends FontFeatureDiagram<T> {
     return Row(
       children: <Widget>[
         buildSubEntry(context, entry, enable: false),
-        buildSubEntry(context, entry, enable: true),
+        buildSubEntry(context, entry),
       ],
     );
   }
@@ -258,7 +256,7 @@ abstract class SideBySideFontFeatureDiagram<T> extends FontFeatureDiagram<T> {
 
 class CharacterVariantsFontFeatureDiagram
     extends SideBySideFontFeatureDiagram<String> {
-  const CharacterVariantsFontFeatureDiagram({Key? key}) : super(key: key);
+  const CharacterVariantsFontFeatureDiagram({super.key});
 
   @override
   String get name => 'font_feature_cvXX';
@@ -294,9 +292,10 @@ class CharacterVariantsFontFeatureDiagram
         demos[entry]!,
         style: textStyle.copyWith(
           fontFamily: font,
+          package: 'diagrams',
           fontFeatures: enable
               ? <FontFeature>[
-                  FontFeature(entry, 1),
+                  FontFeature(entry),
                 ]
               : null,
         ),
@@ -311,7 +310,7 @@ class CharacterVariantsFontFeatureDiagram
 
 class StylisticSetsFontFeatureDiagram1
     extends SideBySideFontFeatureDiagram<String> {
-  const StylisticSetsFontFeatureDiagram1({Key? key}) : super(key: key);
+  const StylisticSetsFontFeatureDiagram1({super.key});
 
   @override
   String get name => 'font_feature_ssXX_1';
@@ -334,9 +333,10 @@ class StylisticSetsFontFeatureDiagram1
         demos[entry]!,
         style: textStyle.copyWith(
           fontFamily: font,
+          package: 'diagrams',
           fontFeatures: enable
               ? <FontFeature>[
-                  FontFeature(entry, 1),
+                  FontFeature(entry),
                 ]
               : null,
         ),
@@ -350,7 +350,7 @@ class StylisticSetsFontFeatureDiagram1
 }
 
 class StylisticSetsFontFeatureDiagram2 extends FontFeatureDiagram<int> {
-  const StylisticSetsFontFeatureDiagram2({Key? key}) : super(key: key);
+  const StylisticSetsFontFeatureDiagram2({super.key});
 
   @override
   String get name => 'font_feature_ssXX_2';
@@ -365,8 +365,9 @@ class StylisticSetsFontFeatureDiagram2 extends FontFeatureDiagram<int> {
         '-> MCMXCVII <-', // the year SG-1 started
         style: textStyle.copyWith(
           fontFamily: font,
+          package: 'diagrams',
           fontFeatures: <FontFeature>[
-            if (0x01 & entry > 0) const FontFeature('ss01', 1),
+            if (0x01 & entry > 0) const FontFeature('ss01'),
             if (0x02 & entry > 0) const FontFeature('ss02', 2),
           ],
         ),
@@ -389,9 +390,7 @@ class StylisticSetsFontFeatureDiagram2 extends FontFeatureDiagram<int> {
   }
 }
 
-class FontFeatureDiagramStep extends DiagramStep<FontFeatureDiagram<Object>> {
-  FontFeatureDiagramStep(DiagramController controller) : super(controller);
-
+class FontFeatureDiagramStep extends DiagramStep {
   @override
   final String category = 'dart-ui';
 
@@ -443,10 +442,4 @@ class FontFeatureDiagramStep extends DiagramStep<FontFeatureDiagram<Object>> {
         const FontFeatureValueDiagram('zero', <int>[0, 1], 'Source Code Pro',
             sampleText: 'One million is: 1,000,000.00'),
       ];
-
-  @override
-  Future<File> generateDiagram(FontFeatureDiagram<Object> diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawDiagramToFile(File('${diagram.name}.png'));
-  }
 }

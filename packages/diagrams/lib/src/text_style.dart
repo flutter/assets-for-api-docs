@@ -3,9 +3,7 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
@@ -17,8 +15,8 @@ const String _size = 'text_style_size';
 const String _wavyUnderline = 'text_style_wavy_red_underline';
 const String _customFonts = 'text_style_custom_fonts';
 
-class TextStyleDiagram extends StatelessWidget implements DiagramMetadata {
-  const TextStyleDiagram(this.name, {Key? key}) : super(key: key);
+class TextStyleDiagram extends StatelessWidget with DiagramMetadata {
+  const TextStyleDiagram(this.name, {super.key});
 
   @override
   final String name;
@@ -93,7 +91,10 @@ class TextStyleDiagram extends StatelessWidget implements DiagramMetadata {
       case _customFonts:
         returnWidget = const Text(
           'Look, when Britain taxed our tea, we got frisky.',
-          style: TextStyle(fontFamily: 'Raleway'),
+          style: TextStyle(
+            fontFamily: 'Raleway',
+            package: 'diagrams',
+          ),
         );
         break;
     }
@@ -110,9 +111,7 @@ class TextStyleDiagram extends StatelessWidget implements DiagramMetadata {
   }
 }
 
-class TextStyleDiagramStep extends DiagramStep<TextStyleDiagram> {
-  TextStyleDiagramStep(DiagramController controller) : super(controller);
-
+class TextStyleDiagramStep extends DiagramStep {
   @override
   final String category = 'painting';
 
@@ -125,10 +124,4 @@ class TextStyleDiagramStep extends DiagramStep<TextStyleDiagram> {
         const TextStyleDiagram(_wavyUnderline),
         const TextStyleDiagram(_customFonts),
       ];
-
-  @override
-  Future<File> generateDiagram(TextStyleDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-    return controller.drawDiagramToFile(File('${diagram.name}.png'));
-  }
 }

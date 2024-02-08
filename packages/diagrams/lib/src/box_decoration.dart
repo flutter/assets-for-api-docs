@@ -3,17 +3,19 @@
 // found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:io';
 
-import 'package:diagram_capture/diagram_capture.dart';
 import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
 
 const String _boxDecoration = 'box_decoration';
 
-class BoxDecorationDiagram extends StatelessWidget implements DiagramMetadata {
-  const BoxDecorationDiagram(this.name, {Key? key}) : super(key: key);
+const ImageProvider owlImage = NetworkImage(
+  'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl-2.jpg',
+);
+
+class BoxDecorationDiagram extends StatelessWidget with DiagramMetadata {
+  const BoxDecorationDiagram(this.name, {super.key});
 
   @override
   final String name;
@@ -31,12 +33,10 @@ class BoxDecorationDiagram extends StatelessWidget implements DiagramMetadata {
           decoration: BoxDecoration(
             color: const Color(0xff7c94b6),
             image: const DecorationImage(
-              image: NetworkImage(
-                  'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl-2.jpg'),
+              image: owlImage,
               fit: BoxFit.cover,
             ),
             border: Border.all(
-              color: Colors.black,
               width: 8,
             ),
             borderRadius: BorderRadius.circular(12),
@@ -45,11 +45,14 @@ class BoxDecorationDiagram extends StatelessWidget implements DiagramMetadata {
       ),
     );
   }
+
+  @override
+  Future<void> setUp(GlobalKey key) async {
+    await precacheImage(owlImage, key.currentContext!);
+  }
 }
 
-class BoxDecorationDiagramStep extends DiagramStep<BoxDecorationDiagram> {
-  BoxDecorationDiagramStep(DiagramController controller) : super(controller);
-
+class BoxDecorationDiagramStep extends DiagramStep {
   @override
   final String category = 'painting';
 
@@ -58,13 +61,4 @@ class BoxDecorationDiagramStep extends DiagramStep<BoxDecorationDiagram> {
       <BoxDecorationDiagram>[
         const BoxDecorationDiagram(_boxDecoration),
       ];
-
-  @override
-  Future<File> generateDiagram(BoxDecorationDiagram diagram) async {
-    controller.builder = (BuildContext context) => diagram;
-
-    await Future<void>.delayed(const Duration(seconds: 1));
-
-    return controller.drawDiagramToFile(File('${diagram.name}.png'));
-  }
 }

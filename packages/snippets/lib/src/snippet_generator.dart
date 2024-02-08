@@ -43,11 +43,6 @@ class SnippetGenerator {
   static DartFormatter formatter =
       DartFormatter(pageWidth: 80, fixes: StyleFix.all);
 
-  /// This returns the output file for a given snippet ID. Only used for
-  /// [SampleType.sample] snippets.
-  File getOutputFile(String id) => configuration.filesystem
-      .file(path.join(configuration.outputDirectory.path, '$id.dart'));
-
   /// Gets the path to the template file requested.
   File? getTemplatePath(String templateName, {Directory? templatesDir}) {
     final Directory templateDir =
@@ -215,9 +210,11 @@ class SnippetGenerator {
           assert(buffer.isEmpty);
           subLine = null;
         } else if (block[index].text.startsWith('// ')) {
-          if (buffer.length > 1) // don't include leading comments
-            buffer.add(SourceLine(
-                '/${block[index].text}')); // so that it doesn't start with "// " and get caught in this again
+          if (buffer.length > 1) {
+            // don't include leading comments
+            // so that it doesn't start with "// " and get caught in this again
+            buffer.add(SourceLine('/${block[index].text}'));
+          }
         } else {
           subLine ??= block[index];
           buffer.add(block[index]);
@@ -298,7 +295,7 @@ class SnippetGenerator {
   }
 
   String _loadFileAsUtf8(File file) {
-    return file.readAsStringSync(encoding: utf8);
+    return file.readAsStringSync();
   }
 
   /// Generate the HTML using the skeleton file for the type of the given sample.
@@ -347,8 +344,6 @@ class SnippetGenerator {
     bool addSectionMarkers = false,
     bool includeAssumptions = false,
   }) {
-    configuration.createOutputDirectoryIfNeeded();
-
     sample.metadata['copyright'] ??= copyright;
     final List<TemplateInjection> snippetData = parseInput(sample);
     sample.description = description ?? sample.description;
@@ -459,7 +454,7 @@ class SnippetGenerator {
     int count = 0;
     for (final String line in code.split('\n')) {
       count++;
-      buffer.writeln('${count.toString().padLeft(5, ' ')}: $line');
+      buffer.writeln('${count.toString().padLeft(5)}: $line');
     }
     return buffer.toString();
   }

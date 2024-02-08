@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 import 'dart:io';
 
 import 'package:path/path.dart' as path;
@@ -18,9 +16,9 @@ final String repoRoot =
 
 void main() {
   group('DiagramGenerator', () {
-    DiagramGenerator generator;
-    Directory temporaryDirectory;
-    FakeProcessManager processManager;
+    late DiagramGenerator generator;
+    late Directory temporaryDirectory;
+    late FakeProcessManager processManager;
 
     setUp(() {
       processManager = FakeProcessManager((String input) {});
@@ -67,7 +65,7 @@ void main() {
               temporaryDirectory.path,
             ],
             workingDirectory: path.join(
-                DiagramGenerator.projectDir, 'utils', 'diagram_generator'),
+                DiagramGenerator.projectDir, 'packages', 'diagram_generator'),
           ): <ProcessResult>[
             ProcessResult(0, 0, '', ''),
           ],

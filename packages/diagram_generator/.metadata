@@ -4,7 +4,36 @@
 # This file should be version controlled and should not be manually edited.
 
 version:
-  revision: 4dba2ed4504f13cc4d207385237cbfb8376ab207
-  channel: reorderable_list_handles
+  revision: "f808aaa12f3a32d316f0ee476ffc24502f7c3d25"
+  channel: "main"
 
 project_type: app
+
+# Tracks metadata for the flutter migrate command
+migration:
+  platforms:
+    - platform: root
+      create_revision: f808aaa12f3a32d316f0ee476ffc24502f7c3d25
+      base_revision: f808aaa12f3a32d316f0ee476ffc24502f7c3d25
+    - platform: android
+      create_revision: f808aaa12f3a32d316f0ee476ffc24502f7c3d25
+      base_revision: f808aaa12f3a32d316f0ee476ffc24502f7c3d25
+    - platform: ios
+      create_revision: f808aaa12f3a32d316f0ee476ffc24502f7c3d25
+      base_revision: f808aaa12f3a32d316f0ee476ffc24502f7c3d25
+    - platform: linux
+      create_revision: f808aaa12f3a32d316f0ee476ffc24502f7c3d25
+      base_revision: f808aaa12f3a32d316f0ee476ffc24502f7c3d25
+    - platform: macos
+      create_revision: f808aaa12f3a32d316f0ee476ffc24502f7c3d25
+      base_revision: f808aaa12f3a32d316f0ee476ffc24502f7c3d25
+
+  # User provided section
+
+  # List of Local paths (relative to this file) that should be
+  # ignored by the migrate tool.
+  #
+  # Files that are not part of the templates will be ignored by default.
+  unmanaged_files:
+    - 'lib/main.dart'
+    - 'ios/Runner.xcodeproj/project.pbxproj'
