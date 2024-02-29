@@ -1,3 +1,7 @@
+## 0.4.3
+
+* Backwards compatibility: Substitute in "main" when running on "master" channel.
+
 ## 0.4.2
 
 * Switch master channel to main.
