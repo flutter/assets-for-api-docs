@@ -73,10 +73,10 @@ void main() {
       expect(decodedImage.height, equals(50));
       expect(decodedImage.length, equals(5000));
       final image.Pixel testPixel = decodedImage.getRange(50, 10, 1, 1).current;
-      expect(testPixel.a, equals(0xff));
-      expect(testPixel.r, equals(0x1c));
-      expect(testPixel.g, equals(0x1b));
-      expect(testPixel.b, equals(0x1f));
+      expect(testPixel.a, equals(0xfe));
+      expect(testPixel.r, equals(0xed));
+      expect(testPixel.g, equals(0xbe));
+      expect(testPixel.b, equals(0xef));
     });
 
     test('can create images from an animated widget', () async {
@@ -173,10 +173,10 @@ void main() {
       expect(decodedImage.length, equals(45000));
       final image.Pixel testPixel =
           decodedImage.getRange(150, 20, 1, 1).current;
-      expect(testPixel.a, equals(0xff));
-      expect(testPixel.r, equals(0x1c));
-      expect(testPixel.g, equals(0x1b));
-      expect(testPixel.b, equals(0x1f));
+      expect(testPixel.a, equals(0xfe));
+      expect(testPixel.r, equals(0xed));
+      expect(testPixel.g, equals(0xbe));
+      expect(testPixel.b, equals(0xef));
     });
 
     test('can inject gestures', () async {
@@ -219,7 +219,7 @@ void main() {
 Widget buildStaticDiagram(BuildContext context) {
   return Container(
     constraints: BoxConstraints.tight(const Size(100.0, 50.0)),
-    child: const Text('Diagram'),
+    color: const Color(0xfeedbeef),
   );
 }
 
