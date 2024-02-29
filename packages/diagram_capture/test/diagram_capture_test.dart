@@ -219,7 +219,7 @@ void main() {
 Widget buildStaticDiagram(BuildContext context) {
   return Container(
     constraints: BoxConstraints.tight(const Size(100.0, 50.0)),
-    color: Color(0xfeedbeef),
+    color: const Color(0xfeedbeef),
   );
 }
 
