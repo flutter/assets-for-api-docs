@@ -1,3 +1,7 @@
+## 0.4.2
+
+* Switch master channel to main.
+
 ## 0.4.1
 
 * Update dependencies.
