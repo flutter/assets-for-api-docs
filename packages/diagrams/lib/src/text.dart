@@ -11,8 +11,9 @@ import 'package:flutter/rendering.dart';
 
 import 'diagram_step.dart';
 
-const String _text = 'text';
 const String _textEllipsis = 'text_ellipsis';
+const String _textFadeMaxLines = 'text_fade_max_lines';
+const String _textFadeSoftWrap = 'text_fade_soft_wrap';
 const String _textRich = 'text_rich';
 const String _textBorder = 'text_border';
 const String _textGradient = 'text_gradient';
@@ -28,24 +29,30 @@ class TextDiagram extends StatelessWidget with DiagramMetadata {
     Widget returnWidget;
 
     switch (name) {
-      case _text:
-        returnWidget = const Text(
-          'Hello, Ruth! How are you?',
-          textAlign: TextAlign.center,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(fontWeight: FontWeight.bold),
-        );
-        break;
       case _textEllipsis:
-        returnWidget = ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 100),
-          child: const Text(
-            'Hello, Ruth! How are you?',
-            textAlign: TextAlign.center,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-        );
+        returnWidget = Container(
+            width: 100,
+            decoration: BoxDecoration(border: Border.all()),
+            child: const Text(
+                overflow: TextOverflow.ellipsis, 'Hello Ruth, how are you?'));
+        break;
+      case _textFadeMaxLines:
+        returnWidget = Container(
+            width: 100,
+            decoration: BoxDecoration(border: Border.all()),
+            child: const Text(
+                overflow: TextOverflow.fade,
+                maxLines: 1,
+                'Hello Ruth, how are you?'));
+        break;
+      case _textFadeSoftWrap:
+        returnWidget = Container(
+            width: 100,
+            decoration: BoxDecoration(border: Border.all()),
+            child: const Text(
+                overflow: TextOverflow.fade,
+                softWrap: false,
+                'Hello Ruth, how are you?'));
         break;
       case _textRich:
         returnWidget = const Text.rich(
@@ -504,10 +511,10 @@ class TextHeightBreakdown extends TextHeightDiagram with DiagramMetadata {
     return Container(
       alignment: Alignment.center,
       height: 500,
-      child: Column(
+      child: const Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          const Center(
+          Center(
             child: Text(
               'Roboto, fontSize: $_fontSize, height: $_height',
               style: TextStyle(fontSize: 30, fontWeight: FontWeight.w700),
@@ -522,7 +529,7 @@ class TextHeightBreakdown extends TextHeightDiagram with DiagramMetadata {
                 children: <Widget>[
                   Column(
                     mainAxisSize: MainAxisSize.min,
-                    children: const <Widget>[
+                    children: <Widget>[
                       // This must be the first child of the column for the Row
                       // elements to be properly baseline-aligned.
                       TextHeightBreakdownRow(
@@ -544,12 +551,12 @@ class TextHeightBreakdown extends TextHeightDiagram with DiagramMetadata {
                       // centered. This is a hack to offset the "Configuration 1"
                       // caption so it looks more aligned with the glyph.
                       Text('                        Configuration 1',
-                          textScaleFactor: 1.5),
+                          textScaler: TextScaler.linear(1.5)),
                     ],
                   ),
                   Column(
                     mainAxisSize: MainAxisSize.min,
-                    children: const <Widget>[
+                    children: <Widget>[
                       TextHeightBreakdownRow(
                         text: _text,
                         backgroundColor: Colors.transparent,
@@ -565,7 +572,8 @@ class TextHeightBreakdown extends TextHeightDiagram with DiagramMetadata {
                         paintCaptions: true,
                       ),
                       SizedBox(height: 30),
-                      Text('Configuration 2', textScaleFactor: 1.5),
+                      Text('Configuration 2',
+                          textScaler: TextScaler.linear(1.5)),
                     ],
                   ),
                 ],
@@ -576,7 +584,7 @@ class TextHeightBreakdown extends TextHeightDiagram with DiagramMetadata {
                 children: <Widget>[
                   Column(
                     mainAxisSize: MainAxisSize.min,
-                    children: const <Widget>[
+                    children: <Widget>[
                       TextHeightBreakdownRow(
                         text: _text,
                         backgroundColor: Colors.transparent,
@@ -589,12 +597,13 @@ class TextHeightBreakdown extends TextHeightDiagram with DiagramMetadata {
                         paintLeadingIndicator: true,
                       ),
                       SizedBox(height: 30),
-                      Text('Configuration 3', textScaleFactor: 1.5),
+                      Text('Configuration 3',
+                          textScaler: TextScaler.linear(1.5)),
                     ],
                   ),
                   Column(
                     mainAxisSize: MainAxisSize.min,
-                    children: const <Widget>[
+                    children: <Widget>[
                       TextHeightBreakdownRow(
                         text: _text,
                         backgroundColor: Colors.transparent,
@@ -608,7 +617,8 @@ class TextHeightBreakdown extends TextHeightDiagram with DiagramMetadata {
                             TextHeightBehavior(applyHeightToLastDescent: false),
                       ),
                       SizedBox(height: 30),
-                      Text('Configuration 4', textScaleFactor: 1.5),
+                      Text('Configuration 4',
+                          textScaler: TextScaler.linear(1.5)),
                     ],
                   ),
                 ],
@@ -1060,8 +1070,9 @@ class TextDiagramStep extends DiagramStep {
 
   @override
   Future<List<TextDiagram>> get diagrams async => <TextDiagram>[
-        const TextDiagram(_text),
         const TextDiagram(_textEllipsis),
+        const TextDiagram(_textFadeMaxLines),
+        const TextDiagram(_textFadeSoftWrap),
         const TextDiagram(_textRich),
         const TextDiagram(_textBorder),
         const TextDiagram(_textGradient),

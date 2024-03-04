@@ -43,11 +43,6 @@ class SnippetGenerator {
   static DartFormatter formatter =
       DartFormatter(pageWidth: 80, fixes: StyleFix.all);
 
-  /// This returns the output file for a given snippet ID. Only used for
-  /// [SampleType.sample] snippets.
-  File getOutputFile(String id) => configuration.filesystem
-      .file(path.join(configuration.outputDirectory.path, '$id.dart'));
-
   /// Gets the path to the template file requested.
   File? getTemplatePath(String templateName, {Directory? templatesDir}) {
     final Directory templateDir =
@@ -102,11 +97,11 @@ class SnippetGenerator {
         ? '<div class="snippet-description">{@end-inject-html}${sample.description.trim()}{@inject-html}</div>'
         : '';
 
-    // DartPad only supports stable or master as valid channels. Use master
+    // DartPad only supports stable or main as valid channels. Use main
     // if not on stable so that local runs will work (although they will
     // still take their sample code from the master docs server).
     final String channel =
-        sample.metadata['channel'] == 'stable' ? 'stable' : 'master';
+        sample.metadata['channel'] == 'stable' ? 'stable' : 'main';
 
     final Map<String, String> substitutions = <String, String>{
       'description': description,
@@ -349,8 +344,6 @@ class SnippetGenerator {
     bool addSectionMarkers = false,
     bool includeAssumptions = false,
   }) {
-    configuration.createOutputDirectoryIfNeeded();
-
     sample.metadata['copyright'] ??= copyright;
     final List<TemplateInjection> snippetData = parseInput(sample);
     sample.description = description ?? sample.description;

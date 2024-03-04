@@ -21,12 +21,6 @@ void main() {
       expect(config.configDirectory.path,
           matches(RegExp(r'[/\\]flutter sdk[/\\]dev[/\\]snippets[/\\]config')));
     });
-    test('output directory is correct', () async {
-      expect(
-          config.outputDirectory.path,
-          matches(RegExp(
-              r'[/\\]flutter sdk[/\\]dev[/\\]docs[/\\]doc[/\\]snippets')));
-    });
     test('skeleton directory is correct', () async {
       expect(
           config.skeletonsDirectory.path,

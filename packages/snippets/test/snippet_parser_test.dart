@@ -71,7 +71,6 @@ void main() {
           .directory(path.join(tmpDir.absolute.path, 'flutter'));
       configuration = FlutterRepoSnippetConfiguration(
           flutterRoot: flutterRoot, filesystem: memoryFileSystem);
-      configuration.createOutputDirectoryIfNeeded();
       configuration.templatesDirectory.createSync(recursive: true);
       configuration.skeletonsDirectory.createSync(recursive: true);
       template = memoryFileSystem.file(
@@ -267,7 +266,7 @@ class DocumentedClass {
   /// ```
   /// {@end-tool}
   const DocumentedClass.name();
-  
+
   /// Member variable comment
   /// {@tool snippet}
   /// Description
@@ -275,7 +274,7 @@ class DocumentedClass {
   /// String elementName = 'DocumentedClass.intMember';
   /// ```
   /// {@end-tool}
-  int intMember;  
+  int intMember;
 
   /// Member comment
   /// {@tool snippet}
@@ -284,7 +283,7 @@ class DocumentedClass {
   /// String elementName = 'DocumentedClass.member';
   /// ```
   /// {@end-tool}
-  void member() {}  
+  void member() {}
 }
 ''');
 }

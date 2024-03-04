@@ -35,15 +35,18 @@ List<Map<String, CupertinoDynamicColor>> activeColors =
 ];
 List<Map<String, CupertinoDynamicColor>> systemColors1 =
     <Map<String, CupertinoDynamicColor>>[
-  <String, CupertinoDynamicColor>{'systemBlue': CupertinoColors.systemBlue},
-  <String, CupertinoDynamicColor>{'systemGreen': CupertinoColors.systemGreen},
-  <String, CupertinoDynamicColor>{'systemIndigo': CupertinoColors.systemIndigo},
-  <String, CupertinoDynamicColor>{'systemOrange': CupertinoColors.systemOrange},
-  <String, CupertinoDynamicColor>{'systemPink': CupertinoColors.systemPink},
-  <String, CupertinoDynamicColor>{'systemPurple': CupertinoColors.systemPurple},
   <String, CupertinoDynamicColor>{'systemRed': CupertinoColors.systemRed},
-  <String, CupertinoDynamicColor>{'systemTeal': CupertinoColors.systemTeal},
+  <String, CupertinoDynamicColor>{'systemOrange': CupertinoColors.systemOrange},
   <String, CupertinoDynamicColor>{'systemYellow': CupertinoColors.systemYellow},
+  <String, CupertinoDynamicColor>{'systemGreen': CupertinoColors.systemGreen},
+  <String, CupertinoDynamicColor>{'systemMint': CupertinoColors.systemMint},
+  <String, CupertinoDynamicColor>{'systemTeal': CupertinoColors.systemTeal},
+  <String, CupertinoDynamicColor>{'systemCyan': CupertinoColors.systemCyan},
+  <String, CupertinoDynamicColor>{'systemBlue': CupertinoColors.systemBlue},
+  <String, CupertinoDynamicColor>{'systemIndigo': CupertinoColors.systemIndigo},
+  <String, CupertinoDynamicColor>{'systemPurple': CupertinoColors.systemPurple},
+  <String, CupertinoDynamicColor>{'systemPink': CupertinoColors.systemPink},
+  <String, CupertinoDynamicColor>{'systemBrown': CupertinoColors.systemBrown},
 ];
 List<Map<String, CupertinoDynamicColor>> systemColors2 =
     <Map<String, CupertinoDynamicColor>>[
@@ -144,7 +147,7 @@ class CupertinoColorsDiagram extends StatelessWidget with DiagramMetadata {
                   ),
                 ],
               ),
-              for (Map<String, Color> basicColor in basicColors)
+              for (final Map<String, Color> basicColor in basicColors)
                 TableRow(
                   children: <Widget>[
                     Text(
@@ -183,7 +186,7 @@ class CupertinoColorsDiagram extends StatelessWidget with DiagramMetadata {
                   ),
                 ],
               ),
-              for (Map<String, CupertinoDynamicColor> activeColor
+              for (final Map<String, CupertinoDynamicColor> activeColor
                   in activeColors)
                 TableRow(
                   children: <Widget>[
@@ -228,7 +231,7 @@ class CupertinoColorsDiagram extends StatelessWidget with DiagramMetadata {
                   ),
                 ],
               ),
-              for (Map<String, CupertinoDynamicColor> systemColor
+              for (final Map<String, CupertinoDynamicColor> systemColor
                   in systemColors1)
                 TableRow(
                   children: <Widget>[
@@ -255,7 +258,7 @@ class CupertinoColorsDiagram extends StatelessWidget with DiagramMetadata {
           child: Table(
             defaultVerticalAlignment: TableCellVerticalAlignment.middle,
             children: <TableRow>[
-              for (Map<String, CupertinoDynamicColor> systemColor
+              for (final Map<String, CupertinoDynamicColor> systemColor
                   in systemColors2)
                 TableRow(
                   children: <Widget>[
@@ -282,7 +285,7 @@ class CupertinoColorsDiagram extends StatelessWidget with DiagramMetadata {
           child: Table(
             defaultVerticalAlignment: TableCellVerticalAlignment.middle,
             children: <TableRow>[
-              for (Map<String, CupertinoDynamicColor> systemColor
+              for (final Map<String, CupertinoDynamicColor> systemColor
                   in systemColors3)
                 TableRow(
                   children: <Widget>[
@@ -327,7 +330,8 @@ class CupertinoColorsDiagram extends StatelessWidget with DiagramMetadata {
                   ),
                 ],
               ),
-              for (Map<String, CupertinoDynamicColor> labelColor in labelColors)
+              for (final Map<String, CupertinoDynamicColor> labelColor
+                  in labelColors)
                 TableRow(
                   children: <Widget>[
                     Text(
@@ -375,7 +379,7 @@ class CupertinoColorsDiagram extends StatelessWidget with DiagramMetadata {
                 ),
               ],
             ),
-            for (Map<String, CupertinoDynamicColor> backgroundColor
+            for (final Map<String, CupertinoDynamicColor> backgroundColor
                 in backgroundColors)
               TableRow(
                 children: <Widget>[
@@ -454,9 +458,9 @@ class ColorWidget extends StatelessWidget {
           width: 90.0,
           child: Row(
             children: <Widget>[
-              Column(
+              const Column(
                 mainAxisSize: MainAxisSize.min,
-                children: const <Widget>[
+                children: <Widget>[
                   Text('R'),
                   Text('G'),
                   Text('B'),

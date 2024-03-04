@@ -5,14 +5,14 @@ homepage: https://github.com/flutter/flutter
 publish_to: none
 
 environment:
-  sdk: ">=2.17.0-0 <3.0.0"
+  sdk: ">=3.0.0 <4.0.0"
 
 dartdoc:
   nodoc: true
 
 dependencies:
   args: ^2.0.0
-  file: ^6.1.0
+  file: ^7.0.0
   snippets:
     path: ..
 

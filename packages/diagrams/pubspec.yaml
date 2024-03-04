@@ -1,17 +1,19 @@
 name: diagrams
-description: Main app for building API doc assets.
+description: Main app for drawing API doc diagrams.
 repository: https://github.com/flutter/assets-for-api-docs/tree/master/packages/diagrams
 issue_tracker: https://github.com/flutter/flutter/issues
 version: 0.1.0
 publish_to: none
 
 environment:
-  sdk: ">=2.17.0-0 <3.0.0"
+  sdk: ">=3.0.0 <4.0.0"
   flutter: ">=1.0.0 <4.0.0"
 
 dependencies:
   archive: ^3.1.2
   cupertino_icons: ^1.0.3
+  animation_metadata:
+    path: ../animation_metadata
   diagram_capture:
     path: ../diagram_capture
   flutter:
@@ -19,7 +21,7 @@ dependencies:
   flutter_test:
     sdk: flutter
   path_provider: ^2.0.1
-  process: ^4.2.1
+  process: ^5.0.1
   vector_math: ^2.1.2
 
 dev_dependencies:

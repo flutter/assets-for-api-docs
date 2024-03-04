@@ -10,7 +10,7 @@ import 'package:flutter/rendering.dart';
 /// Evenly packs children with arbitrary height, dividing them up into separate
 /// columns depending on the available width.
 class StaggeredList extends MultiChildRenderObjectWidget {
-  StaggeredList({
+  const StaggeredList({
     super.key,
     required this.minColumnWidth,
     required super.children,

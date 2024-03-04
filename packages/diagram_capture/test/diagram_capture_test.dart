@@ -13,61 +13,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:image/image.dart' as image;
 import 'package:path/path.dart' as path;
 
-Widget buildStaticDiagram(BuildContext context) {
-  return Container(
-    constraints: BoxConstraints.tight(const Size(100.0, 50.0)),
-    child: const Text('Diagram'),
-  );
-}
-
-class TestAnimatedDiagram extends StatelessWidget {
-  const TestAnimatedDiagram({super.key, this.size = 1.0});
-
-  final double size;
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedContainer(
-      duration: const Duration(seconds: 1),
-      width: size,
-      height: size,
-      decoration: const ShapeDecoration(
-        shape: BeveledRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(10.0)),
-        ),
-        color: Color(0xfeedbeef),
-      ),
-    );
-  }
-}
-
-class TestTappableDiagram extends StatefulWidget {
-  const TestTappableDiagram({super.key});
-
-  @override
-  State<TestTappableDiagram> createState() => _TestTappableDiagramState();
-}
-
-class _TestTappableDiagramState extends State<TestTappableDiagram> {
-  bool on = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return TextButton(
-      style: ButtonStyle(
-        backgroundColor:
-            MaterialStateProperty.all<Color?>(on ? Colors.red : Colors.blue),
-      ),
-      onPressed: () {
-        setState(() {
-          on = !on;
-        });
-      },
-      child: const SizedBox.shrink(),
-    );
-  }
-}
-
 void main() {
   group('DiagramController', () {
     late Directory outputDir;
@@ -122,13 +67,16 @@ void main() {
       final File actualOutputFile =
           await controller.drawDiagramToFile(outputFile);
       expect(actualOutputFile.existsSync(), isTrue);
-      final List<int> imageContents = actualOutputFile.readAsBytesSync();
+      final Uint8List imageContents = actualOutputFile.readAsBytesSync();
       final image.Image decodedImage = image.decodePng(imageContents)!;
       expect(decodedImage.width, equals(100));
       expect(decodedImage.height, equals(50));
       expect(decodedImage.length, equals(5000));
-      expect(decodedImage[decodedImage.index(50, 10)],
-          equals(0xdd000000)); // Check a pixel value
+      final image.Pixel testPixel = decodedImage.getRange(50, 10, 1, 1).current;
+      expect(testPixel.a, equals(0xfe));
+      expect(testPixel.r, equals(0xed));
+      expect(testPixel.g, equals(0xbe));
+      expect(testPixel.b, equals(0xef));
     });
 
     test('can create images from an animated widget', () async {
@@ -198,7 +146,7 @@ void main() {
       for (final File file in frames) {
         expect(file.existsSync(), isTrue);
         expect(file.lengthSync(), greaterThan(0));
-        final List<int> imageContents = file.readAsBytesSync();
+        final Uint8List imageContents = file.readAsBytesSync();
         final image.Image decodedImage = image.decodePng(imageContents)!;
         expect(decodedImage.width, equals(expectedSizes[count]));
         expect(decodedImage.height, equals(expectedSizes[count]));
@@ -218,13 +166,17 @@ void main() {
       final File actualOutputFile =
           await controller.drawDiagramToFile(outputFile);
       expect(actualOutputFile.existsSync(), isTrue);
-      final List<int> imageContents = actualOutputFile.readAsBytesSync();
+      final Uint8List imageContents = actualOutputFile.readAsBytesSync();
       final image.Image decodedImage = image.decodePng(imageContents)!;
       expect(decodedImage.width, equals(300));
       expect(decodedImage.height, equals(150));
       expect(decodedImage.length, equals(45000));
-      expect(decodedImage[decodedImage.index(150, 20)],
-          equals(0xdd000000)); // Check a pixel value
+      final image.Pixel testPixel =
+          decodedImage.getRange(150, 20, 1, 1).current;
+      expect(testPixel.a, equals(0xfe));
+      expect(testPixel.r, equals(0xed));
+      expect(testPixel.g, equals(0xbe));
+      expect(testPixel.b, equals(0xef));
     });
 
     test('can inject gestures', () async {
@@ -237,12 +189,15 @@ void main() {
 
       final File outputFile = File('test3.png');
       File actualOutputFile = await controller.drawDiagramToFile(outputFile);
-      List<int> imageContents = actualOutputFile.readAsBytesSync();
+      Uint8List imageContents = actualOutputFile.readAsBytesSync();
       image.Image decodedImage = image.decodePng(imageContents)!;
       expect(decodedImage.width, equals(64));
       expect(decodedImage.height, equals(48));
-      expect(decodedImage[decodedImage.index(44, 18)],
-          equals(0xfff39621)); // Check a pixel value
+      image.Pixel testPixel = decodedImage.getRange(44, 18, 1, 1).current;
+      expect(testPixel.a, equals(0xff));
+      expect(testPixel.r, equals(0x21));
+      expect(testPixel.g, equals(0x96));
+      expect(testPixel.b, equals(0xf3));
 
       final TestGesture gesture =
           await controller.startGesture(const Offset(50.0, 50.0));
@@ -252,8 +207,66 @@ void main() {
       actualOutputFile = await controller.drawDiagramToFile(outputFile);
       imageContents = actualOutputFile.readAsBytesSync();
       decodedImage = image.decodePng(imageContents)!;
-      expect(decodedImage[decodedImage.index(44, 18)],
-          equals(0xff3643f4)); // Check a pixel value
+      testPixel = decodedImage.getRange(44, 18, 1, 1).current;
+      expect(testPixel.a, equals(0xff));
+      expect(testPixel.r, equals(0xf4));
+      expect(testPixel.g, equals(0x43));
+      expect(testPixel.b, equals(0x36));
     });
   });
+}
+
+Widget buildStaticDiagram(BuildContext context) {
+  return Container(
+    constraints: BoxConstraints.tight(const Size(100.0, 50.0)),
+    color: const Color(0xfeedbeef),
+  );
+}
+
+class TestAnimatedDiagram extends StatelessWidget {
+  const TestAnimatedDiagram({super.key, this.size = 1.0});
+
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedContainer(
+      duration: const Duration(seconds: 1),
+      width: size,
+      height: size,
+      decoration: const ShapeDecoration(
+        shape: BeveledRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+        ),
+        color: Color(0xfeedbeef),
+      ),
+    );
+  }
+}
+
+class TestTappableDiagram extends StatefulWidget {
+  const TestTappableDiagram({super.key});
+
+  @override
+  State<TestTappableDiagram> createState() => _TestTappableDiagramState();
+}
+
+class _TestTappableDiagramState extends State<TestTappableDiagram> {
+  bool on = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      style: ButtonStyle(
+        backgroundColor:
+            MaterialStateProperty.all<Color?>(on ? Colors.red : Colors.blue),
+      ),
+      onPressed: () {
+        setState(() {
+          on = !on;
+        });
+      },
+      child: const SizedBox.shrink(),
+    );
+  }
 }

@@ -37,8 +37,8 @@ class DiagramImage extends ImageProvider<DiagramImage>
   }
 
   @override
-  ImageStreamCompleter loadBuffer(
-      DiagramImage key, DecoderBufferCallback decode) {
+  ImageStreamCompleter loadImage(
+      DiagramImage key, ImageDecoderCallback decode) {
     return MultiFrameImageStreamCompleter(
       codec: _loadAsync(),
       chunkEvents: chunkEvents.stream,
@@ -93,7 +93,7 @@ class DiagramImage extends ImageProvider<DiagramImage>
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     if (other.runtimeType != runtimeType) {
       return false;
     }

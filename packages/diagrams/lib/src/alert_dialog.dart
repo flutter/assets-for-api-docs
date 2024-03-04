@@ -96,9 +96,9 @@ class _AlertDialogDiagramState extends State<AlertDialogDiagram>
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('AlertDialog'),
-          content: SingleChildScrollView(
+          content: const SingleChildScrollView(
             child: ListBody(
-              children: const <Widget>[
+              children: <Widget>[
                 Text('This is a demo alert dialog.'),
                 Text('Would you like to approve of this message?'),
               ],

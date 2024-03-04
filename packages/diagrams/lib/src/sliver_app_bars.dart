@@ -143,7 +143,7 @@ class SliverAppBarDiagramState extends State<SliverAppBarDiagram>
                 color: i.isEven ? Colors.white : Colors.black12,
                 height: 100.0,
                 child: Center(
-                  child: Text('$i', textScaleFactor: 5),
+                  child: Text('$i', textScaler: const TextScaler.linear(5)),
                 ),
               );
             })),

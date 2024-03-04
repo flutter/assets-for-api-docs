@@ -1,3 +1,24 @@
+## 0.4.3
+
+* Backwards compatibility: Substitute in "main" when running on "master" channel.
+
+## 0.4.2
+
+* Switch master channel to main.
+
+## 0.4.1
+
+* Update dependencies.
+
+## 0.4.0
+
+* Fix absolute path usage for --output-directory.
+* Update dependencies.
+
+## 0.3.1
+
+* Upgrade to Dart 3.0
+
 ## 0.3.0
 
 * Removes obsolete `extract_sample.dart` script.

@@ -4,7 +4,6 @@
 
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
@@ -15,7 +14,7 @@ class BoxFitDiagram extends StatelessWidget with DiagramMetadata {
   final BoxFit fit;
 
   @override
-  String get name => 'box_fit_${describeEnum(fit)}';
+  String get name => 'box_fit_${fit.name}';
 
   @override
   Widget build(BuildContext context) {
