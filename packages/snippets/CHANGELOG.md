@@ -1,3 +1,15 @@
+## 0.4.3
+
+* Backwards compatibility: Substitute in "main" when running on "master" channel.
+
+## 0.4.2
+
+* Switch master channel to main.
+
+## 0.4.1
+
+* Update dependencies.
+
 ## 0.4.0
 
 * Fix absolute path usage for --output-directory.

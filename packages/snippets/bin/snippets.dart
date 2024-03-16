@@ -59,7 +59,11 @@ String getChannelName({
   ProcessManager processManager = const LocalProcessManager(),
 }) {
   final String? envReleaseChannel = platform.environment['LUCI_BRANCH']?.trim();
-  if (<String>['master', 'stable'].contains(envReleaseChannel)) {
+  if (<String>['master', 'stable', 'main'].contains(envReleaseChannel)) {
+    // Backward compatibility: Still support running on "master", but pretend it is "main".
+    if (envReleaseChannel == 'master') {
+      return 'main';
+    }
     return envReleaseChannel!;
   }
 

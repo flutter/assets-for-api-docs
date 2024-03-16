@@ -97,11 +97,11 @@ class SnippetGenerator {
         ? '<div class="snippet-description">{@end-inject-html}${sample.description.trim()}{@inject-html}</div>'
         : '';
 
-    // DartPad only supports stable or master as valid channels. Use master
+    // DartPad only supports stable or main as valid channels. Use main
     // if not on stable so that local runs will work (although they will
     // still take their sample code from the master docs server).
     final String channel =
-        sample.metadata['channel'] == 'stable' ? 'stable' : 'master';
+        sample.metadata['channel'] == 'stable' ? 'stable' : 'main';
 
     final Map<String, String> substitutions = <String, String>{
       'description': description,
