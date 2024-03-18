@@ -584,6 +584,7 @@ class CurveDiagramStep extends DiagramStep {
         name: 'interval',
         caption: 'Interval(0.25, 0.75)',
         curve: Interval(0.25, 0.75)),
+    const CurveDiagram(name: 'split', caption: 'Split(0.5)', curve: Split(0.5)),
     const CurveDiagram(
         name: 'linear', caption: 'Curves.linear', curve: Curves.linear),
     const CurveDiagram(
