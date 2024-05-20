@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
 
+// ignore_for_file: deprecated_member_use, https://github.com/flutter/flutter/issues/148709
+
 class CardDiagram extends StatelessWidget with DiagramMetadata {
   const CardDiagram({super.key});
 

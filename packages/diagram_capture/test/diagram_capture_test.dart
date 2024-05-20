@@ -259,7 +259,7 @@ class _TestTappableDiagramState extends State<TestTappableDiagram> {
     return TextButton(
       style: ButtonStyle(
         backgroundColor:
-            MaterialStateProperty.all<Color?>(on ? Colors.red : Colors.blue),
+            WidgetStateProperty.all<Color?>(on ? Colors.red : Colors.blue),
       ),
       onPressed: () {
         setState(() {

@@ -174,7 +174,6 @@ class AnimatedPhysicalModelDiagram
             elevation: selected ? 20.0 : 0.0,
             shadowColor: Colors.grey,
             borderRadius: selected ? selectedBorder : unselectedBorder,
-            shape: BoxShape.rectangle,
             duration: _kAnimationDuration,
             curve: curve,
             child: Container(color: Colors.blue),
