@@ -33,7 +33,7 @@ class CardDiagram extends StatelessWidget with DiagramMetadata {
                 title: Text('The Enchanted Nightingale'),
                 subtitle: Text('Music by Julie Gable. Lyrics by Sidney Stein.'),
               ),
-              ButtonBar(
+              ButtonBar( // ignore: deprecated_member_use
                 children: <Widget>[
                   TextButton(
                     child: const Text('BUY TICKETS'),
