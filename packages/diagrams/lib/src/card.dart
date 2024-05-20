@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
 
+// ignore_for_file: deprecated_member_use
+
 class CardDiagram extends StatelessWidget with DiagramMetadata {
   const CardDiagram({super.key});
 
@@ -34,7 +36,6 @@ class CardDiagram extends StatelessWidget with DiagramMetadata {
                 subtitle: Text('Music by Julie Gable. Lyrics by Sidney Stein.'),
               ),
               ButtonBar(
-                // ignore: deprecated_member_use
                 children: <Widget>[
                   TextButton(
                     child: const Text('BUY TICKETS'),
