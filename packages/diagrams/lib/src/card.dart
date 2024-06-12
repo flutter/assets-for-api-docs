@@ -8,8 +8,6 @@ import 'package:flutter/material.dart';
 
 import 'diagram_step.dart';
 
-// ignore_for_file: deprecated_member_use, https://github.com/flutter/flutter/issues/148709
-
 class CardDiagram extends StatelessWidget with DiagramMetadata {
   const CardDiagram({super.key});
 
@@ -35,17 +33,23 @@ class CardDiagram extends StatelessWidget with DiagramMetadata {
                 title: Text('The Enchanted Nightingale'),
                 subtitle: Text('Music by Julie Gable. Lyrics by Sidney Stein.'),
               ),
-              ButtonBar(
-                children: <Widget>[
-                  TextButton(
-                    child: const Text('BUY TICKETS'),
-                    onPressed: () {},
-                  ),
-                  TextButton(
-                    child: const Text('LISTEN'),
-                    onPressed: () {},
-                  ),
-                ],
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: OverflowBar(
+                  alignment: MainAxisAlignment.end,
+                  spacing: 8.0,
+                  overflowSpacing: 8.0,
+                  children: <Widget>[
+                    TextButton(
+                      child: const Text('BUY TICKETS'),
+                      onPressed: () {},
+                    ),
+                    TextButton(
+                      child: const Text('LISTEN'),
+                      onPressed: () {},
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
