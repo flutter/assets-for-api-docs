@@ -93,7 +93,7 @@ BEGIN
             VALUE "FileDescription", "diagram_viewer" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "diagram_viewer" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2023 dev.flutter. All rights reserved." "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2024 dev.flutter. All rights reserved." "\0"
             VALUE "OriginalFilename", "diagram_viewer.exe" "\0"
             VALUE "ProductName", "diagram_viewer" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
