@@ -11,4 +11,4 @@ PRODUCT_NAME = diagram_viewer
 PRODUCT_BUNDLE_IDENTIFIER = dev.flutter.diagramViewer
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2023 dev.flutter. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2024 dev.flutter. All rights reserved.
