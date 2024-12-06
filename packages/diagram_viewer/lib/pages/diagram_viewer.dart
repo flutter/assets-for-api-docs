@@ -36,25 +36,22 @@ class _DiagramViewerPageState extends State<DiagramViewerPage>
   final GlobalKey tabBarViewKey = GlobalKey();
 
   // Only allow the body of the viewer to receive pointer events from diagrams.
-  late final SubtreeWidgetController widgetController =
-      SubtreeWidgetController(WidgetsBinding.instance, tabBarViewKey);
+  late final SubtreeWidgetController widgetController = SubtreeWidgetController(
+    WidgetsBinding.instance,
+    tabBarViewKey,
+  );
 
   @override
   void initState() {
     super.initState();
 
-    tabController = TabController(
-      length: diagrams.length,
-      vsync: this,
-    );
+    tabController = TabController(length: diagrams.length, vsync: this);
 
     tabController.addListener(onTabChange);
 
     controllers = <DiagramTickerController>[
       for (final DiagramMetadata diagram in diagrams)
-        DiagramTickerController(
-          diagram: diagram,
-        ),
+        DiagramTickerController(diagram: diagram),
     ];
 
     ticker = createTicker((Duration elapsed) {
@@ -115,9 +112,10 @@ class _DiagramViewerPageState extends State<DiagramViewerPage>
               padding: const EdgeInsets.all(8.0),
               child: Material(
                 shape: const StadiumBorder(),
-                color: theme.brightness == Brightness.light
-                    ? theme.primaryColor
-                    : theme.colorScheme.surface,
+                color:
+                    theme.brightness == Brightness.light
+                        ? theme.primaryColor
+                        : theme.colorScheme.surface,
                 elevation: 4,
               ),
             ),
@@ -178,31 +176,21 @@ class _DiagramViewerPageState extends State<DiagramViewerPage>
             builder: (BuildContext context, double value, Widget? child) {
               return Opacity(
                 opacity: value,
-                child: SizedBox(
-                  width: 300 * value,
-                  child: child,
-                ),
+                child: SizedBox(width: 300 * value, child: child),
               );
             },
             child: SliderTheme(
-              data: SliderThemeData(
-                disabledThumbColor: Colors.grey.shade200,
-              ),
+              data: SliderThemeData(disabledThumbColor: Colors.grey.shade200),
               child: AnimatedBuilder(
                 animation: controller.elapsed,
                 builder: (BuildContext context, Widget? child) {
-                  return Slider(
-                    value: controller.progress,
-                    onChanged: null,
-                  );
+                  return Slider(value: controller.progress, onChanged: null);
                 },
               ),
             ),
           ),
         ),
-        const BrightnessToggleButton(
-          color: Colors.white,
-        ),
+        const BrightnessToggleButton(color: Colors.white),
       ],
     );
   }
@@ -234,19 +222,14 @@ class _DiagramViewerPageState extends State<DiagramViewerPage>
                 child: widget.diagrams[index],
               ),
             ),
-          )
+          ),
       ],
     );
 
     final Widget body = Stack(
       children: <Widget>[
         Padding(
-          padding: const EdgeInsets.only(
-            left: 8,
-            top: 8,
-            right: 8,
-            bottom: 48,
-          ),
+          padding: const EdgeInsets.only(left: 8, top: 8, right: 8, bottom: 48),
           child: DiagramWidgetController(
             controller: widgetController,
             child: tabBarView,
@@ -277,12 +260,7 @@ class _DiagramViewerPageState extends State<DiagramViewerPage>
                   },
                 ),
                 Expanded(
-                  child: ClipRect(
-                    child: SafeArea(
-                      left: false,
-                      child: body,
-                    ),
-                  ),
+                  child: ClipRect(child: SafeArea(left: false, child: body)),
                 ),
               ],
             ),
@@ -297,12 +275,7 @@ class _DiagramViewerPageState extends State<DiagramViewerPage>
             ),
             body: Column(
               children: <Widget>[
-                Expanded(
-                  child: SafeArea(
-                    left: false,
-                    child: body,
-                  ),
-                ),
+                Expanded(child: SafeArea(left: false, child: body)),
               ],
             ),
           );
@@ -373,10 +346,7 @@ class DiagramSwitchDrawer extends StatelessWidget {
 
   Widget buildChild(BuildContext context, int index) {
     final DiagramMetadata diagram = diagrams[index];
-    return ListTile(
-      title: Text(diagram.name),
-      onTap: () => onChanged(index),
-    );
+    return ListTile(title: Text(diagram.name), onTap: () => onChanged(index));
   }
 
   @override
@@ -390,10 +360,7 @@ class DiagramSwitchDrawer extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              AppBar(
-                elevation: 0,
-                title: Text('${step.runtimeType}'),
-              ),
+              AppBar(elevation: 0, title: Text('${step.runtimeType}')),
               Expanded(
                 child: ListView.builder(
                   itemBuilder: buildChild,

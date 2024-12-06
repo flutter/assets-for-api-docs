@@ -41,11 +41,12 @@ Future<void> main(List<String> args) async {
   DiagramFlutterBinding.ensureInitialized();
   late final List<String> arguments;
   if (platform.isAndroid) {
-    arguments = PlatformDispatcher.instance.defaultRouteName.length > 5
-        ? Uri.decodeComponent(
-                PlatformDispatcher.instance.defaultRouteName.substring(5))
-            .split(' ')
-        : <String>[];
+    arguments =
+        PlatformDispatcher.instance.defaultRouteName.length > 5
+            ? Uri.decodeComponent(
+              PlatformDispatcher.instance.defaultRouteName.substring(5),
+            ).split(' ')
+            : <String>[];
   } else {
     arguments = args;
   }
@@ -71,12 +72,16 @@ Future<void> main(List<String> args) async {
   final List<String> categories = flags['category'] as List<String>;
   final List<String> names = flags['name'] as List<String>;
   final List<String> steps = flags['step'] as List<String>;
-  final Set<DiagramPlatform> platforms = (flags['platform'] as List<String>)
-      .map<DiagramPlatform>((String platformStr) {
-    assert(diagramStepPlatformNames.containsKey(platformStr),
-        'Invalid platform $platformStr');
-    return diagramStepPlatformNames[platformStr]!;
-  }).toSet();
+  final Set<DiagramPlatform> platforms =
+      (flags['platform'] as List<String>).map<DiagramPlatform>((
+        String platformStr,
+      ) {
+        assert(
+          diagramStepPlatformNames.containsKey(platformStr),
+          'Invalid platform $platformStr',
+        );
+        return diagramStepPlatformNames[platformStr]!;
+      }).toSet();
 
   print(
     'Filters:\n  categories: $categories\n  names: $names\n  steps: $steps',
@@ -84,7 +89,8 @@ Future<void> main(List<String> args) async {
 
   final DateTime start = DateTime.now();
   final Directory outputDirectory = await prepareOutputDirectory(
-      platform.isAndroid ? null : flags['output-dir'] as String?);
+    platform.isAndroid ? null : flags['output-dir'] as String?,
+  );
 
   final DiagramController controller = DiagramController(
     outputDirectory: outputDirectory,
@@ -93,94 +99,99 @@ Future<void> main(List<String> args) async {
   );
 
   final Completer<void> done = Completer<void>();
-  Zone.current.fork(specification: ZoneSpecification(
-    handleUncaughtError: (
-      Zone self,
-      ZoneDelegate parent,
-      Zone zone,
-      Object error,
-      StackTrace stackTrace,
-    ) {
-      print('Exception! $error\n$stackTrace');
-      errorLog.writeln(error);
-      errorLog.writeln(stackTrace);
-    },
-  )).runGuarded(() async {
-    for (final DiagramStep step in allDiagramSteps) {
-      if ((categories.isNotEmpty && !categories.contains(step.category)) ||
-          (platforms.isNotEmpty &&
-              platforms.intersection(step.platforms).isEmpty) ||
-          (steps.isNotEmpty &&
-              !steps.any((String name) =>
-                  step.runtimeType.toString().toLowerCase() ==
-                  name.toLowerCase()))) {
-        continue;
-      }
-      final Directory stepOutputDirectory =
-          Directory(path.join(outputDirectory.absolute.path, step.category));
-      stepOutputDirectory.createSync(recursive: true);
-      controller.outputDirectory = stepOutputDirectory;
-      controller.pixelRatio = 1.0;
-      print('Working on step ${step.runtimeType}');
+  Zone.current
+      .fork(
+        specification: ZoneSpecification(
+          handleUncaughtError: (
+            Zone self,
+            ZoneDelegate parent,
+            Zone zone,
+            Object error,
+            StackTrace stackTrace,
+          ) {
+            print('Exception! $error\n$stackTrace');
+            errorLog.writeln(error);
+            errorLog.writeln(stackTrace);
+          },
+        ),
+      )
+      .runGuarded(() async {
+        for (final DiagramStep step in allDiagramSteps) {
+          if ((categories.isNotEmpty && !categories.contains(step.category)) ||
+              (platforms.isNotEmpty &&
+                  platforms.intersection(step.platforms).isEmpty) ||
+              (steps.isNotEmpty &&
+                  !steps.any(
+                    (String name) =>
+                        step.runtimeType.toString().toLowerCase() ==
+                        name.toLowerCase(),
+                  ))) {
+            continue;
+          }
+          final Directory stepOutputDirectory = Directory(
+            path.join(outputDirectory.absolute.path, step.category),
+          );
+          stepOutputDirectory.createSync(recursive: true);
+          controller.outputDirectory = stepOutputDirectory;
+          controller.pixelRatio = 1.0;
+          print('Working on step ${step.runtimeType}');
 
-      for (final DiagramMetadata diagram in await step.diagrams) {
-        if (names.isNotEmpty && !names.contains(diagram.name)) {
-          continue;
-        }
+          for (final DiagramMetadata diagram in await step.diagrams) {
+            if (names.isNotEmpty && !names.contains(diagram.name)) {
+              continue;
+            }
 
-        // Set up a custom onError to hide errors that the diagram expects, like
-        // RenderFlex overflows.
-        final FlutterExceptionHandler? oldOnError = FlutterError.onError;
-        FlutterError.onError = (FlutterErrorDetails details) {
-          final String exception = details.exception.toString();
-          for (final Pattern pattern in diagram.expectedErrors) {
-            if (pattern.allMatches(exception).isNotEmpty) {
-              return;
+            // Set up a custom onError to hide errors that the diagram expects, like
+            // RenderFlex overflows.
+            final FlutterExceptionHandler? oldOnError = FlutterError.onError;
+            FlutterError.onError = (FlutterErrorDetails details) {
+              final String exception = details.exception.toString();
+              for (final Pattern pattern in diagram.expectedErrors) {
+                if (pattern.allMatches(exception).isNotEmpty) {
+                  return;
+                }
+              }
+              if (oldOnError != null) {
+                oldOnError(details);
+              }
+            };
+
+            try {
+              final GlobalKey key = GlobalKey();
+              controller.builder = (BuildContext context) {
+                return KeyedSubtree(key: key, child: diagram);
+              };
+              await diagram.setUp(key);
+              if (diagram.duration != null) {
+                await controller.drawAnimatedDiagramToFiles(
+                  end: diagram.duration!,
+                  frameRate: diagram.frameRate,
+                  category: step.category,
+                  name: diagram.name,
+                  start: diagram.startAt,
+                  videoFormat: diagram.videoFormat,
+                );
+              } else {
+                await controller.drawDiagramToFile(
+                  File('${diagram.name}.png'),
+                  timestamp: diagram.startAt,
+                  framerate: diagram.frameRate,
+                );
+              }
+            } finally {
+              FlutterError.onError = oldOnError;
             }
           }
-          if (oldOnError != null) {
-            oldOnError(details);
-          }
-        };
-
-        try {
-          final GlobalKey key = GlobalKey();
-          controller.builder = (BuildContext context) {
-            return KeyedSubtree(
-              key: key,
-              child: diagram,
-            );
-          };
-          await diagram.setUp(key);
-          if (diagram.duration != null) {
-            await controller.drawAnimatedDiagramToFiles(
-              end: diagram.duration!,
-              frameRate: diagram.frameRate,
-              category: step.category,
-              name: diagram.name,
-              start: diagram.startAt,
-              videoFormat: diagram.videoFormat,
-            );
-          } else {
-            await controller.drawDiagramToFile(
-              File('${diagram.name}.png'),
-              timestamp: diagram.startAt,
-              framerate: diagram.frameRate,
-            );
-          }
-        } finally {
-          FlutterError.onError = oldOnError;
         }
-      }
-    }
-    done.complete();
-  });
+        done.complete();
+      });
   await done.future;
 
   // Save errors, if any. (We always create the file, even if empty, to signal we got to the end.)
   final String errors = errorLog.toString();
-  final File errorsFile =
-      File(path.join(outputDirectory.absolute.path, 'error.log'));
+  final File errorsFile = File(
+    path.join(outputDirectory.absolute.path, 'error.log'),
+  );
   errorsFile.writeAsStringSync(errors);
   if (errors.isNotEmpty) {
     print('Wrote errors to: ${errorsFile.path}');
@@ -207,9 +218,6 @@ class SmokeTestApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: 'Smoke Test',
-      home: Placeholder(),
-    );
+    return const MaterialApp(title: 'Smoke Test', home: Placeholder());
   }
 }

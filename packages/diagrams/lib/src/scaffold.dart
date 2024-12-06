@@ -31,11 +31,10 @@ class ScaffoldDiagramState extends State<ScaffoldDiagram> {
     switch (widget.name) {
       case _scaffold:
         returnWidget = Scaffold(
-          appBar: AppBar(
-            title: const Text('Sample Code'),
+          appBar: AppBar(title: const Text('Sample Code')),
+          body: Center(
+            child: Text('You have pressed the button $_count times.'),
           ),
-          body:
-              Center(child: Text('You have pressed the button $_count times.')),
           floatingActionButton: FloatingActionButton(
             onPressed: () => setState(() => _count++),
             tooltip: 'Increment Counter',
@@ -45,11 +44,10 @@ class ScaffoldDiagramState extends State<ScaffoldDiagram> {
         break;
       case _scaffoldBackgroundColor:
         returnWidget = Scaffold(
-          appBar: AppBar(
-            title: const Text('Sample Code'),
+          appBar: AppBar(title: const Text('Sample Code')),
+          body: Center(
+            child: Text('You have pressed the button $_count times.'),
           ),
-          body:
-              Center(child: Text('You have pressed the button $_count times.')),
           backgroundColor: Colors.blueGrey.shade200,
           floatingActionButton: FloatingActionButton(
             onPressed: () => setState(() => _count++),
@@ -60,9 +58,7 @@ class ScaffoldDiagramState extends State<ScaffoldDiagram> {
         break;
       case _scaffoldBottomAppBar:
         returnWidget = Scaffold(
-          appBar: AppBar(
-            title: const Text('Sample Code'),
-          ),
+          appBar: AppBar(title: const Text('Sample Code')),
           body: Center(
             child: Text('You have pressed the button $_count times.'),
           ),
@@ -99,8 +95,8 @@ class ScaffoldDiagramStep extends DiagramStep {
 
   @override
   Future<List<ScaffoldDiagram>> get diagrams async => <ScaffoldDiagram>[
-        const ScaffoldDiagram(name: _scaffold),
-        const ScaffoldDiagram(name: _scaffoldBottomAppBar),
-        const ScaffoldDiagram(name: _scaffoldBackgroundColor),
-      ];
+    const ScaffoldDiagram(name: _scaffold),
+    const ScaffoldDiagram(name: _scaffoldBottomAppBar),
+    const ScaffoldDiagram(name: _scaffoldBackgroundColor),
+  ];
 }

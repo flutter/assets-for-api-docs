@@ -36,8 +36,9 @@ class _GestureDetectorDiagramState extends State<GestureDetectorDiagram>
 
     final RenderBox target =
         _gestureDetectorKey.currentContext!.findRenderObject()! as RenderBox;
-    final Offset targetOffset =
-        target.localToGlobal(target.size.center(Offset.zero));
+    final Offset targetOffset = target.localToGlobal(
+      target.size.center(Offset.zero),
+    );
     final WidgetController controller = DiagramWidgetController.of(context);
     await controller.tapAt(targetOffset);
   }
@@ -93,7 +94,5 @@ class GestureDetectorDiagramStep extends DiagramStep {
 
   @override
   Future<List<GestureDetectorDiagram>> get diagrams async =>
-      <GestureDetectorDiagram>[
-        const GestureDetectorDiagram(_gestureDetector),
-      ];
+      <GestureDetectorDiagram>[const GestureDetectorDiagram(_gestureDetector)];
 }

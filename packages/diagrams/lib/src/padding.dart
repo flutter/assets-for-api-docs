@@ -39,6 +39,6 @@ class PaddingDiagramStep extends DiagramStep {
 
   @override
   Future<List<PaddingDiagram>> get diagrams async => <PaddingDiagram>[
-        const PaddingDiagram('padding'),
-      ];
+    const PaddingDiagram('padding'),
+  ];
 }

@@ -32,19 +32,21 @@ class DropdownButtonDiagram extends StatelessWidget with DiagramMetadata {
               icon: const Icon(Icons.arrow_downward),
               elevation: 16,
               style: const TextStyle(color: Colors.deepPurple),
-              underline: Container(
-                height: 2,
-                color: Colors.deepPurpleAccent,
-              ),
+              underline: Container(height: 2, color: Colors.deepPurpleAccent),
               value: 'One',
               onChanged: (String? newValue) {},
-              items: <String>['One', 'Two', 'Free', 'Four']
-                  .map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
+              items:
+                  <String>[
+                    'One',
+                    'Two',
+                    'Free',
+                    'Four',
+                  ].map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
             ),
           ),
         ),
@@ -59,7 +61,5 @@ class DropdownButtonDiagramStep extends DiagramStep {
 
   @override
   Future<List<DropdownButtonDiagram>> get diagrams async =>
-      <DropdownButtonDiagram>[
-        DropdownButtonDiagram(_basic, GlobalKey()),
-      ];
+      <DropdownButtonDiagram>[DropdownButtonDiagram(_basic, GlobalKey())];
 }

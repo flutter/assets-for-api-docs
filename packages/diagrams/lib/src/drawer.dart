@@ -34,8 +34,9 @@ class _DrawerDiagramState extends State<DrawerDiagram>
     await waitLockstep(_pauseDuration);
     final RenderBox target =
         _menuKey.currentContext!.findRenderObject()! as RenderBox;
-    final Offset targetOffset =
-        target.localToGlobal(target.size.center(Offset.zero));
+    final Offset targetOffset = target.localToGlobal(
+      target.size.center(Offset.zero),
+    );
     final WidgetController controller = DiagramWidgetController.of(context);
     await controller.tapAt(targetOffset);
   }
@@ -84,15 +85,10 @@ class _DrawerDiagramState extends State<DrawerDiagram>
                       padding: EdgeInsets.zero,
                       children: const <Widget>[
                         DrawerHeader(
-                          decoration: BoxDecoration(
-                            color: Colors.blue,
-                          ),
+                          decoration: BoxDecoration(color: Colors.blue),
                           child: Text(
                             'Drawer Header',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 24,
-                            ),
+                            style: TextStyle(color: Colors.white, fontSize: 24),
                           ),
                         ),
                         ListTile(
@@ -126,6 +122,6 @@ class DrawerDiagramStep extends DiagramStep {
 
   @override
   Future<List<DrawerDiagram>> get diagrams async => <DrawerDiagram>[
-        const DrawerDiagram('drawer'),
-      ];
+    const DrawerDiagram('drawer'),
+  ];
 }

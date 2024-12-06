@@ -28,31 +28,38 @@ Future<void> _generateSamples() async {
     flutterLogoPainter.paint(
       canvas,
       Offset.zero,
-      const ImageConfiguration(
-        size: Size(60, 60),
-      ),
+      const ImageConfiguration(size: Size(60, 60)),
     );
   }).toImage(_originalWidth, _originalHeight);
 
-  _scaledSamples
-      .add(await _paintScaledSample(1.0, 'original', FilterQuality.none));
-  _scaledSamples
-      .add(await _paintScaledSample(0.3, '0.3x @ none', FilterQuality.none));
-  _scaledSamples
-      .add(await _paintScaledSample(0.3, '0.3x @ low', FilterQuality.low));
   _scaledSamples.add(
-      await _paintScaledSample(0.3, '0.3x @ medium', FilterQuality.medium));
-  _scaledSamples
-      .add(await _paintScaledSample(0.3, '0.3x @ high', FilterQuality.high));
+    await _paintScaledSample(1.0, 'original', FilterQuality.none),
+  );
+  _scaledSamples.add(
+    await _paintScaledSample(0.3, '0.3x @ none', FilterQuality.none),
+  );
+  _scaledSamples.add(
+    await _paintScaledSample(0.3, '0.3x @ low', FilterQuality.low),
+  );
+  _scaledSamples.add(
+    await _paintScaledSample(0.3, '0.3x @ medium', FilterQuality.medium),
+  );
+  _scaledSamples.add(
+    await _paintScaledSample(0.3, '0.3x @ high', FilterQuality.high),
+  );
 
-  _scaledSamples
-      .add(await _paintScaledSample(2.3, '2.3x @ none', FilterQuality.none));
-  _scaledSamples
-      .add(await _paintScaledSample(2.3, '2.3x @ low', FilterQuality.low));
   _scaledSamples.add(
-      await _paintScaledSample(2.3, '2.3x @ medium', FilterQuality.medium));
-  _scaledSamples
-      .add(await _paintScaledSample(2.3, '2.3x @ high', FilterQuality.high));
+    await _paintScaledSample(2.3, '2.3x @ none', FilterQuality.none),
+  );
+  _scaledSamples.add(
+    await _paintScaledSample(2.3, '2.3x @ low', FilterQuality.low),
+  );
+  _scaledSamples.add(
+    await _paintScaledSample(2.3, '2.3x @ medium', FilterQuality.medium),
+  );
+  _scaledSamples.add(
+    await _paintScaledSample(2.3, '2.3x @ high', FilterQuality.high),
+  );
 }
 
 ui.Picture _paint(_Painter painter) {
@@ -71,10 +78,7 @@ Future<ui.Picture> _paintScaledSample(
   final ui.Canvas canvas = ui.Canvas(recorder);
 
   final ui.ParagraphBuilder builder = ui.ParagraphBuilder(ui.ParagraphStyle());
-  builder.pushStyle(ui.TextStyle(
-    color: const Color(0xFF000000),
-    fontSize: 18,
-  ));
+  builder.pushStyle(ui.TextStyle(color: const Color(0xFF000000), fontSize: 18));
   builder.addText(label);
   final ui.Paragraph paragraph = builder.build();
   paragraph.layout(const ui.ParagraphConstraints(width: 1000));
@@ -133,9 +137,7 @@ class FilterQualityDiagram extends StatelessWidget with DiagramMetadata {
     return SizedBox(
       width: 740,
       height: 300,
-      child: CustomPaint(
-        painter: _FilterQualityPainter(),
-      ),
+      child: CustomPaint(painter: _FilterQualityPainter()),
     );
   }
 }

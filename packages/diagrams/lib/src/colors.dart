@@ -45,35 +45,38 @@ class ColorSwatchDiagram extends ColorDiagram {
         label = '$name[$key]';
         shadeLabel = '$name.shade$key';
       }
-      items.add(Container(
-        color: swatch[key],
-        padding: const EdgeInsets.all(_kPadding),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(label, style: style),
-                if (shadeLabel != '') Text(shadeLabel, style: style)
-              ],
-            ),
-            Text('0x${swatch[key]!.value.toRadixString(16).toUpperCase()}',
-                style: style),
-          ],
+      items.add(
+        Container(
+          color: swatch[key],
+          padding: const EdgeInsets.all(_kPadding),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(label, style: style),
+                  if (shadeLabel != '') Text(shadeLabel, style: style),
+                ],
+              ),
+              Text(
+                '0x${swatch[key]!.value.toRadixString(16).toUpperCase()}',
+                style: style,
+              ),
+            ],
+          ),
         ),
-      ));
+      );
     }
     return ConstrainedBox(
       key: UniqueKey(),
       constraints: const BoxConstraints(
-          minWidth: _kSwatchWidth, maxWidth: _kSwatchWidth),
+        minWidth: _kSwatchWidth,
+        maxWidth: _kSwatchWidth,
+      ),
       child: Material(
         color: Colors.white,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: items,
-        ),
+        child: Column(mainAxisSize: MainAxisSize.min, children: items),
       ),
     );
   }
@@ -93,30 +96,33 @@ class ColorListDiagram extends ColorDiagram {
     for (final String key in colors.keys) {
       final Color textColor = colors[key]!;
       final TextStyle style = TextStyle(color: textColor, fontSize: _kFontSize);
-      items.add(Container(
-        padding: const EdgeInsets.all(_kPadding),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Text(key, style: style),
-            Text('0x${textColor.value.toRadixString(16).toUpperCase()}',
-                style: style),
-          ],
+      items.add(
+        Container(
+          padding: const EdgeInsets.all(_kPadding),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(key, style: style),
+              Text(
+                '0x${textColor.value.toRadixString(16).toUpperCase()}',
+                style: style,
+              ),
+            ],
+          ),
         ),
-      ));
+      );
     }
     return ConstrainedBox(
       key: UniqueKey(),
       constraints: const BoxConstraints(
-          minWidth: _kSwatchWidth, maxWidth: _kSwatchWidth),
+        minWidth: _kSwatchWidth,
+        maxWidth: _kSwatchWidth,
+      ),
       child: Material(
         color: Colors.white,
         child: Container(
           color: background,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: items,
-          ),
+          child: Column(mainAxisSize: MainAxisSize.min, children: items),
         ),
       ),
     );
@@ -134,7 +140,7 @@ class ColorsDiagramStep extends DiagramStep {
     600,
     700,
     800,
-    900
+    900,
   ];
   static const List<int> accentPalette = <int>[100, 200, 400, 700];
   static const List<int> greyPalette = <int>[
@@ -149,7 +155,7 @@ class ColorsDiagramStep extends DiagramStep {
     700,
     800,
     850,
-    900
+    900,
   ];
 
   @override
@@ -175,37 +181,85 @@ class ColorsDiagramStep extends DiagramStep {
     const ColorSwatchDiagram('Colors.brown', Colors.brown, palette),
     const ColorSwatchDiagram('Colors.blueGrey', Colors.blueGrey, palette),
     const ColorSwatchDiagram(
-        'Colors.redAccent', Colors.redAccent, accentPalette),
+      'Colors.redAccent',
+      Colors.redAccent,
+      accentPalette,
+    ),
     const ColorSwatchDiagram(
-        'Colors.pinkAccent', Colors.pinkAccent, accentPalette),
+      'Colors.pinkAccent',
+      Colors.pinkAccent,
+      accentPalette,
+    ),
     const ColorSwatchDiagram(
-        'Colors.purpleAccent', Colors.purpleAccent, accentPalette),
+      'Colors.purpleAccent',
+      Colors.purpleAccent,
+      accentPalette,
+    ),
     const ColorSwatchDiagram(
-        'Colors.deepPurpleAccent', Colors.deepPurpleAccent, accentPalette),
+      'Colors.deepPurpleAccent',
+      Colors.deepPurpleAccent,
+      accentPalette,
+    ),
     const ColorSwatchDiagram(
-        'Colors.indigoAccent', Colors.indigoAccent, accentPalette),
+      'Colors.indigoAccent',
+      Colors.indigoAccent,
+      accentPalette,
+    ),
     const ColorSwatchDiagram(
-        'Colors.blueAccent', Colors.blueAccent, accentPalette),
+      'Colors.blueAccent',
+      Colors.blueAccent,
+      accentPalette,
+    ),
     const ColorSwatchDiagram(
-        'Colors.lightBlueAccent', Colors.lightBlueAccent, accentPalette),
+      'Colors.lightBlueAccent',
+      Colors.lightBlueAccent,
+      accentPalette,
+    ),
     const ColorSwatchDiagram(
-        'Colors.cyanAccent', Colors.cyanAccent, accentPalette),
+      'Colors.cyanAccent',
+      Colors.cyanAccent,
+      accentPalette,
+    ),
     const ColorSwatchDiagram(
-        'Colors.tealAccent', Colors.tealAccent, accentPalette),
+      'Colors.tealAccent',
+      Colors.tealAccent,
+      accentPalette,
+    ),
     const ColorSwatchDiagram(
-        'Colors.greenAccent', Colors.greenAccent, accentPalette),
+      'Colors.greenAccent',
+      Colors.greenAccent,
+      accentPalette,
+    ),
     const ColorSwatchDiagram(
-        'Colors.lightGreenAccent', Colors.lightGreenAccent, accentPalette),
+      'Colors.lightGreenAccent',
+      Colors.lightGreenAccent,
+      accentPalette,
+    ),
     const ColorSwatchDiagram(
-        'Colors.limeAccent', Colors.limeAccent, accentPalette),
+      'Colors.limeAccent',
+      Colors.limeAccent,
+      accentPalette,
+    ),
     const ColorSwatchDiagram(
-        'Colors.yellowAccent', Colors.yellowAccent, accentPalette),
+      'Colors.yellowAccent',
+      Colors.yellowAccent,
+      accentPalette,
+    ),
     const ColorSwatchDiagram(
-        'Colors.amberAccent', Colors.amberAccent, accentPalette),
+      'Colors.amberAccent',
+      Colors.amberAccent,
+      accentPalette,
+    ),
     const ColorSwatchDiagram(
-        'Colors.orangeAccent', Colors.orangeAccent, accentPalette),
+      'Colors.orangeAccent',
+      Colors.orangeAccent,
+      accentPalette,
+    ),
     const ColorSwatchDiagram(
-        'Colors.deepOrangeAccent', Colors.deepOrangeAccent, accentPalette),
+      'Colors.deepOrangeAccent',
+      Colors.deepOrangeAccent,
+      accentPalette,
+    ),
     const ColorSwatchDiagram('Colors.grey', Colors.grey, greyPalette),
     const ColorListDiagram('Colors.blacks', Colors.white, <String, Color>{
       'black': Colors.black,

@@ -8,7 +8,8 @@ import 'package:flutter/material.dart';
 
 import '../diagrams.dart';
 
-final Duration _kTotalDuration = _kBreakDuration +
+final Duration _kTotalDuration =
+    _kBreakDuration +
     _kAnimationDuration +
     _kBreakDuration +
     _kAnimationDuration;
@@ -36,8 +37,10 @@ class TweenSequenceDiagramState extends State<TweenSequenceDiagram>
   @override
   void initState() {
     super.initState();
-    _controller =
-        AnimationController(vsync: this, duration: _kAnimationDuration);
+    _controller = AnimationController(
+      vsync: this,
+      duration: _kAnimationDuration,
+    );
 
     waitLockstep(_kBreakDuration).then((_) => _controller.forward());
     waitLockstep(
@@ -61,19 +64,19 @@ class TweenSequenceDiagramState extends State<TweenSequenceDiagram>
 
   final Animatable<Color?> _tweenSequence =
       TweenSequence<Color?>(<TweenSequenceItem<Color?>>[
-    TweenSequenceItem<Color?>(
-      tween: ColorTween(begin: Colors.yellow, end: Colors.green),
-      weight: 2,
-    ),
-    TweenSequenceItem<Color?>(
-      tween: ConstantTween<Color>(Colors.green),
-      weight: 1,
-    ),
-    TweenSequenceItem<Color?>(
-      tween: ColorTween(begin: Colors.green, end: Colors.red),
-      weight: 2,
-    ),
-  ]);
+        TweenSequenceItem<Color?>(
+          tween: ColorTween(begin: Colors.yellow, end: Colors.green),
+          weight: 2,
+        ),
+        TweenSequenceItem<Color?>(
+          tween: ConstantTween<Color>(Colors.green),
+          weight: 1,
+        ),
+        TweenSequenceItem<Color?>(
+          tween: ColorTween(begin: Colors.green, end: Colors.red),
+          weight: 2,
+        ),
+      ]);
 
   final TextStyle _activeStyle = TextStyle(color: Colors.blue[800]);
 
@@ -98,9 +101,9 @@ class TweenSequenceDiagramState extends State<TweenSequenceDiagram>
                     color: _tweenSequence.evaluate(_controller),
                   ),
                   DefaultTextStyle(
-                    style: DefaultTextStyle.of(context)
-                        .style
-                        .copyWith(height: 1.2, fontSize: 13.0),
+                    style: DefaultTextStyle.of(
+                      context,
+                    ).style.copyWith(height: 1.2, fontSize: 13.0),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -138,7 +141,5 @@ class TweenSequenceDiagramStep extends DiagramStep {
 
   @override
   Future<List<TweenSequenceDiagram>> get diagrams async =>
-      <TweenSequenceDiagram>[
-        const TweenSequenceDiagram(),
-      ];
+      <TweenSequenceDiagram>[const TweenSequenceDiagram()];
 }

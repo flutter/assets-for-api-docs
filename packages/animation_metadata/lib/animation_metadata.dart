@@ -7,10 +7,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:path/path.dart' as path;
 
-enum VideoFormat {
-  mp4,
-  gif,
-}
+enum VideoFormat { mp4, gif }
 
 /// Container class to read and write a JSON file containing metadata generated
 /// by the [DiagramController.drawAnimatedDiagramToFiles] method.
@@ -33,13 +30,12 @@ class AnimationMetadata {
         json.decode(metadataFile.readAsStringSync()) as Map<String, dynamic>;
     final String baseDir = path.dirname(metadataFile.absolute.path);
     final List<File> frameFiles =
-        (metadata[_frameFilesKey]! as List<dynamic>).map<File>(
-      (dynamic name) {
-        return File(path.normalize(path.join(baseDir, name.toString())));
-      },
-    ).toList();
-    final Duration duration =
-        Duration(milliseconds: metadata[_durationMsKey]! as int);
+        (metadata[_frameFilesKey]! as List<dynamic>).map<File>((dynamic name) {
+          return File(path.normalize(path.join(baseDir, name.toString())));
+        }).toList();
+    final Duration duration = Duration(
+      milliseconds: metadata[_durationMsKey]! as int,
+    );
     return AnimationMetadata.fromData(
       metadataFile: metadataFile,
       name: metadata[_nameKey]! as String,
@@ -48,8 +44,9 @@ class AnimationMetadata {
       frameRate: metadata[_frameRateKey]! as double,
       frameFiles: frameFiles,
       width: metadata[_widthKey]! as int,
-      videoFormat:
-          VideoFormat.values.byName(metadata[_videoFormatKey]! as String),
+      videoFormat: VideoFormat.values.byName(
+        metadata[_videoFormatKey]! as String,
+      ),
     );
   }
 
@@ -69,15 +66,19 @@ class AnimationMetadata {
       _videoFormatKey: videoFormat.name,
       _frameRateKey: frameRate,
       _widthKey: width,
-      _frameFilesKey: frameFiles.map<String>((File file) {
-        return path.relative(file.path,
-            from: path.dirname(metadataFile.absolute.path));
-      }).toList(),
+      _frameFilesKey:
+          frameFiles.map<String>((File file) {
+            return path.relative(
+              file.path,
+              from: path.dirname(metadataFile.absolute.path),
+            );
+          }).toList(),
     };
     const JsonEncoder encoder = JsonEncoder.withIndent('  ');
     final String jsonMetadata = encoder.convert(metadata);
     print(
-        'Writing metadata for ${duration.inMilliseconds}ms animation (${frameFiles.length} frames) to: ${metadataFile.path}');
+      'Writing metadata for ${duration.inMilliseconds}ms animation (${frameFiles.length} frames) to: ${metadataFile.path}',
+    );
     return metadataFile.writeAsString(jsonMetadata);
   }
 

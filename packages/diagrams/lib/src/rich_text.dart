@@ -29,7 +29,9 @@ class RichTextDiagram extends StatelessWidget with DiagramMetadata {
             style: DefaultTextStyle.of(context).style,
             children: const <TextSpan>[
               TextSpan(
-                  text: 'bold', style: TextStyle(fontWeight: FontWeight.bold)),
+                text: 'bold',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
               TextSpan(text: ' world!'),
             ],
           ),
@@ -45,6 +47,6 @@ class RichTextDiagramStep extends DiagramStep {
 
   @override
   Future<List<RichTextDiagram>> get diagrams async => <RichTextDiagram>[
-        const RichTextDiagram('rich_text'),
-      ];
+    const RichTextDiagram('rich_text'),
+  ];
 }

@@ -55,6 +55,6 @@ class FormDiagramStep extends DiagramStep {
 
   @override
   Future<List<FormDiagram>> get diagrams async => <FormDiagram>[
-        const FormDiagram('form'),
-      ];
+    const FormDiagram('form'),
+  ];
 }

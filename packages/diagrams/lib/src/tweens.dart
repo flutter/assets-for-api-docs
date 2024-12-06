@@ -11,7 +11,8 @@ import '../diagrams.dart';
 const Duration _kBreakDuration = Duration(seconds: 1, milliseconds: 500);
 const Duration _kAnimationDuration = Duration(seconds: 3);
 
-final Duration _kTotalDuration = _kBreakDuration +
+final Duration _kTotalDuration =
+    _kBreakDuration +
     _kAnimationDuration +
     _kBreakDuration +
     _kAnimationDuration;
@@ -41,8 +42,9 @@ class TweensDiagramState extends State<TweensDiagram>
       duration: _kAnimationDuration,
     );
     waitLockstep(_kBreakDuration).then((_) => _controller.forward());
-    waitLockstep(_kBreakDuration + _kAnimationDuration + _kBreakDuration)
-        .then((_) => _controller.reverse());
+    waitLockstep(
+      _kBreakDuration + _kAnimationDuration + _kBreakDuration,
+    ).then((_) => _controller.reverse());
   }
 
   @override
@@ -119,22 +121,25 @@ class TweensDiagramState extends State<TweensDiagram>
                       Center(
                         child: Padding(
                           padding: EdgeInsets.all(5),
-                          child:
-                              Text('IntTween(\n  begin: 45,\n  end: 65,\n);'),
+                          child: Text(
+                            'IntTween(\n  begin: 45,\n  end: 65,\n);',
+                          ),
                         ),
                       ),
                       Center(
                         child: Padding(
                           padding: EdgeInsets.all(5),
                           child: Text(
-                              'Tween<double>(\n  begin: 100.0,\n  end: 200.0,\n);'),
+                            'Tween<double>(\n  begin: 100.0,\n  end: 200.0,\n);',
+                          ),
                         ),
                       ),
                       Center(
                         child: Padding(
                           padding: EdgeInsets.all(5),
                           child: Text(
-                              'ColorTween(\n  begin: Colors.red,\n  end: Colors.green,\n);'),
+                            'ColorTween(\n  begin: Colors.red,\n  end: Colors.green,\n);',
+                          ),
                         ),
                       ),
                     ],
@@ -155,8 +160,6 @@ class TweensDiagramStep extends DiagramStep {
 
   @override
   Future<List<DiagramMetadata>> get diagrams async {
-    return const <TweensDiagram>[
-      TweensDiagram(),
-    ];
+    return const <TweensDiagram>[TweensDiagram()];
   }
 }

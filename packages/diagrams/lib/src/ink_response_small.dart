@@ -35,8 +35,9 @@ class _InkResponseSmallDiagramState extends State<InkResponseSmallDiagram> {
     await Future<void>.delayed(Duration.zero);
     final RenderBox target =
         splashKey.currentContext!.findRenderObject()! as RenderBox;
-    final Offset targetOffset =
-        target.localToGlobal(target.size.bottomRight(Offset.zero));
+    final Offset targetOffset = target.localToGlobal(
+      target.size.bottomRight(Offset.zero),
+    );
     final WidgetController controller = DiagramWidgetController.of(context);
     await controller.startGesture(targetOffset);
   }
@@ -52,9 +53,7 @@ class _InkResponseSmallDiagramState extends State<InkResponseSmallDiagram> {
     return ConstrainedBox(
       constraints: BoxConstraints.tight(const Size(280.0, 180.0)),
       child: Theme(
-        data: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
+        data: ThemeData(primarySwatch: Colors.blue),
         child: Material(
           color: const Color(0xFFFFFFFF),
           child: Stack(
@@ -70,20 +69,13 @@ class _InkResponseSmallDiagramState extends State<InkResponseSmallDiagram> {
                     width: 100.0,
                     child: InkResponse(
                       onTap: () {},
-                      child: Hole(
-                        color: Colors.blue,
-                        key: childKey,
-                      ),
+                      child: Hole(color: Colors.blue, key: childKey),
                     ),
                   ),
                 ),
               ),
               Center(
-                child: SizedBox(
-                  key: splashKey,
-                  width: 90.0,
-                  height: 20.0,
-                ),
+                child: SizedBox(key: splashKey, width: 90.0, height: 20.0),
               ),
               Positioned.fill(
                 child: LabelPainterWidget(
@@ -91,9 +83,15 @@ class _InkResponseSmallDiagramState extends State<InkResponseSmallDiagram> {
                   labels: <Label>[
                     Label(childKey, 'child', const FractionalOffset(0.1, 0.85)),
                     Label(
-                        splashKey, 'splash', const FractionalOffset(0.8, 0.6)),
-                    Label(heroKey, 'highlight',
-                        const FractionalOffset(0.45, 0.25)),
+                      splashKey,
+                      'splash',
+                      const FractionalOffset(0.8, 0.6),
+                    ),
+                    Label(
+                      heroKey,
+                      'highlight',
+                      const FractionalOffset(0.45, 0.25),
+                    ),
                   ],
                   heroKey: heroKey,
                 ),

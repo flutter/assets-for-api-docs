@@ -26,11 +26,7 @@ class ColumnDiagram extends StatelessWidget with DiagramMetadata {
           children: <Widget>[
             Text('Deliver features faster'),
             Text('Craft beautiful UIs'),
-            Expanded(
-              child: FittedBox(
-                child: FlutterLogo(),
-              ),
-            ),
+            Expanded(child: FittedBox(child: FlutterLogo())),
           ],
         );
         break;
@@ -41,17 +37,21 @@ class ColumnDiagram extends StatelessWidget with DiagramMetadata {
           children: <Widget>[
             const Text('We move under cover and we move as one'),
             const Text(
-                'Through the night, we have one shot to live another day'),
+              'Through the night, we have one shot to live another day',
+            ),
             const Text('We cannot let a stray gunshot give us away'),
             const Text(
-                'We will fight up close, seize the moment and stay in it'),
+              'We will fight up close, seize the moment and stay in it',
+            ),
             const Text(
-                'It’s either that or meet the business end of a bayonet'),
+              'It’s either that or meet the business end of a bayonet',
+            ),
             const Text('The code word is ‘Rochambeau,’ dig me?'),
             Text(
               'Rochambeau!',
-              style:
-                  DefaultTextStyle.of(context).style.apply(fontSizeFactor: 2.0),
+              style: DefaultTextStyle.of(
+                context,
+              ).style.apply(fontSizeFactor: 2.0),
             ),
           ],
         );
@@ -79,7 +79,7 @@ class ColumnDiagramStep extends DiagramStep {
 
   @override
   Future<List<ColumnDiagram>> get diagrams async => <ColumnDiagram>[
-        const ColumnDiagram(_column),
-        const ColumnDiagram(_columnWithProperties),
-      ];
+    const ColumnDiagram(_column),
+    const ColumnDiagram(_columnWithProperties),
+  ];
 }

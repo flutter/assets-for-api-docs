@@ -21,8 +21,9 @@ class SubtreeWidgetController extends LiveWidgetController {
     // Send the pointer event only if it is inside the target area.
     final RenderBox renderObject = context.findRenderObject()! as RenderBox;
     final Offset topLeft = renderObject.localToGlobal(Offset.zero);
-    final Offset bottomRight =
-        renderObject.localToGlobal(renderObject.size.bottomRight(Offset.zero));
+    final Offset bottomRight = renderObject.localToGlobal(
+      renderObject.size.bottomRight(Offset.zero),
+    );
     if (event.position >= topLeft && event.position <= bottomRight) {
       binding.handlePointerEvent(event);
     }
@@ -30,7 +31,8 @@ class SubtreeWidgetController extends LiveWidgetController {
 
   @override
   Future<List<Duration>> handlePointerEventRecord(
-      List<PointerEventRecord> records) {
+    List<PointerEventRecord> records,
+  ) {
     assert(records != null);
     assert(records.isNotEmpty);
     return TestAsyncUtils.guard<List<Duration>>(() async {

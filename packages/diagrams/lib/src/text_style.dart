@@ -81,9 +81,7 @@ class TextStyleDiagram extends StatelessWidget with DiagramMetadata {
                   decorationStyle: TextDecorationStyle.wavy,
                 ),
               ),
-              TextSpan(
-                text: ' we got it made in the shade.',
-              ),
+              TextSpan(text: ' we got it made in the shade.'),
             ],
           ),
         );
@@ -91,10 +89,7 @@ class TextStyleDiagram extends StatelessWidget with DiagramMetadata {
       case _customFonts:
         returnWidget = const Text(
           'Look, when Britain taxed our tea, we got frisky.',
-          style: TextStyle(
-            fontFamily: 'Raleway',
-            package: 'diagrams',
-          ),
+          style: TextStyle(fontFamily: 'Raleway', package: 'diagrams'),
         );
         break;
     }
@@ -117,11 +112,11 @@ class TextStyleDiagramStep extends DiagramStep {
 
   @override
   Future<List<TextStyleDiagram>> get diagrams async => <TextStyleDiagram>[
-        const TextStyleDiagram(_bold),
-        const TextStyleDiagram(_italics),
-        const TextStyleDiagram(_opacityAndColor),
-        const TextStyleDiagram(_size),
-        const TextStyleDiagram(_wavyUnderline),
-        const TextStyleDiagram(_customFonts),
-      ];
+    const TextStyleDiagram(_bold),
+    const TextStyleDiagram(_italics),
+    const TextStyleDiagram(_opacityAndColor),
+    const TextStyleDiagram(_size),
+    const TextStyleDiagram(_wavyUnderline),
+    const TextStyleDiagram(_customFonts),
+  ];
 }

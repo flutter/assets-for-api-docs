@@ -13,7 +13,8 @@ import 'utils.dart';
 const Duration _pauseDuration = Duration(seconds: 1);
 const Duration _openDuration = Duration(milliseconds: 300);
 const Duration _closeDuration = Duration(milliseconds: 300);
-final Duration _totalDuration = _pauseDuration +
+final Duration _totalDuration =
+    _pauseDuration +
     _pauseDuration +
     _openDuration +
     _pauseDuration +
@@ -49,8 +50,9 @@ class _PushRegularRouteDiagramState extends State<PushRegularRouteDiagram>
   Future<void> _tap(GlobalKey key) async {
     final RenderBox target =
         key.currentContext!.findRenderObject()! as RenderBox;
-    final Offset targetOffset =
-        target.localToGlobal(target.size.center(Offset.zero));
+    final Offset targetOffset = target.localToGlobal(
+      target.size.center(Offset.zero),
+    );
     final WidgetController controller = DiagramWidgetController.of(context);
     final TestGesture gesture = await controller.startGesture(targetOffset);
     await waitLockstep(_pauseDuration);
@@ -104,8 +106,9 @@ class _PushSameShellDiagramState extends State<PushSameShellDiagram>
   Future<void> _tap(GlobalKey key) async {
     final RenderBox target =
         key.currentContext!.findRenderObject()! as RenderBox;
-    final Offset targetOffset =
-        target.localToGlobal(target.size.center(Offset.zero));
+    final Offset targetOffset = target.localToGlobal(
+      target.size.center(Offset.zero),
+    );
     final WidgetController controller = DiagramWidgetController.of(context);
     final TestGesture gesture = await controller.startGesture(targetOffset);
     await waitLockstep(_pauseDuration);
@@ -160,8 +163,9 @@ class _PushDifferentShellDiagramState extends State<PushDifferentShellDiagram>
   Future<void> _tap(GlobalKey key) async {
     final RenderBox target =
         key.currentContext!.findRenderObject()! as RenderBox;
-    final Offset targetOffset =
-        target.localToGlobal(target.size.center(Offset.zero));
+    final Offset targetOffset = target.localToGlobal(
+      target.size.center(Offset.zero),
+    );
     final WidgetController controller = DiagramWidgetController.of(context);
     final TestGesture gesture = await controller.startGesture(targetOffset);
     await waitLockstep(_pauseDuration);
@@ -211,9 +215,7 @@ class _MainApp extends StatelessWidget {
               Animation<double> secondaryAnimation,
             ) {
               return Scaffold(
-                appBar: AppBar(
-                  title: const Text('Shell1'),
-                ),
+                appBar: AppBar(title: const Text('Shell1')),
                 body: _Shell1(),
               );
             },
@@ -243,35 +245,44 @@ class _Shell1 extends StatelessWidget {
                 TextButton(
                   key: _pushShell1,
                   onPressed: () {
-                    _innerNavigator.currentState!
-                        .push(MaterialPageRoute<void>(builder: (_) {
-                      return const Center(child: Text('shell1 body'));
-                    }));
+                    _innerNavigator.currentState!.push(
+                      MaterialPageRoute<void>(
+                        builder: (_) {
+                          return const Center(child: Text('shell1 body'));
+                        },
+                      ),
+                    );
                   },
                   child: const Text('push the same shell route /shell1'),
                 ),
                 TextButton(
                   key: _pushShell2,
                   onPressed: () {
-                    _outerNavigator.currentState!
-                        .push(MaterialPageRoute<void>(builder: (_) {
-                      return Scaffold(
-                          appBar: AppBar(
-                            title: const Text('shell2'),
-                          ),
-                          body: const Center(child: Text('shell2 body')));
-                    }));
+                    _outerNavigator.currentState!.push(
+                      MaterialPageRoute<void>(
+                        builder: (_) {
+                          return Scaffold(
+                            appBar: AppBar(title: const Text('shell2')),
+                            body: const Center(child: Text('shell2 body')),
+                          );
+                        },
+                      ),
+                    );
                   },
                   child: const Text('push the different shell route /shell2'),
                 ),
                 TextButton(
                   key: _pushRegularRoute,
                   onPressed: () {
-                    _outerNavigator.currentState!
-                        .push(MaterialPageRoute<void>(builder: (_) {
-                      return const Scaffold(
-                          body: Center(child: Text('Regular Route')));
-                    }));
+                    _outerNavigator.currentState!.push(
+                      MaterialPageRoute<void>(
+                        builder: (_) {
+                          return const Scaffold(
+                            body: Center(child: Text('Regular Route')),
+                          );
+                        },
+                      ),
+                    );
                   },
                   child: const Text('push the regular route /regular-route'),
                 ),
@@ -290,8 +301,8 @@ class GoRouterDiagramStep extends DiagramStep {
 
   @override
   Future<List<DiagramMetadata>> get diagrams async => <DiagramMetadata>[
-        const PushRegularRouteDiagram(),
-        const PushSameShellDiagram(),
-        const PushDifferentShellDiagram(),
-      ];
+    const PushRegularRouteDiagram(),
+    const PushSameShellDiagram(),
+    const PushDifferentShellDiagram(),
+  ];
 }

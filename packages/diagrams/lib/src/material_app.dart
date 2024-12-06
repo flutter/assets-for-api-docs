@@ -25,31 +25,25 @@ class MaterialAppDiagram extends StatelessWidget with DiagramMetadata {
     switch (name) {
       case _basic:
         returnWidget = MaterialApp(
-          home: Scaffold(
-            appBar: AppBar(
-              title: const Text('Home'),
-            ),
-          ),
+          home: Scaffold(appBar: AppBar(title: const Text('Home'))),
           debugShowCheckedModeBanner: false,
         );
         break;
       case _theme:
         returnWidget = MaterialApp(
           theme: ThemeData(
-              brightness: Brightness.dark, primaryColor: Colors.blueGrey),
+            brightness: Brightness.dark,
+            primaryColor: Colors.blueGrey,
+          ),
           home: Scaffold(
-            appBar: AppBar(
-              title: const Text('MaterialApp Theme'),
-            ),
+            appBar: AppBar(title: const Text('MaterialApp Theme')),
           ),
           debugShowCheckedModeBanner: false,
         );
         break;
       case _textstyle:
         returnWidget = const MaterialApp(
-          home: Center(
-            child: Text('Hello World'),
-          ),
+          home: Center(child: Text('Hello World')),
           debugShowCheckedModeBanner: false,
         );
         break;
@@ -73,8 +67,8 @@ class MaterialAppDiagramStep extends DiagramStep {
 
   @override
   Future<List<MaterialAppDiagram>> get diagrams async => <MaterialAppDiagram>[
-        const MaterialAppDiagram(_basic),
-        const MaterialAppDiagram(_theme),
-        const MaterialAppDiagram(_textstyle),
-      ];
+    const MaterialAppDiagram(_basic),
+    const MaterialAppDiagram(_theme),
+    const MaterialAppDiagram(_textstyle),
+  ];
 }

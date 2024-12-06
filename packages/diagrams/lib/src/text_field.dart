@@ -41,6 +41,6 @@ class TextFieldDiagramStep extends DiagramStep {
 
   @override
   Future<List<TextFieldDiagram>> get diagrams async => <TextFieldDiagram>[
-        const TextFieldDiagram('text_field'),
-      ];
+    const TextFieldDiagram('text_field'),
+  ];
 }

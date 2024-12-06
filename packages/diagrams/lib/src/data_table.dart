@@ -80,6 +80,6 @@ class DataTableDiagramStep extends DiagramStep {
 
   @override
   Future<List<DataTableDiagram>> get diagrams async => <DataTableDiagram>[
-        const DataTableDiagram('data_table'),
-      ];
+    const DataTableDiagram('data_table'),
+  ];
 }

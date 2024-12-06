@@ -35,8 +35,9 @@ class _AlertDialogDiagramState extends State<AlertDialogDiagram>
 
     final RenderBox target =
         _openDialogKey.currentContext!.findRenderObject()! as RenderBox;
-    final Offset targetOffset =
-        target.localToGlobal(target.size.center(Offset.zero));
+    final Offset targetOffset = target.localToGlobal(
+      target.size.center(Offset.zero),
+    );
     final WidgetController controller = DiagramWidgetController.of(context);
     final TestGesture gesture = await controller.startGesture(targetOffset);
 
@@ -66,9 +67,7 @@ class _AlertDialogDiagramState extends State<AlertDialogDiagram>
               Animation<double> secondaryAnimation,
             ) {
               return Scaffold(
-                appBar: AppBar(
-                  title: const Text('AlertDialog Demo'),
-                ),
+                appBar: AppBar(title: const Text('AlertDialog Demo')),
                 body: Center(
                   child: Builder(
                     builder: (BuildContext context) {
@@ -122,6 +121,6 @@ class AlertDialogDiagramStep extends DiagramStep {
 
   @override
   Future<List<AlertDialogDiagram>> get diagrams async => <AlertDialogDiagram>[
-        const AlertDialogDiagram('alert_dialog'),
-      ];
+    const AlertDialogDiagram('alert_dialog'),
+  ];
 }

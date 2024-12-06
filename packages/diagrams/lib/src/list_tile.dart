@@ -63,8 +63,9 @@ class ListTileDiagram extends StatelessWidget with DiagramMetadata {
               child: ListTile(
                 leading: FlutterLogo(size: 72.0),
                 title: Text('Three-line ListTile'),
-                subtitle:
-                    Text('A sufficiently long subtitle warrants three lines.'),
+                subtitle: Text(
+                  'A sufficiently long subtitle warrants three lines.',
+                ),
                 trailing: Icon(Icons.more_vert),
                 isThreeLine: true,
               ),
@@ -82,6 +83,6 @@ class ListTileDiagramStep extends DiagramStep {
 
   @override
   Future<List<ListTileDiagram>> get diagrams async => <ListTileDiagram>[
-        const ListTileDiagram('list_tile'),
-      ];
+    const ListTileDiagram('list_tile'),
+  ];
 }

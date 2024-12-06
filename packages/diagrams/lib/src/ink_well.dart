@@ -38,8 +38,9 @@ class _InkWellDiagramState extends State<InkWellDiagram>
     final WidgetController controller = DiagramWidgetController.of(context);
     final RenderBox target =
         _splashKey.currentContext!.findRenderObject()! as RenderBox;
-    final Offset targetOffset =
-        target.localToGlobal(target.size.bottomRight(Offset.zero));
+    final Offset targetOffset = target.localToGlobal(
+      target.size.bottomRight(Offset.zero),
+    );
     final TestGesture gesture = await controller.startGesture(targetOffset);
     await waitLockstep(const Duration(seconds: 1));
     gesture.up();
@@ -57,9 +58,7 @@ class _InkWellDiagramState extends State<InkWellDiagram>
       key: UniqueKey(),
       constraints: BoxConstraints.tight(const Size(280.0, 180.0)),
       child: Theme(
-        data: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
+        data: ThemeData(primarySwatch: Colors.blue),
         child: Material(
           color: const Color(0xFFFFFFFF),
           child: Stack(
@@ -71,10 +70,7 @@ class _InkWellDiagramState extends State<InkWellDiagram>
                   child: InkWell(
                     key: heroKey,
                     onTap: () {},
-                    child: Hole(
-                      color: Colors.blue,
-                      key: childKey,
-                    ),
+                    child: Hole(color: Colors.blue, key: childKey),
                   ),
                 ),
               ),
@@ -83,11 +79,7 @@ class _InkWellDiagramState extends State<InkWellDiagram>
                   width: 120.0,
                   height: 80.0,
                   alignment: FractionalOffset.bottomRight,
-                  child: SizedBox(
-                    key: _splashKey,
-                    width: 20.0,
-                    height: 25.0,
-                  ),
+                  child: SizedBox(key: _splashKey, width: 20.0, height: 25.0),
                 ),
               ),
               Positioned.fill(
@@ -97,7 +89,10 @@ class _InkWellDiagramState extends State<InkWellDiagram>
                     Label(childKey, 'child', const FractionalOffset(0.2, 0.8)),
                     Label(_splashKey, 'splash', FractionalOffset.topLeft),
                     Label(
-                        heroKey, 'highlight', const FractionalOffset(0.3, 0.2)),
+                      heroKey,
+                      'highlight',
+                      const FractionalOffset(0.3, 0.2),
+                    ),
                   ],
                   heroKey: heroKey,
                 ),
@@ -116,8 +111,6 @@ class InkWellDiagramStep extends DiagramStep {
 
   @override
   Future<List<DiagramMetadata>> get diagrams async {
-    return const <DiagramMetadata>[
-      InkWellDiagram(),
-    ];
+    return const <DiagramMetadata>[InkWellDiagram()];
   }
 }

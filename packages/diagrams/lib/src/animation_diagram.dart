@@ -21,26 +21,20 @@ String _getCaption(Type type) {
 /// Convert the caption CamelCase name into lower_with_underscores.
 String getName(Type type) {
   final RegExp uppercase = RegExp(r'([A-Z])');
-  return _getCaption(type).replaceAllMapped(
-    uppercase,
-    (Match match) {
-      if (match.start != 0) {
-        return '_${match.group(1)!.toLowerCase()}';
-      } else {
-        return match.group(1)!.toLowerCase();
-      }
-    },
-  );
+  return _getCaption(type).replaceAllMapped(uppercase, (Match match) {
+    if (match.start != 0) {
+      return '_${match.group(1)!.toLowerCase()}';
+    } else {
+      return match.group(1)!.toLowerCase();
+    }
+  });
 }
 
 /// A base class for diagrams that show explicit animation transitions, like
 /// [FadeTransition]. See transitions.dart for more examples.
 abstract class TransitionDiagram<T> extends StatefulWidget
     with DiagramMetadata {
-  const TransitionDiagram({
-    super.key,
-    this.decorate = true,
-  });
+  const TransitionDiagram({super.key, this.decorate = true});
 
   /// Whether or not to decorate this diagram with an animation curve and top label.
   final bool decorate;
@@ -73,11 +67,11 @@ class TransitionDiagramState<T> extends State<TransitionDiagram<T>>
       duration: _kAnimationDuration,
       vsync: this,
     )..addListener(() {
-        setState(() {
-          // The animation controller is changing the animation value, so we
-          // need to redraw.
-        });
+      setState(() {
+        // The animation controller is changing the animation value, so we
+        // need to redraw.
       });
+    });
     animation = widget.buildAnimation(_controller);
   }
 
@@ -239,26 +233,30 @@ class SparklinePainter extends CustomPainter {
   final Curve curve;
   final double position;
 
-  static final Paint _axisPaint = Paint()
-    ..color = Colors.black45
-    ..style = PaintingStyle.stroke
-    ..strokeWidth = 2.0;
+  static final Paint _axisPaint =
+      Paint()
+        ..color = Colors.black45
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 2.0;
 
-  static final Paint _sparklinePaint = Paint()
-    ..color = Colors.blue.shade900
-    ..style = PaintingStyle.stroke
-    ..strokeCap = StrokeCap.round
-    ..strokeWidth = 4.0;
+  static final Paint _sparklinePaint =
+      Paint()
+        ..color = Colors.blue.shade900
+        ..style = PaintingStyle.stroke
+        ..strokeCap = StrokeCap.round
+        ..strokeWidth = 4.0;
 
-  static final Paint _graphProgressPaint = Paint()
-    ..color = Colors.black26
-    ..style = PaintingStyle.stroke
-    ..strokeCap = StrokeCap.round
-    ..strokeWidth = 4.0;
+  static final Paint _graphProgressPaint =
+      Paint()
+        ..color = Colors.black26
+        ..style = PaintingStyle.stroke
+        ..strokeCap = StrokeCap.round
+        ..strokeWidth = 4.0;
 
-  static final Paint _positionCirclePaint = Paint()
-    ..color = Colors.blue.shade900
-    ..style = PaintingStyle.fill;
+  static final Paint _positionCirclePaint =
+      Paint()
+        ..color = Colors.blue.shade900
+        ..style = PaintingStyle.fill;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -274,10 +272,11 @@ class SparklinePainter extends CustomPainter {
       size.width - rightMargin,
       size.height - topMargin,
     );
-    final Path axes = Path()
-      ..moveTo(area.left, area.top) // vertical axis
-      ..lineTo(area.left, area.bottom) // origin
-      ..lineTo(area.right, area.bottom); // horizontal axis
+    final Path axes =
+        Path()
+          ..moveTo(area.left, area.top) // vertical axis
+          ..lineTo(area.left, area.bottom) // origin
+          ..lineTo(area.right, area.bottom); // horizontal axis
     canvas.drawPath(axes, _axisPaint);
     final Offset activePoint = FractionalOffset(
       position,
@@ -286,14 +285,17 @@ class SparklinePainter extends CustomPainter {
 
     // The sparkline itself.
     final Path sparkline = Path()..moveTo(area.left, area.bottom);
-    final double stepSize = 1.0 /
+    final double stepSize =
+        1.0 /
         (area.width *
             (ui.PlatformDispatcher.instance.implicitView?.devicePixelRatio ??
                 1.0));
 
     void lineToPoint(Path path, double t) {
-      final Offset point =
-          FractionalOffset(t, 1.0 - curve.transform(t)).withinRect(area);
+      final Offset point = FractionalOffset(
+        t,
+        1.0 - curve.transform(t),
+      ).withinRect(area);
       path.lineTo(point.dx, point.dy);
     }
 
@@ -316,7 +318,10 @@ class SparklinePainter extends CustomPainter {
     lineToPoint(graphProgress, 1.0);
     canvas.drawPath(graphProgress, _graphProgressPaint);
     canvas.drawCircle(
-        Offset(activePoint.dx, activePoint.dy), 4.0, _positionCirclePaint);
+      Offset(activePoint.dx, activePoint.dy),
+      4.0,
+      _positionCirclePaint,
+    );
   }
 
   @override

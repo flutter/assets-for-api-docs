@@ -24,9 +24,7 @@ class FloatingActionButtonDiagram extends StatelessWidget with DiagramMetadata {
     switch (name) {
       case _basic:
         returnWidget = Scaffold(
-          appBar: AppBar(
-            title: const Text('Floating Action Button'),
-          ),
+          appBar: AppBar(title: const Text('Floating Action Button')),
           body: const Center(child: Text('Press the button below!')),
           floatingActionButton: FloatingActionButton(
             onPressed: () {},
@@ -37,9 +35,7 @@ class FloatingActionButtonDiagram extends StatelessWidget with DiagramMetadata {
         break;
       case _labeled:
         returnWidget = Scaffold(
-          appBar: AppBar(
-            title: const Text('Floating Action Button Label'),
-          ),
+          appBar: AppBar(title: const Text('Floating Action Button Label')),
           body: const Center(
             child: Text('Press the button with a label below!'),
           ),

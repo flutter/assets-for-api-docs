@@ -24,9 +24,7 @@ class BottomNavigationBarDiagram extends StatelessWidget with DiagramMetadata {
         //padding: const EdgeInsets.all(5.0),
         color: Colors.white,
         child: Scaffold(
-          appBar: AppBar(
-            title: const Text('BottomNavigationBar Sample'),
-          ),
+          appBar: AppBar(title: const Text('BottomNavigationBar Sample')),
           body: const Center(
             child: Text(
               'Index 0: Home',
@@ -35,10 +33,7 @@ class BottomNavigationBarDiagram extends StatelessWidget with DiagramMetadata {
           ),
           bottomNavigationBar: BottomNavigationBar(
             items: const <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                icon: Icon(Icons.home),
-                label: 'Home',
-              ),
+              BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
               BottomNavigationBarItem(
                 icon: Icon(Icons.business),
                 label: 'Business',

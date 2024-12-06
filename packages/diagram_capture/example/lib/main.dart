@@ -43,7 +43,9 @@ Future<void> main() async {
   DiagramFlutterBinding.ensureInitialized();
   final Directory directory = Directory(
     path.join(
-        (await getApplicationDocumentsDirectory()).absolute.path, 'output'),
+      (await getApplicationDocumentsDirectory()).absolute.path,
+      'output',
+    ),
   );
   if (directory.existsSync()) {
     directory.deleteSync(recursive: true);

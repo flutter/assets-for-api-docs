@@ -18,8 +18,9 @@ void main() {
     late Directory outputDir;
 
     setUp(() async {
-      outputDir =
-          Directory.systemTemp.createTempSync('flutter_diagram_capture_test.');
+      outputDir = Directory.systemTemp.createTempSync(
+        'flutter_diagram_capture_test.',
+      );
     });
 
     tearDown(() {
@@ -64,8 +65,9 @@ void main() {
       );
 
       final File outputFile = File('test1.png');
-      final File actualOutputFile =
-          await controller.drawDiagramToFile(outputFile);
+      final File actualOutputFile = await controller.drawDiagramToFile(
+        outputFile,
+      );
       expect(actualOutputFile.existsSync(), isTrue);
       final Uint8List imageContents = actualOutputFile.readAsBytesSync();
       final image.Image decodedImage = image.decodePng(imageContents)!;
@@ -90,11 +92,11 @@ void main() {
 
       controller.builder =
           (BuildContext context) => TestAnimatedDiagram(key: key, size: 50.0);
-      final List<ui.Image> outputImages =
-          await controller.drawAnimatedDiagramToImages(
-        end: const Duration(milliseconds: 1200),
-        frameDuration: const Duration(milliseconds: 200),
-      );
+      final List<ui.Image> outputImages = await controller
+          .drawAnimatedDiagramToImages(
+            end: const Duration(milliseconds: 1200),
+            frameDuration: const Duration(milliseconds: 200),
+          );
       expect(outputImages.length, equals(7));
       final List<int> expectedSizes = <int>[1, 11, 21, 31, 41, 50, 50];
       for (int i = 0; i < outputImages.length; i++) {
@@ -126,13 +128,16 @@ void main() {
       expect(outputFile.lengthSync(), greaterThan(0));
 
       Map<String, dynamic> loadMetadata(File metadataFile) {
-        final Map<String, dynamic> metadata = json
-            .decode(metadataFile.readAsStringSync()) as Map<String, dynamic>;
+        final Map<String, dynamic> metadata =
+            json.decode(metadataFile.readAsStringSync())
+                as Map<String, dynamic>;
         final String baseDir = path.dirname(metadataFile.absolute.path);
         final List<File> frameFiles =
             (metadata['frame_files']! as List<dynamic>)
-                .map<File>((dynamic name) =>
-                    File(path.normalize(path.join(baseDir, name as String))))
+                .map<File>(
+                  (dynamic name) =>
+                      File(path.normalize(path.join(baseDir, name as String))),
+                )
                 .toList();
         metadata['frame_files'] = frameFiles;
         return metadata;
@@ -163,8 +168,9 @@ void main() {
       );
 
       final File outputFile = File('test2.png');
-      final File actualOutputFile =
-          await controller.drawDiagramToFile(outputFile);
+      final File actualOutputFile = await controller.drawDiagramToFile(
+        outputFile,
+      );
       expect(actualOutputFile.existsSync(), isTrue);
       final Uint8List imageContents = actualOutputFile.readAsBytesSync();
       final image.Image decodedImage = image.decodePng(imageContents)!;
@@ -199,8 +205,9 @@ void main() {
       expect(testPixel.g, equals(0x96));
       expect(testPixel.b, equals(0xf3));
 
-      final TestGesture gesture =
-          await controller.startGesture(const Offset(50.0, 50.0));
+      final TestGesture gesture = await controller.startGesture(
+        const Offset(50.0, 50.0),
+      );
       await gesture.up();
       controller.advanceTime(const Duration(seconds: 1));
 
@@ -258,8 +265,9 @@ class _TestTappableDiagramState extends State<TestTappableDiagram> {
   Widget build(BuildContext context) {
     return TextButton(
       style: ButtonStyle(
-        backgroundColor:
-            WidgetStateProperty.all<Color?>(on ? Colors.red : Colors.blue),
+        backgroundColor: WidgetStateProperty.all<Color?>(
+          on ? Colors.red : Colors.blue,
+        ),
       ),
       onPressed: () {
         setState(() {

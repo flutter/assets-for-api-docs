@@ -112,7 +112,8 @@ class _HeroesDiagramState extends State<HeroesDiagram> {
                                                 child: Padding(
                                                   padding: EdgeInsets.all(8.0),
                                                   child: Text(
-                                                      'placeholderBuilder'),
+                                                    'placeholderBuilder',
+                                                  ),
                                                 ),
                                               ),
                                             ),
@@ -128,8 +129,9 @@ class _HeroesDiagramState extends State<HeroesDiagram> {
                           const Padding(
                             padding: EdgeInsets.all(10.0),
                             child: CustomPaint(
-                              painter:
-                                  RightArrowPainter(fillColor: Colors.orange),
+                              painter: RightArrowPainter(
+                                fillColor: Colors.orange,
+                              ),
                               child: SizedBox(
                                 height: 60.0,
                                 width: 400.0,
@@ -151,8 +153,9 @@ class _HeroesDiagramState extends State<HeroesDiagram> {
                           angle: -0.2,
                           child: CustomPaint(
                             size: const Size(320.0, 20.0),
-                            painter:
-                                RightArrowPainter(fillColor: Colors.blue[600]!),
+                            painter: RightArrowPainter(
+                              fillColor: Colors.blue[600]!,
+                            ),
                           ),
                         ),
                       ),
@@ -167,7 +170,7 @@ class _HeroesDiagramState extends State<HeroesDiagram> {
                             child: Text('flightShuttleBuilder'),
                           ),
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),
@@ -231,10 +234,7 @@ class RightArrowPainter extends CustomPainter {
 
     final Path arrowPath = Path()..addPolygon(points, true);
 
-    canvas.drawPath(
-      arrowPath,
-      Paint()..color = fillColor,
-    );
+    canvas.drawPath(arrowPath, Paint()..color = fillColor);
 
     canvas.drawPath(
       arrowPath,
@@ -254,6 +254,7 @@ class HeroesDiagramStep extends DiagramStep {
   final String category = 'interaction';
 
   @override
-  Future<List<HeroesDiagram>> get diagrams async =>
-      <HeroesDiagram>[const HeroesDiagram()];
+  Future<List<HeroesDiagram>> get diagrams async => <HeroesDiagram>[
+    const HeroesDiagram(),
+  ];
 }

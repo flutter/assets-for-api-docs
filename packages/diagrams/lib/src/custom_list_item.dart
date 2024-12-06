@@ -38,15 +38,9 @@ class _VideoDescription extends StatelessWidget {
             ),
           ),
           const Padding(padding: EdgeInsets.symmetric(vertical: 2.0)),
-          Text(
-            user,
-            style: const TextStyle(fontSize: 10.0),
-          ),
+          Text(user, style: const TextStyle(fontSize: 10.0)),
           const Padding(padding: EdgeInsets.symmetric(vertical: 1.0)),
-          Text(
-            '$viewCount views',
-            style: const TextStyle(fontSize: 10.0),
-          ),
+          Text('$viewCount views', style: const TextStyle(fontSize: 10.0)),
         ],
       ),
     );
@@ -75,10 +69,7 @@ class CustomListItem extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Expanded(
-            flex: 2,
-            child: thumbnail,
-          ),
+          Expanded(flex: 2, child: thumbnail),
           Expanded(
             flex: 3,
             child: _VideoDescription(
@@ -87,10 +78,7 @@ class CustomListItem extends StatelessWidget {
               viewCount: viewCount,
             ),
           ),
-          const Icon(
-            Icons.more_vert,
-            size: 16.0,
-          ),
+          const Icon(Icons.more_vert, size: 16.0),
         ],
       ),
     );
@@ -126,19 +114,14 @@ class _ArticleDescription extends StatelessWidget {
                 title,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
               const Padding(padding: EdgeInsets.only(bottom: 2.0)),
               Text(
                 subtitle,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  fontSize: 12.0,
-                  color: Colors.black54,
-                ),
+                style: const TextStyle(fontSize: 12.0, color: Colors.black54),
               ),
             ],
           ),
@@ -150,17 +133,11 @@ class _ArticleDescription extends StatelessWidget {
             children: <Widget>[
               Text(
                 author,
-                style: const TextStyle(
-                  fontSize: 12.0,
-                  color: Colors.black87,
-                ),
+                style: const TextStyle(fontSize: 12.0, color: Colors.black87),
               ),
               Text(
                 '$publishDate · $readDuration ★',
-                style: const TextStyle(
-                  fontSize: 12.0,
-                  color: Colors.black54,
-                ),
+                style: const TextStyle(fontSize: 12.0, color: Colors.black54),
               ),
             ],
           ),
@@ -198,10 +175,7 @@ class CustomListItemTwo extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            AspectRatio(
-              aspectRatio: 1.0,
-              child: thumbnail,
-            ),
+            AspectRatio(aspectRatio: 1.0, child: thumbnail),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(20.0, 0.0, 2.0, 0.0),
@@ -213,7 +187,7 @@ class CustomListItemTwo extends StatelessWidget {
                   readDuration: readDuration,
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),

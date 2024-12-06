@@ -82,13 +82,7 @@ class CodeTheme {
   final Color comment;
 }
 
-enum SpanType {
-  text,
-  method,
-  comment,
-  literal,
-  operator,
-}
+enum SpanType { text, method, comment, literal, operator }
 
 class CodeSpan {
   const CodeSpan(this.type, this.text);
@@ -129,10 +123,7 @@ class CodeHighlighter {
     return TextSpan(
       children: <TextSpan>[
         for (final CodeSpan span in spans)
-          TextSpan(
-            style: styles[span.type],
-            text: span.text,
-          ),
+          TextSpan(style: styles[span.type], text: span.text),
       ],
     );
   }
@@ -175,11 +166,14 @@ void paintTextArc(
   // Calculate the baseline / middle radius, adjusting for whether or not the
   // text is on the inside of the circle or running clockwise.
   final LineMetrics lineMetrics = textPainter.computeLineMetrics().single;
-  final Rect baselineRect = rect.inflate(inside
-      ? (clockwise ? lineMetrics.descent : -lineMetrics.height)
-      : (clockwise ? lineMetrics.height : 0.0));
-  final Rect centerRect =
-      rect.inflate(inside ? lineMetrics.height / -2 : lineMetrics.height / 2);
+  final Rect baselineRect = rect.inflate(
+    inside
+        ? (clockwise ? lineMetrics.descent : -lineMetrics.height)
+        : (clockwise ? lineMetrics.height : 0.0),
+  );
+  final Rect centerRect = rect.inflate(
+    inside ? lineMetrics.height / -2 : lineMetrics.height / 2,
+  );
 
   // Calculate the aligned start offset (in pixels) and then the ratio of pixels
   // to radians.
@@ -198,7 +192,8 @@ void paintTextArc(
     final double offset = (letterOffset + textOffset) + letterWidth / 2;
     final double arcTheta =
         theta + offset * (clockwise ? thetaPixels : -thetaPixels);
-    final Offset arcOffset = Offset(
+    final Offset arcOffset =
+        Offset(
           cos(arcTheta) * baselineRect.width / 2,
           sin(arcTheta) * baselineRect.height / 2,
         ) +
@@ -228,9 +223,10 @@ void paintArrowHead(
   final Vector2 topVec = matrix.transform(Vector2(-length, length));
   final Vector2 bottomVec = matrix.transform(Vector2(-length, -length));
 
-  final Path path = Path()
-    ..moveTo(center.dx + bottomVec.x, center.dy + bottomVec.y)
-    ..lineTo(center.dx, center.dy);
+  final Path path =
+      Path()
+        ..moveTo(center.dx + bottomVec.x, center.dy + bottomVec.y)
+        ..lineTo(center.dx, center.dy);
 
   if (!bottomOnly) {
     path.lineTo(center.dx + topVec.x, center.dy + topVec.y);
@@ -279,24 +275,27 @@ class ArcDiagramPainter extends CustomPainter {
     final double overlapNudge = overlaps ? 3.5 : 0.0;
     final Rect arcRect = rect.deflate(3.0 + overlapNudge);
 
-    final Offset nudgedArcStart = arcRect.center +
+    final Offset nudgedArcStart =
+        arcRect.center +
         Offset(
           cos(startAngle) * (arcRect.width / 2 + overlapNudge),
           sin(startAngle) * (arcRect.height / 2 + overlapNudge),
         );
 
-    final Offset arcEnd = arcRect.center +
+    final Offset arcEnd =
+        arcRect.center +
         Offset(
           cos(startAngle + sweepAngle) * arcRect.width / 2,
           sin(startAngle + sweepAngle) * arcRect.height / 2,
         );
 
-    final Paint paint = Paint()
-      ..color = theme.hintColor
-      ..strokeWidth = 2.0
-      ..style = PaintingStyle.stroke
-      ..strokeCap = StrokeCap.round
-      ..strokeJoin = StrokeJoin.round;
+    final Paint paint =
+        Paint()
+          ..color = theme.hintColor
+          ..strokeWidth = 2.0
+          ..style = PaintingStyle.stroke
+          ..strokeCap = StrokeCap.round
+          ..strokeJoin = StrokeJoin.round;
 
     // Unit circle, 8 angles at 45 degree increments
     for (int i = 0; i < 8; i++) {
@@ -317,13 +316,10 @@ class ArcDiagramPainter extends CustomPainter {
       );
 
       // Draw spokes of unit circle
-      canvas.drawLine(
-        arcRect.center + arcIn,
-        arcRect.center + arcOut,
-        paint,
-      );
+      canvas.drawLine(arcRect.center + arcIn, arcRect.center + arcOut, paint);
 
-      final Offset labelOffset = arcRect.center +
+      final Offset labelOffset =
+          arcRect.center +
           Offset(
             cos(theta) * (labelStart + arcRect.width / 2),
             sin(theta) * (labelStart + arcRect.height / 2),
@@ -335,35 +331,35 @@ class ArcDiagramPainter extends CustomPainter {
         TextSpan(
           children: <InlineSpan>[
             TextSpan(
-              text: const <String>[
-                '0°, 360°',
-                '45°',
-                '90°',
-                '135°',
-                '180°',
-                '225°',
-                '270°',
-                '315°',
-              ][i],
+              text:
+                  const <String>[
+                    '0°, 360°',
+                    '45°',
+                    '90°',
+                    '135°',
+                    '180°',
+                    '225°',
+                    '270°',
+                    '315°',
+                  ][i],
             ),
             const TextSpan(text: '\n'),
             TextSpan(
-              text: const <String>[
-                '0, 2π',
-                'π/4',
-                'π/2',
-                '3π/4',
-                'π',
-                '5π/4',
-                '3π/2',
-                '7π/4',
-              ][i],
+              text:
+                  const <String>[
+                    '0, 2π',
+                    'π/4',
+                    'π/2',
+                    '3π/4',
+                    'π',
+                    '5π/4',
+                    '3π/2',
+                    '7π/4',
+                  ][i],
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
           ],
-          style: TextStyle(
-            color: theme.hintColor,
-          ),
+          style: TextStyle(color: theme.hintColor),
         ),
         offset: labelOffset,
       );
@@ -429,11 +425,8 @@ class ArcDiagramPainter extends CustomPainter {
         fontWeight: FontWeight.bold,
       ),
       alignment: 0.0,
-      theta: lerpDouble(
-        startAngle,
-        startAngle + sweepAngle,
-        sweepLabelAlignment,
-      )!,
+      theta:
+          lerpDouble(startAngle, startAngle + sweepAngle, sweepLabelAlignment)!,
     );
 
     // Draw arrow at startAngle
@@ -509,7 +502,7 @@ class CanvasDrawArcDiagram extends ArcDiagram {
               CodeSpan(SpanType.text, '\n);'),
             ]),
           ),
-        )
+        ),
       ],
     );
   }
@@ -563,7 +556,7 @@ class PathAddArcDiagram extends ArcDiagram {
               CodeSpan(SpanType.text, '\n);'),
             ]),
           ),
-        )
+        ),
       ],
     );
   }
@@ -620,7 +613,7 @@ class PathAddArcCCWDiagram extends ArcDiagram {
               CodeSpan(SpanType.text, '\n);'),
             ]),
           ),
-        )
+        ),
       ],
     );
   }
@@ -635,11 +628,11 @@ class ArcDiagramStep extends DiagramStep {
 
   @override
   Future<List<ArcDiagram>> get diagrams async => const <ArcDiagram>[
-        CanvasDrawArcDiagram(),
-        CanvasDrawArcDiagram(dark: true),
-        PathAddArcDiagram(),
-        PathAddArcDiagram(dark: true),
-        PathAddArcCCWDiagram(),
-        PathAddArcCCWDiagram(dark: true),
-      ];
+    CanvasDrawArcDiagram(),
+    CanvasDrawArcDiagram(dark: true),
+    PathAddArcDiagram(),
+    PathAddArcDiagram(dark: true),
+    PathAddArcCCWDiagram(),
+    PathAddArcCCWDiagram(dark: true),
+  ];
 }

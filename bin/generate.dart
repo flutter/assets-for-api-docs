@@ -32,7 +32,7 @@ class DiagramGenerator {
     required this.temporaryDirectory,
     this.cleanup = true,
   }) : processRunner =
-            processRunner ?? ProcessRunner(printOutputDefault: true) {
+           processRunner ?? ProcessRunner(printOutputDefault: true) {
     print('Dart path: $generatorMain');
     print('Temp directory: ${temporaryDirectory.path}');
   }
@@ -50,10 +50,7 @@ class DiagramGenerator {
   );
 
   /// The path to the dart program to be run for generating the diagram.
-  static final String generatorMain = path.join(
-    'lib',
-    'main.dart',
-  );
+  static final String generatorMain = path.join('lib', 'main.dart');
 
   /// The class that the app runs as.
   static const String appClass = 'dev.flutter.diagram_generator';
@@ -61,8 +58,9 @@ class DiagramGenerator {
   /// The path to the top of the repo.
   static String get projectDir {
     if (Platform.script.isScheme('file')) {
-      return path
-          .dirname(path.dirname(path.absolute(path.fromUri(Platform.script))));
+      return path.dirname(
+        path.dirname(path.absolute(path.fromUri(Platform.script))),
+      );
     } else {
       // Tests can sometimes have data URIs, so we just return the current
       // directory for those.
@@ -103,13 +101,15 @@ class DiagramGenerator {
     final DateTime startTime = DateTime.now();
     if (!await _findIdForDeviceName()) {
       throw GeneratorException(
-          'Unable to find device ID for device $device. Are you sure it is attached?');
+        'Unable to find device ID for device $device. Are you sure it is attached?',
+      );
     }
 
     try {
       await _createScreenshots(categories, names, steps);
-      final List<File> outputFiles =
-          await _combineAnimations(await _transferImages());
+      final List<File> outputFiles = await _combineAnimations(
+        await _transferImages(),
+      );
       await _optimizeImages(outputFiles);
     } finally {
       if (cleanup) {
@@ -117,7 +117,8 @@ class DiagramGenerator {
       }
     }
     print(
-        'Elapsed time for diagram generation: ${DateTime.now().difference(startTime)}');
+      'Elapsed time for diagram generation: ${DateTime.now().difference(startTime)}',
+    );
   }
 
   Future<void> _createScreenshots(
@@ -159,18 +160,20 @@ class DiagramGenerator {
       filters.add('fuchsia');
     } else {
       throw GeneratorException(
-          'Unsupported target platform $deviceTargetPlatform for device $deviceId');
+        'Unsupported target platform $deviceTargetPlatform for device $deviceId',
+      );
     }
     filters.add('--output-dir');
     filters.add(temporaryDirectory.absolute.path);
     late final List<String> filterArgs;
     if (deviceTargetPlatform.startsWith('android')) {
-      filterArgs = filters.isNotEmpty
-          ? <String>[
-              '--route',
-              'args:${Uri.encodeComponent(filters.join(' '))}'
-            ]
-          : <String>[];
+      filterArgs =
+          filters.isNotEmpty
+              ? <String>[
+                '--route',
+                'args:${Uri.encodeComponent(filters.join(' '))}',
+              ]
+              : <String>[];
     } else {
       filterArgs = <String>[];
       for (final String arg in filters) {
@@ -179,12 +182,8 @@ class DiagramGenerator {
       }
     }
     final List<String> deviceArgs = <String>['-d', deviceId];
-    final List<String> args = <String>[
-          flutterCommand,
-          'run',
-        ] +
-        deviceArgs +
-        filterArgs;
+    final List<String> args =
+        <String>[flutterCommand, 'run'] + deviceArgs + filterArgs;
     await processRunner.runProcess(
       args,
       workingDirectory: Directory(generatorDir),
@@ -193,11 +192,7 @@ class DiagramGenerator {
 
   Future<bool> _findIdForDeviceName() async {
     final ProcessRunnerResult result = await processRunner.runProcess(
-      <String>[
-        flutterCommand,
-        'devices',
-        '--machine',
-      ],
+      <String>[flutterCommand, 'devices', '--machine'],
       workingDirectory: temporaryDirectory,
       printOutput: false,
     );
@@ -205,9 +200,9 @@ class DiagramGenerator {
     final List<dynamic> devices = jsonDecode(result.stdout) as List<dynamic>;
     for (final Map<String, dynamic> entry
         in devices.cast<Map<String, dynamic>>()) {
-      if ((entry['name'] as String)
-              .toLowerCase()
-              .startsWith(device.toLowerCase()) ||
+      if ((entry['name'] as String).toLowerCase().startsWith(
+            device.toLowerCase(),
+          ) ||
           (entry['id'] as String) == device) {
         deviceId = entry['id'] as String;
         deviceTargetPlatform =
@@ -240,8 +235,9 @@ class DiagramGenerator {
         workingDirectory: temporaryDirectory,
         printOutput: false,
       );
-      for (final ArchiveFile file
-          in TarDecoder().decodeBytes(tarData.stdoutRaw)) {
+      for (final ArchiveFile file in TarDecoder().decodeBytes(
+        tarData.stdoutRaw,
+      )) {
         if (file.isFile) {
           files.add(File(file.name));
           File(path.join(temporaryDirectory.absolute.path, file.name))
@@ -250,11 +246,15 @@ class DiagramGenerator {
         }
       }
     } else {
-      await for (final FileSystemEntity entity
-          in temporaryDirectory.list(recursive: true, followLinks: false)) {
+      await for (final FileSystemEntity entity in temporaryDirectory.list(
+        recursive: true,
+        followLinks: false,
+      )) {
         if (entity is File) {
-          final String relativePath =
-              path.relative(entity.path, from: temporaryDirectory.path);
+          final String relativePath = path.relative(
+            entity.path,
+            from: temporaryDirectory.path,
+          );
           files.add(File(relativePath));
         }
       }
@@ -272,7 +272,8 @@ class DiagramGenerator {
   }
 
   Future<List<File>> _buildMoviesFromMetadata(
-      List<AnimationMetadata> metadataList) async {
+    List<AnimationMetadata> metadataList,
+  ) async {
     final Directory destDir = Directory(assetDir);
     final List<File> outputs = <File>[];
     // The key represent the iterations and starts with 0. Iterations are
@@ -285,8 +286,9 @@ class DiagramGenerator {
     for (final AnimationMetadata metadata in metadataList) {
       final String prefix = '${metadata.category}/${metadata.name}';
 
-      final File destination =
-          File(path.join(destDir.path, '$prefix.${metadata.videoFormat.name}'));
+      final File destination = File(
+        path.join(destDir.path, '$prefix.${metadata.videoFormat.name}'),
+      );
       if (destination.existsSync()) {
         destination.deleteSync();
       }
@@ -294,9 +296,13 @@ class DiagramGenerator {
         destination.parent.createSync(recursive: true);
       }
       print(
-          'Converting ${metadata.name} animation to ${metadata.videoFormat.name}.');
+        'Converting ${metadata.name} animation to ${metadata.videoFormat.name}.',
+      );
       _generateCommands(
-          metadata: metadata, destination: destination.path, jobs: jobs);
+        metadata: metadata,
+        destination: destination.path,
+        jobs: jobs,
+      );
       outputs.add(destination);
     }
     final ProcessPool pool = ProcessPool(processRunner: processRunner);
@@ -316,10 +322,16 @@ class DiagramGenerator {
     switch (metadata.videoFormat) {
       case VideoFormat.mp4:
         _generateMp4Commands(
-            metadata: metadata, destination: destination, jobs: jobs);
+          metadata: metadata,
+          destination: destination,
+          jobs: jobs,
+        );
       case VideoFormat.gif:
         _generateGifCommands(
-            metadata: metadata, destination: destination, jobs: jobs);
+          metadata: metadata,
+          destination: destination,
+          jobs: jobs,
+        );
     }
   }
 
@@ -328,7 +340,9 @@ class DiagramGenerator {
     required String destination,
     required Map<int, List<WorkerJob>> jobs,
   }) {
-    jobs.putIfAbsent(0, () => <WorkerJob>[]).add(
+    jobs
+        .putIfAbsent(0, () => <WorkerJob>[])
+        .add(
           WorkerJob(
             <String>[
               ffmpegCommand,
@@ -363,9 +377,13 @@ class DiagramGenerator {
     required Map<int, List<WorkerJob>> jobs,
   }) {
     final String palette = path.join(
-        temporaryDirectory.path, '${metadata.category}_${metadata.name}.png');
+      temporaryDirectory.path,
+      '${metadata.category}_${metadata.name}.png',
+    );
     // Generate palette.
-    jobs.putIfAbsent(0, () => <WorkerJob>[]).add(
+    jobs
+        .putIfAbsent(0, () => <WorkerJob>[])
+        .add(
           WorkerJob(
             <String>[
               ffmpegCommand,
@@ -381,7 +399,9 @@ class DiagramGenerator {
           ),
         );
     // Create the final gif with the palette.
-    jobs.putIfAbsent(1, () => <WorkerJob>[]).add(
+    jobs
+        .putIfAbsent(1, () => <WorkerJob>[])
+        .add(
           WorkerJob(
             <String>[
               ffmpegCommand,
@@ -400,9 +420,10 @@ class DiagramGenerator {
   }
 
   Future<List<File>> _combineAnimations(List<File> inputFiles) async {
-    final List<File> errorFiles = inputFiles
-        .where((File input) => path.basename(input.path) == 'error.log')
-        .toList();
+    final List<File> errorFiles =
+        inputFiles
+            .where((File input) => path.basename(input.path) == 'error.log')
+            .toList();
 
     if (errorFiles.length != 1) {
       throw GeneratorException('Subprocess did not complete cleanly!');
@@ -410,8 +431,10 @@ class DiagramGenerator {
 
     print('Processing ${inputFiles.length - 1} files...');
 
-    final String errorsFileName =
-        path.join(temporaryDirectory.absolute.path, errorFiles.single.path);
+    final String errorsFileName = path.join(
+      temporaryDirectory.absolute.path,
+      errorFiles.single.path,
+    );
     final String errors = await File(errorsFileName).readAsString();
     if (errors.isNotEmpty) {
       print('Failed. Errors:');
@@ -419,9 +442,10 @@ class DiagramGenerator {
       throw GeneratorException('Failed with errors (see $errorsFileName).');
     }
 
-    final List<File> metadataFiles = inputFiles
-        .where((File input) => path.extension(input.path) == '.json')
-        .toList();
+    final List<File> metadataFiles =
+        inputFiles
+            .where((File input) => path.extension(input.path) == '.json')
+            .toList();
 
     // Collect all the animation frames that are in the metadata files so that
     // we can eliminate them from the other files that were transferred.
@@ -435,27 +459,31 @@ class DiagramGenerator {
           ),
         );
       }
-      final AnimationMetadata metadata =
-          AnimationMetadata.fromFile(metadataFile);
+      final AnimationMetadata metadata = AnimationMetadata.fromFile(
+        metadataFile,
+      );
       metadataList.add(metadata);
       animationFiles.add(metadata.metadataFile.absolute.path);
-      animationFiles
-          .addAll(metadata.frameFiles.map((File file) => file.absolute.path));
+      animationFiles.addAll(
+        metadata.frameFiles.map((File file) => file.absolute.path),
+      );
     }
-    final List<File> staticFiles = inputFiles.where((File input) {
-      if (!input.isAbsolute) {
-        input = File(
-          path.normalize(
-            path.join(temporaryDirectory.absolute.path, input.path),
-          ),
-        );
-      } else {
-        input = File(path.normalize(input.path));
-      }
-      return !animationFiles.contains(input.absolute.path);
-    }).toList();
-    final List<File> convertedFiles =
-        await _buildMoviesFromMetadata(metadataList);
+    final List<File> staticFiles =
+        inputFiles.where((File input) {
+          if (!input.isAbsolute) {
+            input = File(
+              path.normalize(
+                path.join(temporaryDirectory.absolute.path, input.path),
+              ),
+            );
+          } else {
+            input = File(path.normalize(input.path));
+          }
+          return !animationFiles.contains(input.absolute.path);
+        }).toList();
+    final List<File> convertedFiles = await _buildMoviesFromMetadata(
+      metadataList,
+    );
     return staticFiles..addAll(convertedFiles);
   }
 
@@ -465,8 +493,9 @@ class DiagramGenerator {
       if (!imagePath.path.endsWith('.png')) {
         continue;
       }
-      final File destination =
-          File(path.join(Directory(assetDir).path, imagePath.path));
+      final File destination = File(
+        path.join(Directory(assetDir).path, imagePath.path),
+      );
       final Directory destDir = destination.parent;
       if (!destDir.existsSync()) {
         destDir.createSync(recursive: true);
@@ -474,20 +503,22 @@ class DiagramGenerator {
       if (destination.existsSync()) {
         destination.deleteSync();
       }
-      jobs.add(WorkerJob(
-        <String>[
-          optiPngCommand,
-          '-zc1-9',
-          '-zm1-9',
-          '-zs0-3',
-          '-f0-5',
-          imagePath.path,
-          '-out',
-          destination.path,
-        ],
-        workingDirectory: temporaryDirectory,
-        name: 'optipng ${destination.path}',
-      ));
+      jobs.add(
+        WorkerJob(
+          <String>[
+            optiPngCommand,
+            '-zc1-9',
+            '-zm1-9',
+            '-zs0-3',
+            '-f0-5',
+            imagePath.path,
+            '-out',
+            destination.path,
+          ],
+          workingDirectory: temporaryDirectory,
+          name: 'optipng ${destination.path}',
+        ),
+      );
     }
     if (jobs.isNotEmpty) {
       final ProcessPool pool = ProcessPool(processRunner: processRunner);
@@ -517,10 +548,11 @@ bool _hasJobFailed(WorkerJob job) {
 }
 
 Future<Map<String, Map<String, String>>> listAvailableDevices() async {
-  final ProcessRunnerResult result = await ProcessRunner().runProcess(
-    <String>['flutter', 'devices', '--machine'],
-    printOutput: false,
-  );
+  final ProcessRunnerResult result = await ProcessRunner().runProcess(<String>[
+    'flutter',
+    'devices',
+    '--machine',
+  ], printOutput: false);
 
   final Map<String, Map<String, String>> devices =
       <String, Map<String, String>>{};
@@ -529,7 +561,7 @@ Future<Map<String, Map<String, String>>> listAvailableDevices() async {
       in devicesJson.cast<Map<String, dynamic>>()) {
     devices[(entry['name'] as String).toLowerCase()] = <String, String>{
       'id': entry['id'] as String,
-      'targetPlatform': entry['targetPlatform'] as String
+      'targetPlatform': entry['targetPlatform'] as String,
     };
   }
   return devices;
@@ -562,33 +594,48 @@ Future<void> main(List<String> arguments) async {
 
   final ArgParser parser = ArgParser();
   parser.addFlag('help', help: 'Print help.');
-  parser.addFlag('keep-tmp',
-      help: "Don't cleanup after a run (don't remove temporary directory).");
-  parser.addOption('tmpdir',
-      abbr: 't',
-      help: 'Specify a temporary directory to use (implies --keep-tmp)');
-  parser.addOption('device-id',
-      abbr: 'd',
-      help: 'Specify a device ID to use for generating the diagrams. Defaults '
-          'to the host platform that the script is run on, if that platform is '
-          'supported, or an attached device if not. Available devices '
-          'are:\n${getDeviceList(devices)}\n',
-      defaultsTo: getDefaultDevice(devices));
-  parser.addMultiOption('category',
-      abbr: 'c',
-      help: 'Specify the categories of diagrams that should be generated. The '
-          'category is the name of the subdirectory of the assets/ directory '
-          'into which the images will be placed, as determined by the '
-          'DiagramStep.category property.');
-  parser.addMultiOption('name',
-      abbr: 'n',
-      help: 'Specify the names of diagrams that should be generated. The '
-          'name is the basename of the output file and may be specified with '
-          'or without the suffix.');
-  parser.addMultiOption('step',
-      abbr: 's',
-      help:
-          'Specify the class names of the DiagramSteps that should be generated.');
+  parser.addFlag(
+    'keep-tmp',
+    help: "Don't cleanup after a run (don't remove temporary directory).",
+  );
+  parser.addOption(
+    'tmpdir',
+    abbr: 't',
+    help: 'Specify a temporary directory to use (implies --keep-tmp)',
+  );
+  parser.addOption(
+    'device-id',
+    abbr: 'd',
+    help:
+        'Specify a device ID to use for generating the diagrams. Defaults '
+        'to the host platform that the script is run on, if that platform is '
+        'supported, or an attached device if not. Available devices '
+        'are:\n${getDeviceList(devices)}\n',
+    defaultsTo: getDefaultDevice(devices),
+  );
+  parser.addMultiOption(
+    'category',
+    abbr: 'c',
+    help:
+        'Specify the categories of diagrams that should be generated. The '
+        'category is the name of the subdirectory of the assets/ directory '
+        'into which the images will be placed, as determined by the '
+        'DiagramStep.category property.',
+  );
+  parser.addMultiOption(
+    'name',
+    abbr: 'n',
+    help:
+        'Specify the names of diagrams that should be generated. The '
+        'name is the basename of the output file and may be specified with '
+        'or without the suffix.',
+  );
+  parser.addMultiOption(
+    'step',
+    abbr: 's',
+    help:
+        'Specify the class names of the DiagramSteps that should be generated.',
+  );
   final ArgResults flags = parser.parse(arguments);
 
   if (flags['help'] as bool) {

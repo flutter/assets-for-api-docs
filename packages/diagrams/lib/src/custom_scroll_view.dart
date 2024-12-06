@@ -12,7 +12,8 @@ import 'diagram_step.dart';
 import 'fake_drag_scroll_activity.dart';
 import 'utils.dart';
 
-final Duration _kTotalDuration = _kScrollUpDuration +
+final Duration _kTotalDuration =
+    _kScrollUpDuration +
     _kScrollPauseDuration +
     _kScrollDownDurationPartOne +
     _kScrollPauseDuration +
@@ -61,20 +62,11 @@ class _CustomScrollViewDiagramState extends State<CustomScrollViewDiagram>
 
   Future<void> _play() async {
     await waitLockstep(_kScrollPauseDuration);
-    await _animate(
-      to: 650.0,
-      duration: _kScrollUpDuration,
-    );
+    await _animate(to: 650.0, duration: _kScrollUpDuration);
     await waitLockstep(_kScrollPauseDuration);
-    await _animate(
-      to: 500.0,
-      duration: _kScrollDownDurationPartOne,
-    );
+    await _animate(to: 500.0, duration: _kScrollDownDurationPartOne);
     await waitLockstep(_kScrollPauseDuration);
-    await _animate(
-      to: 0.0,
-      duration: _kScrollDownDurationPartTwo,
-    );
+    await _animate(to: 0.0, duration: _kScrollDownDurationPartTwo);
   }
 
   Future<void> _animate({required double to, required Duration duration}) {
@@ -104,9 +96,7 @@ class _CustomScrollViewDiagramState extends State<CustomScrollViewDiagram>
           const SliverAppBar(
             pinned: true,
             expandedHeight: 250.0,
-            flexibleSpace: FlexibleSpaceBar(
-              title: Text('Demo'),
-            ),
+            flexibleSpace: FlexibleSpaceBar(title: Text('Demo')),
           ),
           SliverGrid(
             gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
@@ -115,28 +105,29 @@ class _CustomScrollViewDiagramState extends State<CustomScrollViewDiagram>
               crossAxisSpacing: 10.0,
               childAspectRatio: 4.0,
             ),
-            delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
-                return Container(
-                  alignment: Alignment.center,
-                  color: Colors.teal[100 * (index % 9)],
-                  child: Text('Grid Item $index'),
-                );
-              },
-              childCount: 20,
-            ),
+            delegate: SliverChildBuilderDelegate((
+              BuildContext context,
+              int index,
+            ) {
+              return Container(
+                alignment: Alignment.center,
+                color: Colors.teal[100 * (index % 9)],
+                child: Text('Grid Item $index'),
+              );
+            }, childCount: 20),
           ),
           SliverFixedExtentList(
             itemExtent: 50.0,
-            delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
-                return Container(
-                  alignment: Alignment.center,
-                  color: Colors.lightBlue[100 * (index % 9)],
-                  child: Text('List Item $index'),
-                );
-              },
-            ),
+            delegate: SliverChildBuilderDelegate((
+              BuildContext context,
+              int index,
+            ) {
+              return Container(
+                alignment: Alignment.center,
+                color: Colors.lightBlue[100 * (index % 9)],
+                child: Text('List Item $index'),
+              );
+            }),
           ),
         ],
       ),

@@ -32,14 +32,9 @@ class _DiagramState extends State<AppBarDiagram> {
   Widget build(BuildContext context) {
     return ConstrainedBox(
       key: UniqueKey(),
-      constraints: BoxConstraints.tight(const Size(
-        540.0,
-        260.0,
-      )),
+      constraints: BoxConstraints.tight(const Size(540.0, 260.0)),
       child: Theme(
-        data: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
+        data: ThemeData(primarySwatch: Colors.blue),
         child: Material(
           color: const Color(0xFFFFFFFF),
           child: MediaQuery(
@@ -67,7 +62,7 @@ class _DiagramState extends State<AppBarDiagram> {
                             end: const FractionalOffset(0.48, 1.0),
                             colors: <Color>[
                               Colors.blue.shade500,
-                              Colors.blue.shade800
+                              Colors.blue.shade800,
                             ],
                           ),
                         ),
@@ -78,9 +73,7 @@ class _DiagramState extends State<AppBarDiagram> {
                         child: Container(
                           height: 50.0,
                           padding: const EdgeInsets.all(4.0),
-                          child: const Placeholder(
-                            color: Color(0xFFFFFFFF),
-                          ),
+                          child: const Placeholder(color: Color(0xFFFFFFFF)),
                         ),
                       ),
                     ),
@@ -90,15 +83,27 @@ class _DiagramState extends State<AppBarDiagram> {
                   child: LabelPainterWidget(
                     key: canvasKey,
                     labels: <Label>[
-                      Label(leading, 'leading',
-                          const FractionalOffset(0.5, 0.25)),
-                      Label(actions, 'actions',
-                          const FractionalOffset(0.25, 0.5)),
-                      Label(title, 'title', FractionalOffset.center),
-                      Label(flexibleSpace, 'flexibleSpace',
-                          const FractionalOffset(0.2, 0.5)),
                       Label(
-                          bottom, 'bottom', const FractionalOffset(0.5, 0.75)),
+                        leading,
+                        'leading',
+                        const FractionalOffset(0.5, 0.25),
+                      ),
+                      Label(
+                        actions,
+                        'actions',
+                        const FractionalOffset(0.25, 0.5),
+                      ),
+                      Label(title, 'title', FractionalOffset.center),
+                      Label(
+                        flexibleSpace,
+                        'flexibleSpace',
+                        const FractionalOffset(0.2, 0.5),
+                      ),
+                      Label(
+                        bottom,
+                        'bottom',
+                        const FractionalOffset(0.5, 0.75),
+                      ),
                     ],
                     heroKey: heroKey,
                   ),
@@ -117,6 +122,7 @@ class AppBarDiagramStep extends DiagramStep {
   final String category = 'material';
 
   @override
-  Future<List<AppBarDiagram>> get diagrams async =>
-      <AppBarDiagram>[const AppBarDiagram(name: 'app_bar')];
+  Future<List<AppBarDiagram>> get diagrams async => <AppBarDiagram>[
+    const AppBarDiagram(name: 'app_bar'),
+  ];
 }

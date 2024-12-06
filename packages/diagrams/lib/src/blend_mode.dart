@@ -13,12 +13,18 @@ import 'utils.dart';
 
 final GlobalKey key = GlobalKey();
 
-const ImageProvider destinationImageProvider =
-    ExactAssetImage('assets/blend_mode_destination.jpeg', package: 'diagrams');
-const ImageProvider sourceImageProvider =
-    ExactAssetImage('assets/blend_mode_source.png', package: 'diagrams');
-const ImageProvider gridImageProvider =
-    ExactAssetImage('assets/blend_mode_grid.png', package: 'diagrams');
+const ImageProvider destinationImageProvider = ExactAssetImage(
+  'assets/blend_mode_destination.jpeg',
+  package: 'diagrams',
+);
+const ImageProvider sourceImageProvider = ExactAssetImage(
+  'assets/blend_mode_source.png',
+  package: 'diagrams',
+);
+const ImageProvider gridImageProvider = ExactAssetImage(
+  'assets/blend_mode_grid.png',
+  package: 'diagrams',
+);
 
 const String kMonospaceFont = 'Courier New';
 
@@ -57,7 +63,9 @@ class BlendModeDiagram extends StatelessWidget with DiagramMetadata {
                   alignment: Alignment.topLeft,
                   child: Container(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 1.0, vertical: 3.0),
+                      horizontal: 1.0,
+                      vertical: 3.0,
+                    ),
                     color: Colors.white,
                     child: Text(
                       '$mode',
@@ -77,7 +85,9 @@ class BlendModeDiagram extends StatelessWidget with DiagramMetadata {
                   child: Container(
                     margin: const EdgeInsets.all(1.0),
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 1.0, vertical: 1.0),
+                      horizontal: 1.0,
+                      vertical: 1.0,
+                    ),
                     color: Colors.white,
                     child: const Text(
                       '⟵ destination ⟶',
@@ -99,7 +109,9 @@ class BlendModeDiagram extends StatelessWidget with DiagramMetadata {
                     child: Container(
                       margin: const EdgeInsets.all(1.0),
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 1.0, vertical: 1.0),
+                        horizontal: 1.0,
+                        vertical: 1.0,
+                      ),
                       color: Colors.white,
                       child: const Text(
                         '⟵ source ⟶',
@@ -202,19 +214,29 @@ class BlendModePainter extends CustomPainter {
     final double barWidth = bounds.height / (bars.length * 3.0);
     double top = bounds.top + barWidth * 2.0;
     for (final Color color in bars) {
-      drawBar(canvas, Rect.fromLTWH(bounds.left, top, bounds.width, barWidth),
-          Paint()..color = color);
+      drawBar(
+        canvas,
+        Rect.fromLTWH(bounds.left, top, bounds.width, barWidth),
+        Paint()..color = color,
+      );
       top += barWidth;
     }
     for (final List<Color> colors in gradients) {
       final Rect rect = Rect.fromLTWH(bounds.left, top, bounds.width, barWidth);
       top += barWidth;
-      drawBar(canvas, rect,
-          Paint()..shader = LinearGradient(colors: colors).createShader(rect));
+      drawBar(
+        canvas,
+        rect,
+        Paint()..shader = LinearGradient(colors: colors).createShader(rect),
+      );
     }
     top += barWidth * 2.0;
-    final Rect rect =
-        Rect.fromLTRB(bounds.left, top, bounds.right, bounds.bottom);
+    final Rect rect = Rect.fromLTRB(
+      bounds.left,
+      top,
+      bounds.right,
+      bounds.bottom,
+    );
     paintImage(canvas: canvas, rect: rect, image: image, fit: BoxFit.fill);
   }
 

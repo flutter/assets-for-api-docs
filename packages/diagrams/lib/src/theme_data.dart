@@ -67,7 +67,8 @@ class ThemeDataDiagram extends StatelessWidget with DiagramMetadata {
                     secondary: Colors.green,
                   ),
                   textTheme: const TextTheme(
-                      bodyMedium: TextStyle(color: Colors.purple)),
+                    bodyMedium: TextStyle(color: Colors.purple),
+                  ),
                 ),
                 home: Stack(
                   children: <Widget>[
@@ -84,10 +85,7 @@ class ThemeDataDiagram extends StatelessWidget with DiagramMetadata {
                           child: const Icon(Icons.add),
                         ),
                         body: Center(
-                          child: Text(
-                            'Button pressed 0 times',
-                            key: _bodyKey,
-                          ),
+                          child: Text('Button pressed 0 times', key: _bodyKey),
                         ),
                       ),
                     ),
@@ -113,7 +111,7 @@ class ThemeDataDiagram extends StatelessWidget with DiagramMetadata {
                           ),
                         ],
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -133,7 +131,7 @@ class ThemeDataDiagramStep extends DiagramStep {
 
   @override
   Future<List<ThemeDataDiagram>> get diagrams async => <ThemeDataDiagram>[
-        const ThemeDataDiagram(_themeData),
-        const ThemeDataDiagram(_materialAppThemeData),
-      ];
+    const ThemeDataDiagram(_themeData),
+    const ThemeDataDiagram(_materialAppThemeData),
+  ];
 }

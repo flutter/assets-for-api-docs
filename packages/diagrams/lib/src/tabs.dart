@@ -11,7 +11,8 @@ import 'utils.dart';
 
 const Duration _kTabAnimationDuration = Duration(milliseconds: 300);
 const Duration _kPauseDuration = Duration(seconds: 2);
-final Duration _kTotalAnimationTime = _kPauseDuration +
+final Duration _kTotalAnimationTime =
+    _kPauseDuration +
     _kTabAnimationDuration +
     _kPauseDuration +
     _kTabAnimationDuration +
@@ -32,10 +33,7 @@ class TabsDiagram extends StatefulWidget with DiagramMetadata {
 
 class TabsDiagramState extends State<TabsDiagram>
     with TickerProviderStateMixin, LockstepStateMixin {
-  final List<GlobalKey> _tabKeys = <GlobalKey>[
-    GlobalKey(),
-    GlobalKey(),
-  ];
+  final List<GlobalKey> _tabKeys = <GlobalKey>[GlobalKey(), GlobalKey()];
 
   late final List<Tab> myTabs = <Tab>[
     Tab(key: _tabKeys[0], text: 'LEFT'),
@@ -84,22 +82,20 @@ class TabsDiagramState extends State<TabsDiagram>
         debugShowCheckedModeBanner: false,
         home: Scaffold(
           appBar: AppBar(
-            bottom: TabBar(
-              controller: _tabController,
-              tabs: myTabs,
-            ),
+            bottom: TabBar(controller: _tabController, tabs: myTabs),
           ),
           body: TabBarView(
             controller: _tabController,
-            children: myTabs.map((Tab tab) {
-              final String label = tab.text!.toLowerCase();
-              return Center(
-                child: Text(
-                  'This is the $label tab',
-                  style: const TextStyle(fontSize: 36),
-                ),
-              );
-            }).toList(),
+            children:
+                myTabs.map((Tab tab) {
+                  final String label = tab.text!.toLowerCase();
+                  return Center(
+                    child: Text(
+                      'This is the $label tab',
+                      style: const TextStyle(fontSize: 36),
+                    ),
+                  );
+                }).toList(),
           ),
         ),
       ),
@@ -113,6 +109,6 @@ class TabsDiagramStep extends DiagramStep {
 
   @override
   Future<List<TabsDiagram>> get diagrams async => const <TabsDiagram>[
-        TabsDiagram('tabs'),
-      ];
+    TabsDiagram('tabs'),
+  ];
 }

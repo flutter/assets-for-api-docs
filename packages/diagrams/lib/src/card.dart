@@ -44,10 +44,7 @@ class CardDiagram extends StatelessWidget with DiagramMetadata {
                       child: const Text('BUY TICKETS'),
                       onPressed: () {},
                     ),
-                    TextButton(
-                      child: const Text('LISTEN'),
-                      onPressed: () {},
-                    ),
+                    TextButton(child: const Text('LISTEN'), onPressed: () {}),
                   ],
                 ),
               ),
@@ -64,6 +61,7 @@ class CardDiagramStep extends DiagramStep {
   final String category = 'material';
 
   @override
-  Future<List<CardDiagram>> get diagrams async =>
-      <CardDiagram>[const CardDiagram()];
+  Future<List<CardDiagram>> get diagrams async => <CardDiagram>[
+    const CardDiagram(),
+  ];
 }

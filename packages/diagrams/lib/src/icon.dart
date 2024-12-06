@@ -28,21 +28,9 @@ class IconDiagram extends StatelessWidget with DiagramMetadata {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
-              Icon(
-                Icons.favorite,
-                color: Colors.pink,
-                size: 24.0,
-              ),
-              Icon(
-                Icons.audiotrack,
-                color: Colors.green,
-                size: 30.0,
-              ),
-              Icon(
-                Icons.beach_access,
-                color: Colors.blue,
-                size: 36.0,
-              ),
+              Icon(Icons.favorite, color: Colors.pink, size: 24.0),
+              Icon(Icons.audiotrack, color: Colors.green, size: 30.0),
+              Icon(Icons.beach_access, color: Colors.blue, size: 36.0),
             ],
           ),
         ),
@@ -57,6 +45,6 @@ class IconDiagramStep extends DiagramStep {
 
   @override
   Future<List<IconDiagram>> get diagrams async => <IconDiagram>[
-        const IconDiagram(_icon),
-      ];
+    const IconDiagram(_icon),
+  ];
 }

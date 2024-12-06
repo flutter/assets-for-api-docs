@@ -10,8 +10,10 @@ import 'package:flutter/material.dart' hide Image;
 import 'diagram_step.dart';
 import 'utils.dart';
 
-const ImageProvider _backgroundImageProvider =
-    ExactAssetImage('assets/blend_mode_destination.jpeg', package: 'diagrams');
+const ImageProvider _backgroundImageProvider = ExactAssetImage(
+  'assets/blend_mode_destination.jpeg',
+  package: 'diagrams',
+);
 
 ui.Image? _backgroundImage;
 
@@ -28,10 +30,7 @@ class ClipDiagram extends StatelessWidget with DiagramMetadata {
       color: Colors.white,
       child: CustomPaint(
         painter: painter,
-        child: const SizedBox(
-          width: 700,
-          height: 400,
-        ),
+        child: const SizedBox(width: 700, height: 400),
       ),
     );
   }
@@ -68,10 +67,11 @@ class ClipRectPainter extends CustomPainter {
     _drawBackground(canvas, size);
     canvas.restore();
 
-    final Paint paint = Paint()
-      ..style = PaintingStyle.stroke
-      ..color = Colors.white
-      ..strokeWidth = 3.0;
+    final Paint paint =
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..color = Colors.white
+          ..strokeWidth = 3.0;
     canvas.drawRect(rect, paint);
   }
 
@@ -87,18 +87,21 @@ class ClipRRectPainter extends CustomPainter {
     canvas.restore();
 
     const Rect rect = Rect.fromLTWH(100, 100, 500.0, 200.0);
-    final RRect rrect =
-        RRect.fromRectAndRadius(rect, const Radius.circular(32.0));
+    final RRect rrect = RRect.fromRectAndRadius(
+      rect,
+      const Radius.circular(32.0),
+    );
 
     canvas.save();
     canvas.clipRRect(rrect);
     _drawBackground(canvas, size);
     canvas.restore();
 
-    final Paint paint = Paint()
-      ..style = PaintingStyle.stroke
-      ..color = Colors.white
-      ..strokeWidth = 3.0;
+    final Paint paint =
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..color = Colors.white
+          ..strokeWidth = 3.0;
     canvas.drawRRect(rrect, paint);
   }
 
@@ -124,50 +127,52 @@ class ClipPathPainter extends CustomPainter {
     const double topControl = 60.0;
     const double middleControl = 75.0;
 
-    final Path path = Path()
-      ..moveTo(cx, bottomAnchorY)
-      ..cubicTo(
-        cx - bottomControl,
-        bottomAnchorY,
-        leftAnchorX,
-        middleAnchorY + middleControl,
-        leftAnchorX,
-        middleAnchorY,
-      )
-      ..cubicTo(
-        leftAnchorX,
-        middleAnchorY - middleControl,
-        cx - topControl,
-        topAnchorY - topControl,
-        cx,
-        topAnchorY,
-      )
-      ..cubicTo(
-        cx + topControl,
-        topAnchorY - topControl,
-        rightAnchorX,
-        middleAnchorY - middleControl,
-        rightAnchorX,
-        middleAnchorY,
-      )
-      ..cubicTo(
-        rightAnchorX,
-        middleAnchorY + middleControl,
-        cx + bottomControl,
-        bottomAnchorY,
-        cx,
-        bottomAnchorY,
-      );
+    final Path path =
+        Path()
+          ..moveTo(cx, bottomAnchorY)
+          ..cubicTo(
+            cx - bottomControl,
+            bottomAnchorY,
+            leftAnchorX,
+            middleAnchorY + middleControl,
+            leftAnchorX,
+            middleAnchorY,
+          )
+          ..cubicTo(
+            leftAnchorX,
+            middleAnchorY - middleControl,
+            cx - topControl,
+            topAnchorY - topControl,
+            cx,
+            topAnchorY,
+          )
+          ..cubicTo(
+            cx + topControl,
+            topAnchorY - topControl,
+            rightAnchorX,
+            middleAnchorY - middleControl,
+            rightAnchorX,
+            middleAnchorY,
+          )
+          ..cubicTo(
+            rightAnchorX,
+            middleAnchorY + middleControl,
+            cx + bottomControl,
+            bottomAnchorY,
+            cx,
+            bottomAnchorY,
+          );
 
     canvas.save();
     canvas.clipPath(path);
     _drawBackground(canvas, size);
     canvas.restore();
 
-    final Paint paint = Paint()
-      ..style = PaintingStyle.stroke
-      ..color = Colors.white
-      ..strokeWidth = 3.0;
+    final Paint paint =
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..color = Colors.white
+          ..strokeWidth = 3.0;
     canvas.drawPath(path, paint);
   }
 
@@ -183,18 +188,9 @@ class ClipDiagramStep extends DiagramStep {
   Future<List<ClipDiagram>> get diagrams async {
     _backgroundImage ??= await getImage(_backgroundImageProvider);
     return <ClipDiagram>[
-      ClipDiagram(
-        name: 'clip_rect',
-        painter: ClipRectPainter(),
-      ),
-      ClipDiagram(
-        name: 'clip_rrect',
-        painter: ClipRRectPainter(),
-      ),
-      ClipDiagram(
-        name: 'clip_path',
-        painter: ClipPathPainter(),
-      ),
+      ClipDiagram(name: 'clip_rect', painter: ClipRectPainter()),
+      ClipDiagram(name: 'clip_rrect', painter: ClipRRectPainter()),
+      ClipDiagram(name: 'clip_path', painter: ClipPathPainter()),
     ];
   }
 }

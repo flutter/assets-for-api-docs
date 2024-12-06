@@ -23,14 +23,9 @@ class _MediaQueryDiagramState extends State<MediaQueryDiagram> {
   Widget build(BuildContext context) {
     return ConstrainedBox(
       key: UniqueKey(),
-      constraints: BoxConstraints.tight(const Size(
-        500.0,
-        300.0,
-      )),
+      constraints: BoxConstraints.tight(const Size(500.0, 300.0)),
       child: Theme(
-        data: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
+        data: ThemeData(primarySwatch: Colors.blue),
         child: Material(
           color: const Color(0xFFFFFFFF),
           child: MediaQuery(
@@ -39,16 +34,8 @@ class _MediaQueryDiagramState extends State<MediaQueryDiagram> {
               child: Stack(
                 alignment: Alignment.topCenter,
                 children: <Widget>[
-                  Container(
-                    width: 350.0,
-                    height: 250.0,
-                    color: Colors.black,
-                  ),
-                  Container(
-                    width: 342.0,
-                    height: 246.0,
-                    color: Colors.red,
-                  ),
+                  Container(width: 350.0, height: 250.0, color: Colors.black),
+                  Container(width: 342.0, height: 246.0, color: Colors.red),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 130.0),
                     child: Container(
@@ -75,10 +62,7 @@ class _MediaQueryDiagramState extends State<MediaQueryDiagram> {
                   ),
                   const Padding(
                     padding: EdgeInsets.fromLTRB(0.0, 260, 240.0, 0.0),
-                    child: Text(
-                      'viewInsets',
-                      style: TextStyle(fontSize: 20.0),
-                    ),
+                    child: Text('viewInsets', style: TextStyle(fontSize: 20.0)),
                   ),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(0.0, 100, 0.0, 0.0),
@@ -90,10 +74,7 @@ class _MediaQueryDiagramState extends State<MediaQueryDiagram> {
                   ),
                   const Padding(
                     padding: EdgeInsets.fromLTRB(0.0, 70, 0.0, 0.0),
-                    child: Text(
-                      'padding',
-                      style: TextStyle(fontSize: 20.0),
-                    ),
+                    child: Text('padding', style: TextStyle(fontSize: 20.0)),
                   ),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(240.0, 100.0, 0.0, .0),
@@ -125,6 +106,7 @@ class MediaQueryDiagramStep extends DiagramStep {
   final String category = 'widgets';
 
   @override
-  Future<List<MediaQueryDiagram>> get diagrams async =>
-      <MediaQueryDiagram>[const MediaQueryDiagram(name: 'media_query')];
+  Future<List<MediaQueryDiagram>> get diagrams async => <MediaQueryDiagram>[
+    const MediaQueryDiagram(name: 'media_query'),
+  ];
 }

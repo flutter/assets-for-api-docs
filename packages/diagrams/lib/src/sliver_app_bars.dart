@@ -11,7 +11,8 @@ import 'diagram_step.dart';
 import 'fake_drag_scroll_activity.dart';
 import 'utils.dart';
 
-final Duration _kTotalDuration = _kScrollPauseDuration +
+final Duration _kTotalDuration =
+    _kScrollPauseDuration +
     _kScrollUpDuration +
     _kScrollPauseDuration +
     _kScrollDownDurationPartOne +
@@ -78,26 +79,17 @@ class SliverAppBarDiagramState extends State<SliverAppBarDiagram>
     if (!mounted) {
       return;
     }
-    await _animate(
-      to: 600.0,
-      duration: _kScrollUpDuration,
-    );
+    await _animate(to: 600.0, duration: _kScrollUpDuration);
     await waitLockstep(_kScrollPauseDuration);
     if (!mounted) {
       return;
     }
-    await _animate(
-      to: 490.0,
-      duration: _kScrollDownDurationPartOne,
-    );
+    await _animate(to: 490.0, duration: _kScrollDownDurationPartOne);
     await waitLockstep(_kScrollPauseDuration);
     if (!mounted) {
       return;
     }
-    await _animate(
-      to: 0.0,
-      duration: _kScrollDownDurationPartTwo,
-    );
+    await _animate(to: 0.0, duration: _kScrollDownDurationPartTwo);
     if (widget.repeatAnimation && mounted) {
       _play();
     }
@@ -137,17 +129,18 @@ class SliverAppBarDiagramState extends State<SliverAppBarDiagram>
             leading: const Icon(Icons.menu),
           ),
           SliverList(
-            delegate:
-                SliverChildListDelegate(List<Widget>.generate(20, (int i) {
-              return Container(
-                color: i.isEven ? Colors.white : Colors.black12,
-                height: 100.0,
-                child: Center(
-                  child: Text('$i', textScaler: const TextScaler.linear(5)),
-                ),
-              );
-            })),
-          )
+            delegate: SliverChildListDelegate(
+              List<Widget>.generate(20, (int i) {
+                return Container(
+                  color: i.isEven ? Colors.white : Colors.black12,
+                  height: 100.0,
+                  child: Center(
+                    child: Text('$i', textScaler: const TextScaler.linear(5)),
+                  ),
+                );
+              }),
+            ),
+          ),
         ],
       ),
     );
@@ -163,11 +156,7 @@ class SliverAppBarDiagramStep extends DiagramStep {
       for (final bool floating in <bool>[false, true])
         // snap is only a legal option if floating is true.
         for (final bool snap in floating ? <bool>[false, true] : <bool>[false])
-          SliverAppBarDiagram(
-            pinned: pinned,
-            floating: floating,
-            snap: snap,
-          ),
+          SliverAppBarDiagram(pinned: pinned, floating: floating, snap: snap),
   ];
 
   @override

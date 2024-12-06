@@ -13,7 +13,7 @@ const Duration _kAnimationDuration = Duration(seconds: 2);
 
 class AnimatedAlignDiagram extends ImplicitAnimationDiagram<AlignmentGeometry> {
   const AnimatedAlignDiagram({super.key})
-      : super(duration: _kOverallAnimationDuration);
+    : super(duration: _kOverallAnimationDuration);
 
   @override
   Curve get curve => Curves.fastOutSlowIn;
@@ -37,7 +37,7 @@ class AnimatedAlignDiagram extends ImplicitAnimationDiagram<AlignmentGeometry> {
 class AnimatedContainerDiagram
     extends ImplicitAnimationDiagram<AlignmentGeometry> {
   const AnimatedContainerDiagram({super.key})
-      : super(duration: _kOverallAnimationDuration);
+    : super(duration: _kOverallAnimationDuration);
 
   @override
   Curve get curve => Curves.fastOutSlowIn;
@@ -64,19 +64,20 @@ class AnimatedContainerDiagram
 class AnimatedDefaultTextStyleDiagram
     extends ImplicitAnimationDiagram<AlignmentGeometry> {
   const AnimatedDefaultTextStyleDiagram({super.key})
-      : super(duration: _kOverallAnimationDuration);
+    : super(duration: _kOverallAnimationDuration);
 
   @override
   Curve get curve => Curves.elasticInOut;
 
   @override
   Widget buildImplicitAnimation(BuildContext context, bool selected) {
-    final TextStyle selectedStyle =
-        Theme.of(context).textTheme.headlineMedium!.copyWith(
-              color: Colors.red,
-              fontSize: 50.0,
-              fontWeight: FontWeight.w100,
-            );
+    final TextStyle selectedStyle = Theme.of(
+      context,
+    ).textTheme.headlineMedium!.copyWith(
+      color: Colors.red,
+      fontSize: 50.0,
+      fontWeight: FontWeight.w100,
+    );
     final TextStyle unselectedStyle = selectedStyle.copyWith(
       color: Colors.blue,
       fontSize: 50.0,
@@ -100,7 +101,7 @@ class AnimatedDefaultTextStyleDiagram
 class AnimatedOpacityDiagram
     extends ImplicitAnimationDiagram<AlignmentGeometry> {
   const AnimatedOpacityDiagram({super.key})
-      : super(duration: _kOverallAnimationDuration);
+    : super(duration: _kOverallAnimationDuration);
 
   @override
   Curve get curve => Curves.fastOutSlowIn;
@@ -123,7 +124,7 @@ class AnimatedOpacityDiagram
 class AnimatedPaddingDiagram
     extends ImplicitAnimationDiagram<AlignmentGeometry> {
   const AnimatedPaddingDiagram({super.key})
-      : super(duration: _kOverallAnimationDuration);
+    : super(duration: _kOverallAnimationDuration);
 
   @override
   Curve get curve => Curves.fastOutSlowIn;
@@ -133,9 +134,10 @@ class AnimatedPaddingDiagram
     return Center(
       child: ImplicitAnimationDiagramTapper(
         child: AnimatedPadding(
-          padding: selected
-              ? const EdgeInsets.symmetric(vertical: 80.0)
-              : const EdgeInsets.symmetric(horizontal: 80.0),
+          padding:
+              selected
+                  ? const EdgeInsets.symmetric(vertical: 80.0)
+                  : const EdgeInsets.symmetric(horizontal: 80.0),
           duration: _kAnimationDuration,
           curve: curve,
           child: Container(color: Colors.blue),
@@ -148,7 +150,7 @@ class AnimatedPaddingDiagram
 class AnimatedPhysicalModelDiagram
     extends ImplicitAnimationDiagram<AlignmentGeometry> {
   const AnimatedPhysicalModelDiagram({super.key})
-      : super(duration: _kOverallAnimationDuration);
+    : super(duration: _kOverallAnimationDuration);
 
   @override
   Curve get curve => Curves.fastOutSlowIn;
@@ -187,7 +189,7 @@ class AnimatedPhysicalModelDiagram
 class AnimatedPositionedDiagram
     extends ImplicitAnimationDiagram<AlignmentGeometry> {
   const AnimatedPositionedDiagram({super.key})
-      : super(duration: _kOverallAnimationDuration);
+    : super(duration: _kOverallAnimationDuration);
 
   @override
   Curve get curve => Curves.fastOutSlowIn;
@@ -221,7 +223,7 @@ class AnimatedPositionedDiagram
 class AnimatedPositionedDirectionalDiagram
     extends ImplicitAnimationDiagram<AlignmentGeometry> {
   const AnimatedPositionedDirectionalDiagram({super.key})
-      : super(duration: _kOverallAnimationDuration);
+    : super(duration: _kOverallAnimationDuration);
 
   @override
   Curve get curve => Curves.fastOutSlowIn;
@@ -258,7 +260,7 @@ class AnimatedPositionedDirectionalDiagram
 
 class AnimatedThemeDiagram extends ImplicitAnimationDiagram<AlignmentGeometry> {
   const AnimatedThemeDiagram({super.key})
-      : super(duration: _kOverallAnimationDuration);
+    : super(duration: _kOverallAnimationDuration);
 
   @override
   Curve get curve => Curves.elasticInOut;
@@ -291,7 +293,7 @@ class AnimatedThemeDiagram extends ImplicitAnimationDiagram<AlignmentGeometry> {
 
 class WindowPaddingDiagram extends ImplicitAnimationDiagram<AlignmentGeometry> {
   const WindowPaddingDiagram({super.key})
-      : super(duration: _kOverallAnimationDuration);
+    : super(duration: _kOverallAnimationDuration);
 
   @override
   Curve get curve => Curves.fastOutSlowIn;
@@ -304,20 +306,10 @@ class WindowPaddingDiagram extends ImplicitAnimationDiagram<AlignmentGeometry> {
     return ImplicitAnimationDiagramTapper(
       child: Stack(
         children: <Widget>[
-          SizedBox(
-            height: 45,
-            child: Container(
-              color: Colors.red,
-            ),
-          ),
+          SizedBox(height: 45, child: Container(color: Colors.red)),
           Align(
             alignment: AlignmentDirectional.bottomCenter,
-            child: SizedBox(
-              height: 30,
-              child: Container(
-                color: Colors.red,
-              ),
-            ),
+            child: SizedBox(height: 30, child: Container(color: Colors.red)),
           ),
           // "Notch"
           Align(
@@ -328,7 +320,10 @@ class WindowPaddingDiagram extends ImplicitAnimationDiagram<AlignmentGeometry> {
                 bottomRight: Radius.circular(15.0),
               ),
               child: Container(
-                  color: Colors.black, width: size.width * .6, height: 40),
+                color: Colors.black,
+                width: size.width * .6,
+                height: 40,
+              ),
             ),
           ),
 
@@ -343,10 +338,7 @@ class WindowPaddingDiagram extends ImplicitAnimationDiagram<AlignmentGeometry> {
                 child: const Center(
                   child: Text(
                     'KEYBOARD',
-                    style: TextStyle(
-                      fontSize: 40,
-                      color: Colors.white,
-                    ),
+                    style: TextStyle(fontSize: 40, color: Colors.white),
                   ),
                 ),
               ),
@@ -387,10 +379,7 @@ class WindowPaddingDiagram extends ImplicitAnimationDiagram<AlignmentGeometry> {
 }
 
 class ImplicitAnimationDiagramTapper extends StatefulWidget {
-  const ImplicitAnimationDiagramTapper({
-    super.key,
-    required this.child,
-  });
+  const ImplicitAnimationDiagramTapper({super.key, required this.child});
 
   final Widget child;
 

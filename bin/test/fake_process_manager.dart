@@ -61,8 +61,11 @@ class FakeProcessManager implements ProcessManager {
     expect(invocations.length, equals(calls.length));
     for (final FakeInvocationRecord call in calls) {
       expect(invocations[index].invocation, orderedEquals(call.invocation));
-      expect(invocations[index].workingDirectory, equals(call.workingDirectory),
-          reason: 'Wrong working directory for ${call.invocation}');
+      expect(
+        invocations[index].workingDirectory,
+        equals(call.workingDirectory),
+        reason: 'Wrong working directory for ${call.invocation}',
+      );
       index++;
     }
   }
@@ -88,8 +91,11 @@ class FakeProcessManager implements ProcessManager {
         break;
       }
     }
-    expect(foundResult, isNotNull,
-        reason: '$command not found in expected results: ${fakeResults.keys}');
+    expect(
+      foundResult,
+      isNotNull,
+      reason: '$command not found in expected results: ${fakeResults.keys}',
+    );
     return fakeResults[foundCommand]?.removeAt(0) ??
         ProcessResult(0, 0, '', '');
   }
@@ -98,25 +104,37 @@ class FakeProcessManager implements ProcessManager {
       FakeProcess(_popResult(command), stdinResults);
 
   Future<Process> _nextProcess(
-      List<String> invocation, String? workingDirectory) async {
-    final FakeInvocationRecord record =
-        FakeInvocationRecord(invocation, workingDirectory: workingDirectory);
+    List<String> invocation,
+    String? workingDirectory,
+  ) async {
+    final FakeInvocationRecord record = FakeInvocationRecord(
+      invocation,
+      workingDirectory: workingDirectory,
+    );
     invocations.add(record);
     return Future<Process>.value(_popProcess(record));
   }
 
   ProcessResult _nextResultSync(
-      List<String> invocation, String? workingDirectory) {
-    final FakeInvocationRecord record =
-        FakeInvocationRecord(invocation, workingDirectory: workingDirectory);
+    List<String> invocation,
+    String? workingDirectory,
+  ) {
+    final FakeInvocationRecord record = FakeInvocationRecord(
+      invocation,
+      workingDirectory: workingDirectory,
+    );
     invocations.add(record);
     return _popResult(record);
   }
 
   Future<ProcessResult> _nextResult(
-      List<String> invocation, String? workingDirectory) async {
-    final FakeInvocationRecord record =
-        FakeInvocationRecord(invocation, workingDirectory: workingDirectory);
+    List<String> invocation,
+    String? workingDirectory,
+  ) async {
+    final FakeInvocationRecord record = FakeInvocationRecord(
+      invocation,
+      workingDirectory: workingDirectory,
+    );
     invocations.add(record);
     return Future<ProcessResult>.value(_popResult(record));
   }
@@ -185,12 +203,14 @@ typedef StdinResults = void Function(String input);
 /// FakeProcessManager.
 class FakeProcess implements Process {
   FakeProcess(ProcessResult result, StdinResults stdinResults)
-      : stdoutStream =
-            Stream<List<int>>.value((result.stdout as String).codeUnits),
-        stderrStream =
-            Stream<List<int>>.value((result.stderr as String).codeUnits),
-        desiredExitCode = result.exitCode,
-        stdinSink = IOSink(StringStreamConsumer(stdinResults));
+    : stdoutStream = Stream<List<int>>.value(
+        (result.stdout as String).codeUnits,
+      ),
+      stderrStream = Stream<List<int>>.value(
+        (result.stderr as String).codeUnits,
+      ),
+      desiredExitCode = result.exitCode,
+      stdinSink = IOSink(StringStreamConsumer(stdinResults));
 
   final IOSink stdinSink;
   final Stream<List<int>> stdoutStream;

@@ -37,9 +37,7 @@ class BoxFitDiagram extends StatelessWidget with DiagramMetadata {
             divisions: 1,
             interval: 18.5,
             subdivisions: 1,
-            child: Center(
-              child: Text(fit.toString().split('.').join('\n')),
-            ),
+            child: Center(child: Text(fit.toString().split('.').join('\n'))),
           ),
         ),
       ),
@@ -54,23 +52,12 @@ class BoxFitDiagram extends StatelessWidget with DiagramMetadata {
         children: <Widget>[
           Expanded(
             flex: 180,
-            child: Center(
-              child: AspectRatio(
-                aspectRatio: 2.5,
-                child: inner,
-              ),
-            ),
+            child: Center(child: AspectRatio(aspectRatio: 2.5, child: inner)),
           ),
           const SizedBox(width: 30.0),
-          Expanded(
-            flex: 80,
-            child: inner,
-          ),
+          Expanded(flex: 80, child: inner),
           const SizedBox(width: 30.0),
-          Expanded(
-            flex: 200,
-            child: inner,
-          ),
+          Expanded(flex: 200, child: inner),
         ],
       ),
     );
