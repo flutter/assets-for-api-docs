@@ -45,16 +45,16 @@ class TextStyleDiagram extends StatelessWidget with DiagramMetadata {
             children: <TextSpan>[
               TextSpan(
                 text: "You don't have the votes.\n",
-                style: TextStyle(color: Colors.black.withOpacity(0.6)),
+                style: TextStyle(color: Colors.black.withValues(alpha: 0.6)),
               ),
               TextSpan(
                 text: "You don't have the votes!\n",
-                style: TextStyle(color: Colors.black.withOpacity(0.8)),
+                style: TextStyle(color: Colors.black.withValues(alpha: 0.8)),
               ),
               TextSpan(
                 text:
                     "You're gonna need congressional approval and you don't have the votes!\n",
-                style: TextStyle(color: Colors.black.withOpacity(1.0)),
+                style: TextStyle(color: Colors.black.withValues(alpha: 1.0)),
               ),
             ],
           ),
@@ -81,9 +81,7 @@ class TextStyleDiagram extends StatelessWidget with DiagramMetadata {
                   decorationStyle: TextDecorationStyle.wavy,
                 ),
               ),
-              TextSpan(
-                text: ' we got it made in the shade.',
-              ),
+              TextSpan(text: ' we got it made in the shade.'),
             ],
           ),
         );
@@ -91,10 +89,7 @@ class TextStyleDiagram extends StatelessWidget with DiagramMetadata {
       case _customFonts:
         returnWidget = const Text(
           'Look, when Britain taxed our tea, we got frisky.',
-          style: TextStyle(
-            fontFamily: 'Raleway',
-            package: 'diagrams',
-          ),
+          style: TextStyle(fontFamily: 'Raleway', package: 'diagrams'),
         );
         break;
     }
@@ -117,11 +112,11 @@ class TextStyleDiagramStep extends DiagramStep {
 
   @override
   Future<List<TextStyleDiagram>> get diagrams async => <TextStyleDiagram>[
-        const TextStyleDiagram(_bold),
-        const TextStyleDiagram(_italics),
-        const TextStyleDiagram(_opacityAndColor),
-        const TextStyleDiagram(_size),
-        const TextStyleDiagram(_wavyUnderline),
-        const TextStyleDiagram(_customFonts),
-      ];
+    const TextStyleDiagram(_bold),
+    const TextStyleDiagram(_italics),
+    const TextStyleDiagram(_opacityAndColor),
+    const TextStyleDiagram(_size),
+    const TextStyleDiagram(_wavyUnderline),
+    const TextStyleDiagram(_customFonts),
+  ];
 }

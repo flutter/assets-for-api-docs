@@ -11,7 +11,8 @@ import 'utils.dart';
 
 const Duration _pauseDuration = Duration(seconds: 1);
 const Duration _openDuration = Duration(milliseconds: 300);
-final Duration _totalDuration = _pauseDuration +
+final Duration _totalDuration =
+    _pauseDuration +
     _pauseDuration +
     _openDuration +
     _pauseDuration +
@@ -39,8 +40,9 @@ class _SimpleDialogDiagramState extends State<SimpleDialogDiagram>
   Future<void> _tap(GlobalKey key) async {
     final RenderBox target =
         key.currentContext!.findRenderObject()! as RenderBox;
-    final Offset targetOffset =
-        target.localToGlobal(target.size.center(Offset.zero));
+    final Offset targetOffset = target.localToGlobal(
+      target.size.center(Offset.zero),
+    );
     final WidgetController controller = DiagramWidgetController.of(context);
     final TestGesture gesture = await controller.startGesture(targetOffset);
     await waitLockstep(_pauseDuration);
@@ -82,9 +84,7 @@ class _SimpleDialogDiagramState extends State<SimpleDialogDiagram>
               Animation<double> secondaryAnimation,
             ) {
               return Scaffold(
-                appBar: AppBar(
-                  title: const Text('SimpleDialog Demo'),
-                ),
+                appBar: AppBar(title: const Text('SimpleDialog Demo')),
                 body: Center(
                   child: Builder(
                     builder: (BuildContext context) {
@@ -105,51 +105,49 @@ class _SimpleDialogDiagramState extends State<SimpleDialogDiagram>
   }
 
   Future<void> _askedToLead(BuildContext context) async {
-    final Department result = (await showDialog<Department>(
-      context: context,
-      useRootNavigator: false,
-      builder: (BuildContext context) {
-        return SimpleDialog(
-          title: const Text('Select assignment'),
-          children: <Widget>[
-            SimpleDialogOption(
-              key: _treasuryKey,
-              onPressed: () {
-                Navigator.pop<Department>(context, Department.treasury);
-              },
-              child: const Text('Treasury department'),
-            ),
-            SimpleDialogOption(
-              key: _stateKey,
-              onPressed: () {
-                Navigator.pop<Department>(context, Department.state);
-              },
-              child: const Text('State department'),
-            ),
-          ],
-        );
-      },
-    ))!;
+    final Department result =
+        (await showDialog<Department>(
+          context: context,
+          useRootNavigator: false,
+          builder: (BuildContext context) {
+            return SimpleDialog(
+              title: const Text('Select assignment'),
+              children: <Widget>[
+                SimpleDialogOption(
+                  key: _treasuryKey,
+                  onPressed: () {
+                    Navigator.pop<Department>(context, Department.treasury);
+                  },
+                  child: const Text('Treasury department'),
+                ),
+                SimpleDialogOption(
+                  key: _stateKey,
+                  onPressed: () {
+                    Navigator.pop<Department>(context, Department.state);
+                  },
+                  child: const Text('State department'),
+                ),
+              ],
+            );
+          },
+        ))!;
 
     switch (result) {
       case Department.treasury:
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Treasury')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Treasury')));
         break;
       case Department.state:
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('State')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('State')));
         break;
     }
   }
 }
 
-enum Department {
-  treasury,
-  state,
-}
+enum Department { treasury, state }
 
 class SimpleDialogDiagramStep extends DiagramStep {
   @override
@@ -157,6 +155,6 @@ class SimpleDialogDiagramStep extends DiagramStep {
 
   @override
   Future<List<SimpleDialogDiagram>> get diagrams async => <SimpleDialogDiagram>[
-        const SimpleDialogDiagram('simple_dialog'),
-      ];
+    const SimpleDialogDiagram('simple_dialog'),
+  ];
 }

@@ -11,10 +11,7 @@ void main() {
 }
 
 class DiagramViewerApp extends StatefulWidget {
-  const DiagramViewerApp({
-    super.key,
-    this.home,
-  });
+  const DiagramViewerApp({super.key, this.home});
 
   final Widget? home;
 

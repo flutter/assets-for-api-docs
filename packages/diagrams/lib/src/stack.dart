@@ -24,32 +24,16 @@ class StackDiagram extends StatelessWidget with DiagramMetadata {
       case _stack:
         returnWidget = Stack(
           children: <Widget>[
-            Container(
-              width: 100,
-              height: 100,
-              color: Colors.red,
-            ),
-            Container(
-              width: 90,
-              height: 90,
-              color: Colors.green,
-            ),
-            Container(
-              width: 80,
-              height: 80,
-              color: Colors.blue,
-            ),
+            Container(width: 100, height: 100, color: Colors.red),
+            Container(width: 90, height: 90, color: Colors.green),
+            Container(width: 80, height: 80, color: Colors.blue),
           ],
         );
         break;
       case _stackWithGradient:
         returnWidget = Stack(
           children: <Widget>[
-            Container(
-              width: 250,
-              height: 250,
-              color: Colors.white,
-            ),
+            Container(width: 250, height: 250, color: Colors.white),
             Container(
               padding: const EdgeInsets.all(5.0),
               alignment: Alignment.bottomCenter,
@@ -60,7 +44,7 @@ class StackDiagram extends StatelessWidget with DiagramMetadata {
                   colors: <Color>[
                     Colors.black.withAlpha(0),
                     Colors.black12,
-                    Colors.black45
+                    Colors.black45,
                   ],
                 ),
               ),
@@ -95,7 +79,7 @@ class StackDiagramStep extends DiagramStep {
 
   @override
   Future<List<StackDiagram>> get diagrams async => <StackDiagram>[
-        const StackDiagram(_stack),
-        const StackDiagram(_stackWithGradient),
-      ];
+    const StackDiagram(_stack),
+    const StackDiagram(_stackWithGradient),
+  ];
 }

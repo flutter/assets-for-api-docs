@@ -33,16 +33,9 @@ class RowDiagram extends StatelessWidget with DiagramMetadata {
               ),
             ),
             Expanded(
-              child: Text(
-                'Craft beautiful UIs',
-                textAlign: TextAlign.center,
-              ),
+              child: Text('Craft beautiful UIs', textAlign: TextAlign.center),
             ),
-            Expanded(
-              child: FittedBox(
-                child: FlutterLogo(),
-              ),
-            ),
+            Expanded(child: FittedBox(child: FlutterLogo())),
           ],
         );
         break;
@@ -114,9 +107,9 @@ class RowDiagramStep extends DiagramStep {
 
   @override
   Future<List<RowDiagram>> get diagrams async => <RowDiagram>[
-        const RowDiagram(_row),
-        const RowDiagram(_rowError),
-        const RowDiagram(_rowFixed),
-        const RowDiagram(_rowTextDirection),
-      ];
+    const RowDiagram(_row),
+    const RowDiagram(_rowError),
+    const RowDiagram(_rowFixed),
+    const RowDiagram(_rowTextDirection),
+  ];
 }

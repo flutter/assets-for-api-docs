@@ -90,61 +90,61 @@ class AnimatedIconsStep extends DiagramStep {
 
   @override
   Future<List<DiagramMetadata>> get diagrams async => <DiagramMetadata>[
-        const AnimatedIconsDiagram(
-          iconName: add_event,
-          iconData: AnimatedIcons.add_event,
-        ),
-        const AnimatedIconsDiagram(
-          iconName: arrow_menu,
-          iconData: AnimatedIcons.arrow_menu,
-        ),
-        const AnimatedIconsDiagram(
-          iconName: close_menu,
-          iconData: AnimatedIcons.close_menu,
-        ),
-        const AnimatedIconsDiagram(
-          iconName: ellipsis_search,
-          iconData: AnimatedIcons.ellipsis_search,
-        ),
-        const AnimatedIconsDiagram(
-          iconName: event_add,
-          iconData: AnimatedIcons.event_add,
-        ),
-        const AnimatedIconsDiagram(
-          iconName: home_menu,
-          iconData: AnimatedIcons.home_menu,
-        ),
-        const AnimatedIconsDiagram(
-          iconName: list_view,
-          iconData: AnimatedIcons.list_view,
-        ),
-        const AnimatedIconsDiagram(
-          iconName: menu_arrow,
-          iconData: AnimatedIcons.menu_arrow,
-        ),
-        const AnimatedIconsDiagram(
-          iconName: menu_close,
-          iconData: AnimatedIcons.menu_close,
-        ),
-        const AnimatedIconsDiagram(
-          iconName: menu_home,
-          iconData: AnimatedIcons.menu_home,
-        ),
-        const AnimatedIconsDiagram(
-          iconName: pause_play,
-          iconData: AnimatedIcons.pause_play,
-        ),
-        const AnimatedIconsDiagram(
-          iconName: play_pause,
-          iconData: AnimatedIcons.play_pause,
-        ),
-        const AnimatedIconsDiagram(
-          iconName: search_ellipsis,
-          iconData: AnimatedIcons.search_ellipsis,
-        ),
-        const AnimatedIconsDiagram(
-          iconName: view_list,
-          iconData: AnimatedIcons.view_list,
-        ),
-      ];
+    const AnimatedIconsDiagram(
+      iconName: add_event,
+      iconData: AnimatedIcons.add_event,
+    ),
+    const AnimatedIconsDiagram(
+      iconName: arrow_menu,
+      iconData: AnimatedIcons.arrow_menu,
+    ),
+    const AnimatedIconsDiagram(
+      iconName: close_menu,
+      iconData: AnimatedIcons.close_menu,
+    ),
+    const AnimatedIconsDiagram(
+      iconName: ellipsis_search,
+      iconData: AnimatedIcons.ellipsis_search,
+    ),
+    const AnimatedIconsDiagram(
+      iconName: event_add,
+      iconData: AnimatedIcons.event_add,
+    ),
+    const AnimatedIconsDiagram(
+      iconName: home_menu,
+      iconData: AnimatedIcons.home_menu,
+    ),
+    const AnimatedIconsDiagram(
+      iconName: list_view,
+      iconData: AnimatedIcons.list_view,
+    ),
+    const AnimatedIconsDiagram(
+      iconName: menu_arrow,
+      iconData: AnimatedIcons.menu_arrow,
+    ),
+    const AnimatedIconsDiagram(
+      iconName: menu_close,
+      iconData: AnimatedIcons.menu_close,
+    ),
+    const AnimatedIconsDiagram(
+      iconName: menu_home,
+      iconData: AnimatedIcons.menu_home,
+    ),
+    const AnimatedIconsDiagram(
+      iconName: pause_play,
+      iconData: AnimatedIcons.pause_play,
+    ),
+    const AnimatedIconsDiagram(
+      iconName: play_pause,
+      iconData: AnimatedIcons.play_pause,
+    ),
+    const AnimatedIconsDiagram(
+      iconName: search_ellipsis,
+      iconData: AnimatedIcons.search_ellipsis,
+    ),
+    const AnimatedIconsDiagram(
+      iconName: view_list,
+      iconData: AnimatedIcons.view_list,
+    ),
+  ];
 }

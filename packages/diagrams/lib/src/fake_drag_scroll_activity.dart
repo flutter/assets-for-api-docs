@@ -27,13 +27,13 @@ class FakeDragScrollActivity extends ScrollActivity {
     required Duration duration,
     required Curve curve,
     required TickerProvider vsync,
-  })  : _completer = Completer<void>(),
-        _controller = AnimationController.unbounded(
-          value: from,
-          debugLabel: '$FakeDragScrollActivity',
-          vsync: vsync,
-        ),
-        _lastValue = from {
+  }) : _completer = Completer<void>(),
+       _controller = AnimationController.unbounded(
+         value: from,
+         debugLabel: '$FakeDragScrollActivity',
+         vsync: vsync,
+       ),
+       _lastValue = from {
     _controller
       ..addListener(_tick)
       ..animateTo(to, duration: duration, curve: curve).whenComplete(_end);
@@ -62,13 +62,16 @@ class FakeDragScrollActivity extends ScrollActivity {
 
   @override
   void dispatchOverscrollNotification(
-      ScrollMetrics metrics, BuildContext context, double overscroll) {
+    ScrollMetrics metrics,
+    BuildContext context,
+    double overscroll,
+  ) {
     OverscrollNotification(
-            metrics: metrics,
-            context: context,
-            overscroll: overscroll,
-            velocity: velocity)
-        .dispatch(context);
+      metrics: metrics,
+      context: context,
+      overscroll: overscroll,
+      velocity: velocity,
+    ).dispatch(context);
   }
 
   @override

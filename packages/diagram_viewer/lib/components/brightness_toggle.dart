@@ -7,10 +7,7 @@ import 'package:flutter/material.dart';
 import '../main.dart';
 
 class BrightnessToggleButton extends StatelessWidget {
-  const BrightnessToggleButton({
-    super.key,
-    this.color,
-  });
+  const BrightnessToggleButton({super.key, this.color});
 
   final Color? color;
 

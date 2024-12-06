@@ -34,11 +34,12 @@ class LinkedLabelRadio extends StatelessWidget {
       child: Row(
         children: <Widget>[
           Radio<bool>(
-              groupValue: groupValue,
-              value: value,
-              onChanged: (bool? newValue) {
-                onChanged(newValue);
-              }),
+            groupValue: groupValue,
+            value: value,
+            onChanged: (bool? newValue) {
+              onChanged(newValue);
+            },
+          ),
           RichText(
             text: TextSpan(
               text: label,
@@ -46,10 +47,11 @@ class LinkedLabelRadio extends StatelessWidget {
                 color: Colors.blueAccent,
                 decoration: TextDecoration.underline,
               ),
-              recognizer: TapGestureRecognizer()
-                ..onTap = () {
-                  print('Label has been tapped.');
-                },
+              recognizer:
+                  TapGestureRecognizer()
+                    ..onTap = () {
+                      print('Label has been tapped.');
+                    },
             ),
           ),
         ],

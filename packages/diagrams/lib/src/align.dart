@@ -17,10 +17,7 @@ class AlignDiagram extends StatelessWidget with DiagramMetadata {
   @override
   Widget build(BuildContext context) {
     const Widget logo = FlutterLogo(size: 60);
-    const Icon origin = Icon(
-      Icons.gps_fixed,
-      size: 20,
-    );
+    const Icon origin = Icon(Icons.gps_fixed, size: 20);
     Widget heading;
     Widget containerChild;
     switch (name) {
@@ -35,13 +32,8 @@ class AlignDiagram extends StatelessWidget with DiagramMetadata {
         heading = const Text('Alignment Origin');
         containerChild = const Stack(
           children: <Widget>[
-            Align(
-              alignment: Alignment(0.2, 0.6),
-              child: logo,
-            ),
-            Align(
-              child: origin,
-            ),
+            Align(alignment: Alignment(0.2, 0.6), child: logo),
+            Align(child: origin),
           ],
         );
 
@@ -50,14 +42,8 @@ class AlignDiagram extends StatelessWidget with DiagramMetadata {
         heading = const Text('Fractional Offset Origin');
         containerChild = const Stack(
           children: <Widget>[
-            Align(
-              alignment: FractionalOffset(0.2, 0.6),
-              child: logo,
-            ),
-            Align(
-              alignment: FractionalOffset(-0.1, -0.1),
-              child: origin,
-            ),
+            Align(alignment: FractionalOffset(0.2, 0.6), child: logo),
+            Align(alignment: FractionalOffset(-0.1, -0.1), child: origin),
           ],
         );
         break;
@@ -80,10 +66,11 @@ class AlignDiagram extends StatelessWidget with DiagramMetadata {
               child: heading,
             ),
             Container(
-                height: 120.0,
-                width: 120.0,
-                color: Colors.blue[50],
-                child: containerChild),
+              height: 120.0,
+              width: 120.0,
+              color: Colors.blue[50],
+              child: containerChild,
+            ),
           ],
         ),
       ),
@@ -97,8 +84,8 @@ class AlignDiagramStep extends DiagramStep {
 
   @override
   Future<List<AlignDiagram>> get diagrams async => <AlignDiagram>[
-        const AlignDiagram('align_constant'),
-        const AlignDiagram('align_alignment'),
-        const AlignDiagram('align_fractional_offset'),
-      ];
+    const AlignDiagram('align_constant'),
+    const AlignDiagram('align_alignment'),
+    const AlignDiagram('align_fractional_offset'),
+  ];
 }

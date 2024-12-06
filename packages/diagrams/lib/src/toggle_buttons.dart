@@ -46,8 +46,9 @@ class _ToggleButtonsDiagramState extends State<ToggleButtonsDiagram>
   Future<void> _tap(GlobalKey key) async {
     final RenderBox target =
         key.currentContext!.findRenderObject()! as RenderBox;
-    final Offset targetOffset =
-        target.localToGlobal(target.size.center(Offset.zero));
+    final Offset targetOffset = target.localToGlobal(
+      target.size.center(Offset.zero),
+    );
     final WidgetController controller = DiagramWidgetController.of(context);
     final TestGesture gesture = await controller.startGesture(targetOffset);
     await waitLockstep(const Duration(milliseconds: 500));
@@ -93,9 +94,11 @@ class _ToggleButtonsDiagramState extends State<ToggleButtonsDiagram>
           }
           break;
         case ToggleButtonsBehavior.mutuallyExclusive:
-          for (int buttonIndex = 0;
-              buttonIndex < _isSelected.length;
-              buttonIndex++) {
+          for (
+            int buttonIndex = 0;
+            buttonIndex < _isSelected.length;
+            buttonIndex++
+          ) {
             if (buttonIndex == index) {
               _isSelected[buttonIndex] = !_isSelected[buttonIndex];
             } else {
@@ -104,9 +107,11 @@ class _ToggleButtonsDiagramState extends State<ToggleButtonsDiagram>
           }
           break;
         case ToggleButtonsBehavior.requiredMutuallyExclusive:
-          for (int buttonIndex = 0;
-              buttonIndex < _isSelected.length;
-              buttonIndex++) {
+          for (
+            int buttonIndex = 0;
+            buttonIndex < _isSelected.length;
+            buttonIndex++
+          ) {
             if (buttonIndex == index) {
               _isSelected[buttonIndex] = true;
             } else {

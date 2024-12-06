@@ -8,7 +8,8 @@ import 'package:flutter/material.dart';
 
 import '../diagrams.dart';
 
-final Duration _kTotalDuration = _kBreakDuration +
+final Duration _kTotalDuration =
+    _kBreakDuration +
     _kAnimationDuration +
     _kBreakDuration +
     _kAnimationDuration;
@@ -38,8 +39,10 @@ class AnimationStatusValueDiagramState
   @override
   void initState() {
     super.initState();
-    _controller =
-        AnimationController(vsync: this, duration: _kAnimationDuration);
+    _controller = AnimationController(
+      vsync: this,
+      duration: _kAnimationDuration,
+    );
     waitLockstep(_kBreakDuration).then((_) => _controller.forward());
     waitLockstep(
       _kBreakDuration + _kAnimationDuration + _kBreakDuration,
@@ -148,7 +151,5 @@ class AnimationStatusValueDiagramStep extends DiagramStep {
 
   @override
   Future<List<AnimationStatusValueDiagram>> get diagrams async =>
-      const <AnimationStatusValueDiagram>[
-        AnimationStatusValueDiagram(),
-      ];
+      const <AnimationStatusValueDiagram>[AnimationStatusValueDiagram()];
 }

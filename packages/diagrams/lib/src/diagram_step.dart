@@ -9,23 +9,19 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 // Possible supported platforms that can be specified for the diagram.
-enum DiagramPlatform {
-  android,
-  fuchsia,
-  ios,
-  linux,
-  macos,
-  windows,
-}
+enum DiagramPlatform { android, fuchsia, ios, linux, macos, windows }
 
 Map<String, DiagramPlatform> diagramStepPlatformNames =
-    Map<String, DiagramPlatform>.fromEntries(DiagramPlatform.values
-        .map<MapEntry<String, DiagramPlatform>>((DiagramPlatform platform) {
-  return MapEntry<String, DiagramPlatform>(
-    platform.toString().replaceFirst('$DiagramPlatform.', ''),
-    platform,
-  );
-}));
+    Map<String, DiagramPlatform>.fromEntries(
+      DiagramPlatform.values.map<MapEntry<String, DiagramPlatform>>((
+        DiagramPlatform platform,
+      ) {
+        return MapEntry<String, DiagramPlatform>(
+          platform.toString().replaceFirst('$DiagramPlatform.', ''),
+          platform,
+        );
+      }),
+    );
 
 /// Describes a step in drawing the diagrams.
 abstract class DiagramStep {

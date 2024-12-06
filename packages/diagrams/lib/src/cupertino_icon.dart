@@ -29,16 +29,8 @@ class CupertinoIconDiagram extends StatelessWidget with DiagramMetadata {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
-              Icon(
-                CupertinoIcons.heart_fill,
-                color: Colors.pink,
-                size: 24.0,
-              ),
-              Icon(
-                CupertinoIcons.bell_fill,
-                color: Colors.green,
-                size: 30.0,
-              ),
+              Icon(CupertinoIcons.heart_fill, color: Colors.pink, size: 24.0),
+              Icon(CupertinoIcons.bell_fill, color: Colors.green, size: 30.0),
               Icon(
                 CupertinoIcons.umbrella_fill,
                 color: Colors.blue,
@@ -58,7 +50,5 @@ class CupertinoIconDiagramStep extends DiagramStep {
 
   @override
   Future<List<CupertinoIconDiagram>> get diagrams async =>
-      <CupertinoIconDiagram>[
-        const CupertinoIconDiagram(_icon),
-      ];
+      <CupertinoIconDiagram>[const CupertinoIconDiagram(_icon)];
 }

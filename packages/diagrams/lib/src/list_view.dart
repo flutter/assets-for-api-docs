@@ -44,15 +44,16 @@ class ListViewDiagram extends StatelessWidget with DiagramMetadata {
         break;
       case 'list_view_builder':
         returnWidget = ListView.builder(
-            padding: const EdgeInsets.all(8.0),
-            itemCount: entries.length,
-            itemBuilder: (BuildContext context, int index) {
-              return Container(
-                height: 50,
-                color: Colors.amber[colorCodes[index]],
-                child: Center(child: Text('Entry ${entries[index]}')),
-              );
-            });
+          padding: const EdgeInsets.all(8.0),
+          itemCount: entries.length,
+          itemBuilder: (BuildContext context, int index) {
+            return Container(
+              height: 50,
+              color: Colors.amber[colorCodes[index]],
+              child: Center(child: Text('Entry ${entries[index]}')),
+            );
+          },
+        );
         break;
       case 'list_view_separated':
         returnWidget = ListView.separated(
@@ -65,8 +66,8 @@ class ListViewDiagram extends StatelessWidget with DiagramMetadata {
               child: Center(child: Text('Entry ${entries[index]}')),
             );
           },
-          separatorBuilder: (BuildContext context, int index) =>
-              const Divider(),
+          separatorBuilder:
+              (BuildContext context, int index) => const Divider(),
         );
         break;
       default:
@@ -77,10 +78,11 @@ class ListViewDiagram extends StatelessWidget with DiagramMetadata {
       key: UniqueKey(),
       constraints: BoxConstraints.tight(const Size(400.0, 250.0)),
       child: Container(
-          alignment: FractionalOffset.center,
-          padding: const EdgeInsets.all(5.0),
-          color: Colors.white,
-          child: returnWidget),
+        alignment: FractionalOffset.center,
+        padding: const EdgeInsets.all(5.0),
+        color: Colors.white,
+        child: returnWidget,
+      ),
     );
   }
 }
@@ -91,8 +93,8 @@ class ListViewDiagramStep extends DiagramStep {
 
   @override
   Future<List<ListViewDiagram>> get diagrams async => <ListViewDiagram>[
-        const ListViewDiagram('list_view'),
-        const ListViewDiagram('list_view_builder'),
-        const ListViewDiagram('list_view_separated'),
-      ];
+    const ListViewDiagram('list_view'),
+    const ListViewDiagram('list_view_builder'),
+    const ListViewDiagram('list_view_separated'),
+  ];
 }

@@ -25,9 +25,7 @@ class CupertinoAppDiagram extends StatelessWidget with DiagramMetadata {
       case _basic:
         returnWidget = const CupertinoApp(
           home: CupertinoPageScaffold(
-            navigationBar: CupertinoNavigationBar(
-              middle: Text('Home'),
-            ),
+            navigationBar: CupertinoNavigationBar(middle: Text('Home')),
             child: Center(child: Icon(CupertinoIcons.share)),
           ),
           debugShowCheckedModeBanner: false,
@@ -53,10 +51,7 @@ class CupertinoAppDiagram extends StatelessWidget with DiagramMetadata {
     return ConstrainedBox(
       key: UniqueKey(),
       constraints: BoxConstraints.tight(const Size(300.0, 533.33)),
-      child: Container(
-        color: CupertinoColors.white,
-        child: returnWidget,
-      ),
+      child: Container(color: CupertinoColors.white, child: returnWidget),
     );
   }
 }
@@ -68,12 +63,13 @@ class CupertinoAppDiagramStep extends DiagramStep {
   // This diagram will only be created when run on macOS, so that the fonts are
   // correct.
   @override
-  Set<DiagramPlatform> get platforms =>
-      <DiagramPlatform>{DiagramPlatform.macos};
+  Set<DiagramPlatform> get platforms => <DiagramPlatform>{
+    DiagramPlatform.macos,
+  };
 
   @override
   Future<List<CupertinoAppDiagram>> get diagrams async => <CupertinoAppDiagram>[
-        const CupertinoAppDiagram(_basic),
-        const CupertinoAppDiagram(_theme),
-      ];
+    const CupertinoAppDiagram(_basic),
+    const CupertinoAppDiagram(_theme),
+  ];
 }

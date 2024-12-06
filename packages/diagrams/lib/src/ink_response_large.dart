@@ -37,8 +37,9 @@ class _InkResponseLargeDiagramState extends State<InkResponseLargeDiagram>
 
     final RenderBox target =
         splashKey.currentContext!.findRenderObject()! as RenderBox;
-    final Offset targetOffset =
-        target.localToGlobal(target.size.bottomRight(Offset.zero));
+    final Offset targetOffset = target.localToGlobal(
+      target.size.bottomRight(Offset.zero),
+    );
     final WidgetController controller = DiagramWidgetController.of(context);
     await controller.startGesture(targetOffset);
   }
@@ -54,9 +55,7 @@ class _InkResponseLargeDiagramState extends State<InkResponseLargeDiagram>
     return ConstrainedBox(
       constraints: BoxConstraints.tight(const Size(280.0, 180.0)),
       child: Theme(
-        data: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
+        data: ThemeData(primarySwatch: Colors.blue),
         child: Material(
           color: const Color(0xFFFFFFFF),
           child: Stack(
@@ -68,10 +67,7 @@ class _InkResponseLargeDiagramState extends State<InkResponseLargeDiagram>
                   child: InkResponse(
                     key: heroKey,
                     onTap: () {},
-                    child: Hole(
-                      color: Colors.blue,
-                      key: childKey,
-                    ),
+                    child: Hole(color: Colors.blue, key: childKey),
                   ),
                 ),
               ),
@@ -80,11 +76,7 @@ class _InkResponseLargeDiagramState extends State<InkResponseLargeDiagram>
                   width: 120.0,
                   height: 80.0,
                   alignment: FractionalOffset.bottomRight,
-                  child: SizedBox(
-                    key: splashKey,
-                    width: 20.0,
-                    height: 25.0,
-                  ),
+                  child: SizedBox(key: splashKey, width: 20.0, height: 25.0),
                 ),
               ),
               Positioned.fill(
@@ -93,8 +85,11 @@ class _InkResponseLargeDiagramState extends State<InkResponseLargeDiagram>
                   labels: <Label>[
                     Label(childKey, 'child', const FractionalOffset(0.2, 0.8)),
                     Label(splashKey, 'splash', FractionalOffset.topLeft),
-                    Label(heroKey, 'highlight',
-                        const FractionalOffset(0.45, 0.3)),
+                    Label(
+                      heroKey,
+                      'highlight',
+                      const FractionalOffset(0.45, 0.3),
+                    ),
                   ],
                   heroKey: heroKey,
                 ),

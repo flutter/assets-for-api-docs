@@ -24,10 +24,8 @@ abstract class FontFeatureDiagram<T> extends StatelessWidget
   Widget buildEntry(BuildContext context, T entry);
   String describe(T entry);
 
-  TextStyle get textStyle => const TextStyle(
-        color: Colors.black,
-        fontSize: 32.0,
-      );
+  TextStyle get textStyle =>
+      const TextStyle(color: Colors.black, fontSize: 32.0);
 
   Widget buildRow(BuildContext context, T entry) {
     return Stack(
@@ -47,12 +45,7 @@ abstract class FontFeatureDiagram<T> extends StatelessWidget
   }
 
   Widget buildDescription(BuildContext context, T entry) {
-    return Text(
-      describe(entry),
-      style: const TextStyle(
-        fontSize: 10.0,
-      ),
-    );
+    return Text(describe(entry), style: const TextStyle(fontSize: 10.0));
   }
 
   @override
@@ -60,7 +53,8 @@ abstract class FontFeatureDiagram<T> extends StatelessWidget
     return SizedBox(
       key: UniqueKey(),
       width: 600.0,
-      height: (textStyle.fontSize! * 1.2 + _margin + _gap) * entries.length +
+      height:
+          (textStyle.fontSize! * 1.2 + _margin + _gap) * entries.length +
           _margin * 3.0 -
           _gap,
       child: Container(
@@ -73,12 +67,15 @@ abstract class FontFeatureDiagram<T> extends StatelessWidget
           minHeight: 0.0,
           maxHeight: double.infinity,
           child: Column(
-            children: entries
-                .map((T entry) => SizedBox(
-                      height: _margin + textStyle.fontSize! * 1.2 + _gap,
-                      child: buildRow(context, entry),
-                    ))
-                .toList(),
+            children:
+                entries
+                    .map(
+                      (T entry) => SizedBox(
+                        height: _margin + textStyle.fontSize! * 1.2 + _gap,
+                        child: buildRow(context, entry),
+                      ),
+                    )
+                    .toList(),
           ),
         ),
       ),
@@ -112,17 +109,19 @@ class FontFeatureValueDiagram extends FontFeatureDiagram<int> {
 
   @override
   Widget buildEntry(BuildContext context, int entry) => Text(
-        sampleText,
-        style: textStyle.copyWith(
+    sampleText,
+    style: textStyle
+        .copyWith(
           fontFamily: font,
           package: 'diagrams',
           fontFeatures: <FontFeature>[
             FontFeature(feature, entry),
             ...?additionalFontFeatures,
           ],
-        ).merge(style),
-        textAlign: TextAlign.left,
-      );
+        )
+        .merge(style),
+    textAlign: TextAlign.left,
+  );
 
   @override
   String describe(int entry) => '$feature $entry';
@@ -130,8 +129,11 @@ class FontFeatureValueDiagram extends FontFeatureDiagram<int> {
 
 class HistoricalFontFeatureDiagram
     extends FontFeatureDiagram<List<FontFeature>> {
-  const HistoricalFontFeatureDiagram(this.font,
-      {required this.sampleText, super.key});
+  const HistoricalFontFeatureDiagram(
+    this.font, {
+    required this.sampleText,
+    super.key,
+  });
 
   @override
   String get name => 'font_feature_historical';
@@ -141,27 +143,28 @@ class HistoricalFontFeatureDiagram
 
   @override
   Iterable<List<FontFeature>> get entries => const <List<FontFeature>>[
-        <FontFeature>[FontFeature('hist', 0), FontFeature('hlig', 0)],
-        <FontFeature>[FontFeature('hist'), FontFeature('hlig', 0)],
-        <FontFeature>[FontFeature('hist', 0), FontFeature('hlig')],
-        <FontFeature>[FontFeature('hist'), FontFeature('hlig')],
-      ];
+    <FontFeature>[FontFeature('hist', 0), FontFeature('hlig', 0)],
+    <FontFeature>[FontFeature('hist'), FontFeature('hlig', 0)],
+    <FontFeature>[FontFeature('hist', 0), FontFeature('hlig')],
+    <FontFeature>[FontFeature('hist'), FontFeature('hlig')],
+  ];
 
   @override
   Widget buildEntry(BuildContext context, List<FontFeature> entry) => Text(
-        sampleText,
-        style: textStyle.copyWith(
-          fontFamily: font,
-          package: 'diagrams',
-          fontFeatures: entry,
-        ),
-        textAlign: TextAlign.left,
-      );
+    sampleText,
+    style: textStyle.copyWith(
+      fontFamily: font,
+      package: 'diagrams',
+      fontFeatures: entry,
+    ),
+    textAlign: TextAlign.left,
+  );
 
   @override
   String describe(List<FontFeature> entry) => entry
       .map<String>(
-          (FontFeature feature) => '${feature.feature} ${feature.value}')
+        (FontFeature feature) => '${feature.feature} ${feature.value}',
+      )
       .join(', ');
 }
 
@@ -173,25 +176,25 @@ class LocalizedFontFeatureDiagram extends FontFeatureDiagram<Locale> {
 
   @override
   Iterable<Locale> get entries => const <Locale>[
-        Locale('ja'),
-        Locale('ko'),
-        Locale('zh', 'CN'),
-        Locale('zh', 'TW')
-      ]; // alphabetical order
+    Locale('ja'),
+    Locale('ko'),
+    Locale('zh', 'CN'),
+    Locale('zh', 'TW'),
+  ]; // alphabetical order
 
   @override
   Widget buildEntry(BuildContext context, Locale entry) => Text(
-        '次 化 刃 直 入 令',
-        style: textStyle.copyWith(
-          fontFamily: 'Noto Sans',
-          package: 'diagrams',
-          fontFeatures: <FontFeature>[
-            const FontFeature('locl'), // redundant, this is the default anyway
-          ],
-        ),
-        textAlign: TextAlign.left,
-        locale: entry,
-      );
+    '次 化 刃 直 入 令',
+    style: textStyle.copyWith(
+      fontFamily: 'Noto Sans',
+      package: 'diagrams',
+      fontFeatures: <FontFeature>[
+        const FontFeature('locl'), // redundant, this is the default anyway
+      ],
+    ),
+    textAlign: TextAlign.left,
+    locale: entry,
+  );
 
   @override
   String describe(Locale entry) => 'Locale: ${entry.toLanguageTag()}';
@@ -234,9 +237,7 @@ abstract class SideBySideFontFeatureDiagram<T> extends FontFeatureDiagram<T> {
   Widget buildDescription(BuildContext context, T entry, {bool enable = true}) {
     return Text(
       describe(entry, enable: enable),
-      style: const TextStyle(
-        fontSize: 10.0,
-      ),
+      style: const TextStyle(fontSize: 10.0),
     );
   }
 
@@ -244,9 +245,7 @@ abstract class SideBySideFontFeatureDiagram<T> extends FontFeatureDiagram<T> {
   Widget buildEntry(BuildContext context, T entry, {bool enable = true}) {
     return Text(
       describe(entry, enable: enable),
-      style: const TextStyle(
-        fontSize: 10.0,
-      ),
+      style: const TextStyle(fontSize: 10.0),
     );
   }
 
@@ -265,11 +264,7 @@ class CharacterVariantsFontFeatureDiagram
   String get font => 'Source Code Pro';
 
   @override
-  Iterable<String> get entries => const <String>[
-        'cv01',
-        'cv02',
-        'cv04',
-      ];
+  Iterable<String> get entries => const <String>['cv01', 'cv02', 'cv04'];
 
   static const Map<String, String> demos = <String, String>{
     'cv01': 'aáâ β',
@@ -293,11 +288,7 @@ class CharacterVariantsFontFeatureDiagram
         style: textStyle.copyWith(
           fontFamily: font,
           package: 'diagrams',
-          fontFeatures: enable
-              ? <FontFeature>[
-                  FontFeature(entry),
-                ]
-              : null,
+          fontFeatures: enable ? <FontFeature>[FontFeature(entry)] : null,
         ),
         textAlign: TextAlign.left,
       );
@@ -334,11 +325,7 @@ class StylisticSetsFontFeatureDiagram1
         style: textStyle.copyWith(
           fontFamily: font,
           package: 'diagrams',
-          fontFeatures: enable
-              ? <FontFeature>[
-                  FontFeature(entry),
-                ]
-              : null,
+          fontFeatures: enable ? <FontFeature>[FontFeature(entry)] : null,
         ),
         textAlign: TextAlign.left,
       );
@@ -362,17 +349,17 @@ class StylisticSetsFontFeatureDiagram2 extends FontFeatureDiagram<int> {
 
   @override
   Widget buildEntry(BuildContext context, int entry) => Text(
-        '-> MCMXCVII <-', // the year SG-1 started
-        style: textStyle.copyWith(
-          fontFamily: font,
-          package: 'diagrams',
-          fontFeatures: <FontFeature>[
-            if (0x01 & entry > 0) const FontFeature('ss01'),
-            if (0x02 & entry > 0) const FontFeature('ss02', 2),
-          ],
-        ),
-        textAlign: TextAlign.left,
-      );
+    '-> MCMXCVII <-', // the year SG-1 started
+    style: textStyle.copyWith(
+      fontFamily: font,
+      package: 'diagrams',
+      fontFeatures: <FontFeature>[
+        if (0x01 & entry > 0) const FontFeature('ss01'),
+        if (0x02 & entry > 0) const FontFeature('ss02', 2),
+      ],
+    ),
+    textAlign: TextAlign.left,
+  );
 
   @override
   String describe(int entry) {
@@ -395,51 +382,124 @@ class FontFeatureDiagramStep extends DiagramStep {
   final String category = 'dart-ui';
 
   @override
-  Future<List<FontFeatureDiagram<Object>>> get diagrams async =>
-      <FontFeatureDiagram<Object>>[
-        const FontFeatureValueDiagram('aalt', <int>[0, 1, 2], 'Raleway'),
-        const FontFeatureValueDiagram('afrc', <int>[0, 1], 'Ubuntu Mono',
-            sampleText: 'Fractions: 1/2 2/3 3/4 4/5'),
-        const FontFeatureValueDiagram('calt', <int>[0, 1], 'Barriecito',
-            sampleText: "Ooohh, we weren't going to tell him that."),
-        const FontFeatureValueDiagram('case', <int>[0, 1], 'Piazzolla',
-            sampleText: '(A) [A] {A} «A» A/B A•B'),
-        const CharacterVariantsFontFeatureDiagram(), // cvXX, uses 'Source Code Pro'
-        const FontFeatureValueDiagram('dnom', <int>[0, 1], 'Piazzolla',
-            sampleText: 'Fractions: 1/2 2/3 3/4 4/5'),
-        const FontFeatureValueDiagram('frac', <int>[0, 1], 'Ubuntu Mono',
-            sampleText: 'Fractions: 1/2 2/3 3/4 4/5'),
-        const HistoricalFontFeatureDiagram('Cardo',
-            sampleText: 'VIBRANT fish assisted his business.'),
-        const FontFeatureValueDiagram('lnum', <int>[0, 1], 'Sorts Mill Goudy',
-            sampleText: 'CALL 311-555-2368 NOW!'),
-        const LocalizedFontFeatureDiagram(), // locl, uses 'Noto Sans'
-        const FontFeatureValueDiagram(
-            'nalt', <int>[0, 1, 2, 3, 4, 5, 7], 'Gothic A1',
-            sampleText: 'abc 123'),
-        const FontFeatureValueDiagram('numr', <int>[0, 1], 'Piazzolla',
-            sampleText: 'Fractions: 1/2 2/3 3/4 4/5'),
-        const FontFeatureValueDiagram('onum', <int>[0, 1], 'Piazzolla',
-            sampleText: 'Call 311-555-2368 now!'),
-        const FontFeatureValueDiagram('ordn', <int>[0, 1], 'Piazzolla',
-            sampleText: '1st, 2nd, 3rd, 4th...'),
-        const FontFeatureValueDiagram('pnum', <int>[0, 1], 'Kufam',
-            sampleText: 'Call 311-555-2368 now!'),
-        const FontFeatureValueDiagram('salt', <int>[0, 1], 'Source Code Pro',
-            sampleText: r'Agile Game - $100 initial bet'),
-        const FontFeatureValueDiagram('sinf', <int>[0, 1], 'Piazzolla',
-            sampleText: 'C8H10N4O2'),
-        const StylisticSetsFontFeatureDiagram1(), // ssXX, uses 'Source Code Pro'
-        const StylisticSetsFontFeatureDiagram2(), // ssXX, uses 'Piazzolla'
-        const FontFeatureValueDiagram('subs', <int>[0, 1], 'Piazzolla',
-            sampleText: 'Line from x1,y1 to x2,y2'),
-        const FontFeatureValueDiagram('sups', <int>[0, 1], 'Sorts Mill Goudy',
-            sampleText: 'The isotope 238U decays to 206Pb'),
-        const FontFeatureValueDiagram('swsh', <int>[0, 1], 'BioRhyme Expanded',
-            sampleText: 'Queer & Romantic'),
-        const FontFeatureValueDiagram('tnum', <int>[0, 1], 'Piazzolla',
-            sampleText: 'Call 311-555-2368 now!'),
-        const FontFeatureValueDiagram('zero', <int>[0, 1], 'Source Code Pro',
-            sampleText: 'One million is: 1,000,000.00'),
-      ];
+  Future<List<FontFeatureDiagram<Object>>>
+  get diagrams async => <FontFeatureDiagram<Object>>[
+    const FontFeatureValueDiagram('aalt', <int>[0, 1, 2], 'Raleway'),
+    const FontFeatureValueDiagram(
+      'afrc',
+      <int>[0, 1],
+      'Ubuntu Mono',
+      sampleText: 'Fractions: 1/2 2/3 3/4 4/5',
+    ),
+    const FontFeatureValueDiagram(
+      'calt',
+      <int>[0, 1],
+      'Barriecito',
+      sampleText: "Ooohh, we weren't going to tell him that.",
+    ),
+    const FontFeatureValueDiagram(
+      'case',
+      <int>[0, 1],
+      'Piazzolla',
+      sampleText: '(A) [A] {A} «A» A/B A•B',
+    ),
+    const CharacterVariantsFontFeatureDiagram(), // cvXX, uses 'Source Code Pro'
+    const FontFeatureValueDiagram(
+      'dnom',
+      <int>[0, 1],
+      'Piazzolla',
+      sampleText: 'Fractions: 1/2 2/3 3/4 4/5',
+    ),
+    const FontFeatureValueDiagram(
+      'frac',
+      <int>[0, 1],
+      'Ubuntu Mono',
+      sampleText: 'Fractions: 1/2 2/3 3/4 4/5',
+    ),
+    const HistoricalFontFeatureDiagram(
+      'Cardo',
+      sampleText: 'VIBRANT fish assisted his business.',
+    ),
+    const FontFeatureValueDiagram(
+      'lnum',
+      <int>[0, 1],
+      'Sorts Mill Goudy',
+      sampleText: 'CALL 311-555-2368 NOW!',
+    ),
+    const LocalizedFontFeatureDiagram(), // locl, uses 'Noto Sans'
+    const FontFeatureValueDiagram(
+      'nalt',
+      <int>[0, 1, 2, 3, 4, 5, 7],
+      'Gothic A1',
+      sampleText: 'abc 123',
+    ),
+    const FontFeatureValueDiagram(
+      'numr',
+      <int>[0, 1],
+      'Piazzolla',
+      sampleText: 'Fractions: 1/2 2/3 3/4 4/5',
+    ),
+    const FontFeatureValueDiagram(
+      'onum',
+      <int>[0, 1],
+      'Piazzolla',
+      sampleText: 'Call 311-555-2368 now!',
+    ),
+    const FontFeatureValueDiagram(
+      'ordn',
+      <int>[0, 1],
+      'Piazzolla',
+      sampleText: '1st, 2nd, 3rd, 4th...',
+    ),
+    const FontFeatureValueDiagram(
+      'pnum',
+      <int>[0, 1],
+      'Kufam',
+      sampleText: 'Call 311-555-2368 now!',
+    ),
+    const FontFeatureValueDiagram(
+      'salt',
+      <int>[0, 1],
+      'Source Code Pro',
+      sampleText: r'Agile Game - $100 initial bet',
+    ),
+    const FontFeatureValueDiagram(
+      'sinf',
+      <int>[0, 1],
+      'Piazzolla',
+      sampleText: 'C8H10N4O2',
+    ),
+    const StylisticSetsFontFeatureDiagram1(), // ssXX, uses 'Source Code Pro'
+    const StylisticSetsFontFeatureDiagram2(), // ssXX, uses 'Piazzolla'
+    const FontFeatureValueDiagram(
+      'subs',
+      <int>[0, 1],
+      'Piazzolla',
+      sampleText: 'Line from x1,y1 to x2,y2',
+    ),
+    const FontFeatureValueDiagram(
+      'sups',
+      <int>[0, 1],
+      'Sorts Mill Goudy',
+      sampleText: 'The isotope 238U decays to 206Pb',
+    ),
+    const FontFeatureValueDiagram(
+      'swsh',
+      <int>[0, 1],
+      'BioRhyme Expanded',
+      sampleText: 'Queer & Romantic',
+    ),
+    const FontFeatureValueDiagram(
+      'tnum',
+      <int>[0, 1],
+      'Piazzolla',
+      sampleText: 'Call 311-555-2368 now!',
+    ),
+    const FontFeatureValueDiagram(
+      'zero',
+      <int>[0, 1],
+      'Source Code Pro',
+      sampleText: 'One million is: 1,000,000.00',
+    ),
+  ];
 }

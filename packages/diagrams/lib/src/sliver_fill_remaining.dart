@@ -55,10 +55,7 @@ class _SliverFillRemainingDiagramState extends State<SliverFillRemainingDiagram>
 
   Future<void> _play() async {
     await waitLockstep(_kScrollPauseDuration);
-    await _animate(
-      to: 400.0,
-      duration: _kScrollUpDuration,
-    );
+    await _animate(to: 400.0, duration: _kScrollUpDuration);
     await waitLockstep(_kScrollPauseDuration);
   }
 
@@ -83,10 +80,7 @@ class _SliverFillRemainingDiagramState extends State<SliverFillRemainingDiagram>
 
     slivers = <Widget>[
       SliverToBoxAdapter(
-        child: Container(
-          color: Colors.tealAccent[700],
-          height: 150.0,
-        ),
+        child: Container(color: Colors.tealAccent[700], height: 150.0),
       ),
       SliverFillRemaining(
         hasScrollBody: false,
@@ -129,7 +123,5 @@ class SliverFillRemainingDiagramStep extends DiagramStep {
 
   @override
   Future<List<SliverFillRemainingDiagram>> get diagrams async =>
-      <SliverFillRemainingDiagram>[
-        const SliverFillRemainingDiagram(),
-      ];
+      <SliverFillRemainingDiagram>[const SliverFillRemainingDiagram()];
 }

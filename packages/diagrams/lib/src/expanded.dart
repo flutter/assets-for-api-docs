@@ -24,17 +24,11 @@ class ExpandedDiagram extends StatelessWidget with DiagramMetadata {
     switch (name) {
       case _column:
         returnWidget = Scaffold(
-          appBar: AppBar(
-            title: const Text('Expanded Column Sample'),
-          ),
+          appBar: AppBar(title: const Text('Expanded Column Sample')),
           body: Center(
             child: Column(
               children: <Widget>[
-                Container(
-                  color: Colors.blue,
-                  width: 100,
-                  height: 100,
-                ),
+                Container(color: Colors.blue, width: 100, height: 100),
                 Expanded(
                   child: Container(
                     width: 100,
@@ -42,11 +36,7 @@ class ExpandedDiagram extends StatelessWidget with DiagramMetadata {
                     child: const Center(child: Text('Expanded')),
                   ),
                 ),
-                Container(
-                  color: Colors.blue,
-                  width: 100,
-                  height: 100,
-                ),
+                Container(color: Colors.blue, width: 100, height: 100),
               ],
             ),
           ),
@@ -54,9 +44,7 @@ class ExpandedDiagram extends StatelessWidget with DiagramMetadata {
         break;
       case _row:
         returnWidget = Scaffold(
-          appBar: AppBar(
-            title: const Text('Expanded Row Sample'),
-          ),
+          appBar: AppBar(title: const Text('Expanded Row Sample')),
           body: Center(
             child: Row(
               children: <Widget>[
@@ -68,11 +56,7 @@ class ExpandedDiagram extends StatelessWidget with DiagramMetadata {
                     child: const Center(child: Text('flex: 2')),
                   ),
                 ),
-                Container(
-                  color: Colors.blue,
-                  height: 100,
-                  width: 50,
-                ),
+                Container(color: Colors.blue, height: 100, width: 50),
                 Expanded(
                   child: Container(
                     color: Colors.amber,
@@ -105,7 +89,7 @@ class ExpandedDiagramStep extends DiagramStep {
 
   @override
   Future<List<ExpandedDiagram>> get diagrams async => <ExpandedDiagram>[
-        const ExpandedDiagram(_column),
-        const ExpandedDiagram(_row),
-      ];
+    const ExpandedDiagram(_column),
+    const ExpandedDiagram(_row),
+  ];
 }

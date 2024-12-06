@@ -130,9 +130,7 @@ class FloatingActionButtonLocationDiagram extends StatelessWidget
   @override
   Widget build(BuildContext context) {
     final Widget returnWidget = Scaffold(
-      appBar: AppBar(
-        title: Text(appBarTitle),
-      ),
+      appBar: AppBar(title: Text(appBarTitle)),
       body: const Center(child: Text('Press the button below!')),
       floatingActionButtonLocation: fabLocation,
       floatingActionButton: FloatingActionButton(
@@ -144,9 +142,13 @@ class FloatingActionButtonLocationDiagram extends StatelessWidget
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-              icon: Icon(Icons.account_circle_outlined), label: 'You'),
+            icon: Icon(Icons.account_circle_outlined),
+            label: 'You',
+          ),
           BottomNavigationBarItem(
-              icon: Icon(Icons.add_alarm_outlined), label: 'Alarm'),
+            icon: Icon(Icons.add_alarm_outlined),
+            label: 'Alarm',
+          ),
         ],
       ),
     );

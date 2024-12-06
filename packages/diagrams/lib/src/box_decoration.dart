@@ -32,13 +32,8 @@ class BoxDecorationDiagram extends StatelessWidget with DiagramMetadata {
         child: Container(
           decoration: BoxDecoration(
             color: const Color(0xff7c94b6),
-            image: const DecorationImage(
-              image: owlImage,
-              fit: BoxFit.cover,
-            ),
-            border: Border.all(
-              width: 8,
-            ),
+            image: const DecorationImage(image: owlImage, fit: BoxFit.cover),
+            border: Border.all(width: 8),
             borderRadius: BorderRadius.circular(12),
           ),
         ),
@@ -58,7 +53,5 @@ class BoxDecorationDiagramStep extends DiagramStep {
 
   @override
   Future<List<BoxDecorationDiagram>> get diagrams async =>
-      <BoxDecorationDiagram>[
-        const BoxDecorationDiagram(_boxDecoration),
-      ];
+      <BoxDecorationDiagram>[const BoxDecorationDiagram(_boxDecoration)];
 }

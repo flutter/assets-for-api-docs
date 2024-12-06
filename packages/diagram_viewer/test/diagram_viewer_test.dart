@@ -65,8 +65,9 @@ class TestDiagram extends StatefulWidget with DiagramMetadata {
 }
 
 class _TestDiagramState extends State<TestDiagram> {
-  final ValueNotifier<Duration> durationNotifier =
-      ValueNotifier<Duration>(Duration.zero);
+  final ValueNotifier<Duration> durationNotifier = ValueNotifier<Duration>(
+    Duration.zero,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -82,9 +83,7 @@ class _TestDiagramState extends State<TestDiagram> {
 
 void main() {
   testWidgets('Catalog shows all steps', (WidgetTester tester) async {
-    await tester.pumpWidget(
-      const DiagramViewerApp(home: DiagramCatalogPage()),
-    );
+    await tester.pumpWidget(const DiagramViewerApp(home: DiagramCatalogPage()));
     await tester.pumpAndSettle();
     for (final DiagramStep step in allDiagramSteps) {
       expect(
@@ -99,12 +98,7 @@ void main() {
     final DiagramStep step = TestDiagramStep();
     final List<DiagramMetadata> diagrams = await step.diagrams;
     await tester.pumpWidget(
-      DiagramViewerApp(
-        home: DiagramViewerPage(
-          step: step,
-          diagrams: diagrams,
-        ),
-      ),
+      DiagramViewerApp(home: DiagramViewerPage(step: step, diagrams: diagrams)),
     );
     await tester.pump(const Duration(minutes: 1));
     for (final DiagramMetadata diagram in diagrams) {
@@ -116,8 +110,9 @@ void main() {
     }
   });
 
-  testWidgets('DiagramTickerController with still diagram',
-      (WidgetTester tester) async {
+  testWidgets('DiagramTickerController with still diagram', (
+    WidgetTester tester,
+  ) async {
     final DiagramTickerController controller = DiagramTickerController(
       diagram: TestDiagramStep.stillDiagram,
     );
@@ -171,8 +166,9 @@ void main() {
     expect(controller.ready, true);
   });
 
-  testWidgets('DiagramTickerController with still delayed diagram',
-      (WidgetTester tester) async {
+  testWidgets('DiagramTickerController with still delayed diagram', (
+    WidgetTester tester,
+  ) async {
     final DiagramTickerController controller = DiagramTickerController(
       diagram: TestDiagramStep.stillDelayedDiagram,
     );
@@ -224,8 +220,9 @@ void main() {
     expect(controller.ready, true);
   });
 
-  testWidgets('DiagramTickerController with animated diagram',
-      (WidgetTester tester) async {
+  testWidgets('DiagramTickerController with animated diagram', (
+    WidgetTester tester,
+  ) async {
     final DiagramTickerController controller = DiagramTickerController(
       diagram: TestDiagramStep.animatedDiagram,
     );

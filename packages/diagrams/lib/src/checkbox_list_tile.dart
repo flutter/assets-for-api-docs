@@ -38,10 +38,11 @@ class LinkedLabelCheckbox extends StatelessWidget {
                   color: Colors.blueAccent,
                   decoration: TextDecoration.underline,
                 ),
-                recognizer: TapGestureRecognizer()
-                  ..onTap = () {
-                    print('Link has been tapped.');
-                  },
+                recognizer:
+                    TapGestureRecognizer()
+                      ..onTap = () {
+                        print('Link has been tapped.');
+                      },
               ),
             ),
           ),
@@ -141,14 +142,15 @@ class _CheckboxListTileDiagramState extends State<CheckboxListTileDiagram> {
             padding: const EdgeInsets.all(5.0),
             color: Colors.white,
             child: LinkedLabelCheckbox(
-                label: 'Linked, tappable label text',
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                value: _isSelected,
-                onChanged: (bool? newValue) {
-                  setState(() {
-                    _isSelected = newValue!;
-                  });
-                }),
+              label: 'Linked, tappable label text',
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              value: _isSelected,
+              onChanged: (bool? newValue) {
+                setState(() {
+                  _isSelected = newValue!;
+                });
+              },
+            ),
           ),
         );
       case 'checkbox_list_tile_custom':

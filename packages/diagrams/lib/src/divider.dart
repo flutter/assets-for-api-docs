@@ -28,9 +28,7 @@ class DividerDiagram extends StatelessWidget with DiagramMetadata {
               Expanded(
                 child: Container(
                   color: Colors.amber,
-                  child: const Center(
-                    child: Text('Above'),
-                  ),
+                  child: const Center(child: Text('Above')),
                 ),
               ),
               const Divider(
@@ -43,9 +41,7 @@ class DividerDiagram extends StatelessWidget with DiagramMetadata {
               Expanded(
                 child: Container(
                   color: Colors.blue,
-                  child: const Center(
-                    child: Text('Below'),
-                  ),
+                  child: const Center(child: Text('Below')),
                 ),
               ),
             ],
@@ -62,6 +58,6 @@ class DividerDiagramStep extends DiagramStep {
 
   @override
   Future<List<DividerDiagram>> get diagrams async => <DividerDiagram>[
-        const DividerDiagram('divider'),
-      ];
+    const DividerDiagram('divider'),
+  ];
 }

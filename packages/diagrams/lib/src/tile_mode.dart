@@ -15,12 +15,7 @@ const double height = 200.0;
 const double spacing = 8.0;
 const double borderSize = 1.0;
 
-enum GradientMode {
-  linear,
-  radial,
-  radialWithFocal,
-  sweep,
-}
+enum GradientMode { linear, radial, radialWithFocal, sweep }
 
 class TileModeDiagram extends StatelessWidget with DiagramMetadata {
   const TileModeDiagram(this.gradientMode, this.tileMode, {super.key});
@@ -86,10 +81,7 @@ class TileModeDiagram extends StatelessWidget with DiagramMetadata {
       key: UniqueKey(),
       constraints: const BoxConstraints.tightFor(width: width, height: height),
       child: DefaultTextStyle.merge(
-        style: const TextStyle(
-          fontSize: 10.0,
-          color: Color(0xFF000000),
-        ),
+        style: const TextStyle(fontSize: 10.0, color: Color(0xFF000000)),
         child: Directionality(
           textDirection: TextDirection.ltr,
           child: Center(
@@ -106,9 +98,7 @@ class TileModeDiagram extends StatelessWidget with DiagramMetadata {
                     child: Container(
                       decoration: BoxDecoration(
                         gradient: _buildGradient(),
-                        border: const Border(
-                          bottom: BorderSide(),
-                        ),
+                        border: const Border(bottom: BorderSide()),
                       ),
                     ),
                   ),

@@ -38,9 +38,8 @@ class RenderStaggeredList extends RenderBox
     with
         ContainerRenderObjectMixin<RenderBox, StaggeredListParentData>,
         RenderBoxContainerDefaultsMixin<RenderBox, StaggeredListParentData> {
-  RenderStaggeredList({
-    required double minColumnWidth,
-  }) : _minColumnWidth = minColumnWidth;
+  RenderStaggeredList({required double minColumnWidth})
+    : _minColumnWidth = minColumnWidth;
 
   double _minColumnWidth;
 
@@ -104,10 +103,7 @@ class RenderStaggeredList extends RenderBox
       child = parentData.nextSibling;
     }
 
-    size = Size(
-      constraints.maxWidth,
-      columnHeights.reduce(max),
-    );
+    size = Size(constraints.maxWidth, columnHeights.reduce(max));
   }
 
   @override

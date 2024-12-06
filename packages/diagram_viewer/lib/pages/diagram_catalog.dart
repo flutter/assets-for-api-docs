@@ -36,60 +36,53 @@ class _DiagramCatalogPageState extends State<DiagramCatalogPage> {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (
-      BuildContext context,
-      BoxConstraints constraints,
-    ) {
-      const double maxWidth = 1200.0;
-      final num extraWidth = max(0, constraints.maxWidth - maxWidth);
-      final double appBarPadding = extraWidth / 2;
-      return Scaffold(
-        appBar: AppBar(
-          title: Padding(
-            padding: EdgeInsets.only(left: appBarPadding),
-            child: const Text('Catalog'),
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        const double maxWidth = 1200.0;
+        final num extraWidth = max(0, constraints.maxWidth - maxWidth);
+        final double appBarPadding = extraWidth / 2;
+        return Scaffold(
+          appBar: AppBar(
+            title: Padding(
+              padding: EdgeInsets.only(left: appBarPadding),
+              child: const Text('Catalog'),
+            ),
+            centerTitle: false,
+            actions: <Widget>[
+              Padding(
+                padding: EdgeInsets.only(right: appBarPadding),
+                child: const BrightnessToggleButton(),
+              ),
+            ],
           ),
-          centerTitle: false,
-          actions: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(right: appBarPadding),
-              child: const BrightnessToggleButton(),
-            ),
-          ],
-        ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.only(
-              top: max(8, min(75, extraWidth / 2)),
-            ),
-            child: Center(
-              child: SizedBox(
-                width: 1200,
-                child: StaggeredList(
-                  minColumnWidth: 350.0,
-                  children: <Widget>[
-                    for (int index = 0; index < categories.length; index++)
-                      CatalogTile(
-                        name: categories[index],
-                        steps: steps[categories[index]]!,
-                      )
-                  ],
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.only(top: max(8, min(75, extraWidth / 2))),
+              child: Center(
+                child: SizedBox(
+                  width: 1200,
+                  child: StaggeredList(
+                    minColumnWidth: 350.0,
+                    children: <Widget>[
+                      for (int index = 0; index < categories.length; index++)
+                        CatalogTile(
+                          name: categories[index],
+                          steps: steps[categories[index]]!,
+                        ),
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-      );
-    });
+        );
+      },
+    );
   }
 }
 
 class CatalogTile extends StatelessWidget {
-  const CatalogTile({
-    super.key,
-    required this.name,
-    required this.steps,
-  });
+  const CatalogTile({super.key, required this.name, required this.steps});
 
   final String name;
   final List<DiagramStep> steps;
@@ -111,9 +104,10 @@ class CatalogTile extends StatelessWidget {
             child: Text(
               name,
               style: TextStyle(
-                color: Theme.of(context).brightness == Brightness.light
-                    ? Colors.white
-                    : Colors.black,
+                color:
+                    Theme.of(context).brightness == Brightness.light
+                        ? Colors.white
+                        : Colors.black,
                 fontWeight: FontWeight.bold,
                 fontSize: 16.0,
               ),
@@ -131,10 +125,7 @@ class CatalogTile extends StatelessWidget {
 }
 
 class StepTile extends StatelessWidget {
-  const StepTile({
-    super.key,
-    required this.step,
-  });
+  const StepTile({super.key, required this.step});
 
   final DiagramStep step;
 
@@ -145,10 +136,9 @@ class StepTile extends StatelessWidget {
     final List<DiagramMetadata> diagrams = await step.diagrams;
     Navigator.of(context).push(
       MaterialPageRoute<void>(
-        builder: (BuildContext context) => DiagramViewerPage(
-          step: step,
-          diagrams: diagrams,
-        ),
+        builder:
+            (BuildContext context) =>
+                DiagramViewerPage(step: step, diagrams: diagrams),
       ),
     );
   }
@@ -158,15 +148,16 @@ class StepTile extends StatelessWidget {
     return ListTile(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
       title: Text(step.runtimeType.toString()),
-      trailing: step.platforms.containsAll(DiagramPlatform.values)
-          ? null
-          : Row(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                for (final DiagramPlatform platform in step.platforms)
-                  Chip(label: Text(platform.name)),
-              ],
-            ),
+      trailing:
+          step.platforms.containsAll(DiagramPlatform.values)
+              ? null
+              : Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  for (final DiagramPlatform platform in step.platforms)
+                    Chip(label: Text(platform.name)),
+                ],
+              ),
       visualDensity: const VisualDensity(vertical: -4),
       onTap: () => openDiagramStepViewer(context, step),
     );

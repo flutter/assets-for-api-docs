@@ -31,28 +31,35 @@ class TextDiagram extends StatelessWidget with DiagramMetadata {
     switch (name) {
       case _textEllipsis:
         returnWidget = Container(
-            width: 100,
-            decoration: BoxDecoration(border: Border.all()),
-            child: const Text(
-                overflow: TextOverflow.ellipsis, 'Hello Ruth, how are you?'));
+          width: 100,
+          decoration: BoxDecoration(border: Border.all()),
+          child: const Text(
+            overflow: TextOverflow.ellipsis,
+            'Hello Ruth, how are you?',
+          ),
+        );
         break;
       case _textFadeMaxLines:
         returnWidget = Container(
-            width: 100,
-            decoration: BoxDecoration(border: Border.all()),
-            child: const Text(
-                overflow: TextOverflow.fade,
-                maxLines: 1,
-                'Hello Ruth, how are you?'));
+          width: 100,
+          decoration: BoxDecoration(border: Border.all()),
+          child: const Text(
+            overflow: TextOverflow.fade,
+            maxLines: 1,
+            'Hello Ruth, how are you?',
+          ),
+        );
         break;
       case _textFadeSoftWrap:
         returnWidget = Container(
-            width: 100,
-            decoration: BoxDecoration(border: Border.all()),
-            child: const Text(
-                overflow: TextOverflow.fade,
-                softWrap: false,
-                'Hello Ruth, how are you?'));
+          width: 100,
+          decoration: BoxDecoration(border: Border.all()),
+          child: const Text(
+            overflow: TextOverflow.fade,
+            softWrap: false,
+            'Hello Ruth, how are you?',
+          ),
+        );
         break;
       case _textRich:
         returnWidget = const Text.rich(
@@ -81,19 +88,17 @@ class TextDiagram extends StatelessWidget with DiagramMetadata {
                 'Greetings, planet!',
                 style: TextStyle(
                   fontSize: 40,
-                  foreground: Paint()
-                    ..style = PaintingStyle.stroke
-                    ..strokeWidth = 6
-                    ..color = Colors.blue[700]!,
+                  foreground:
+                      Paint()
+                        ..style = PaintingStyle.stroke
+                        ..strokeWidth = 6
+                        ..color = Colors.blue[700]!,
                 ),
               ),
               // Solid text as fill.
               Text(
                 'Greetings, planet!',
-                style: TextStyle(
-                  fontSize: 40,
-                  color: Colors.grey[300],
-                ),
+                style: TextStyle(fontSize: 40, color: Colors.grey[300]),
               ),
             ],
           ),
@@ -108,16 +113,15 @@ class TextDiagram extends StatelessWidget with DiagramMetadata {
               Text(
                 'Greetings, planet!',
                 style: TextStyle(
-                    fontSize: 40,
-                    foreground: Paint()
-                      ..shader = ui.Gradient.linear(
-                        const Offset(0, 20),
-                        const Offset(150, 20),
-                        <Color>[
-                          Colors.red,
-                          Colors.yellow,
-                        ],
-                      )),
+                  fontSize: 40,
+                  foreground:
+                      Paint()
+                        ..shader = ui.Gradient.linear(
+                          const Offset(0, 20),
+                          const Offset(150, 20),
+                          <Color>[Colors.red, Colors.yellow],
+                        ),
+                ),
               ),
             ],
           ),
@@ -152,10 +156,7 @@ class TextHeightDiagram extends StatelessWidget with DiagramMetadata {
     final TextPainter textPainter = TextPainter(
       text: const TextSpan(
         text: ' AaBbGgJj ',
-        style: TextStyle(
-          fontSize: 100,
-          color: Colors.black,
-        ),
+        style: TextStyle(fontSize: 100, color: Colors.black),
       ),
       textAlign: TextAlign.left,
       textDirection: TextDirection.ltr,
@@ -184,15 +185,17 @@ class TextDiagramPainter extends CustomPainter {
     textPainter.layout();
 
     final List<TextBox> boxes = textPainter.getBoxesForSelection(
-        const TextSelection(baseOffset: 0, extentOffset: largeIndex));
+      const TextSelection(baseOffset: 0, extentOffset: largeIndex),
+    );
 
     final Paint paint = Paint();
     paint.color = Colors.black;
     paint.strokeWidth = 3.5;
     const double top = 0;
     final double bottom = textPainter.height;
-    final double baseline =
-        textPainter.computeDistanceToActualBaseline(TextBaseline.alphabetic);
+    final double baseline = textPainter.computeDistanceToActualBaseline(
+      TextBaseline.alphabetic,
+    );
 
     final double ratio = 100.0 / textPainter.height;
     final double emTop = baseline - (baseline - top) * ratio;
@@ -200,7 +203,9 @@ class TextDiagramPainter extends CustomPainter {
 
     final double width = boxes[boxes.length - 1].right;
     final Offset baseOffset = Offset(
-        (size.width - width) / 2, (size.height - textPainter.height) / 2);
+      (size.width - width) / 2,
+      (size.height - textPainter.height) / 2,
+    );
 
     textPainter.paint(canvas, baseOffset);
     // Baseline
@@ -212,11 +217,7 @@ class TextDiagramPainter extends CustomPainter {
 
     paint.color = Colors.blue[900]!;
     // Top
-    canvas.drawLine(
-      baseOffset,
-      baseOffset + Offset(width, top),
-      paint,
-    );
+    canvas.drawLine(baseOffset, baseOffset + Offset(width, top), paint);
 
     // Bottom
     canvas.drawLine(
@@ -264,46 +265,42 @@ class TextDiagramPainter extends CustomPainter {
     TextPainter label = TextPainter(
       text: const TextSpan(
         text: 'Font metrics\ndefault height',
-        style: TextStyle(
-          fontSize: 12,
-          color: Colors.black,
-        ),
+        style: TextStyle(fontSize: 12, color: Colors.black),
       ),
       textAlign: TextAlign.right,
       textDirection: TextDirection.ltr,
     );
     label.layout();
     label.paint(
-        canvas,
-        baseOffset +
-            Offset(-25.0 - (paint.strokeWidth + margin) - label.width,
-                (top + bottom) / 2 - 16));
+      canvas,
+      baseOffset +
+          Offset(
+            -25.0 - (paint.strokeWidth + margin) - label.width,
+            (top + bottom) / 2 - 16,
+          ),
+    );
 
     paint.color = Colors.red[900]!;
     label = TextPainter(
       text: const TextSpan(
         text: 'Font Size\n(EM-square)',
-        style: TextStyle(
-          fontSize: 12,
-          color: Colors.black,
-        ),
+        style: TextStyle(fontSize: 12, color: Colors.black),
       ),
       textAlign: TextAlign.left,
       textDirection: TextDirection.ltr,
     );
     label.layout();
-    label.paint(canvas,
-        baseOffset + Offset(width + 25 + margin, (emTop + emBottom) / 2 - 16));
+    label.paint(
+      canvas,
+      baseOffset + Offset(width + 25 + margin, (emTop + emBottom) / 2 - 16),
+    );
 
     paint.color = Colors.black;
     // Baseline label
     label = TextPainter(
       text: const TextSpan(
         text: 'Alphabetic Baseline',
-        style: TextStyle(
-          fontSize: 11,
-          color: Colors.black,
-        ),
+        style: TextStyle(fontSize: 11, color: Colors.black),
       ),
       textAlign: TextAlign.left,
       textDirection: TextDirection.ltr,
@@ -395,11 +392,7 @@ class TextHeightComparisonPainter extends CustomPainter {
     final TextPainter textPainter = TextPainter(
       text: TextSpan(
         text: 'height:$height, $text',
-        style: TextStyle(
-          fontSize: 50,
-          height: height,
-          color: Colors.black,
-        ),
+        style: TextStyle(fontSize: 50, height: height, color: Colors.black),
       ),
       textAlign: TextAlign.left,
       textDirection: TextDirection.ltr,
@@ -407,28 +400,28 @@ class TextHeightComparisonPainter extends CustomPainter {
     textPainter.layout();
 
     final List<TextBox> boxes = textPainter.getBoxesForSelection(
-        const TextSelection(baseOffset: 0, extentOffset: largeIndex));
+      const TextSelection(baseOffset: 0, extentOffset: largeIndex),
+    );
 
     paint.color = Colors.black;
     paint.strokeWidth = 3.5;
     const double top = 0;
     final double bottom = textPainter.height;
-    final double baseline =
-        textPainter.computeDistanceToActualBaseline(TextBaseline.alphabetic);
+    final double baseline = textPainter.computeDistanceToActualBaseline(
+      TextBaseline.alphabetic,
+    );
 
     final double width = boxes[boxes.length - 1].right;
     final Offset baseOffset = Offset(
-        (size.width - width) / 2 + 30, (size.height - textPainter.height) / 2);
+      (size.width - width) / 2 + 30,
+      (size.height - textPainter.height) / 2,
+    );
 
     textPainter.paint(canvas, baseOffset);
 
     paint.color = Colors.red[900]!;
     // Top
-    canvas.drawLine(
-      baseOffset,
-      baseOffset + Offset(width, top),
-      paint,
-    );
+    canvas.drawLine(baseOffset, baseOffset + Offset(width, top), paint);
 
     // Bottom
     canvas.drawLine(
@@ -460,27 +453,23 @@ class TextHeightComparisonPainter extends CustomPainter {
     TextPainter label = TextPainter(
       text: TextSpan(
         text: '${bottom - top}px',
-        style: const TextStyle(
-          fontSize: 20,
-          color: Colors.black,
-        ),
+        style: const TextStyle(fontSize: 20, color: Colors.black),
       ),
       textAlign: TextAlign.right,
       textDirection: TextDirection.ltr,
     );
     label.layout();
     label.paint(
-        canvas, baseOffset + Offset(-25.0 - 80, (top + bottom) / 2 - 10));
+      canvas,
+      baseOffset + Offset(-25.0 - 80, (top + bottom) / 2 - 10),
+    );
 
     paint.color = Colors.black;
     // Baseline label
     label = TextPainter(
       text: const TextSpan(
         text: 'Alphabetic Baseline',
-        style: TextStyle(
-          fontSize: 9,
-          color: Colors.black,
-        ),
+        style: TextStyle(fontSize: 9, color: Colors.black),
       ),
       textAlign: TextAlign.left,
       textDirection: TextDirection.ltr,
@@ -550,8 +539,10 @@ class TextHeightBreakdown extends TextHeightDiagram with DiagramMetadata {
                       // This column has the height indicator so the glyph is not
                       // centered. This is a hack to offset the "Configuration 1"
                       // caption so it looks more aligned with the glyph.
-                      Text('                        Configuration 1',
-                          textScaler: TextScaler.linear(1.5)),
+                      Text(
+                        '                        Configuration 1',
+                        textScaler: TextScaler.linear(1.5),
+                      ),
                     ],
                   ),
                   Column(
@@ -567,13 +558,16 @@ class TextHeightBreakdown extends TextHeightDiagram with DiagramMetadata {
                           leadingDistribution:
                               TextLeadingDistribution.proportional,
                         ),
-                        textHeightBehavior:
-                            TextHeightBehavior(applyHeightToFirstAscent: false),
+                        textHeightBehavior: TextHeightBehavior(
+                          applyHeightToFirstAscent: false,
+                        ),
                         paintCaptions: true,
                       ),
                       SizedBox(height: 30),
-                      Text('Configuration 2',
-                          textScaler: TextScaler.linear(1.5)),
+                      Text(
+                        'Configuration 2',
+                        textScaler: TextScaler.linear(1.5),
+                      ),
                     ],
                   ),
                 ],
@@ -597,8 +591,10 @@ class TextHeightBreakdown extends TextHeightDiagram with DiagramMetadata {
                         paintLeadingIndicator: true,
                       ),
                       SizedBox(height: 30),
-                      Text('Configuration 3',
-                          textScaler: TextScaler.linear(1.5)),
+                      Text(
+                        'Configuration 3',
+                        textScaler: TextScaler.linear(1.5),
+                      ),
                     ],
                   ),
                   Column(
@@ -613,12 +609,15 @@ class TextHeightBreakdown extends TextHeightDiagram with DiagramMetadata {
                           color: Colors.black,
                           leadingDistribution: TextLeadingDistribution.even,
                         ),
-                        textHeightBehavior:
-                            TextHeightBehavior(applyHeightToLastDescent: false),
+                        textHeightBehavior: TextHeightBehavior(
+                          applyHeightToLastDescent: false,
+                        ),
                       ),
                       SizedBox(height: 30),
-                      Text('Configuration 4',
-                          textScaler: TextScaler.linear(1.5)),
+                      Text(
+                        'Configuration 4',
+                        textScaler: TextScaler.linear(1.5),
+                      ),
                     ],
                   ),
                 ],
@@ -666,7 +665,9 @@ class TextHeightBreakdownRow extends LeafRenderObjectWidget {
 
   @override
   void updateRenderObject(
-      BuildContext context, RenderTextHeightBreakdown renderObject) {
+    BuildContext context,
+    RenderTextHeightBreakdown renderObject,
+  ) {
     renderObject
       ..text = TextSpan(text: text, style: style)
       ..backgroundColor = backgroundColor
@@ -688,15 +689,15 @@ class RenderTextHeightBreakdown extends RenderBox
     required bool paintHeightIndicator,
     required bool paintCaptions,
     required bool paintLeadingIndicator,
-  })  : _backgroundColor = backgroundColor,
-        _paintHeightIndicator = paintHeightIndicator,
-        _paintLeadingIndicator = paintLeadingIndicator,
-        _paintCaptions = paintCaptions,
-        _textPainter = TextPainter(
-          textDirection: textDirection,
-          text: text,
-          textHeightBehavior: textHeightBehavior,
-        );
+  }) : _backgroundColor = backgroundColor,
+       _paintHeightIndicator = paintHeightIndicator,
+       _paintLeadingIndicator = paintLeadingIndicator,
+       _paintCaptions = paintCaptions,
+       _textPainter = TextPainter(
+         textDirection: textDirection,
+         text: text,
+         textHeightBehavior: textHeightBehavior,
+       );
 
   final TextPainter _textPainter;
 
@@ -768,10 +769,14 @@ class RenderTextHeightBreakdown extends RenderBox
     markNeedsPaint();
   }
 
-  late final TextPainter heightCaptionTextPainter =
-      TextPainter(textDirection: textDirection, textAlign: TextAlign.center);
-  static final TextStyle heightCaptionTextStyle =
-      TextStyle(fontSize: 20, color: Colors.blue[900]);
+  late final TextPainter heightCaptionTextPainter = TextPainter(
+    textDirection: textDirection,
+    textAlign: TextAlign.center,
+  );
+  static final TextStyle heightCaptionTextStyle = TextStyle(
+    fontSize: 20,
+    color: Colors.blue[900],
+  );
   static const Offset fontMetricsLabelPadding = Offset(0, 3);
   static const double heightCaptionBracketMinX = -25;
 
@@ -780,16 +785,19 @@ class RenderTextHeightBreakdown extends RenderBox
     _textPainter.layout(minWidth: constraints.minWidth);
     if (paintHeightIndicator) {
       heightCaptionTextPainter.text = TextSpan(
-          text: 'Text Height:\n${_textPainter.height} px',
-          style: heightCaptionTextStyle);
+        text: 'Text Height:\n${_textPainter.height} px',
+        style: heightCaptionTextStyle,
+      );
       heightCaptionTextPainter.layout(minWidth: constraints.minWidth);
-      return constraints.constrain(Size(
-        heightCaptionTextPainter.width +
-            _textPainter.width +
-            fontMetricsLabelPadding.dx -
-            heightCaptionBracketMinX,
-        max(heightCaptionTextPainter.height, _textPainter.height),
-      ));
+      return constraints.constrain(
+        Size(
+          heightCaptionTextPainter.width +
+              _textPainter.width +
+              fontMetricsLabelPadding.dx -
+              heightCaptionBracketMinX,
+          max(heightCaptionTextPainter.height, _textPainter.height),
+        ),
+      );
     }
     return constraints.constrain(_textPainter.size);
   }
@@ -812,15 +820,17 @@ class RenderTextHeightBreakdown extends RenderBox
     // Paint the background color.
     canvas.drawRect(offset & size, paint);
 
-    final Offset lineBoxOrigin = paintHeightIndicator
-        // Left-align the height caption. Ideally this should also be centered.
-        ? Offset(
-                heightCaptionTextPainter.width +
-                    fontMetricsLabelPadding.dx -
-                    heightCaptionBracketMinX,
-                0) +
-            offset
-        : (size - _textPainter.size as Offset) / 2 + offset;
+    final Offset lineBoxOrigin =
+        paintHeightIndicator
+            // Left-align the height caption. Ideally this should also be centered.
+            ? Offset(
+                  heightCaptionTextPainter.width +
+                      fontMetricsLabelPadding.dx -
+                      heightCaptionBracketMinX,
+                  0,
+                ) +
+                offset
+            : (size - _textPainter.size as Offset) / 2 + offset;
 
     assert(lineBoxOrigin.dy == offset.dy);
     // Paint the text. Layout is done in performLayout.
@@ -832,39 +842,48 @@ class RenderTextHeightBreakdown extends RenderBox
     canvas.translate(lineBoxOrigin.dx, lineBoxOrigin.dy);
 
     final List<TextBox> boxes = _textPainter.getBoxesForSelection(
-        TextSelection(baseOffset: 0, extentOffset: text.text!.length));
+      TextSelection(baseOffset: 0, extentOffset: text.text!.length),
+    );
     assert(boxes.length == 1);
     final Rect glyphsBox = boxes.first.toRect();
 
     paint.strokeWidth = 7.5;
     paint.color = Colors.blue[900]!;
-    final double guideWidth =
-        max(size.width - lineBoxOrigin.dx, glyphsBox.right);
+    final double guideWidth = max(
+      size.width - lineBoxOrigin.dx,
+      glyphsBox.right,
+    );
     // Top guide
     canvas.drawLine(Offset.zero, Offset(guideWidth, 0), paint);
     // Bottom guide
-    canvas.drawLine(Offset(0, _textPainter.height),
-        Offset(guideWidth, _textPainter.height), paint);
+    canvas.drawLine(
+      Offset(0, _textPainter.height),
+      Offset(guideWidth, _textPainter.height),
+      paint,
+    );
 
     paint.strokeWidth = 2.5;
     paint.color = Colors.red[900]!;
     // Glyph ascent guide
     canvas.drawLine(
-        Offset(0, glyphsBox.top), Offset(guideWidth, glyphsBox.top), paint);
+      Offset(0, glyphsBox.top),
+      Offset(guideWidth, glyphsBox.top),
+      paint,
+    );
     // Glyph descent guide
-    canvas.drawLine(Offset(0, glyphsBox.bottom),
-        Offset(guideWidth, glyphsBox.bottom), paint);
+    canvas.drawLine(
+      Offset(0, glyphsBox.bottom),
+      Offset(guideWidth, glyphsBox.bottom),
+      paint,
+    );
 
     // Baseline
     paint.strokeWidth = 2.5;
     paint.color = Colors.black;
-    final double baseline =
-        _textPainter.computeDistanceToActualBaseline(TextBaseline.alphabetic);
-    canvas.drawLine(
-      Offset(0, baseline),
-      Offset(guideWidth, baseline),
-      paint,
+    final double baseline = _textPainter.computeDistanceToActualBaseline(
+      TextBaseline.alphabetic,
     );
+    canvas.drawLine(Offset(0, baseline), Offset(guideWidth, baseline), paint);
 
     if (paintHeightIndicator) {
       _doPaintHeightIndicator(canvas, _textPainter.size);
@@ -876,7 +895,10 @@ class RenderTextHeightBreakdown extends RenderBox
 
     if (paintLeadingIndicator) {
       _doPaintLeadingIndicators(
-          canvas, Size(guideWidth, _textPainter.height), glyphsBox);
+        canvas,
+        Size(guideWidth, _textPainter.height),
+        glyphsBox,
+      );
     }
     canvas.restore();
   }
@@ -939,7 +961,8 @@ class RenderTextHeightBreakdown extends RenderBox
     // Bottom Leading Area
     labelPainter.text = TextSpan(text: 'Bottom Leading', style: textStyle);
     labelPainter.layout();
-    final Rect bottomLeadingArea = Offset(0, glyphsBox.bottom) &
+    final Rect bottomLeadingArea =
+        Offset(0, glyphsBox.bottom) &
         Size(size.width, size.height - glyphsBox.bottom);
     final Rect bottomTextRect = Rect.fromCenter(
       center: bottomLeadingArea.center,
@@ -974,7 +997,8 @@ class RenderTextHeightBreakdown extends RenderBox
     canvas.drawPath(path, paint);
 
     // Layout is done in performLayout.
-    final Offset origin = Offset(
+    final Offset origin =
+        Offset(
           heightCaptionBracketMinX - heightCaptionTextPainter.width,
           (size.height - heightCaptionTextPainter.height) / 2,
         ) -
@@ -983,31 +1007,30 @@ class RenderTextHeightBreakdown extends RenderBox
   }
 
   void _doPaintCaptions(
-      Canvas canvas, Size size, Rect glyphsBox, double baseline) {
+    Canvas canvas,
+    Size size,
+    Rect glyphsBox,
+    double baseline,
+  ) {
     // Ascent
     final TextPainter labelPainter = TextPainter(
       text: TextSpan(
         text: 'Font Ascent',
-        style: TextStyle(
-          fontSize: 9,
-          color: Colors.red[900],
-        ),
+        style: TextStyle(fontSize: 9, color: Colors.red[900]),
       ),
       textAlign: TextAlign.right,
       textDirection: textDirection,
     );
     labelPainter.layout();
-    Offset labelPaintOrigin = Offset(0, glyphsBox.top - labelPainter.height) -
+    Offset labelPaintOrigin =
+        Offset(0, glyphsBox.top - labelPainter.height) -
         fontMetricsLabelPadding;
     labelPainter.paint(canvas, labelPaintOrigin);
 
     // Descent
     labelPainter.text = TextSpan(
       text: 'Font Descent',
-      style: TextStyle(
-        fontSize: 9,
-        color: Colors.red[900],
-      ),
+      style: TextStyle(fontSize: 9, color: Colors.red[900]),
     );
     labelPainter.layout();
     labelPaintOrigin = Offset(0, glyphsBox.bottom) + fontMetricsLabelPadding;
@@ -1016,10 +1039,7 @@ class RenderTextHeightBreakdown extends RenderBox
     // Baseline
     labelPainter.text = const TextSpan(
       text: 'Alphabetic Baseline',
-      style: TextStyle(
-        fontSize: 9,
-        color: Colors.black,
-      ),
+      style: TextStyle(fontSize: 9, color: Colors.black),
     );
     labelPainter.layout();
     labelPaintOrigin = Offset(0, baseline) + fontMetricsLabelPadding;
@@ -1028,10 +1048,7 @@ class RenderTextHeightBreakdown extends RenderBox
     // Top
     labelPainter.text = TextSpan(
       text: 'Text Top',
-      style: TextStyle(
-        fontSize: 9,
-        color: Colors.blue[900],
-      ),
+      style: TextStyle(fontSize: 9, color: Colors.blue[900]),
     );
     labelPainter.layout();
     labelPaintOrigin = Offset.zero + fontMetricsLabelPadding * 2;
@@ -1039,13 +1056,11 @@ class RenderTextHeightBreakdown extends RenderBox
 
     labelPainter.text = TextSpan(
       text: 'Text Bottom',
-      style: TextStyle(
-        fontSize: 9,
-        color: Colors.blue[900],
-      ),
+      style: TextStyle(fontSize: 9, color: Colors.blue[900]),
     );
     labelPainter.layout();
-    labelPaintOrigin = size.bottomLeft(Offset.zero) -
+    labelPaintOrigin =
+        size.bottomLeft(Offset.zero) -
         Offset(0, labelPainter.height) -
         fontMetricsLabelPadding * 2;
     labelPainter.paint(canvas, labelPaintOrigin);
@@ -1058,10 +1073,10 @@ class TextHeightDiagramStep extends DiagramStep {
 
   @override
   Future<List<TextHeightDiagram>> get diagrams async => <TextHeightDiagram>[
-        const TextHeightDiagram('text_height_diagram'),
-        const TextHeightComparison('text_height_comparison_diagram'),
-        const TextHeightBreakdown('text_height_breakdown'),
-      ];
+    const TextHeightDiagram('text_height_diagram'),
+    const TextHeightComparison('text_height_comparison_diagram'),
+    const TextHeightBreakdown('text_height_breakdown'),
+  ];
 }
 
 class TextDiagramStep extends DiagramStep {
@@ -1070,11 +1085,11 @@ class TextDiagramStep extends DiagramStep {
 
   @override
   Future<List<TextDiagram>> get diagrams async => <TextDiagram>[
-        const TextDiagram(_textEllipsis),
-        const TextDiagram(_textFadeMaxLines),
-        const TextDiagram(_textFadeSoftWrap),
-        const TextDiagram(_textRich),
-        const TextDiagram(_textBorder),
-        const TextDiagram(_textGradient),
-      ];
+    const TextDiagram(_textEllipsis),
+    const TextDiagram(_textFadeMaxLines),
+    const TextDiagram(_textFadeSoftWrap),
+    const TextDiagram(_textRich),
+    const TextDiagram(_textBorder),
+    const TextDiagram(_textGradient),
+  ];
 }

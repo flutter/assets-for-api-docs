@@ -46,10 +46,9 @@ class ContainerDiagram extends StatelessWidget with DiagramMetadata {
               transform: Matrix4.rotationZ(0.1),
               child: Text(
                 'Hello World',
-                style: Theme.of(context)
-                    .textTheme
-                    .headlineMedium!
-                    .copyWith(color: Colors.white),
+                style: Theme.of(
+                  context,
+                ).textTheme.headlineMedium!.copyWith(color: Colors.white),
               ),
             ),
           ),
@@ -66,7 +65,7 @@ class ContainerDiagramStep extends DiagramStep {
 
   @override
   Future<List<ContainerDiagram>> get diagrams async => <ContainerDiagram>[
-        const ContainerDiagram('container_a'),
-        const ContainerDiagram('container_b'),
-      ];
+    const ContainerDiagram('container_a'),
+    const ContainerDiagram('container_b'),
+  ];
 }

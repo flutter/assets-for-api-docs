@@ -11,17 +11,16 @@ import 'package:flutter/widgets.dart';
 /// A controller that manages the tick state, global key, and progress of a
 /// diagram.
 class DiagramTickerController extends ChangeNotifier with Diagnosticable {
-  DiagramTickerController({
-    required this.diagram,
-  }) {
+  DiagramTickerController({required this.diagram}) {
     elapsed.addListener(_onElapsed);
   }
 
   final DiagramMetadata diagram;
 
   /// Notifier for how much time has elapsed from the diagram's perspective.
-  final ValueNotifier<Duration> elapsed =
-      ValueNotifier<Duration>(Duration.zero);
+  final ValueNotifier<Duration> elapsed = ValueNotifier<Duration>(
+    Duration.zero,
+  );
 
   /// Whether or not the TickerMode should be enabled.
   bool ticking = false;
@@ -177,9 +176,7 @@ class DiagramTickerController extends ChangeNotifier with Diagnosticable {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(
-      DiagnosticsProperty<Duration>('elapsed', elapsed.value),
-    );
+    properties.add(DiagnosticsProperty<Duration>('elapsed', elapsed.value));
     properties.add(DiagnosticsProperty<bool>('ticking', ticking));
     properties.add(DiagnosticsProperty<bool>('settingUp', settingUp));
     properties.add(DiagnosticsProperty<bool>('ready', ready));

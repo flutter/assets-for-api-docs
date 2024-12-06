@@ -34,7 +34,7 @@ class IconButtonDiagram extends StatelessWidget with DiagramMetadata {
                     tooltip: 'Increase volume by 10',
                     onPressed: () {},
                   ),
-                  const Text('Volume : 40')
+                  const Text('Volume : 40'),
                 ],
               ),
             ),
@@ -73,7 +73,7 @@ class IconButtonDiagramStep extends DiagramStep {
 
   @override
   Future<List<IconButtonDiagram>> get diagrams async => <IconButtonDiagram>[
-        const IconButtonDiagram(_iconButton),
-        const IconButtonDiagram(_iconButtonBackground),
-      ];
+    const IconButtonDiagram(_iconButton),
+    const IconButtonDiagram(_iconButtonBackground),
+  ];
 }

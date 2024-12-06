@@ -38,7 +38,9 @@ class DiagramImage extends ImageProvider<DiagramImage>
 
   @override
   ImageStreamCompleter loadImage(
-      DiagramImage key, ImageDecoderCallback decode) {
+    DiagramImage key,
+    ImageDecoderCallback decode,
+  ) {
     return MultiFrameImageStreamCompleter(
       codec: _loadAsync(),
       chunkEvents: chunkEvents.stream,
@@ -65,10 +67,12 @@ class DiagramImage extends ImageProvider<DiagramImage>
         result.complete(this);
       } else {
         final double percentComplete = controller.value / controller.upperBound;
-        chunkEvents.add(ImageChunkEvent(
-          cumulativeBytesLoaded: (percentComplete * _totalBytes).floor(),
-          expectedTotalBytes: _totalBytes,
-        ));
+        chunkEvents.add(
+          ImageChunkEvent(
+            cumulativeBytesLoaded: (percentComplete * _totalBytes).floor(),
+            expectedTotalBytes: _totalBytes,
+          ),
+        );
       }
     });
     controller.animateTo(controller.upperBound);
@@ -154,7 +158,8 @@ class LoadingProgressImageDiagram extends StatelessWidget {
         }
         return Center(
           child: CircularProgressIndicator(
-            value: loadingProgress.cumulativeBytesLoaded /
+            value:
+                loadingProgress.cumulativeBytesLoaded /
                 loadingProgress.expectedTotalBytes!,
           ),
         );
@@ -228,12 +233,7 @@ class ImageDiagramsStep extends DiagramStep {
     boxPainter.paint(
       ui.Canvas(recorder),
       Offset.zero,
-      ImageConfiguration(
-        size: Size(
-          width.toDouble(),
-          height.toDouble(),
-        ),
-      ),
+      ImageConfiguration(size: Size(width.toDouble(), height.toDouble())),
     );
     final ui.Picture picture = recorder.endRecording();
     return picture.toImage(width, height);
@@ -247,16 +247,18 @@ class ImageDiagramsStep extends DiagramStep {
         image: await renderFlutterLogo(300, 300),
         shownDuration: const Duration(seconds: 4),
         loadingDuration: const Duration(milliseconds: 500),
-        builder: (BuildContext context, ImageProvider image) =>
-            FrameBuilderImageDiagram(image: image),
+        builder:
+            (BuildContext context, ImageProvider image) =>
+                FrameBuilderImageDiagram(image: image),
       ),
       ImageDiagram(
         name: 'loading_progress_image',
         image: await renderFlutterLogo(300, 300),
         shownDuration: const Duration(seconds: 1),
         loadingDuration: const Duration(seconds: 2),
-        builder: (BuildContext context, ImageProvider image) =>
-            LoadingProgressImageDiagram(image: image),
+        builder:
+            (BuildContext context, ImageProvider image) =>
+                LoadingProgressImageDiagram(image: image),
       ),
     ];
   }

@@ -63,10 +63,7 @@ class _Diagram extends StatelessWidget {
           child: Builder(
             builder: (BuildContext context) {
               return Center(
-                child: RepaintBoundary(
-                  key: boundaryKey,
-                  child: child,
-                ),
+                child: RepaintBoundary(key: boundaryKey, child: child),
               );
             },
           ),
@@ -83,27 +80,24 @@ const Size _kDefaultDiagramViewportSize = Size(1280.0, 1024.0);
 // so that the diagram surface fits on the device, but it doesn't affect the
 // captured image pixels.
 class _DiagramViewConfiguration extends ViewConfiguration {
-  _DiagramViewConfiguration({
-    Size size = _kDefaultDiagramViewportSize,
-  })  : _paintMatrix = _getMatrix(
-            size,
-            ui.PlatformDispatcher.instance.implicitView?.devicePixelRatio ??
+  _DiagramViewConfiguration({Size size = _kDefaultDiagramViewportSize})
+    : _paintMatrix = _getMatrix(
+        size,
+        ui.PlatformDispatcher.instance.implicitView?.devicePixelRatio ?? 1.0,
+      ),
+      super(
+        physicalConstraints:
+            BoxConstraints.tightFor(width: size.width, height: size.height) *
+            (ui.PlatformDispatcher.instance.implicitView?.devicePixelRatio ??
                 1.0),
-        super(
-          physicalConstraints: BoxConstraints.tightFor(
-                width: size.width,
-                height: size.height,
-              ) *
-              (ui.PlatformDispatcher.instance.implicitView?.devicePixelRatio ??
-                  1.0),
-          logicalConstraints: BoxConstraints.tightFor(
-            width: size.width,
-            height: size.height,
-          ),
-          devicePixelRatio:
-              ui.PlatformDispatcher.instance.implicitView?.devicePixelRatio ??
-                  1.0,
-        );
+        logicalConstraints: BoxConstraints.tightFor(
+          width: size.width,
+          height: size.height,
+        ),
+        devicePixelRatio:
+            ui.PlatformDispatcher.instance.implicitView?.devicePixelRatio ??
+            1.0,
+      );
 
   static Matrix4 _getMatrix(Size size, double devicePixelRatio) {
     final double baseRatio =
@@ -126,10 +120,10 @@ class _DiagramViewConfiguration extends ViewConfiguration {
       shiftY = (actualHeight - desiredHeight * scale) / 2.0;
     }
     final Matrix4 matrix = Matrix4.compose(
-        Vector3(shiftX, shiftY, 0.0), // translation
-        Quaternion.identity(), // rotation
-        Vector3(scale, scale, 1.0) // scale
-        );
+      Vector3(shiftX, shiftY, 0.0), // translation
+      Quaternion.identity(), // rotation
+      Vector3(scale, scale, 1.0), // scale
+    );
     return matrix;
   }
 
@@ -151,9 +145,7 @@ class _DiagramWidgetController extends WidgetController
   DiagramFlutterBinding get binding => super.binding as DiagramFlutterBinding;
 
   @override
-  Future<void> pump([
-    Duration duration = Duration.zero,
-  ]) {
+  Future<void> pump([Duration duration = Duration.zero]) {
     return TestAsyncUtils.guard(() => binding.pump(duration: duration));
   }
 
@@ -173,7 +165,8 @@ class _DiagramWidgetController extends WidgetController
 
   @override
   Future<List<Duration>> handlePointerEventRecord(
-      List<PointerEventRecord> records) async {
+    List<PointerEventRecord> records,
+  ) async {
     return const <Duration>[];
   }
 
@@ -290,15 +283,14 @@ class DiagramFlutterBinding extends BindingBase
 
   @override
   ViewConfiguration createViewConfigurationFor(RenderView renderView) {
-    return _DiagramViewConfiguration(
-      size: screenDimensions,
-    );
+    return _DiagramViewConfiguration(size: screenDimensions);
   }
 
   /// Captures an image of the [RepaintBoundary] with the given key.
   Future<ui.Image> takeSnapshot() {
-    final RenderRepaintBoundary object = _boundaryKey.currentContext!
-        .findRenderObject()! as RenderRepaintBoundary;
+    final RenderRepaintBoundary object =
+        _boundaryKey.currentContext!.findRenderObject()!
+            as RenderRepaintBoundary;
     return object.toImage(pixelRatio: pixelRatio);
   }
 
@@ -308,11 +300,13 @@ class DiagramFlutterBinding extends BindingBase
     WidgetBuilder builder, {
     Duration duration = Duration.zero,
   }) {
-    final Widget rootWidget = wrapWithDefaultView(_Diagram(
-      boundaryKey: _boundaryKey,
-      widgetController: _controller,
-      child: Builder(builder: builder),
-    ));
+    final Widget rootWidget = wrapWithDefaultView(
+      _Diagram(
+        boundaryKey: _boundaryKey,
+        widgetController: _controller,
+        child: Builder(builder: builder),
+      ),
+    );
     attachRootWidget(rootWidget);
     pump();
   }
@@ -347,8 +341,8 @@ typedef DiagramKeyframe = void Function(Duration duration);
 
 /// A callback given to drawAnimatedDiagramToFiles that is called for each
 /// frame.
-typedef DiagramGestureCallback = void Function(
-    DiagramController diagram, Duration now);
+typedef DiagramGestureCallback =
+    void Function(DiagramController diagram, Duration now);
 
 /// A controller for creating diagrams generated by using Flutter widgets.
 ///
@@ -361,9 +355,10 @@ class DiagramController {
     Directory? outputDirectory,
     double? pixelRatio,
     Size screenDimensions = _kDefaultDiagramViewportSize,
-  })  : outputDirectory = outputDirectory ?? Directory.current,
-        _builder = builder {
-    _binding.pixelRatio = pixelRatio ??
+  }) : outputDirectory = outputDirectory ?? Directory.current,
+       _builder = builder {
+    _binding.pixelRatio =
+        pixelRatio ??
         ui.PlatformDispatcher.instance.implicitView?.devicePixelRatio ??
         1.0;
     _binding.screenDimensions = screenDimensions;
@@ -415,8 +410,10 @@ class DiagramController {
   /// gesture ([startGesture] automatically does this for you for the initial
   /// tap down event).
   Future<TestGesture> startGesture(Offset location, {int? pointer}) async {
-    final TestGesture gesture =
-        await _binding.startGesture(location, pointer: pointer);
+    final TestGesture gesture = await _binding.startGesture(
+      location,
+      pointer: pointer,
+    );
     advanceTime(); // Schedule a frame.
     return gesture;
   }
@@ -443,8 +440,9 @@ class DiagramController {
   }) async {
     // Even though we are only capturing a single frame, advance time at minimum
     // increments to let tickers update and async tasks run.
-    final Duration framerateDuration =
-        Duration(milliseconds: 1000 ~/ framerate);
+    final Duration framerateDuration = Duration(
+      milliseconds: 1000 ~/ framerate,
+    );
     while (timestamp != Duration.zero) {
       final Duration advanceBy =
           timestamp > framerateDuration ? framerateDuration : timestamp;
@@ -469,8 +467,9 @@ class DiagramController {
   }) async {
     if (!outputFile.isAbsolute) {
       // If output path is relative, make it relative to the output directory.
-      outputFile =
-          File(path.join(outputDirectory.absolute.path, outputFile.path));
+      outputFile = File(
+        path.join(outputDirectory.absolute.path, outputFile.path),
+      );
     }
     assert(outputFile.path.endsWith('.png'));
     await advanceTime();
@@ -480,8 +479,10 @@ class DiagramController {
     );
     final ByteData? encoded = await captured.toByteData(format: format);
     final List<int> bytes = encoded!.buffer.asUint8List().toList();
-    print('Writing ${bytes.length} bytes, ${captured.width}x${captured.height} '
-        '${_byteFormatToString(format)}, to: ${outputFile.absolute.path}');
+    print(
+      'Writing ${bytes.length} bytes, ${captured.width}x${captured.height} '
+      '${_byteFormatToString(format)}, to: ${outputFile.absolute.path}',
+    );
     await outputFile.writeAsBytes(bytes);
     return outputFile;
   }
@@ -565,8 +566,9 @@ class DiagramController {
     assert(start >= Duration.zero);
 
     Duration now = start;
-    final Duration frameDuration =
-        Duration(microseconds: (1e6 / frameRate).round());
+    final Duration frameDuration = Duration(
+      microseconds: (1e6 / frameRate).round(),
+    );
     int index = 0;
     final List<File> outputFiles = <File>[];
     List<Duration> keys = <Duration>[];
@@ -602,8 +604,9 @@ class DiagramController {
       ++index;
     }
     print('Wrote $index frames of $name to ${outputDirectory.path}');
-    final File metadataFile =
-        File(path.join(outputDirectory.absolute.path, '$name.json'));
+    final File metadataFile = File(
+      path.join(outputDirectory.absolute.path, '$name.json'),
+    );
     final AnimationMetadata metadata = AnimationMetadata.fromData(
       name: name,
       category: category,

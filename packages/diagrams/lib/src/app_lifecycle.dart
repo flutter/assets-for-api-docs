@@ -160,8 +160,11 @@ class _DiagramState extends State<AppLifecycleDiagram> {
 }
 
 class TransitionLabel extends StatelessWidget {
-  const TransitionLabel(this.label,
-      {super.key, this.color = AppLifecycleDiagram.transitionLabelColor});
+  const TransitionLabel(
+    this.label, {
+    super.key,
+    this.color = AppLifecycleDiagram.transitionLabelColor,
+  });
 
   final String label;
   final Color color;
@@ -170,20 +173,13 @@ class TransitionLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       label,
-      style: TextStyle(
-        fontFamily: 'Noto Sans',
-        color: color,
-        fontSize: 20,
-      ),
+      style: TextStyle(fontFamily: 'Noto Sans', color: color, fontSize: 20),
     );
   }
 }
 
 class AppLifecycleStateBox extends StatelessWidget {
-  const AppLifecycleStateBox({
-    super.key,
-    required this.appState,
-  });
+  const AppLifecycleStateBox({super.key, required this.appState});
 
   final AppLifecycleState appState;
 
@@ -194,9 +190,10 @@ class AppLifecycleStateBox extends StatelessWidget {
       width: AppLifecycleDiagram.stateBoxWidth,
       height: AppLifecycleDiagram.stateBoxHeight,
       decoration: ShapeDecoration(
-        color: Theme.of(context).brightness == Brightness.light
-            ? Colors.blue.shade100
-            : Colors.blue.shade800,
+        color:
+            Theme.of(context).brightness == Brightness.light
+                ? Colors.blue.shade100
+                : Colors.blue.shade800,
         shape: RoundedRectangleBorder(
           side: const BorderSide(width: 3),
           borderRadius: BorderRadius.circular(10),
@@ -204,10 +201,7 @@ class AppLifecycleStateBox extends StatelessWidget {
       ),
       child: Text(
         appState.name,
-        style: const TextStyle(
-          fontFamily: 'Noto Sans',
-          fontSize: 30,
-        ),
+        style: const TextStyle(fontFamily: 'Noto Sans', fontSize: 30),
       ),
     );
   }
@@ -258,10 +252,7 @@ class LabeledArrow extends StatelessWidget {
       quarterTurns: quarterTurns,
       child: CustomPaint(
         painter: ArrowPainter(fillColor: fillColor, thickness: thickness),
-        child: SizedBox(
-          height: tipSize,
-          width: length,
-        ),
+        child: SizedBox(height: tipSize, width: length),
       ),
     );
 
@@ -286,10 +277,11 @@ class LabeledArrow extends StatelessWidget {
 }
 
 class ArrowPainter extends CustomPainter {
-  const ArrowPainter(
-      {required this.fillColor,
-      this.thickness = 10,
-      this.orientation = AxisDirection.right});
+  const ArrowPainter({
+    required this.fillColor,
+    this.thickness = 10,
+    this.orientation = AxisDirection.right,
+  });
 
   final Color fillColor;
   final AxisDirection orientation;
@@ -310,10 +302,7 @@ class ArrowPainter extends CustomPainter {
 
     final Path arrowPath = Path()..addPolygon(points, true);
 
-    canvas.drawPath(
-      arrowPath,
-      Paint()..color = fillColor,
-    );
+    canvas.drawPath(arrowPath, Paint()..color = fillColor);
 
     canvas.drawPath(
       arrowPath,
@@ -335,7 +324,7 @@ class AppLifecycleDiagramStep extends DiagramStep {
   @override
   Future<List<AppLifecycleDiagram>> get diagrams async {
     return <AppLifecycleDiagram>[
-      const AppLifecycleDiagram(name: 'app_lifecycle')
+      const AppLifecycleDiagram(name: 'app_lifecycle'),
     ];
   }
 }

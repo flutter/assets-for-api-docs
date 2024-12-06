@@ -14,10 +14,7 @@ const Duration _kOverallAnimationDuration = Duration(seconds: 6);
 const double _kLogoSize = 150.0;
 
 class TransitionDiagramTapper extends StatefulWidget {
-  const TransitionDiagramTapper({
-    super.key,
-    required this.child,
-  });
+  const TransitionDiagramTapper({super.key, required this.child});
 
   final Widget child;
 
@@ -109,18 +106,15 @@ class AlignTransitionDiagram extends TransitionDiagram<AlignmentGeometry> {
   @override
   Animation<AlignmentGeometry> buildAnimation(AnimationController controller) {
     return _offsetTween.animate(
-      CurvedAnimation(
-        parent: controller,
-        curve: curve,
-      ),
+      CurvedAnimation(parent: controller, curve: curve),
     );
   }
 
   static final _NonNullableAlignmentGeometryTween _offsetTween =
       _NonNullableAlignmentGeometryTween(
-    begin: AlignmentDirectional.bottomStart,
-    end: AlignmentDirectional.center,
-  );
+        begin: AlignmentDirectional.bottomStart,
+        end: AlignmentDirectional.center,
+      );
 
   @override
   Widget buildTransition(
@@ -149,14 +143,14 @@ class DecoratedBoxTransitionDiagram extends TransitionDiagram<Decoration> {
 
   @override
   Animation<Decoration> buildAnimation(AnimationController controller) {
-    return _decorationTween.animate(CurvedAnimation(
-      parent: controller,
-      curve: curve,
-    ));
+    return _decorationTween.animate(
+      CurvedAnimation(parent: controller, curve: curve),
+    );
   }
 
-  static const BorderRadius _beginRadius =
-      BorderRadius.all(Radius.circular(50.0));
+  static const BorderRadius _beginRadius = BorderRadius.all(
+    Radius.circular(50.0),
+  );
   static const BorderRadius _endRadius = BorderRadius.zero;
   static final DecorationTween _decorationTween = DecorationTween(
     begin: BoxDecoration(
@@ -172,7 +166,9 @@ class DecoratedBoxTransitionDiagram extends TransitionDiagram<Decoration> {
 
   @override
   Widget buildTransition(
-      BuildContext context, Animation<Decoration> animation) {
+    BuildContext context,
+    Animation<Decoration> animation,
+  ) {
     return TransitionDiagramTapper(
       child: DecoratedBoxTransition(
         decoration: animation,
@@ -197,19 +193,13 @@ class FadeTransitionDiagram extends TransitionDiagram<double> {
 
   @override
   Animation<double> buildAnimation(AnimationController controller) {
-    return CurvedAnimation(
-      parent: controller,
-      curve: curve,
-    );
+    return CurvedAnimation(parent: controller, curve: curve);
   }
 
   @override
   Widget buildTransition(BuildContext context, Animation<double> animation) {
     return TransitionDiagramTapper(
-      child: FadeTransition(
-        opacity: animation,
-        child: const SampleWidget(),
-      ),
+      child: FadeTransition(opacity: animation, child: const SampleWidget()),
     );
   }
 }
@@ -225,10 +215,9 @@ class PositionedTransitionDiagram extends TransitionDiagram<RelativeRect> {
 
   @override
   Animation<RelativeRect> buildAnimation(AnimationController controller) {
-    return _rectTween.animate(CurvedAnimation(
-      parent: controller,
-      curve: curve,
-    ));
+    return _rectTween.animate(
+      CurvedAnimation(parent: controller, curve: curve),
+    );
   }
 
   static final RelativeRectTween _rectTween = RelativeRectTween(
@@ -238,7 +227,9 @@ class PositionedTransitionDiagram extends TransitionDiagram<RelativeRect> {
 
   @override
   Widget buildTransition(
-      BuildContext context, Animation<RelativeRect> animation) {
+    BuildContext context,
+    Animation<RelativeRect> animation,
+  ) {
     return Center(
       child: Stack(
         children: <Widget>[
@@ -259,7 +250,7 @@ class PositionedTransitionDiagram extends TransitionDiagram<RelativeRect> {
 class _NonNullableRectTween extends Tween<Rect> {
   /// Creates a [Rect] tween.
   _NonNullableRectTween({required Rect begin, required Rect end})
-      : super(begin: begin, end: end);
+    : super(begin: begin, end: end);
 
   /// Returns the value this variable has at the given animation clock value.
   @override
@@ -277,10 +268,9 @@ class RelativePositionedTransitionDiagram extends TransitionDiagram<Rect> {
 
   @override
   Animation<Rect> buildAnimation(AnimationController controller) {
-    return _rectTween.animate(CurvedAnimation(
-      parent: controller,
-      curve: curve,
-    ));
+    return _rectTween.animate(
+      CurvedAnimation(parent: controller, curve: curve),
+    );
   }
 
   static final _NonNullableRectTween _rectTween = _NonNullableRectTween(
@@ -294,7 +284,10 @@ class RelativePositionedTransitionDiagram extends TransitionDiagram<Rect> {
       child: Stack(
         children: <Widget>[
           Container(
-              color: const Color(0xffffffff), width: 200.0, height: 200.0),
+            color: const Color(0xffffffff),
+            width: 200.0,
+            height: 200.0,
+          ),
           TransitionDiagramTapper(
             child: RelativePositionedTransition(
               size: const Size(150.0, 150.0),
@@ -319,19 +312,13 @@ class RotationTransitionDiagram extends TransitionDiagram<double> {
 
   @override
   Animation<double> buildAnimation(AnimationController controller) {
-    return CurvedAnimation(
-      parent: controller,
-      curve: curve,
-    );
+    return CurvedAnimation(parent: controller, curve: curve);
   }
 
   @override
   Widget buildTransition(BuildContext context, Animation<double> animation) {
     return TransitionDiagramTapper(
-      child: RotationTransition(
-        turns: animation,
-        child: const SampleWidget(),
-      ),
+      child: RotationTransition(turns: animation, child: const SampleWidget()),
     );
   }
 }
@@ -347,19 +334,13 @@ class ScaleTransitionDiagram extends TransitionDiagram<double> {
 
   @override
   Animation<double> buildAnimation(AnimationController controller) {
-    return CurvedAnimation(
-      parent: controller,
-      curve: curve,
-    );
+    return CurvedAnimation(parent: controller, curve: curve);
   }
 
   @override
   Widget buildTransition(BuildContext context, Animation<double> animation) {
     return TransitionDiagramTapper(
-      child: ScaleTransition(
-        scale: animation,
-        child: const SampleWidget(),
-      ),
+      child: ScaleTransition(scale: animation, child: const SampleWidget()),
     );
   }
 }
@@ -375,10 +356,7 @@ class SizeTransitionDiagram extends TransitionDiagram<double> {
 
   @override
   Animation<double> buildAnimation(AnimationController controller) {
-    return CurvedAnimation(
-      parent: controller,
-      curve: curve,
-    );
+    return CurvedAnimation(parent: controller, curve: curve);
   }
 
   @override
@@ -417,10 +395,7 @@ class SlideTransitionDiagram extends TransitionDiagram<Offset> {
   @override
   Animation<Offset> buildAnimation(AnimationController controller) {
     return _offsetTween.animate(
-      CurvedAnimation(
-        parent: controller,
-        curve: curve,
-      ),
+      CurvedAnimation(parent: controller, curve: curve),
     );
   }
 

@@ -18,11 +18,15 @@ class StrokeJoinDescription extends CustomPainter {
     required this.angle,
     required this.join,
     required this.strokeMiterLimit,
-  })  : _anglePainter = _createLabelPainter('θ = ${angle.round()}°'),
-        _joinPainter = _createLabelPainter(join.toString()),
-        _miterLimitPainter = _createLabelPainter(join == StrokeJoin.miter //
-            ? 'Miter Limit: ${strokeMiterLimit.toStringAsFixed(1)}${strokeMiterLimit == 4.0 ? ' (default)' : ''}'
-            : '');
+  }) : _anglePainter = _createLabelPainter('θ = ${angle.round()}°'),
+       _joinPainter = _createLabelPainter(join.toString()),
+       _miterLimitPainter = _createLabelPainter(
+         join ==
+                 StrokeJoin
+                     .miter //
+             ? 'Miter Limit: ${strokeMiterLimit.toStringAsFixed(1)}${strokeMiterLimit == 4.0 ? ' (default)' : ''}'
+             : '',
+       );
 
   static const EdgeInsets padding = EdgeInsets.all(8.0);
 
@@ -41,16 +45,16 @@ class StrokeJoinDescription extends CustomPainter {
         aspectRatio: 1.0,
         child: Padding(
           padding: const EdgeInsets.all(3.0),
-          child: CustomPaint(
-            painter: this,
-          ),
+          child: CustomPaint(painter: this),
         ),
       ),
     );
   }
 
-  static TextPainter _createLabelPainter(String label,
-      {FontStyle style = FontStyle.normal}) {
+  static TextPainter _createLabelPainter(
+    String label, {
+    FontStyle style = FontStyle.normal,
+  }) {
     final TextPainter result = TextPainter(
       textDirection: TextDirection.ltr,
       text: TextSpan(
@@ -73,41 +77,43 @@ class StrokeJoinDescription extends CustomPainter {
     final Offset start = Offset(0.0, center.dy);
     final Offset middle = Offset(size.width / 2.0, center.dy);
     final double radians = angle * math.pi / 180.0;
-    final Offset end = Offset(
+    final Offset end =
+        Offset(
           0.5 * size.height * math.cos(radians),
           0.5 * size.height * math.sin(radians),
         ) +
         center;
-    final Offset shortEnd = Offset(
-          20.0 * math.cos(radians),
-          20.0 * math.sin(radians),
-        ) +
-        center;
+    final Offset shortEnd =
+        Offset(20.0 * math.cos(radians), 20.0 * math.sin(radians)) + center;
 
-    final Paint linePaint = Paint()
-      ..color = Colors.grey
-      ..style = PaintingStyle.stroke
-      ..strokeCap = StrokeCap.butt
-      ..strokeJoin = join
-      ..strokeMiterLimit = strokeMiterLimit
-      ..strokeWidth = 20.0;
-    final Paint centerPaint = Paint()
-      ..color = Colors.deepPurpleAccent
-      ..style = PaintingStyle.stroke
-      ..strokeCap = StrokeCap.butt
-      ..strokeJoin = join
-      ..strokeMiterLimit = strokeMiterLimit
-      ..strokeWidth = 20.0;
+    final Paint linePaint =
+        Paint()
+          ..color = Colors.grey
+          ..style = PaintingStyle.stroke
+          ..strokeCap = StrokeCap.butt
+          ..strokeJoin = join
+          ..strokeMiterLimit = strokeMiterLimit
+          ..strokeWidth = 20.0;
+    final Paint centerPaint =
+        Paint()
+          ..color = Colors.deepPurpleAccent
+          ..style = PaintingStyle.stroke
+          ..strokeCap = StrokeCap.butt
+          ..strokeJoin = join
+          ..strokeMiterLimit = strokeMiterLimit
+          ..strokeWidth = 20.0;
 
-    Path line = Path() // Line
-      ..moveTo(start.dx, start.dy)
-      ..lineTo(middle.dx, middle.dy)
-      ..lineTo(end.dx, end.dy);
+    Path line =
+        Path() // Line
+          ..moveTo(start.dx, start.dy)
+          ..lineTo(middle.dx, middle.dy)
+          ..lineTo(end.dx, end.dy);
     canvas.drawPath(line, linePaint);
-    line = Path() // Center area, to highlight the part with the join.
-      ..moveTo(start.dx + center.dy - 20.0, start.dy)
-      ..lineTo(middle.dx, middle.dy)
-      ..lineTo(shortEnd.dx, shortEnd.dy);
+    line =
+        Path() // Center area, to highlight the part with the join.
+          ..moveTo(start.dx + center.dy - 20.0, start.dy)
+          ..lineTo(middle.dx, middle.dy)
+          ..lineTo(shortEnd.dx, shortEnd.dy);
     canvas.drawPath(line, centerPaint);
     _anglePainter.paint(canvas, const Offset(3.0, 3.0));
     _miterLimitPainter.paint(canvas, Offset(3.0, 6.0 + _anglePainter.height));
@@ -150,9 +156,10 @@ class StrokeJoinDiagram extends StatefulWidget with DiagramMetadata {
   StrokeJoinPainterState createState() => StrokeJoinPainterState();
 }
 
-class StrokeJoinPainterState extends State<StrokeJoinDiagram> //
-    with
-        TickerProviderStateMixin<StrokeJoinDiagram> {
+class StrokeJoinPainterState
+    extends
+        State<StrokeJoinDiagram> //
+    with TickerProviderStateMixin<StrokeJoinDiagram> {
   late AnimationController controller;
 
   @override
@@ -171,8 +178,8 @@ class StrokeJoinPainterState extends State<StrokeJoinDiagram> //
       lowerBound: widget.startAngle,
       upperBound: widget.endAngle,
     )..addListener(() {
-        setState(() {});
-      });
+      setState(() {});
+    });
     controller.forward();
   }
 
@@ -206,25 +213,11 @@ class StrokeJoinDiagramStep extends DiagramStep {
   final String category = 'dart-ui';
 
   final List<StrokeJoinDiagram> _diagrams = const <StrokeJoinDiagram>[
-    StrokeJoinDiagram(
-      name: 'miter_0_join',
-      strokeMiterLimit: 0.0,
-    ),
-    StrokeJoinDiagram(
-      name: 'miter_4_join',
-    ),
-    StrokeJoinDiagram(
-      name: 'miter_6_join',
-      strokeMiterLimit: 6.0,
-    ),
-    StrokeJoinDiagram(
-      name: 'round_join',
-      join: StrokeJoin.round,
-    ),
-    StrokeJoinDiagram(
-      name: 'bevel_join',
-      join: StrokeJoin.bevel,
-    ),
+    StrokeJoinDiagram(name: 'miter_0_join', strokeMiterLimit: 0.0),
+    StrokeJoinDiagram(name: 'miter_4_join'),
+    StrokeJoinDiagram(name: 'miter_6_join', strokeMiterLimit: 6.0),
+    StrokeJoinDiagram(name: 'round_join', join: StrokeJoin.round),
+    StrokeJoinDiagram(name: 'bevel_join', join: StrokeJoin.bevel),
   ];
 
   @override

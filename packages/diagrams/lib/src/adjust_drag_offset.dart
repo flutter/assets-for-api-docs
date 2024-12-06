@@ -30,23 +30,24 @@ class AdjustDragOffsetDiagram extends StatelessWidget with DiagramMetadata {
             width: 300,
             height: 150,
             child: const Center(
-              child: Text(
-                'Target Rectangle',
-                style: TextStyle(fontSize: 30),
-              ),
+              child: Text('Target Rectangle', style: TextStyle(fontSize: 30)),
             ),
           ),
           const Positioned(
             top: 206.5,
             left: 546,
-            child:
-                Text('- - - - - - - - - - - -', style: TextStyle(fontSize: 30)),
+            child: Text(
+              '- - - - - - - - - - - -',
+              style: TextStyle(fontSize: 30),
+            ),
           ),
           const Positioned(
             top: 353,
             right: 545,
-            child:
-                Text('- - - - - - - - - - - -', style: TextStyle(fontSize: 30)),
+            child: Text(
+              '- - - - - - - - - - - -',
+              style: TextStyle(fontSize: 30),
+            ),
           ),
           const Positioned(
             top: 100,
