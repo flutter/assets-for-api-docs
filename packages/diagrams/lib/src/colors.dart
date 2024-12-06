@@ -37,7 +37,7 @@ class ColorSwatchDiagram extends ColorDiagram {
               : Colors.white;
       TextStyle style = TextStyle(color: textColor, fontSize: _kFontSize);
       String label, shadeLabel;
-      if (swatch[key]!.value == swatch.value) {
+      if (swatch[key]!.toARGB32() == swatch.toARGB32()) {
         label = name;
         shadeLabel = '';
         style = style.copyWith(fontWeight: FontWeight.w800);
@@ -60,7 +60,7 @@ class ColorSwatchDiagram extends ColorDiagram {
                 ],
               ),
               Text(
-                '0x${swatch[key]!.value.toRadixString(16).toUpperCase()}',
+                '0x${swatch[key]!.toARGB32().toRadixString(16).toUpperCase()}',
                 style: style,
               ),
             ],
@@ -104,7 +104,7 @@ class ColorListDiagram extends ColorDiagram {
             children: <Widget>[
               Text(key, style: style),
               Text(
-                '0x${textColor.value.toRadixString(16).toUpperCase()}',
+                '0x${textColor.toARGB32().toRadixString(16).toUpperCase()}',
                 style: style,
               ),
             ],

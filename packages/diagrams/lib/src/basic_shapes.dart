@@ -869,7 +869,7 @@ class RadiusDiagramPainter extends CustomPainter {
         ..shader = ui.Gradient.linear(
           Offset.zero,
           Offset(0, size.height),
-          <Color>[Colors.white, Colors.white.withOpacity(0)],
+          <Color>[Colors.white, Colors.white.withValues(alpha: 0)],
           <double>[1 - 64 / size.height, 1.0],
         )
         ..blendMode = BlendMode.dstIn,
@@ -880,7 +880,7 @@ class RadiusDiagramPainter extends CustomPainter {
         ..shader = ui.Gradient.linear(
           Offset.zero,
           Offset(size.width, 0),
-          <Color>[Colors.white, Colors.white.withOpacity(0)],
+          <Color>[Colors.white, Colors.white.withValues(alpha: 0)],
           <double>[1 - 64 / size.width, 1.0],
         )
         ..blendMode = BlendMode.dstIn,

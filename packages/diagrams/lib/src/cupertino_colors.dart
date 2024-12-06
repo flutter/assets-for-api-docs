@@ -182,7 +182,7 @@ class CupertinoColorsDiagram extends StatelessWidget with DiagramMetadata {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 14.0),
                     child: Text(
-                      'High\nconstrast color',
+                      'High\ncontrast color',
                       style: textStyle,
                       textAlign: TextAlign.center,
                     ),
@@ -238,7 +238,7 @@ class CupertinoColorsDiagram extends StatelessWidget with DiagramMetadata {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 14.0),
                     child: Text(
-                      'High\nconstrast color',
+                      'High\ncontrast color',
                       style: textStyle,
                       textAlign: TextAlign.center,
                     ),
@@ -352,7 +352,7 @@ class CupertinoColorsDiagram extends StatelessWidget with DiagramMetadata {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 14.0),
                     child: Text(
-                      'High\nconstrast color',
+                      'High\ncontrast color',
                       style: textStyle,
                       textAlign: TextAlign.center,
                     ),
@@ -412,7 +412,7 @@ class CupertinoColorsDiagram extends StatelessWidget with DiagramMetadata {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 14.0),
                   child: Text(
-                    'High\nconstrast color',
+                    'High\ncontrast color',
                     style: textStyle,
                     textAlign: TextAlign.center,
                   ),
@@ -491,7 +491,7 @@ class ColorWidget extends StatelessWidget {
     return DefaultTextStyle(
       style: TextStyle(
         color:
-            color.red > 200 && color.green > 200 && color.blue > 200
+            color.r > 200 && color.g > 200 && color.b > 200
                 ? CupertinoColors.black
                 : CupertinoColors.white,
         fontSize: 16.0,
@@ -517,9 +517,9 @@ class ColorWidget extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text('${color.red}'),
-                  Text('${color.green}'),
-                  Text('${color.blue}'),
+                  Text('${color.r}'),
+                  Text('${color.g}'),
+                  Text('${color.b}'),
                 ],
               ),
             ],
