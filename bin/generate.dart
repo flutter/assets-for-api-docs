@@ -285,15 +285,18 @@ class DiagramGenerator {
     for (final AnimationMetadata metadata in metadataList) {
       final String prefix = '${metadata.category}/${metadata.name}';
 
-      final File destination = File(path.join(destDir.path, '$prefix.${metadata.videoFormat.name}'));
+      final File destination =
+          File(path.join(destDir.path, '$prefix.${metadata.videoFormat.name}'));
       if (destination.existsSync()) {
         destination.deleteSync();
       }
       if (!destination.parent.existsSync()) {
         destination.parent.createSync(recursive: true);
       }
-      print('Converting ${metadata.name} animation to ${metadata.videoFormat.name}.');
-      _generateCommands(metadata: metadata, destination: destination.path, jobs: jobs);
+      print(
+          'Converting ${metadata.name} animation to ${metadata.videoFormat.name}.');
+      _generateCommands(
+          metadata: metadata, destination: destination.path, jobs: jobs);
       outputs.add(destination);
     }
     final ProcessPool pool = ProcessPool(processRunner: processRunner);
@@ -310,11 +313,13 @@ class DiagramGenerator {
     required String destination,
     required Map<int, List<WorkerJob>> jobs,
   }) {
-    switch(metadata.videoFormat) {
+    switch (metadata.videoFormat) {
       case VideoFormat.mp4:
-        _generateMp4Commands(metadata: metadata, destination: destination, jobs: jobs);
+        _generateMp4Commands(
+            metadata: metadata, destination: destination, jobs: jobs);
       case VideoFormat.gif:
-        _generateGifCommands(metadata: metadata, destination: destination, jobs: jobs);
+        _generateGifCommands(
+            metadata: metadata, destination: destination, jobs: jobs);
     }
   }
 
@@ -324,32 +329,32 @@ class DiagramGenerator {
     required Map<int, List<WorkerJob>> jobs,
   }) {
     jobs.putIfAbsent(0, () => <WorkerJob>[]).add(
-      WorkerJob(
-        <String>[
-          ffmpegCommand,
-          '-loglevel', 'fatal', // Only print fatal errors.
-          '-framerate', metadata.frameRate.toStringAsFixed(2),
-          '-i', '-', // read in the concatenated frame files from stdin.
-          // Yes, specify the -framerate flag twice: once for input, once for
-          // output.
-          '-framerate', metadata.frameRate.toStringAsFixed(2),
-          '-tune', 'animation', // Optimize the encoder for cell animation.
-          '-preset',
-          'veryslow', // Use the slowest (best quality) compression preset.
-          // Almost lossless quality (can't use lossless '0' because Safari
-          // doesn't support it).
-          '-crf', '1',
-          '-c:v', 'libx264', // encode to mp4 H.264
-          '-y', // overwrite output
-          // Video format set to YUV420 color space for compatibility.
-          '-vf', 'format=yuv420p',
-          destination, // output movie.
-        ],
-        workingDirectory: temporaryDirectory,
-        stdinRaw: _concatInputs(metadata.frameFiles),
-        printOutput: true,
-      ),
-    );
+          WorkerJob(
+            <String>[
+              ffmpegCommand,
+              '-loglevel', 'fatal', // Only print fatal errors.
+              '-framerate', metadata.frameRate.toStringAsFixed(2),
+              '-i', '-', // read in the concatenated frame files from stdin.
+              // Yes, specify the -framerate flag twice: once for input, once for
+              // output.
+              '-framerate', metadata.frameRate.toStringAsFixed(2),
+              '-tune', 'animation', // Optimize the encoder for cell animation.
+              '-preset',
+              'veryslow', // Use the slowest (best quality) compression preset.
+              // Almost lossless quality (can't use lossless '0' because Safari
+              // doesn't support it).
+              '-crf', '1',
+              '-c:v', 'libx264', // encode to mp4 H.264
+              '-y', // overwrite output
+              // Video format set to YUV420 color space for compatibility.
+              '-vf', 'format=yuv420p',
+              destination, // output movie.
+            ],
+            workingDirectory: temporaryDirectory,
+            stdinRaw: _concatInputs(metadata.frameFiles),
+            printOutput: true,
+          ),
+        );
   }
 
   void _generateGifCommands({
@@ -357,38 +362,41 @@ class DiagramGenerator {
     required String destination,
     required Map<int, List<WorkerJob>> jobs,
   }) {
-    final String palette = path.join(temporaryDirectory.path, '${metadata.category}_${metadata.name}.png');
+    final String palette = path.join(
+        temporaryDirectory.path, '${metadata.category}_${metadata.name}.png');
     // Generate palette.
     jobs.putIfAbsent(0, () => <WorkerJob>[]).add(
-      WorkerJob(
-        <String>[
-          ffmpegCommand,
-          '-loglevel', 'fatal', // Only print fatal errors.
-          '-i', '-', // read in the concatenated frame files from stdin.
-          '-vf', 'fps=${metadata.frameRate.toStringAsFixed(0)},scale=${metadata.width}:-1:flags=lanczos,palettegen',
-          palette,
-        ],
-        workingDirectory: temporaryDirectory,
-        stdinRaw: _concatInputs(metadata.frameFiles),
-        printOutput: true,
-      ),
-    );
+          WorkerJob(
+            <String>[
+              ffmpegCommand,
+              '-loglevel', 'fatal', // Only print fatal errors.
+              '-i', '-', // read in the concatenated frame files from stdin.
+              '-vf',
+              'fps=${metadata.frameRate.toStringAsFixed(0)},scale=${metadata.width}:-1:flags=lanczos,palettegen',
+              palette,
+            ],
+            workingDirectory: temporaryDirectory,
+            stdinRaw: _concatInputs(metadata.frameFiles),
+            printOutput: true,
+          ),
+        );
     // Create the final gif with the palette.
     jobs.putIfAbsent(1, () => <WorkerJob>[]).add(
-      WorkerJob(
-        <String>[
-          ffmpegCommand,
-          '-loglevel', 'fatal', // Only print fatal errors.
-          '-i', '-',
-          '-i', palette,
-          '-filter_complex', 'fps=${metadata.frameRate.toStringAsFixed(0)},scale=${metadata.width}:-1:flags=lanczos[x];[x][1:v]paletteuse',
-          destination,
-        ],
-        workingDirectory: temporaryDirectory,
-        stdinRaw: _concatInputs(metadata.frameFiles),
-        printOutput: true,
-      ),
-    );
+          WorkerJob(
+            <String>[
+              ffmpegCommand,
+              '-loglevel', 'fatal', // Only print fatal errors.
+              '-i', '-',
+              '-i', palette,
+              '-filter_complex',
+              'fps=${metadata.frameRate.toStringAsFixed(0)},scale=${metadata.width}:-1:flags=lanczos[x];[x][1:v]paletteuse',
+              destination,
+            ],
+            workingDirectory: temporaryDirectory,
+            stdinRaw: _concatInputs(metadata.frameFiles),
+            printOutput: true,
+          ),
+        );
   }
 
   Future<List<File>> _combineAnimations(List<File> inputFiles) async {
