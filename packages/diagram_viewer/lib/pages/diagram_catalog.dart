@@ -104,10 +104,9 @@ class CatalogTile extends StatelessWidget {
             child: Text(
               name,
               style: TextStyle(
-                color:
-                    Theme.of(context).brightness == Brightness.light
-                        ? Colors.white
-                        : Colors.black,
+                color: Theme.of(context).brightness == Brightness.light
+                    ? Colors.white
+                    : Colors.black,
                 fontWeight: FontWeight.bold,
                 fontSize: 16.0,
               ),
@@ -136,9 +135,8 @@ class StepTile extends StatelessWidget {
     final List<DiagramMetadata> diagrams = await step.diagrams;
     Navigator.of(context).push(
       MaterialPageRoute<void>(
-        builder:
-            (BuildContext context) =>
-                DiagramViewerPage(step: step, diagrams: diagrams),
+        builder: (BuildContext context) =>
+            DiagramViewerPage(step: step, diagrams: diagrams),
       ),
     );
   }
@@ -148,16 +146,15 @@ class StepTile extends StatelessWidget {
     return ListTile(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
       title: Text(step.runtimeType.toString()),
-      trailing:
-          step.platforms.containsAll(DiagramPlatform.values)
-              ? null
-              : Row(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  for (final DiagramPlatform platform in step.platforms)
-                    Chip(label: Text(platform.name)),
-                ],
-              ),
+      trailing: step.platforms.containsAll(DiagramPlatform.values)
+          ? null
+          : Row(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                for (final DiagramPlatform platform in step.platforms)
+                  Chip(label: Text(platform.name)),
+              ],
+            ),
       visualDensity: const VisualDensity(vertical: -4),
       onTap: () => openDiagramStepViewer(context, step),
     );

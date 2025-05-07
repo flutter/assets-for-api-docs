@@ -41,12 +41,11 @@ Future<void> main(List<String> args) async {
   DiagramFlutterBinding.ensureInitialized();
   late final List<String> arguments;
   if (platform.isAndroid) {
-    arguments =
-        PlatformDispatcher.instance.defaultRouteName.length > 5
-            ? Uri.decodeComponent(
-              PlatformDispatcher.instance.defaultRouteName.substring(5),
-            ).split(' ')
-            : <String>[];
+    arguments = PlatformDispatcher.instance.defaultRouteName.length > 5
+        ? Uri.decodeComponent(
+            PlatformDispatcher.instance.defaultRouteName.substring(5),
+          ).split(' ')
+        : <String>[];
   } else {
     arguments = args;
   }
@@ -72,16 +71,15 @@ Future<void> main(List<String> args) async {
   final List<String> categories = flags['category'] as List<String>;
   final List<String> names = flags['name'] as List<String>;
   final List<String> steps = flags['step'] as List<String>;
-  final Set<DiagramPlatform> platforms =
-      (flags['platform'] as List<String>).map<DiagramPlatform>((
-        String platformStr,
-      ) {
+  final Set<DiagramPlatform> platforms = (flags['platform'] as List<String>)
+      .map<DiagramPlatform>((String platformStr) {
         assert(
           diagramStepPlatformNames.containsKey(platformStr),
           'Invalid platform $platformStr',
         );
         return diagramStepPlatformNames[platformStr]!;
-      }).toSet();
+      })
+      .toSet();
 
   print(
     'Filters:\n  categories: $categories\n  names: $names\n  steps: $steps',
@@ -102,17 +100,18 @@ Future<void> main(List<String> args) async {
   Zone.current
       .fork(
         specification: ZoneSpecification(
-          handleUncaughtError: (
-            Zone self,
-            ZoneDelegate parent,
-            Zone zone,
-            Object error,
-            StackTrace stackTrace,
-          ) {
-            print('Exception! $error\n$stackTrace');
-            errorLog.writeln(error);
-            errorLog.writeln(stackTrace);
-          },
+          handleUncaughtError:
+              (
+                Zone self,
+                ZoneDelegate parent,
+                Zone zone,
+                Object error,
+                StackTrace stackTrace,
+              ) {
+                print('Exception! $error\n$stackTrace');
+                errorLog.writeln(error);
+                errorLog.writeln(stackTrace);
+              },
         ),
       )
       .runGuarded(() async {

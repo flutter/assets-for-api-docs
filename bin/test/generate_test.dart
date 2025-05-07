@@ -73,7 +73,9 @@ void main() {
               'packages',
               'diagram_generator',
             ),
-          ): <ProcessResult>[ProcessResult(0, 0, '', '')],
+          ): <ProcessResult>[
+            ProcessResult(0, 0, '', ''),
+          ],
           FakeInvocationRecord(<String>[
             'optipng',
             '-zc1-9',

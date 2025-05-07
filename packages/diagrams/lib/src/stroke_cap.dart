@@ -62,24 +62,21 @@ class StrokeCapDescription extends CustomPainter {
     final Offset start = Offset(0.0, center.dy);
     final Offset middle = Offset(size.width / 2.0, center.dy);
 
-    final Paint startPaint =
-        Paint()
-          ..color = Colors.grey
-          ..style = PaintingStyle.stroke
-          ..strokeCap = StrokeCap.square
-          ..strokeWidth = 20.0;
-    final Paint linePaint =
-        Paint()
-          ..color = Colors.grey
-          ..style = PaintingStyle.stroke
-          ..strokeCap = cap
-          ..strokeWidth = 20.0;
-    final Paint endPaint =
-        Paint()
-          ..color = Colors.deepPurpleAccent
-          ..style = PaintingStyle.stroke
-          ..strokeCap = cap
-          ..strokeWidth = 20.0;
+    final Paint startPaint = Paint()
+      ..color = Colors.grey
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.square
+      ..strokeWidth = 20.0;
+    final Paint linePaint = Paint()
+      ..color = Colors.grey
+      ..style = PaintingStyle.stroke
+      ..strokeCap = cap
+      ..strokeWidth = 20.0;
+    final Paint endPaint = Paint()
+      ..color = Colors.deepPurpleAccent
+      ..style = PaintingStyle.stroke
+      ..strokeCap = cap
+      ..strokeWidth = 20.0;
 
     Path line =
         Path() // Line

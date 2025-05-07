@@ -56,59 +56,63 @@ class _DrawerDiagramState extends State<DrawerDiagram>
         initialRoute: '/',
         onGenerateRoute: (RouteSettings settings) {
           return PageRouteBuilder<void>(
-            pageBuilder: (
-              BuildContext context,
-              Animation<double> animation,
-              Animation<double> secondaryAnimation,
-            ) {
-              return Container(
-                alignment: FractionalOffset.center,
-                color: Colors.white,
-                child: Scaffold(
-                  appBar: AppBar(
-                    title: const Text('Drawer Demo'),
-                    automaticallyImplyLeading: false,
-                    leading: Builder(
-                      builder: (BuildContext context) {
-                        return IconButton(
-                          key: _menuKey,
-                          icon: const Icon(Icons.menu),
-                          onPressed: () {
-                            Scaffold.of(context).openDrawer();
+            pageBuilder:
+                (
+                  BuildContext context,
+                  Animation<double> animation,
+                  Animation<double> secondaryAnimation,
+                ) {
+                  return Container(
+                    alignment: FractionalOffset.center,
+                    color: Colors.white,
+                    child: Scaffold(
+                      appBar: AppBar(
+                        title: const Text('Drawer Demo'),
+                        automaticallyImplyLeading: false,
+                        leading: Builder(
+                          builder: (BuildContext context) {
+                            return IconButton(
+                              key: _menuKey,
+                              icon: const Icon(Icons.menu),
+                              onPressed: () {
+                                Scaffold.of(context).openDrawer();
+                              },
+                            );
                           },
-                        );
-                      },
+                        ),
+                      ),
+                      drawer: Drawer(
+                        child: ListView(
+                          padding: EdgeInsets.zero,
+                          children: const <Widget>[
+                            DrawerHeader(
+                              decoration: BoxDecoration(color: Colors.blue),
+                              child: Text(
+                                'Drawer Header',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 24,
+                                ),
+                              ),
+                            ),
+                            ListTile(
+                              leading: Icon(Icons.message),
+                              title: Text('Messages'),
+                            ),
+                            ListTile(
+                              leading: Icon(Icons.account_circle),
+                              title: Text('Profile'),
+                            ),
+                            ListTile(
+                              leading: Icon(Icons.settings),
+                              title: Text('Settings'),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
-                  ),
-                  drawer: Drawer(
-                    child: ListView(
-                      padding: EdgeInsets.zero,
-                      children: const <Widget>[
-                        DrawerHeader(
-                          decoration: BoxDecoration(color: Colors.blue),
-                          child: Text(
-                            'Drawer Header',
-                            style: TextStyle(color: Colors.white, fontSize: 24),
-                          ),
-                        ),
-                        ListTile(
-                          leading: Icon(Icons.message),
-                          title: Text('Messages'),
-                        ),
-                        ListTile(
-                          leading: Icon(Icons.account_circle),
-                          title: Text('Profile'),
-                        ),
-                        ListTile(
-                          leading: Icon(Icons.settings),
-                          title: Text('Settings'),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            },
+                  );
+                },
           );
         },
       ),

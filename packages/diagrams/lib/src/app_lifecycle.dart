@@ -190,10 +190,9 @@ class AppLifecycleStateBox extends StatelessWidget {
       width: AppLifecycleDiagram.stateBoxWidth,
       height: AppLifecycleDiagram.stateBoxHeight,
       decoration: ShapeDecoration(
-        color:
-            Theme.of(context).brightness == Brightness.light
-                ? Colors.blue.shade100
-                : Colors.blue.shade800,
+        color: Theme.of(context).brightness == Brightness.light
+            ? Colors.blue.shade100
+            : Colors.blue.shade800,
         shape: RoundedRectangleBorder(
           side: const BorderSide(width: 3),
           borderRadius: BorderRadius.circular(10),

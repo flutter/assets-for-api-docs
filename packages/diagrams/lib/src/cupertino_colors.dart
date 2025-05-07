@@ -490,10 +490,9 @@ class ColorWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return DefaultTextStyle(
       style: TextStyle(
-        color:
-            color.r > 200 && color.g > 200 && color.b > 200
-                ? CupertinoColors.black
-                : CupertinoColors.white,
+        color: color.r > 200 && color.g > 200 && color.b > 200
+            ? CupertinoColors.black
+            : CupertinoColors.white,
         fontSize: 16.0,
       ),
       child: Center(

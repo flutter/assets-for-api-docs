@@ -38,11 +38,10 @@ class LinkedLabelCheckbox extends StatelessWidget {
                   color: Colors.blueAccent,
                   decoration: TextDecoration.underline,
                 ),
-                recognizer:
-                    TapGestureRecognizer()
-                      ..onTap = () {
-                        print('Link has been tapped.');
-                      },
+                recognizer: TapGestureRecognizer()
+                  ..onTap = () {
+                    print('Link has been tapped.');
+                  },
               ),
             ),
           ),

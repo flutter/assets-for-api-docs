@@ -223,10 +223,9 @@ void paintArrowHead(
   final Vector2 topVec = matrix.transform(Vector2(-length, length));
   final Vector2 bottomVec = matrix.transform(Vector2(-length, -length));
 
-  final Path path =
-      Path()
-        ..moveTo(center.dx + bottomVec.x, center.dy + bottomVec.y)
-        ..lineTo(center.dx, center.dy);
+  final Path path = Path()
+    ..moveTo(center.dx + bottomVec.x, center.dy + bottomVec.y)
+    ..lineTo(center.dx, center.dy);
 
   if (!bottomOnly) {
     path.lineTo(center.dx + topVec.x, center.dy + topVec.y);
@@ -289,13 +288,12 @@ class ArcDiagramPainter extends CustomPainter {
           sin(startAngle + sweepAngle) * arcRect.height / 2,
         );
 
-    final Paint paint =
-        Paint()
-          ..color = theme.hintColor
-          ..strokeWidth = 2.0
-          ..style = PaintingStyle.stroke
-          ..strokeCap = StrokeCap.round
-          ..strokeJoin = StrokeJoin.round;
+    final Paint paint = Paint()
+      ..color = theme.hintColor
+      ..strokeWidth = 2.0
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round
+      ..strokeJoin = StrokeJoin.round;
 
     // Unit circle, 8 angles at 45 degree increments
     for (int i = 0; i < 8; i++) {
@@ -331,31 +329,29 @@ class ArcDiagramPainter extends CustomPainter {
         TextSpan(
           children: <InlineSpan>[
             TextSpan(
-              text:
-                  const <String>[
-                    '0°, 360°',
-                    '45°',
-                    '90°',
-                    '135°',
-                    '180°',
-                    '225°',
-                    '270°',
-                    '315°',
-                  ][i],
+              text: const <String>[
+                '0°, 360°',
+                '45°',
+                '90°',
+                '135°',
+                '180°',
+                '225°',
+                '270°',
+                '315°',
+              ][i],
             ),
             const TextSpan(text: '\n'),
             TextSpan(
-              text:
-                  const <String>[
-                    '0, 2π',
-                    'π/4',
-                    'π/2',
-                    '3π/4',
-                    'π',
-                    '5π/4',
-                    '3π/2',
-                    '7π/4',
-                  ][i],
+              text: const <String>[
+                '0, 2π',
+                'π/4',
+                'π/2',
+                '3π/4',
+                'π',
+                '5π/4',
+                '3π/2',
+                '7π/4',
+              ][i],
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
           ],
@@ -425,8 +421,11 @@ class ArcDiagramPainter extends CustomPainter {
         fontWeight: FontWeight.bold,
       ),
       alignment: 0.0,
-      theta:
-          lerpDouble(startAngle, startAngle + sweepAngle, sweepLabelAlignment)!,
+      theta: lerpDouble(
+        startAngle,
+        startAngle + sweepAngle,
+        sweepLabelAlignment,
+      )!,
     );
 
     // Draw arrow at startAngle
@@ -460,8 +459,9 @@ class CanvasDrawArcDiagram extends ArcDiagram {
 
   @override
   Widget build(BuildContext context) {
-    final ArcDiagramTheme theme =
-        dark ? ArcDiagramTheme.dark : ArcDiagramTheme.light;
+    final ArcDiagramTheme theme = dark
+        ? ArcDiagramTheme.dark
+        : ArcDiagramTheme.light;
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
@@ -516,8 +516,9 @@ class PathAddArcDiagram extends ArcDiagram {
 
   @override
   Widget build(BuildContext context) {
-    final ArcDiagramTheme theme =
-        dark ? ArcDiagramTheme.dark : ArcDiagramTheme.light;
+    final ArcDiagramTheme theme = dark
+        ? ArcDiagramTheme.dark
+        : ArcDiagramTheme.light;
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
@@ -570,8 +571,9 @@ class PathAddArcCCWDiagram extends ArcDiagram {
 
   @override
   Widget build(BuildContext context) {
-    final ArcDiagramTheme theme =
-        dark ? ArcDiagramTheme.dark : ArcDiagramTheme.light;
+    final ArcDiagramTheme theme = dark
+        ? ArcDiagramTheme.dark
+        : ArcDiagramTheme.light;
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[

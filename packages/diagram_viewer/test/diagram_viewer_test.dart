@@ -98,7 +98,9 @@ void main() {
     final DiagramStep step = TestDiagramStep();
     final List<DiagramMetadata> diagrams = await step.diagrams;
     await tester.pumpWidget(
-      DiagramViewerApp(home: DiagramViewerPage(step: step, diagrams: diagrams)),
+      DiagramViewerApp(
+        home: DiagramViewerPage(step: step, diagrams: diagrams),
+      ),
     );
     await tester.pump(const Duration(minutes: 1));
     for (final DiagramMetadata diagram in diagrams) {

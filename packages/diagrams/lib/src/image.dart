@@ -119,22 +119,23 @@ class FrameBuilderImageDiagram extends StatelessWidget {
   Widget build(BuildContext context) {
     return Image(
       image: image,
-      frameBuilder: (
-        BuildContext context,
-        Widget child,
-        int? frame,
-        bool wasSynchronouslyLoaded,
-      ) {
-        if (wasSynchronouslyLoaded) {
-          return child;
-        }
-        return AnimatedOpacity(
-          opacity: frame == null ? 0 : 1,
-          duration: const Duration(seconds: 1),
-          curve: Curves.easeOut,
-          child: child,
-        );
-      },
+      frameBuilder:
+          (
+            BuildContext context,
+            Widget child,
+            int? frame,
+            bool wasSynchronouslyLoaded,
+          ) {
+            if (wasSynchronouslyLoaded) {
+              return child;
+            }
+            return AnimatedOpacity(
+              opacity: frame == null ? 0 : 1,
+              duration: const Duration(seconds: 1),
+              curve: Curves.easeOut,
+              child: child,
+            );
+          },
     );
   }
 }
@@ -148,22 +149,23 @@ class LoadingProgressImageDiagram extends StatelessWidget {
   Widget build(BuildContext context) {
     return Image(
       image: image,
-      loadingBuilder: (
-        BuildContext context,
-        Widget child,
-        ImageChunkEvent? loadingProgress,
-      ) {
-        if (loadingProgress == null) {
-          return child;
-        }
-        return Center(
-          child: CircularProgressIndicator(
-            value:
-                loadingProgress.cumulativeBytesLoaded /
-                loadingProgress.expectedTotalBytes!,
-          ),
-        );
-      },
+      loadingBuilder:
+          (
+            BuildContext context,
+            Widget child,
+            ImageChunkEvent? loadingProgress,
+          ) {
+            if (loadingProgress == null) {
+              return child;
+            }
+            return Center(
+              child: CircularProgressIndicator(
+                value:
+                    loadingProgress.cumulativeBytesLoaded /
+                    loadingProgress.expectedTotalBytes!,
+              ),
+            );
+          },
     );
   }
 }
@@ -227,8 +229,8 @@ class ImageDiagramsStep extends DiagramStep {
   final String category = 'widgets';
 
   static Future<ui.Image> renderFlutterLogo(int width, int height) {
-    final BoxPainter boxPainter =
-        const FlutterLogoDecoration().createBoxPainter();
+    final BoxPainter boxPainter = const FlutterLogoDecoration()
+        .createBoxPainter();
     final ui.PictureRecorder recorder = ui.PictureRecorder();
     boxPainter.paint(
       ui.Canvas(recorder),
@@ -247,18 +249,16 @@ class ImageDiagramsStep extends DiagramStep {
         image: await renderFlutterLogo(300, 300),
         shownDuration: const Duration(seconds: 4),
         loadingDuration: const Duration(milliseconds: 500),
-        builder:
-            (BuildContext context, ImageProvider image) =>
-                FrameBuilderImageDiagram(image: image),
+        builder: (BuildContext context, ImageProvider image) =>
+            FrameBuilderImageDiagram(image: image),
       ),
       ImageDiagram(
         name: 'loading_progress_image',
         image: await renderFlutterLogo(300, 300),
         shownDuration: const Duration(seconds: 1),
         loadingDuration: const Duration(seconds: 2),
-        builder:
-            (BuildContext context, ImageProvider image) =>
-                LoadingProgressImageDiagram(image: image),
+        builder: (BuildContext context, ImageProvider image) =>
+            LoadingProgressImageDiagram(image: image),
       ),
     ];
   }

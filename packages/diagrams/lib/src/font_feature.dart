@@ -67,15 +67,14 @@ abstract class FontFeatureDiagram<T> extends StatelessWidget
           minHeight: 0.0,
           maxHeight: double.infinity,
           child: Column(
-            children:
-                entries
-                    .map(
-                      (T entry) => SizedBox(
-                        height: _margin + textStyle.fontSize! * 1.2 + _gap,
-                        child: buildRow(context, entry),
-                      ),
-                    )
-                    .toList(),
+            children: entries
+                .map(
+                  (T entry) => SizedBox(
+                    height: _margin + textStyle.fontSize! * 1.2 + _gap,
+                    child: buildRow(context, entry),
+                  ),
+                )
+                .toList(),
           ),
         ),
       ),

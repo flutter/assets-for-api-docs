@@ -57,11 +57,10 @@ class ShapeDiagramTheme {
     final double rightArrow = rightEdge - arrowNudge;
     final double bottomArrow = bottomEdge - arrowNudge;
 
-    final Paint paint =
-        Paint()
-          ..color = xyPlaneColor
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 3.5;
+    final Paint paint = Paint()
+      ..color = xyPlaneColor
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 3.5;
 
     // Draw main lines going to the right and down
 
@@ -195,11 +194,10 @@ class LineDiagramPainter extends CustomPainter {
 
     theme.paintXYPlane(canvas);
 
-    final Paint paint =
-        Paint()
-          ..strokeWidth = 5.0
-          ..style = PaintingStyle.stroke
-          ..color = theme.foregroundColor;
+    final Paint paint = Paint()
+      ..strokeWidth = 5.0
+      ..style = PaintingStyle.stroke
+      ..color = theme.foregroundColor;
 
     final Offset start = const Offset(2, 4) * _kGridSize;
     final Offset end = const Offset(8, 2) * _kGridSize;
@@ -262,11 +260,10 @@ class RectConstructorDiagramPainter extends CustomPainter {
     canvas.save();
     canvas.translate(showBottom ? 90 : 60, showBottom ? 60 : 50);
 
-    final Paint paint =
-        Paint()
-          ..strokeWidth = 4.0
-          ..style = PaintingStyle.stroke
-          ..color = theme.shapeColor;
+    final Paint paint = Paint()
+      ..strokeWidth = 4.0
+      ..style = PaintingStyle.stroke
+      ..color = theme.shapeColor;
 
     final Rect rect = Rect.fromPoints(
       const Offset(2, 2) * _kGridSize,
@@ -425,11 +422,10 @@ class OvalDiagramPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     void drawRect(Rect rect, PaintingStyle style) {
-      final Paint paint =
-          Paint()
-            ..strokeWidth = 4.0
-            ..style = PaintingStyle.stroke
-            ..color = theme.hintColor;
+      final Paint paint = Paint()
+        ..strokeWidth = 4.0
+        ..style = PaintingStyle.stroke
+        ..color = theme.hintColor;
 
       canvas.drawRect(rect, paint);
 
@@ -498,11 +494,10 @@ class RectDiagramPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     void drawRect(RRect rrect, PaintingStyle style) {
-      final Paint paint =
-          Paint()
-            ..strokeWidth = 4.0
-            ..style = PaintingStyle.stroke
-            ..color = theme.foregroundColor;
+      final Paint paint = Paint()
+        ..strokeWidth = 4.0
+        ..style = PaintingStyle.stroke
+        ..color = theme.foregroundColor;
 
       canvas.drawRRect(rrect, paint);
 
@@ -650,11 +645,10 @@ class ConicToDiagramPainter extends CustomPainter {
     final double x1 = (x + x2) / 2;
     final double y1 = size.height * 0.1;
 
-    final Paint paint =
-        Paint()
-          ..color = theme.hintColor
-          ..strokeWidth = 5.0
-          ..style = PaintingStyle.stroke;
+    final Paint paint = Paint()
+      ..color = theme.hintColor
+      ..strokeWidth = 5.0
+      ..style = PaintingStyle.stroke;
 
     canvas.drawPath(
       Path()
@@ -725,11 +719,10 @@ class QuadraticToDiagramPainter extends CustomPainter {
     final double x1 = (x + x2) / 2;
     final double y1 = size.height * 0.1;
 
-    final Paint paint =
-        Paint()
-          ..color = theme.shapeColor
-          ..strokeWidth = 5.0
-          ..style = PaintingStyle.stroke;
+    final Paint paint = Paint()
+      ..color = theme.shapeColor
+      ..strokeWidth = 5.0
+      ..style = PaintingStyle.stroke;
 
     canvas.drawPath(
       Path()
@@ -762,11 +755,10 @@ class CubicToDiagramPainter extends CustomPainter {
     final double x3 = size.width * 0.9;
     final double y3 = size.height * 0.5;
 
-    final Paint paint =
-        Paint()
-          ..color = theme.hintColor
-          ..strokeWidth = 3.0
-          ..style = PaintingStyle.stroke;
+    final Paint paint = Paint()
+      ..color = theme.hintColor
+      ..strokeWidth = 3.0
+      ..style = PaintingStyle.stroke;
 
     canvas.drawLine(Offset(x, y), Offset(x1, y1), paint);
 
@@ -914,66 +906,60 @@ class BasicShapesStep extends DiagramStep {
       ),
       BasicShapesDiagram(
         name: 'canvas_rrect',
-        painter:
-            (ShapeDiagramTheme theme) =>
-                RectDiagramPainter(theme: theme, label: 'rrect', radius: 24),
+        painter: (ShapeDiagramTheme theme) =>
+            RectDiagramPainter(theme: theme, label: 'rrect', radius: 24),
         width: 640,
         height: 384,
       ),
       BasicShapesDiagram(
         name: 'rect_from_ltrb',
-        painter:
-            (ShapeDiagramTheme theme) => RectConstructorDiagramPainter(
-              theme: theme,
-              showLeft: true,
-              showTop: true,
-              showRight: true,
-              showBottom: true,
-            ),
+        painter: (ShapeDiagramTheme theme) => RectConstructorDiagramPainter(
+          theme: theme,
+          showLeft: true,
+          showTop: true,
+          showRight: true,
+          showBottom: true,
+        ),
         width: 580,
         height: 380,
       ),
       BasicShapesDiagram(
         name: 'rect_from_ltwh',
-        painter:
-            (ShapeDiagramTheme theme) => RectConstructorDiagramPainter(
-              theme: theme,
-              showLeft: true,
-              showTop: true,
-              showWidth: true,
-              showHeight: true,
-            ),
+        painter: (ShapeDiagramTheme theme) => RectConstructorDiagramPainter(
+          theme: theme,
+          showLeft: true,
+          showTop: true,
+          showWidth: true,
+          showHeight: true,
+        ),
         width: 550,
         height: 370,
       ),
       BasicShapesDiagram(
         name: 'rect_from_points',
-        painter:
-            (ShapeDiagramTheme theme) => RectConstructorDiagramPainter(
-              theme: theme,
-              showTopLeft: true,
-              showBottomRight: true,
-            ),
+        painter: (ShapeDiagramTheme theme) => RectConstructorDiagramPainter(
+          theme: theme,
+          showTopLeft: true,
+          showBottomRight: true,
+        ),
         width: 550,
         height: 370,
       ),
       BasicShapesDiagram(
         name: 'rect_from_center',
-        painter:
-            (ShapeDiagramTheme theme) => RectConstructorDiagramPainter(
-              theme: theme,
-              showWidth: true,
-              showHeight: true,
-              showCenter: true,
-            ),
+        painter: (ShapeDiagramTheme theme) => RectConstructorDiagramPainter(
+          theme: theme,
+          showWidth: true,
+          showHeight: true,
+          showCenter: true,
+        ),
         width: 550,
         height: 370,
       ),
       BasicShapesDiagram(
         name: 'rect_from_circle',
-        painter:
-            (ShapeDiagramTheme theme) =>
-                CircleDiagramPainter(theme: theme, square: true),
+        painter: (ShapeDiagramTheme theme) =>
+            CircleDiagramPainter(theme: theme, square: true),
         width: 625,
         height: 410,
       ),
@@ -985,50 +971,47 @@ class BasicShapesStep extends DiagramStep {
       ),
       BasicShapesDiagram(
         name: 'canvas_circle',
-        painter:
-            (ShapeDiagramTheme theme) => CircleDiagramPainter(theme: theme),
+        painter: (ShapeDiagramTheme theme) =>
+            CircleDiagramPainter(theme: theme),
         width: 625,
         height: 410,
       ),
       BasicShapesDiagram(
         name: 'path_conic_to',
-        painter:
-            (ShapeDiagramTheme theme) => ConicToDiagramPainter(theme: theme),
+        painter: (ShapeDiagramTheme theme) =>
+            ConicToDiagramPainter(theme: theme),
         width: 600,
         height: 350,
       ),
       BasicShapesDiagram(
         name: 'path_quadratic_to',
-        painter:
-            (ShapeDiagramTheme theme) =>
-                QuadraticToDiagramPainter(theme: theme),
+        painter: (ShapeDiagramTheme theme) =>
+            QuadraticToDiagramPainter(theme: theme),
         width: 600,
         height: 350,
       ),
       BasicShapesDiagram(
         name: 'path_cubic_to',
-        painter:
-            (ShapeDiagramTheme theme) => CubicToDiagramPainter(theme: theme),
+        painter: (ShapeDiagramTheme theme) =>
+            CubicToDiagramPainter(theme: theme),
         width: 500,
         height: 350,
       ),
       BasicShapesDiagram(
         name: 'radius_circular',
-        painter:
-            (ShapeDiagramTheme theme) => RadiusDiagramPainter(
-              theme: theme,
-              radius: const Radius.circular(96),
-            ),
+        painter: (ShapeDiagramTheme theme) => RadiusDiagramPainter(
+          theme: theme,
+          radius: const Radius.circular(96),
+        ),
         width: 500,
         height: 350,
       ),
       BasicShapesDiagram(
         name: 'radius_elliptical',
-        painter:
-            (ShapeDiagramTheme theme) => RadiusDiagramPainter(
-              theme: theme,
-              radius: const Radius.elliptical(144, 96),
-            ),
+        painter: (ShapeDiagramTheme theme) => RadiusDiagramPainter(
+          theme: theme,
+          radius: const Radius.elliptical(144, 96),
+        ),
         width: 500,
         height: 350,
       ),

@@ -50,47 +50,40 @@ class CurveDescription extends CustomPainter {
     return result;
   }
 
-  static final Paint _axisPaint =
-      Paint()
-        ..color = Colors.black45
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 2.0;
+  static final Paint _axisPaint = Paint()
+    ..color = Colors.black45
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = 2.0;
 
-  static final Paint _positionPaint =
-      Paint()
-        ..color = Colors.black45
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 0.0;
+  static final Paint _positionPaint = Paint()
+    ..color = Colors.black45
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = 0.0;
 
-  static final Paint _dashPaint =
-      Paint()
-        ..color = Colors.black45
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 0.0;
+  static final Paint _dashPaint = Paint()
+    ..color = Colors.black45
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = 0.0;
 
-  static final Paint _graphPaint =
-      Paint()
-        ..color = Colors.blue.shade900
-        ..style = PaintingStyle.stroke
-        ..strokeCap = StrokeCap.round
-        ..strokeWidth = 4.0;
+  static final Paint _graphPaint = Paint()
+    ..color = Colors.blue.shade900
+    ..style = PaintingStyle.stroke
+    ..strokeCap = StrokeCap.round
+    ..strokeWidth = 4.0;
 
-  static final Paint _graphProgressPaint =
-      Paint()
-        ..color = Colors.black26
-        ..style = PaintingStyle.stroke
-        ..strokeCap = StrokeCap.round
-        ..strokeWidth = 4.0;
+  static final Paint _graphProgressPaint = Paint()
+    ..color = Colors.black26
+    ..style = PaintingStyle.stroke
+    ..strokeCap = StrokeCap.round
+    ..strokeWidth = 4.0;
 
-  static final Paint _valueMarkerPaint =
-      Paint()
-        ..color = const Color(0xffA02020)
-        ..style = PaintingStyle.fill;
+  static final Paint _valueMarkerPaint = Paint()
+    ..color = const Color(0xffA02020)
+    ..style = PaintingStyle.fill;
 
-  static final Paint _positionCirclePaint =
-      Paint()
-        ..color = Colors.blue.shade900
-        ..style = PaintingStyle.fill;
+  static final Paint _positionCirclePaint = Paint()
+    ..color = Colors.blue.shade900
+    ..style = PaintingStyle.fill;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -108,13 +101,12 @@ class CurveDescription extends CustomPainter {
       size.width - rightMargin,
       size.height - verticalHeadroom,
     );
-    final Path axes =
-        Path()
-          ..moveTo(area.left - unit, area.top) // vertical axis 1.0 tick
-          ..lineTo(area.left, area.top) // vertical axis
-          ..lineTo(area.left, area.bottom) // origin
-          ..lineTo(area.right, area.bottom) // horizontal axis
-          ..lineTo(area.right, area.bottom + unit); // horizontal axis 1.0 tick
+    final Path axes = Path()
+      ..moveTo(area.left - unit, area.top) // vertical axis 1.0 tick
+      ..lineTo(area.left, area.top) // vertical axis
+      ..lineTo(area.left, area.bottom) // origin
+      ..lineTo(area.right, area.bottom) // horizontal axis
+      ..lineTo(area.right, area.bottom + unit); // horizontal axis 1.0 tick
     canvas.drawPath(axes, _axisPaint);
     final Path dashLine = Path();
     final double delta = 8.0 / area.width;
@@ -162,25 +154,17 @@ class CurveDescription extends CustomPainter {
     // initial paused state to not include the position indicators. They just
     // add clutter before the animation is started.
     if (position != 0.0) {
-      final Path positionLine =
-          Path()
-            ..moveTo(activePoint.dx, area.bottom)
-            ..lineTo(activePoint.dx, area.top); // vertical pointer from base
+      final Path positionLine = Path()
+        ..moveTo(activePoint.dx, area.bottom)
+        ..lineTo(activePoint.dx, area.top); // vertical pointer from base
       canvas.drawPath(positionLine, _positionPaint);
-      final Path valueMarker =
-          Path()
-            ..moveTo(area.right + unit, activePoint.dy)
-            ..lineTo(area.right + unit * 2.0, activePoint.dy - unit)
-            ..lineTo(
-              area.right + unit * 2.0 + markerWidth,
-              activePoint.dy - unit,
-            )
-            ..lineTo(
-              area.right + unit * 2.0 + markerWidth,
-              activePoint.dy + unit,
-            )
-            ..lineTo(area.right + unit * 2.0, activePoint.dy + unit)
-            ..lineTo(area.right + unit, activePoint.dy);
+      final Path valueMarker = Path()
+        ..moveTo(area.right + unit, activePoint.dy)
+        ..lineTo(area.right + unit * 2.0, activePoint.dy - unit)
+        ..lineTo(area.right + unit * 2.0 + markerWidth, activePoint.dy - unit)
+        ..lineTo(area.right + unit * 2.0 + markerWidth, activePoint.dy + unit)
+        ..lineTo(area.right + unit * 2.0, activePoint.dy + unit)
+        ..lineTo(area.right + unit, activePoint.dy);
       canvas.drawPath(valueMarker, _valueMarkerPaint);
     }
     final Path graph = Path()..moveTo(area.left, area.bottom);
