@@ -67,11 +67,10 @@ class ClipRectPainter extends CustomPainter {
     _drawBackground(canvas, size);
     canvas.restore();
 
-    final Paint paint =
-        Paint()
-          ..style = PaintingStyle.stroke
-          ..color = Colors.white
-          ..strokeWidth = 3.0;
+    final Paint paint = Paint()
+      ..style = PaintingStyle.stroke
+      ..color = Colors.white
+      ..strokeWidth = 3.0;
     canvas.drawRect(rect, paint);
   }
 
@@ -97,11 +96,10 @@ class ClipRRectPainter extends CustomPainter {
     _drawBackground(canvas, size);
     canvas.restore();
 
-    final Paint paint =
-        Paint()
-          ..style = PaintingStyle.stroke
-          ..color = Colors.white
-          ..strokeWidth = 3.0;
+    final Paint paint = Paint()
+      ..style = PaintingStyle.stroke
+      ..color = Colors.white
+      ..strokeWidth = 3.0;
     canvas.drawRRect(rrect, paint);
   }
 
@@ -127,52 +125,50 @@ class ClipPathPainter extends CustomPainter {
     const double topControl = 60.0;
     const double middleControl = 75.0;
 
-    final Path path =
-        Path()
-          ..moveTo(cx, bottomAnchorY)
-          ..cubicTo(
-            cx - bottomControl,
-            bottomAnchorY,
-            leftAnchorX,
-            middleAnchorY + middleControl,
-            leftAnchorX,
-            middleAnchorY,
-          )
-          ..cubicTo(
-            leftAnchorX,
-            middleAnchorY - middleControl,
-            cx - topControl,
-            topAnchorY - topControl,
-            cx,
-            topAnchorY,
-          )
-          ..cubicTo(
-            cx + topControl,
-            topAnchorY - topControl,
-            rightAnchorX,
-            middleAnchorY - middleControl,
-            rightAnchorX,
-            middleAnchorY,
-          )
-          ..cubicTo(
-            rightAnchorX,
-            middleAnchorY + middleControl,
-            cx + bottomControl,
-            bottomAnchorY,
-            cx,
-            bottomAnchorY,
-          );
+    final Path path = Path()
+      ..moveTo(cx, bottomAnchorY)
+      ..cubicTo(
+        cx - bottomControl,
+        bottomAnchorY,
+        leftAnchorX,
+        middleAnchorY + middleControl,
+        leftAnchorX,
+        middleAnchorY,
+      )
+      ..cubicTo(
+        leftAnchorX,
+        middleAnchorY - middleControl,
+        cx - topControl,
+        topAnchorY - topControl,
+        cx,
+        topAnchorY,
+      )
+      ..cubicTo(
+        cx + topControl,
+        topAnchorY - topControl,
+        rightAnchorX,
+        middleAnchorY - middleControl,
+        rightAnchorX,
+        middleAnchorY,
+      )
+      ..cubicTo(
+        rightAnchorX,
+        middleAnchorY + middleControl,
+        cx + bottomControl,
+        bottomAnchorY,
+        cx,
+        bottomAnchorY,
+      );
 
     canvas.save();
     canvas.clipPath(path);
     _drawBackground(canvas, size);
     canvas.restore();
 
-    final Paint paint =
-        Paint()
-          ..style = PaintingStyle.stroke
-          ..color = Colors.white
-          ..strokeWidth = 3.0;
+    final Paint paint = Paint()
+      ..style = PaintingStyle.stroke
+      ..color = Colors.white
+      ..strokeWidth = 3.0;
     canvas.drawPath(path, paint);
   }
 

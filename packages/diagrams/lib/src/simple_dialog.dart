@@ -78,26 +78,27 @@ class _SimpleDialogDiagramState extends State<SimpleDialogDiagram>
         initialRoute: '/',
         onGenerateRoute: (RouteSettings settings) {
           return PageRouteBuilder<void>(
-            pageBuilder: (
-              BuildContext context,
-              Animation<double> animation,
-              Animation<double> secondaryAnimation,
-            ) {
-              return Scaffold(
-                appBar: AppBar(title: const Text('SimpleDialog Demo')),
-                body: Center(
-                  child: Builder(
-                    builder: (BuildContext context) {
-                      return OutlinedButton(
-                        key: _openDialogKey,
-                        child: const Text('Show Options'),
-                        onPressed: () => _askedToLead(context),
-                      );
-                    },
-                  ),
-                ),
-              );
-            },
+            pageBuilder:
+                (
+                  BuildContext context,
+                  Animation<double> animation,
+                  Animation<double> secondaryAnimation,
+                ) {
+                  return Scaffold(
+                    appBar: AppBar(title: const Text('SimpleDialog Demo')),
+                    body: Center(
+                      child: Builder(
+                        builder: (BuildContext context) {
+                          return OutlinedButton(
+                            key: _openDialogKey,
+                            child: const Text('Show Options'),
+                            onPressed: () => _askedToLead(context),
+                          );
+                        },
+                      ),
+                    ),
+                  );
+                },
           );
         },
       ),
@@ -105,32 +106,31 @@ class _SimpleDialogDiagramState extends State<SimpleDialogDiagram>
   }
 
   Future<void> _askedToLead(BuildContext context) async {
-    final Department result =
-        (await showDialog<Department>(
-          context: context,
-          useRootNavigator: false,
-          builder: (BuildContext context) {
-            return SimpleDialog(
-              title: const Text('Select assignment'),
-              children: <Widget>[
-                SimpleDialogOption(
-                  key: _treasuryKey,
-                  onPressed: () {
-                    Navigator.pop<Department>(context, Department.treasury);
-                  },
-                  child: const Text('Treasury department'),
-                ),
-                SimpleDialogOption(
-                  key: _stateKey,
-                  onPressed: () {
-                    Navigator.pop<Department>(context, Department.state);
-                  },
-                  child: const Text('State department'),
-                ),
-              ],
-            );
-          },
-        ))!;
+    final Department result = (await showDialog<Department>(
+      context: context,
+      useRootNavigator: false,
+      builder: (BuildContext context) {
+        return SimpleDialog(
+          title: const Text('Select assignment'),
+          children: <Widget>[
+            SimpleDialogOption(
+              key: _treasuryKey,
+              onPressed: () {
+                Navigator.pop<Department>(context, Department.treasury);
+              },
+              child: const Text('Treasury department'),
+            ),
+            SimpleDialogOption(
+              key: _stateKey,
+              onPressed: () {
+                Navigator.pop<Department>(context, Department.state);
+              },
+              child: const Text('State department'),
+            ),
+          ],
+        );
+      },
+    ))!;
 
     switch (result) {
       case Department.treasury:

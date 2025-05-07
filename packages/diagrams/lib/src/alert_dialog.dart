@@ -61,26 +61,27 @@ class _AlertDialogDiagramState extends State<AlertDialogDiagram>
         initialRoute: '/',
         onGenerateRoute: (RouteSettings settings) {
           return PageRouteBuilder<void>(
-            pageBuilder: (
-              BuildContext context,
-              Animation<double> animation,
-              Animation<double> secondaryAnimation,
-            ) {
-              return Scaffold(
-                appBar: AppBar(title: const Text('AlertDialog Demo')),
-                body: Center(
-                  child: Builder(
-                    builder: (BuildContext context) {
-                      return OutlinedButton(
-                        key: _openDialogKey,
-                        child: const Text('Show Dialog'),
-                        onPressed: () => _neverSatisfied(context),
-                      );
-                    },
-                  ),
-                ),
-              );
-            },
+            pageBuilder:
+                (
+                  BuildContext context,
+                  Animation<double> animation,
+                  Animation<double> secondaryAnimation,
+                ) {
+                  return Scaffold(
+                    appBar: AppBar(title: const Text('AlertDialog Demo')),
+                    body: Center(
+                      child: Builder(
+                        builder: (BuildContext context) {
+                          return OutlinedButton(
+                            key: _openDialogKey,
+                            child: const Text('Show Dialog'),
+                            onPressed: () => _neverSatisfied(context),
+                          );
+                        },
+                      ),
+                    ),
+                  );
+                },
           );
         },
       ),

@@ -444,8 +444,9 @@ class DiagramController {
       milliseconds: 1000 ~/ framerate,
     );
     while (timestamp != Duration.zero) {
-      final Duration advanceBy =
-          timestamp > framerateDuration ? framerateDuration : timestamp;
+      final Duration advanceBy = timestamp > framerateDuration
+          ? framerateDuration
+          : timestamp;
       timestamp -= advanceBy;
       await advanceTime(advanceBy);
     }

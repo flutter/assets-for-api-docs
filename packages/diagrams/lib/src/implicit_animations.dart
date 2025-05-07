@@ -23,8 +23,9 @@ class AnimatedAlignDiagram extends ImplicitAnimationDiagram<AlignmentGeometry> {
     return Center(
       child: ImplicitAnimationDiagramTapper(
         child: AnimatedAlign(
-          alignment:
-              selected ? Alignment.center : AlignmentDirectional.bottomStart,
+          alignment: selected
+              ? Alignment.center
+              : AlignmentDirectional.bottomStart,
           duration: _kAnimationDuration,
           curve: curve,
           child: const SampleWidget(small: true),
@@ -50,8 +51,9 @@ class AnimatedContainerDiagram
           width: selected ? 200.0 : 100.0,
           height: selected ? 100.0 : 200.0,
           color: selected ? Colors.red : Colors.blue,
-          alignment:
-              selected ? Alignment.center : AlignmentDirectional.topCenter,
+          alignment: selected
+              ? Alignment.center
+              : AlignmentDirectional.topCenter,
           duration: _kAnimationDuration,
           curve: curve,
           child: const SampleWidget(small: true),
@@ -71,13 +73,12 @@ class AnimatedDefaultTextStyleDiagram
 
   @override
   Widget buildImplicitAnimation(BuildContext context, bool selected) {
-    final TextStyle selectedStyle = Theme.of(
-      context,
-    ).textTheme.headlineMedium!.copyWith(
-      color: Colors.red,
-      fontSize: 50.0,
-      fontWeight: FontWeight.w100,
-    );
+    final TextStyle selectedStyle = Theme.of(context).textTheme.headlineMedium!
+        .copyWith(
+          color: Colors.red,
+          fontSize: 50.0,
+          fontWeight: FontWeight.w100,
+        );
     final TextStyle unselectedStyle = selectedStyle.copyWith(
       color: Colors.blue,
       fontSize: 50.0,
@@ -134,10 +135,9 @@ class AnimatedPaddingDiagram
     return Center(
       child: ImplicitAnimationDiagramTapper(
         child: AnimatedPadding(
-          padding:
-              selected
-                  ? const EdgeInsets.symmetric(vertical: 80.0)
-                  : const EdgeInsets.symmetric(horizontal: 80.0),
+          padding: selected
+              ? const EdgeInsets.symmetric(vertical: 80.0)
+              : const EdgeInsets.symmetric(horizontal: 80.0),
           duration: _kAnimationDuration,
           curve: curve,
           child: Container(color: Colors.blue),

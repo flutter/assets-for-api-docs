@@ -86,16 +86,15 @@ class TabsDiagramState extends State<TabsDiagram>
           ),
           body: TabBarView(
             controller: _tabController,
-            children:
-                myTabs.map((Tab tab) {
-                  final String label = tab.text!.toLowerCase();
-                  return Center(
-                    child: Text(
-                      'This is the $label tab',
-                      style: const TextStyle(fontSize: 36),
-                    ),
-                  );
-                }).toList(),
+            children: myTabs.map((Tab tab) {
+              final String label = tab.text!.toLowerCase();
+              return Center(
+                child: Text(
+                  'This is the $label tab',
+                  style: const TextStyle(fontSize: 36),
+                ),
+              );
+            }).toList(),
           ),
         ),
       ),

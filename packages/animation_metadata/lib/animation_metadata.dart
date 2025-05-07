@@ -29,10 +29,11 @@ class AnimationMetadata {
     final Map<String, Object?> metadata =
         json.decode(metadataFile.readAsStringSync()) as Map<String, dynamic>;
     final String baseDir = path.dirname(metadataFile.absolute.path);
-    final List<File> frameFiles =
-        (metadata[_frameFilesKey]! as List<dynamic>).map<File>((dynamic name) {
+    final List<File> frameFiles = (metadata[_frameFilesKey]! as List<dynamic>)
+        .map<File>((dynamic name) {
           return File(path.normalize(path.join(baseDir, name.toString())));
-        }).toList();
+        })
+        .toList();
     final Duration duration = Duration(
       milliseconds: metadata[_durationMsKey]! as int,
     );
@@ -66,13 +67,12 @@ class AnimationMetadata {
       _videoFormatKey: videoFormat.name,
       _frameRateKey: frameRate,
       _widthKey: width,
-      _frameFilesKey:
-          frameFiles.map<String>((File file) {
-            return path.relative(
-              file.path,
-              from: path.dirname(metadataFile.absolute.path),
-            );
-          }).toList(),
+      _frameFilesKey: frameFiles.map<String>((File file) {
+        return path.relative(
+          file.path,
+          from: path.dirname(metadataFile.absolute.path),
+        );
+      }).toList(),
     };
     const JsonEncoder encoder = JsonEncoder.withIndent('  ');
     final String jsonMetadata = encoder.convert(metadata);

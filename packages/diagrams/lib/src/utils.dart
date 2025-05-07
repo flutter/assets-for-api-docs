@@ -280,10 +280,9 @@ mixin LockstepStateMixin<T extends StatefulWidget> on State<T>
 
       // Avoid concurrent modification of _completers by getting the durations
       // all at once before removing them.
-      final List<Duration> ready =
-          _completers.keys
-              .where((Duration duration) => elapsed >= duration)
-              .toList();
+      final List<Duration> ready = _completers.keys
+          .where((Duration duration) => elapsed >= duration)
+          .toList();
 
       for (final Duration duration in ready) {
         _completers[duration]!.complete();

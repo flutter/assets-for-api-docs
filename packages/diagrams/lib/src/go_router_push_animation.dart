@@ -209,16 +209,17 @@ class _MainApp extends StatelessWidget {
         initialRoute: '/',
         onGenerateRoute: (RouteSettings settings) {
           return PageRouteBuilder<void>(
-            pageBuilder: (
-              BuildContext context,
-              Animation<double> animation,
-              Animation<double> secondaryAnimation,
-            ) {
-              return Scaffold(
-                appBar: AppBar(title: const Text('Shell1')),
-                body: _Shell1(),
-              );
-            },
+            pageBuilder:
+                (
+                  BuildContext context,
+                  Animation<double> animation,
+                  Animation<double> secondaryAnimation,
+                ) {
+                  return Scaffold(
+                    appBar: AppBar(title: const Text('Shell1')),
+                    body: _Shell1(),
+                  );
+                },
           );
         },
       ),
@@ -234,61 +235,66 @@ class _Shell1 extends StatelessWidget {
       initialRoute: '/',
       onGenerateRoute: (RouteSettings settings) {
         return PageRouteBuilder<void>(
-          pageBuilder: (
-            BuildContext context,
-            Animation<double> animation,
-            Animation<double> secondaryAnimation,
-          ) {
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                TextButton(
-                  key: _pushShell1,
-                  onPressed: () {
-                    _innerNavigator.currentState!.push(
-                      MaterialPageRoute<void>(
-                        builder: (_) {
-                          return const Center(child: Text('shell1 body'));
-                        },
+          pageBuilder:
+              (
+                BuildContext context,
+                Animation<double> animation,
+                Animation<double> secondaryAnimation,
+              ) {
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    TextButton(
+                      key: _pushShell1,
+                      onPressed: () {
+                        _innerNavigator.currentState!.push(
+                          MaterialPageRoute<void>(
+                            builder: (_) {
+                              return const Center(child: Text('shell1 body'));
+                            },
+                          ),
+                        );
+                      },
+                      child: const Text('push the same shell route /shell1'),
+                    ),
+                    TextButton(
+                      key: _pushShell2,
+                      onPressed: () {
+                        _outerNavigator.currentState!.push(
+                          MaterialPageRoute<void>(
+                            builder: (_) {
+                              return Scaffold(
+                                appBar: AppBar(title: const Text('shell2')),
+                                body: const Center(child: Text('shell2 body')),
+                              );
+                            },
+                          ),
+                        );
+                      },
+                      child: const Text(
+                        'push the different shell route /shell2',
                       ),
-                    );
-                  },
-                  child: const Text('push the same shell route /shell1'),
-                ),
-                TextButton(
-                  key: _pushShell2,
-                  onPressed: () {
-                    _outerNavigator.currentState!.push(
-                      MaterialPageRoute<void>(
-                        builder: (_) {
-                          return Scaffold(
-                            appBar: AppBar(title: const Text('shell2')),
-                            body: const Center(child: Text('shell2 body')),
-                          );
-                        },
+                    ),
+                    TextButton(
+                      key: _pushRegularRoute,
+                      onPressed: () {
+                        _outerNavigator.currentState!.push(
+                          MaterialPageRoute<void>(
+                            builder: (_) {
+                              return const Scaffold(
+                                body: Center(child: Text('Regular Route')),
+                              );
+                            },
+                          ),
+                        );
+                      },
+                      child: const Text(
+                        'push the regular route /regular-route',
                       ),
-                    );
-                  },
-                  child: const Text('push the different shell route /shell2'),
-                ),
-                TextButton(
-                  key: _pushRegularRoute,
-                  onPressed: () {
-                    _outerNavigator.currentState!.push(
-                      MaterialPageRoute<void>(
-                        builder: (_) {
-                          return const Scaffold(
-                            body: Center(child: Text('Regular Route')),
-                          );
-                        },
-                      ),
-                    );
-                  },
-                  child: const Text('push the regular route /regular-route'),
-                ),
-              ],
-            );
-          },
+                    ),
+                  ],
+                );
+              },
         );
       },
     );
