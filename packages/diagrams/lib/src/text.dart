@@ -88,11 +88,10 @@ class TextDiagram extends StatelessWidget with DiagramMetadata {
                 'Greetings, planet!',
                 style: TextStyle(
                   fontSize: 40,
-                  foreground:
-                      Paint()
-                        ..style = PaintingStyle.stroke
-                        ..strokeWidth = 6
-                        ..color = Colors.blue[700]!,
+                  foreground: Paint()
+                    ..style = PaintingStyle.stroke
+                    ..strokeWidth = 6
+                    ..color = Colors.blue[700]!,
                 ),
               ),
               // Solid text as fill.
@@ -114,13 +113,12 @@ class TextDiagram extends StatelessWidget with DiagramMetadata {
                 'Greetings, planet!',
                 style: TextStyle(
                   fontSize: 40,
-                  foreground:
-                      Paint()
-                        ..shader = ui.Gradient.linear(
-                          const Offset(0, 20),
-                          const Offset(150, 20),
-                          <Color>[Colors.red, Colors.yellow],
-                        ),
+                  foreground: Paint()
+                    ..shader = ui.Gradient.linear(
+                      const Offset(0, 20),
+                      const Offset(150, 20),
+                      <Color>[Colors.red, Colors.yellow],
+                    ),
                 ),
               ),
             ],
@@ -820,17 +818,16 @@ class RenderTextHeightBreakdown extends RenderBox
     // Paint the background color.
     canvas.drawRect(offset & size, paint);
 
-    final Offset lineBoxOrigin =
-        paintHeightIndicator
-            // Left-align the height caption. Ideally this should also be centered.
-            ? Offset(
-                  heightCaptionTextPainter.width +
-                      fontMetricsLabelPadding.dx -
-                      heightCaptionBracketMinX,
-                  0,
-                ) +
-                offset
-            : (size - _textPainter.size as Offset) / 2 + offset;
+    final Offset lineBoxOrigin = paintHeightIndicator
+        // Left-align the height caption. Ideally this should also be centered.
+        ? Offset(
+                heightCaptionTextPainter.width +
+                    fontMetricsLabelPadding.dx -
+                    heightCaptionBracketMinX,
+                0,
+              ) +
+              offset
+        : (size - _textPainter.size as Offset) / 2 + offset;
 
     assert(lineBoxOrigin.dy == offset.dy);
     // Paint the text. Layout is done in performLayout.

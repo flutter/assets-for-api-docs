@@ -167,13 +167,12 @@ class DiagramGenerator {
     filters.add(temporaryDirectory.absolute.path);
     late final List<String> filterArgs;
     if (deviceTargetPlatform.startsWith('android')) {
-      filterArgs =
-          filters.isNotEmpty
-              ? <String>[
-                '--route',
-                'args:${Uri.encodeComponent(filters.join(' '))}',
-              ]
-              : <String>[];
+      filterArgs = filters.isNotEmpty
+          ? <String>[
+              '--route',
+              'args:${Uri.encodeComponent(filters.join(' '))}',
+            ]
+          : <String>[];
     } else {
       filterArgs = <String>[];
       for (final String arg in filters) {
@@ -205,8 +204,8 @@ class DiagramGenerator {
           ) ||
           (entry['id'] as String) == device) {
         deviceId = entry['id'] as String;
-        deviceTargetPlatform =
-            (entry['targetPlatform'] as String).toLowerCase();
+        deviceTargetPlatform = (entry['targetPlatform'] as String)
+            .toLowerCase();
         return true;
       }
     }
@@ -420,10 +419,9 @@ class DiagramGenerator {
   }
 
   Future<List<File>> _combineAnimations(List<File> inputFiles) async {
-    final List<File> errorFiles =
-        inputFiles
-            .where((File input) => path.basename(input.path) == 'error.log')
-            .toList();
+    final List<File> errorFiles = inputFiles
+        .where((File input) => path.basename(input.path) == 'error.log')
+        .toList();
 
     if (errorFiles.length != 1) {
       throw GeneratorException('Subprocess did not complete cleanly!');
@@ -442,10 +440,9 @@ class DiagramGenerator {
       throw GeneratorException('Failed with errors (see $errorsFileName).');
     }
 
-    final List<File> metadataFiles =
-        inputFiles
-            .where((File input) => path.extension(input.path) == '.json')
-            .toList();
+    final List<File> metadataFiles = inputFiles
+        .where((File input) => path.extension(input.path) == '.json')
+        .toList();
 
     // Collect all the animation frames that are in the metadata files so that
     // we can eliminate them from the other files that were transferred.
@@ -468,19 +465,18 @@ class DiagramGenerator {
         metadata.frameFiles.map((File file) => file.absolute.path),
       );
     }
-    final List<File> staticFiles =
-        inputFiles.where((File input) {
-          if (!input.isAbsolute) {
-            input = File(
-              path.normalize(
-                path.join(temporaryDirectory.absolute.path, input.path),
-              ),
-            );
-          } else {
-            input = File(path.normalize(input.path));
-          }
-          return !animationFiles.contains(input.absolute.path);
-        }).toList();
+    final List<File> staticFiles = inputFiles.where((File input) {
+      if (!input.isAbsolute) {
+        input = File(
+          path.normalize(
+            path.join(temporaryDirectory.absolute.path, input.path),
+          ),
+        );
+      } else {
+        input = File(path.normalize(input.path));
+      }
+      return !animationFiles.contains(input.absolute.path);
+    }).toList();
     final List<File> convertedFiles = await _buildMoviesFromMetadata(
       metadataList,
     );

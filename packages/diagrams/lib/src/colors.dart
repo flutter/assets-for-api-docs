@@ -33,8 +33,8 @@ class ColorSwatchDiagram extends ColorDiagram {
     for (final int key in keys) {
       final Color textColor =
           ThemeData.estimateBrightnessForColor(swatch[key]!) == Brightness.light
-              ? Colors.black
-              : Colors.white;
+          ? Colors.black
+          : Colors.white;
       TextStyle style = TextStyle(color: textColor, fontSize: _kFontSize);
       String label, shadeLabel;
       if (swatch[key]!.toARGB32() == swatch.toARGB32()) {

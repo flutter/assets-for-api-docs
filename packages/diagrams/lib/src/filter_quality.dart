@@ -23,8 +23,8 @@ typedef _Painter = void Function(ui.Canvas canvas);
 Future<void> _generateSamples() async {
   _originalImage = await _paint((ui.Canvas canvas) {
     const FlutterLogoDecoration flutterLogoDecoration = FlutterLogoDecoration();
-    final BoxPainter flutterLogoPainter =
-        flutterLogoDecoration.createBoxPainter();
+    final BoxPainter flutterLogoPainter = flutterLogoDecoration
+        .createBoxPainter();
     flutterLogoPainter.paint(
       canvas,
       Offset.zero,

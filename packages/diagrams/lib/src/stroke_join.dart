@@ -86,22 +86,20 @@ class StrokeJoinDescription extends CustomPainter {
     final Offset shortEnd =
         Offset(20.0 * math.cos(radians), 20.0 * math.sin(radians)) + center;
 
-    final Paint linePaint =
-        Paint()
-          ..color = Colors.grey
-          ..style = PaintingStyle.stroke
-          ..strokeCap = StrokeCap.butt
-          ..strokeJoin = join
-          ..strokeMiterLimit = strokeMiterLimit
-          ..strokeWidth = 20.0;
-    final Paint centerPaint =
-        Paint()
-          ..color = Colors.deepPurpleAccent
-          ..style = PaintingStyle.stroke
-          ..strokeCap = StrokeCap.butt
-          ..strokeJoin = join
-          ..strokeMiterLimit = strokeMiterLimit
-          ..strokeWidth = 20.0;
+    final Paint linePaint = Paint()
+      ..color = Colors.grey
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.butt
+      ..strokeJoin = join
+      ..strokeMiterLimit = strokeMiterLimit
+      ..strokeWidth = 20.0;
+    final Paint centerPaint = Paint()
+      ..color = Colors.deepPurpleAccent
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.butt
+      ..strokeJoin = join
+      ..strokeMiterLimit = strokeMiterLimit
+      ..strokeWidth = 20.0;
 
     Path line =
         Path() // Line
@@ -172,14 +170,15 @@ class StrokeJoinPainterState
   @override
   void initState() {
     super.initState();
-    controller = AnimationController(
-      duration: widget.duration,
-      vsync: this,
-      lowerBound: widget.startAngle,
-      upperBound: widget.endAngle,
-    )..addListener(() {
-      setState(() {});
-    });
+    controller =
+        AnimationController(
+          duration: widget.duration,
+          vsync: this,
+          lowerBound: widget.startAngle,
+          upperBound: widget.endAngle,
+        )..addListener(() {
+          setState(() {});
+        });
     controller.forward();
   }
 

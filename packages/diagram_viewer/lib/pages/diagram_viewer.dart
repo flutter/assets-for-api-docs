@@ -112,10 +112,9 @@ class _DiagramViewerPageState extends State<DiagramViewerPage>
               padding: const EdgeInsets.all(8.0),
               child: Material(
                 shape: const StadiumBorder(),
-                color:
-                    theme.brightness == Brightness.light
-                        ? theme.primaryColor
-                        : theme.colorScheme.surface,
+                color: theme.brightness == Brightness.light
+                    ? theme.primaryColor
+                    : theme.colorScheme.surface,
                 elevation: 4,
               ),
             ),

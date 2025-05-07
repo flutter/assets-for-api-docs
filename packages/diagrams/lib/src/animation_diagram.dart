@@ -63,15 +63,14 @@ class TransitionDiagramState<T> extends State<TransitionDiagram<T>>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: _kAnimationDuration,
-      vsync: this,
-    )..addListener(() {
-      setState(() {
-        // The animation controller is changing the animation value, so we
-        // need to redraw.
-      });
-    });
+    _controller =
+        AnimationController(duration: _kAnimationDuration, vsync: this)
+          ..addListener(() {
+            setState(() {
+              // The animation controller is changing the animation value, so we
+              // need to redraw.
+            });
+          });
     animation = widget.buildAnimation(_controller);
   }
 
@@ -233,30 +232,26 @@ class SparklinePainter extends CustomPainter {
   final Curve curve;
   final double position;
 
-  static final Paint _axisPaint =
-      Paint()
-        ..color = Colors.black45
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 2.0;
+  static final Paint _axisPaint = Paint()
+    ..color = Colors.black45
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = 2.0;
 
-  static final Paint _sparklinePaint =
-      Paint()
-        ..color = Colors.blue.shade900
-        ..style = PaintingStyle.stroke
-        ..strokeCap = StrokeCap.round
-        ..strokeWidth = 4.0;
+  static final Paint _sparklinePaint = Paint()
+    ..color = Colors.blue.shade900
+    ..style = PaintingStyle.stroke
+    ..strokeCap = StrokeCap.round
+    ..strokeWidth = 4.0;
 
-  static final Paint _graphProgressPaint =
-      Paint()
-        ..color = Colors.black26
-        ..style = PaintingStyle.stroke
-        ..strokeCap = StrokeCap.round
-        ..strokeWidth = 4.0;
+  static final Paint _graphProgressPaint = Paint()
+    ..color = Colors.black26
+    ..style = PaintingStyle.stroke
+    ..strokeCap = StrokeCap.round
+    ..strokeWidth = 4.0;
 
-  static final Paint _positionCirclePaint =
-      Paint()
-        ..color = Colors.blue.shade900
-        ..style = PaintingStyle.fill;
+  static final Paint _positionCirclePaint = Paint()
+    ..color = Colors.blue.shade900
+    ..style = PaintingStyle.fill;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -272,11 +267,10 @@ class SparklinePainter extends CustomPainter {
       size.width - rightMargin,
       size.height - topMargin,
     );
-    final Path axes =
-        Path()
-          ..moveTo(area.left, area.top) // vertical axis
-          ..lineTo(area.left, area.bottom) // origin
-          ..lineTo(area.right, area.bottom); // horizontal axis
+    final Path axes = Path()
+      ..moveTo(area.left, area.top) // vertical axis
+      ..lineTo(area.left, area.bottom) // origin
+      ..lineTo(area.right, area.bottom); // horizontal axis
     canvas.drawPath(axes, _axisPaint);
     final Offset activePoint = FractionalOffset(
       position,

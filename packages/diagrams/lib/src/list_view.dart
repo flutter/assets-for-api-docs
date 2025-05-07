@@ -66,8 +66,8 @@ class ListViewDiagram extends StatelessWidget with DiagramMetadata {
               child: Center(child: Text('Entry ${entries[index]}')),
             );
           },
-          separatorBuilder:
-              (BuildContext context, int index) => const Divider(),
+          separatorBuilder: (BuildContext context, int index) =>
+              const Divider(),
         );
         break;
       default:

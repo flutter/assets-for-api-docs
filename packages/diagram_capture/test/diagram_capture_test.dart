@@ -90,8 +90,8 @@ void main() {
         screenDimensions: const Size(100.0, 100.0),
       );
 
-      controller.builder =
-          (BuildContext context) => TestAnimatedDiagram(key: key, size: 50.0);
+      controller.builder = (BuildContext context) =>
+          TestAnimatedDiagram(key: key, size: 50.0);
       final List<ui.Image> outputImages = await controller
           .drawAnimatedDiagramToImages(
             end: const Duration(milliseconds: 1200),
@@ -115,8 +115,8 @@ void main() {
         screenDimensions: const Size(100.0, 100.0),
       );
 
-      controller.builder =
-          (BuildContext context) => TestAnimatedDiagram(key: key, size: 50.0);
+      controller.builder = (BuildContext context) =>
+          TestAnimatedDiagram(key: key, size: 50.0);
       final File outputFile = await controller.drawAnimatedDiagramToFiles(
         end: const Duration(milliseconds: 1200),
         frameRate: 5.0,
@@ -177,8 +177,9 @@ void main() {
       expect(decodedImage.width, equals(300));
       expect(decodedImage.height, equals(150));
       expect(decodedImage.length, equals(45000));
-      final image.Pixel testPixel =
-          decodedImage.getRange(150, 20, 1, 1).current;
+      final image.Pixel testPixel = decodedImage
+          .getRange(150, 20, 1, 1)
+          .current;
       expect(testPixel.a, equals(0xfe));
       expect(testPixel.r, equals(0xed));
       expect(testPixel.g, equals(0xbe));
