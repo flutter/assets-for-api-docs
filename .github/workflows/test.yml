@@ -17,7 +17,7 @@ jobs:
     steps:
       # Set up Flutter.
       - name: Clone Flutter repository with master channel
-        uses: subosito/flutter-action@48cafc24713cca54bbe03cdc3a423187d413aafa
+        uses: subosito/flutter-action@e938fdf56512cc96ef2f93601a5a40bde3801046
         with:
           channel: master
       - name: Setup environment
