@@ -15,17 +15,13 @@ class LinkedLabelRadio extends StatelessWidget {
   const LinkedLabelRadio({
     required this.label,
     required this.padding,
-    required this.groupValue,
     required this.value,
-    required this.onChanged,
     super.key,
   });
 
   final String label;
   final EdgeInsets padding;
-  final bool groupValue;
   final bool value;
-  final ValueChanged<bool?> onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -33,13 +29,7 @@ class LinkedLabelRadio extends StatelessWidget {
       padding: padding,
       child: Row(
         children: <Widget>[
-          Radio<bool>(
-            groupValue: groupValue,
-            value: value,
-            onChanged: (bool? newValue) {
-              onChanged(newValue);
-            },
-          ),
+          Radio<bool>(value: value),
           RichText(
             text: TextSpan(
               text: label,
@@ -47,10 +37,11 @@ class LinkedLabelRadio extends StatelessWidget {
                 color: Colors.blueAccent,
                 decoration: TextDecoration.underline,
               ),
-              recognizer: TapGestureRecognizer()
-                ..onTap = () {
-                  print('Label has been tapped.');
-                },
+              recognizer:
+                  TapGestureRecognizer()
+                    ..onTap = () {
+                      print('Label has been tapped.');
+                    },
             ),
           ),
         ],
@@ -63,40 +54,21 @@ class LabeledRadio extends StatelessWidget {
   const LabeledRadio({
     required this.label,
     required this.padding,
-    required this.groupValue,
     required this.value,
-    required this.onChanged,
     super.key,
   });
 
   final String label;
   final EdgeInsets padding;
-  final bool groupValue;
   final bool value;
-  final ValueChanged<bool?> onChanged;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        if (value != groupValue) {
-          onChanged(value);
-        }
-      },
+      onTap: () {},
       child: Padding(
         padding: padding,
-        child: Row(
-          children: <Widget>[
-            Radio<bool>(
-              groupValue: groupValue,
-              value: value,
-              onChanged: (bool? newValue) {
-                onChanged(newValue);
-              },
-            ),
-            Text(label),
-          ],
-        ),
+        child: Row(children: <Widget>[Radio<bool>(value: value), Text(label)]),
       ),
     );
   }
@@ -127,29 +99,25 @@ class _RadioListTileDiagramState extends State<RadioListTileDiagram> {
             alignment: FractionalOffset.center,
             padding: const EdgeInsets.all(5.0),
             color: Colors.white,
-            child: Column(
-              children: <Widget>[
-                RadioListTile<SingingCharacter>(
-                  title: const Text('Lafayette'),
-                  value: SingingCharacter.lafayette,
-                  groupValue: _character,
-                  onChanged: (SingingCharacter? value) {
-                    setState(() {
-                      _character = value;
-                    });
-                  },
-                ),
-                RadioListTile<SingingCharacter>(
-                  title: const Text('Thomas Jefferson'),
-                  value: SingingCharacter.jefferson,
-                  groupValue: _character,
-                  onChanged: (SingingCharacter? value) {
-                    setState(() {
-                      _character = value;
-                    });
-                  },
-                ),
-              ],
+            child: RadioGroup<SingingCharacter?>(
+              groupValue: _character,
+              onChanged: (SingingCharacter? value) {
+                setState(() {
+                  _character = value;
+                });
+              },
+              child: const Column(
+                children: <Widget>[
+                  RadioListTile<SingingCharacter>(
+                    title: Text('Lafayette'),
+                    value: SingingCharacter.lafayette,
+                  ),
+                  RadioListTile<SingingCharacter>(
+                    title: Text('Thomas Jefferson'),
+                    value: SingingCharacter.jefferson,
+                  ),
+                ],
+              ),
             ),
           ),
         );
@@ -161,31 +129,27 @@ class _RadioListTileDiagramState extends State<RadioListTileDiagram> {
             alignment: FractionalOffset.center,
             padding: const EdgeInsets.all(5.0),
             color: Colors.white,
-            child: Column(
-              children: <Widget>[
-                LinkedLabelRadio(
-                  label: 'First tappable label text',
-                  padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                  value: true,
-                  groupValue: _isRadioSelected,
-                  onChanged: (bool? newValue) {
-                    setState(() {
-                      _isRadioSelected = newValue!;
-                    });
-                  },
-                ),
-                LinkedLabelRadio(
-                  label: 'Second tappable label text',
-                  padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                  value: false,
-                  groupValue: _isRadioSelected,
-                  onChanged: (bool? newValue) {
-                    setState(() {
-                      _isRadioSelected = newValue!;
-                    });
-                  },
-                ),
-              ],
+            child: RadioGroup<bool>(
+              groupValue: _isRadioSelected,
+              onChanged: (bool? newValue) {
+                setState(() {
+                  _isRadioSelected = newValue!;
+                });
+              },
+              child: const Column(
+                children: <Widget>[
+                  LinkedLabelRadio(
+                    label: 'First tappable label text',
+                    padding: EdgeInsets.symmetric(horizontal: 5.0),
+                    value: true,
+                  ),
+                  LinkedLabelRadio(
+                    label: 'Second tappable label text',
+                    padding: EdgeInsets.symmetric(horizontal: 5.0),
+                    value: false,
+                  ),
+                ],
+              ),
             ),
           ),
         );
@@ -197,31 +161,27 @@ class _RadioListTileDiagramState extends State<RadioListTileDiagram> {
             alignment: FractionalOffset.center,
             padding: const EdgeInsets.all(5.0),
             color: Colors.white,
-            child: Column(
-              children: <Widget>[
-                LabeledRadio(
-                  label: 'This is the first label text',
-                  padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                  value: true,
-                  groupValue: _isRadioSelected,
-                  onChanged: (bool? newValue) {
-                    setState(() {
-                      _isRadioSelected = newValue!;
-                    });
-                  },
-                ),
-                LabeledRadio(
-                  label: 'This is the second label text',
-                  padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                  value: false,
-                  groupValue: _isRadioSelected,
-                  onChanged: (bool? newValue) {
-                    setState(() {
-                      _isRadioSelected = newValue!;
-                    });
-                  },
-                ),
-              ],
+            child: RadioGroup<bool?>(
+              groupValue: _isRadioSelected,
+              onChanged: (bool? newValue) {
+                setState(() {
+                  _isRadioSelected = newValue!;
+                });
+              },
+              child: const Column(
+                children: <Widget>[
+                  LabeledRadio(
+                    label: 'This is the first label text',
+                    padding: EdgeInsets.symmetric(horizontal: 5.0),
+                    value: true,
+                  ),
+                  LabeledRadio(
+                    label: 'This is the second label text',
+                    padding: EdgeInsets.symmetric(horizontal: 5.0),
+                    value: false,
+                  ),
+                ],
+              ),
             ),
           ),
         );
