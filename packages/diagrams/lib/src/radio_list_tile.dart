@@ -37,11 +37,10 @@ class LinkedLabelRadio extends StatelessWidget {
                 color: Colors.blueAccent,
                 decoration: TextDecoration.underline,
               ),
-              recognizer:
-                  TapGestureRecognizer()
-                    ..onTap = () {
-                      print('Label has been tapped.');
-                    },
+              recognizer: TapGestureRecognizer()
+                ..onTap = () {
+                  print('Label has been tapped.');
+                },
             ),
           ),
         ],
@@ -68,7 +67,12 @@ class LabeledRadio extends StatelessWidget {
       onTap: () {},
       child: Padding(
         padding: padding,
-        child: Row(children: <Widget>[Radio<bool>(value: value), Text(label)]),
+        child: Row(
+          children: <Widget>[
+            Radio<bool>(value: value),
+            Text(label),
+          ],
+        ),
       ),
     );
   }
