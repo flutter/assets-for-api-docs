@@ -62,5 +62,12 @@ fi
 
 for check in "${CHECKS[@]}"; do
   echo "Running $check"
-  dart pub global run flutter_plugin_tools "$check" --run-on-changed-packages
+  EXTRA_ARGS=""
+  if [[ "$check" == "analyze" ]]; then
+    # Remove ephemeral directories that may contain extra analysis_options.yaml files
+    # symlinked by plugins, which causes flutter_plugin_tools to fail.
+    find . -name "ephemeral" -type d -prune -exec rm -rf {} +
+    EXTRA_ARGS="--custom-analysis=ci/allowed_custom_analysis.yaml"
+  fi
+  dart pub global run flutter_plugin_tools "$check" --run-on-changed-packages $EXTRA_ARGS
 done

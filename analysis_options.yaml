@@ -5,6 +5,10 @@
 # "DIFFERENT FROM FLUTTER/FLUTTER" below.
 
 analyzer:
+  exclude:
+    - "packages/**/linux/flutter/ephemeral/**"
+    - "packages/**/windows/flutter/ephemeral/**"
+    - "packages/**/macos/Flutter/ephemeral/**"
   language:
     strict-casts: true
     strict-raw-types: true
