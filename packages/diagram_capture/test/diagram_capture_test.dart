@@ -128,9 +128,9 @@ void main() {
       expect(outputFile.lengthSync(), greaterThan(0));
 
       Map<String, dynamic> loadMetadata(File metadataFile) {
-        final Map<String, dynamic> metadata = json.decode(
-          metadataFile.readAsStringSync(),
-        ) as Map<String, dynamic>;
+        final Map<String, dynamic> metadata =
+            json.decode(metadataFile.readAsStringSync())
+                as Map<String, dynamic>;
         final String baseDir = path.dirname(metadataFile.absolute.path);
         final List<File> frameFiles =
             (metadata['frame_files']! as List<dynamic>)
