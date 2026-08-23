@@ -10,3 +10,4 @@ REPO_DIR="$(dirname "$SCRIPT_DIR")"
 "$SCRIPT_DIR"/tool_runner test
 cd "$REPO_DIR"/bin
 dart test
+bash "$SCRIPT_DIR"/test_assets
