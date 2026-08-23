@@ -28,13 +28,16 @@ class GeneratorException implements Exception {
 class DiagramGenerator {
   DiagramGenerator({
     this.device = '',
+    this.silent = false,
     ProcessRunner? processRunner,
     required this.temporaryDirectory,
     this.cleanup = true,
   }) : processRunner =
-           processRunner ?? ProcessRunner(printOutputDefault: true) {
-    print('Dart path: $generatorMain');
-    print('Temp directory: ${temporaryDirectory.path}');
+           processRunner ?? ProcessRunner(printOutputDefault: !silent) {
+    if (!silent) {
+      print('Dart path: $generatorMain');
+      print('Temp directory: ${temporaryDirectory.path}');
+    }
   }
 
   static const String flutterCommand = 'flutter';
@@ -79,6 +82,9 @@ class DiagramGenerator {
   /// Whether or not to cleanup the temporaryDirectory after generating diagrams.
   final bool cleanup;
 
+  /// Whether to suppress progress and child-process output.
+  final bool silent;
+
   /// The function used to run processes to completion.
   final ProcessRunner processRunner;
 
@@ -116,9 +122,11 @@ class DiagramGenerator {
         await temporaryDirectory.delete(recursive: true);
       }
     }
-    print(
-      'Elapsed time for diagram generation: ${DateTime.now().difference(startTime)}',
-    );
+    if (!silent) {
+      print(
+        'Elapsed time for diagram generation: ${DateTime.now().difference(startTime)}',
+      );
+    }
   }
 
   Future<void> _createScreenshots(
@@ -126,7 +134,9 @@ class DiagramGenerator {
     List<String> names,
     List<String> steps,
   ) async {
-    print('Creating images.');
+    if (!silent) {
+      print('Creating images.');
+    }
     final List<String> filters = <String>[];
     for (final String category in categories) {
       filters.add('--category');
@@ -215,7 +225,9 @@ class DiagramGenerator {
   Future<List<File>> _transferImages() async {
     final List<File> files = <File>[];
     if (deviceTargetPlatform.startsWith('android')) {
-      print('Collecting images from device.');
+      if (!silent) {
+        print('Collecting images from device.');
+      }
       final List<String> args = <String>[
         adbCommand,
         '-s',
@@ -294,9 +306,11 @@ class DiagramGenerator {
       if (!destination.parent.existsSync()) {
         destination.parent.createSync(recursive: true);
       }
-      print(
-        'Converting ${metadata.name} animation to ${metadata.videoFormat.name}.',
-      );
+      if (!silent) {
+        print(
+          'Converting ${metadata.name} animation to ${metadata.videoFormat.name}.',
+        );
+      }
       _generateCommands(
         metadata: metadata,
         destination: destination.path,
@@ -365,7 +379,7 @@ class DiagramGenerator {
             ],
             workingDirectory: temporaryDirectory,
             stdinRaw: _concatInputs(metadata.frameFiles),
-            printOutput: true,
+            printOutput: !silent,
           ),
         );
   }
@@ -394,7 +408,7 @@ class DiagramGenerator {
             ],
             workingDirectory: temporaryDirectory,
             stdinRaw: _concatInputs(metadata.frameFiles),
-            printOutput: true,
+            printOutput: !silent,
           ),
         );
     // Create the final gif with the palette.
@@ -413,7 +427,7 @@ class DiagramGenerator {
             ],
             workingDirectory: temporaryDirectory,
             stdinRaw: _concatInputs(metadata.frameFiles),
-            printOutput: true,
+            printOutput: !silent,
           ),
         );
   }
@@ -427,7 +441,9 @@ class DiagramGenerator {
       throw GeneratorException('Subprocess did not complete cleanly!');
     }
 
-    print('Processing ${inputFiles.length - 1} files...');
+    if (!silent) {
+      print('Processing ${inputFiles.length - 1} files...');
+    }
 
     final String errorsFileName = path.join(
       temporaryDirectory.absolute.path,
@@ -435,8 +451,10 @@ class DiagramGenerator {
     );
     final String errors = await File(errorsFileName).readAsString();
     if (errors.isNotEmpty) {
-      print('Failed. Errors:');
-      print(errors);
+      if (!silent) {
+        print('Failed. Errors:');
+        print(errors);
+      }
       throw GeneratorException('Failed with errors (see $errorsFileName).');
     }
 

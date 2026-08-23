@@ -30,6 +30,7 @@ void main() {
         processRunner: ProcessRunner(processManager: processManager),
         temporaryDirectory: temporaryDirectory,
         cleanup: false,
+        silent: true,
       );
     });
 
@@ -37,73 +38,69 @@ void main() {
       temporaryDirectory.delete(recursive: true);
     });
 
-    try {
-      test('make sure generate generates', () async {
-        final Map<FakeInvocationRecord, List<ProcessResult>>
-        calls = <FakeInvocationRecord, List<ProcessResult>>{
-          FakeInvocationRecord(<String>[
-            'flutter',
-            'devices',
-            '--machine',
-          ], workingDirectory: temporaryDirectory.path): <ProcessResult>[
-            ProcessResult(
-              0,
-              0,
-              '[{"name": "linux", "id": "linux", "targetPlatform": "linux"}]',
-              '',
-            ),
-          ],
-          FakeInvocationRecord(
-            <String>[
+    test('make sure generate generates', () async {
+      final Map<FakeInvocationRecord, List<ProcessResult>> calls =
+          <FakeInvocationRecord, List<ProcessResult>>{
+            FakeInvocationRecord(<String>[
               'flutter',
-              'run',
-              '-d',
-              'linux',
-              '--dart-entrypoint-args',
-              '--platform',
-              '--dart-entrypoint-args',
-              'linux',
-              '--dart-entrypoint-args',
-              '--output-dir',
-              '--dart-entrypoint-args',
-              temporaryDirectory.path,
+              'devices',
+              '--machine',
+            ], workingDirectory: temporaryDirectory.path): <ProcessResult>[
+              ProcessResult(
+                0,
+                0,
+                '[{"name": "linux", "id": "linux", "targetPlatform": "linux"}]',
+                '',
+              ),
             ],
-            workingDirectory: path.join(
-              DiagramGenerator.projectDir,
-              'packages',
-              'diagram_generator',
-            ),
-          ): <ProcessResult>[
-            ProcessResult(0, 0, '', ''),
-          ],
-          FakeInvocationRecord(<String>[
-            'optipng',
-            '-zc1-9',
-            '-zm1-9',
-            '-zs0-3',
-            '-f0-5',
-            'output.png',
-            '-out',
-            path.join(DiagramGenerator.projectDir, 'assets', 'output.png'),
-          ], workingDirectory: temporaryDirectory.path): <ProcessResult>[
-            ProcessResult(0, 0, '', ''),
-          ],
-        };
-        processManager.fakeResults = calls;
-        // Fake an output file
-        final File errorLog = File(
-          path.join(temporaryDirectory.path, 'error.log'),
-        );
-        errorLog.writeAsString('');
-        final File output = File(
-          path.join(temporaryDirectory.path, 'output.png'),
-        );
-        output.writeAsString('');
-        await generator.generateDiagrams();
-        processManager.verifyCalls(calls.keys.toList());
-      });
-    } catch (e, s) {
-      print(s);
-    }
+            FakeInvocationRecord(
+              <String>[
+                'flutter',
+                'run',
+                '-d',
+                'linux',
+                '--dart-entrypoint-args',
+                '--platform',
+                '--dart-entrypoint-args',
+                'linux',
+                '--dart-entrypoint-args',
+                '--output-dir',
+                '--dart-entrypoint-args',
+                temporaryDirectory.path,
+              ],
+              workingDirectory: path.join(
+                DiagramGenerator.projectDir,
+                'packages',
+                'diagram_generator',
+              ),
+            ): <ProcessResult>[
+              ProcessResult(0, 0, '', ''),
+            ],
+            FakeInvocationRecord(<String>[
+              'optipng',
+              '-zc1-9',
+              '-zm1-9',
+              '-zs0-3',
+              '-f0-5',
+              'output.png',
+              '-out',
+              path.join(DiagramGenerator.projectDir, 'assets', 'output.png'),
+            ], workingDirectory: temporaryDirectory.path): <ProcessResult>[
+              ProcessResult(0, 0, '', ''),
+            ],
+          };
+      processManager.fakeResults = calls;
+      // Fake an output file
+      final File errorLog = File(
+        path.join(temporaryDirectory.path, 'error.log'),
+      );
+      errorLog.writeAsString('');
+      final File output = File(
+        path.join(temporaryDirectory.path, 'output.png'),
+      );
+      output.writeAsString('');
+      await generator.generateDiagrams();
+      processManager.verifyCalls(calls.keys.toList());
+    });
   });
 }
